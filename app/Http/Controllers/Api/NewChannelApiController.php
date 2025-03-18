@@ -373,7 +373,7 @@ class NewChannelApiController extends Controller
                 $zipcode = "18344";
             }
             // Fetch programs matching the search query
-            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
+            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%");
             if ($validate == 1) {
@@ -399,7 +399,17 @@ class NewChannelApiController extends Controller
                 $program->type = 'event';
                 $program->callSign = null;
                 $program->url = null;
+                // Convert start and end timestamps to Carbon instances
+                $startTime = Carbon::parse($program->start, 'UTC');
+                $endTime = Carbon::parse($program->end, 'UTC');
+
+                // Get the current timestamp in the UTC timezone
+                $currentTimestamp = Carbon::now('UTC');
+                // Determine if play_icon should be true or false
+                $program->play_icon = $currentTimestamp->between($startTime, $endTime) ?? false;
                 unset($program->assets);
+                unset($program->start);
+                unset($program->end);
             });
 
             // Fetch channels matching the search query
@@ -435,6 +445,7 @@ class NewChannelApiController extends Controller
                 $channel->type = 'channel';
                 $channel->description = null;
                 $channel->TMSId = null;
+                $channel->play_icon = true;
                 unset($channel->assets);
             });
 
