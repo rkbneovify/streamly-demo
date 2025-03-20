@@ -20,7 +20,7 @@ class Kernel extends HttpKernel
         //\App\Http\Middleware\DatabaseSwitcher::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \Barryvdh\Cors\HandleCors::class, 
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+            'throttle:100,1',
             'bindings',
             \Barryvdh\Cors\HandleCors::class,
             \App\Http\Middleware\HandlePutFormData::class
@@ -67,7 +67,7 @@ class Kernel extends HttpKernel
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
-        'role'=> \App\Http\Middleware\EntrustRole::class,
+        'role' => \App\Http\Middleware\EntrustRole::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'subscribed' => \App\Http\Middleware\Subscribed::class,
     ];
