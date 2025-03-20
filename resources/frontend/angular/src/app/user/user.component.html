@@ -5,11 +5,12 @@
     class="sidebar_container justify-content-between col-1 p-0 d-flex flex-column align-items-center pt-3"
   >
     <div
-      class="sidebar_1 pointer"
+      class="sidebar_1 isExpandable pointer"
       (click)="toggleSidebar()"
       [ngClass]="{ 'rotate-180': isExpanded }"
     >
       <img
+        class="isExpandable"
         loading="lazy"
         src="../../assets/dummy-img/sidebar_arrow.svg"
         alt=""
