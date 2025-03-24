@@ -466,8 +466,7 @@ export class PlaylistScheduleComponent
   
   // Extracted Method: Handle isNextDay & UI updates
   private updateDayState() {
-    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count || this.selectedDay == 'Tomorrow';
-  
+    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
     if (!this.isNextDay) {
       this.selectedDay = 'Today';
       setTimeout(() => {
@@ -997,7 +996,7 @@ changeCategory(genre?: string){
     providedDate.setHours(hours, minutes, 0, 0);
   
     // If the provided time is earlier than the current time, consider it as the next day
-    if (providedDate.getTime() <= currentDate.getTime() && this.totalTomNumber <= this.count && this.selectedDay == 'Tomorrow') {
+    if (providedDate.getTime() <= currentDate.getTime() || this.selectedDay == 'Tomorrow') {
       return true; // It is considered as the next day
     }
   
