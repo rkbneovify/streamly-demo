@@ -247,7 +247,18 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       this.submenu = false;
       return;
     }
+  }
 
+  @HostListener('mouseover', ['$event'])
+  onMouseOver(event: MouseEvent) {
+    const target = event.target as HTMLElement; // Ensure it's an HTMLElement
+    const parentDiv =target.closest('.onHoverShowMenu') as HTMLElement;
+
+    if (parentDiv) {
+      this.isExpanded = true;
+    }else{
+      this.isExpanded = false;
+    }
   }
 
   toggleSidebar(): void {
