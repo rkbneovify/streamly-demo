@@ -997,7 +997,7 @@ changeCategory(genre?: string){
     providedDate.setHours(hours, minutes, 0, 0);
   
     // If the provided time is earlier than the current time, consider it as the next day
-    if (providedDate.getTime() <= currentDate.getTime()) {
+    if (providedDate.getTime() <= currentDate.getTime() && this.totalTomNumber <= this.count && this.selectedDay == 'Tomorrow') {
       return true; // It is considered as the next day
     }
   

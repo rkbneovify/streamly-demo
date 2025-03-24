@@ -1371,6 +1371,12 @@ footer .contain:first-child {
   }
 }
 
+@media screen and (min-width: 768px) {
+.isExpandable{
+  visibility: hidden;
+}
+}
+
 @media screen and (max-width: 450px) {
   .schedule_Container {
     padding-left: 1rem;
