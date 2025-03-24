@@ -25,7 +25,7 @@
         (click)="changeSideBarTab('home')"
         routerLink="/user"
         [ngClass]="{
-          'submenu1 pointer flex d-flex flex-nowrap': true,
+          'submenu1 onHoverShowMenu pointer flex d-flex flex-nowrap': true,
           activeTab: activeTab === 'home'
         }"
       >
@@ -45,7 +45,7 @@
         (click)="changeSideBarTab('fav')"
         routerLink="/user/my-stuff"
         [ngClass]="{
-          'submenu3 pointer flex d-flex flex-nowrap': true,
+          'submenu3 onHoverShowMenu pointer flex d-flex flex-nowrap': true,
           activeTab: activeTab === 'fav'
         }"
       >
@@ -65,7 +65,7 @@
         (click)="changeSideBarTab('playsh')"
         routerLink="/user/playlistschedule"
         [ngClass]="{
-          'submenu3 pointer d-flex flex flex-nowrap': true,
+          'submenu3 onHoverShowMenu pointer d-flex flex flex-nowrap': true,
           activeTab: activeTab === 'playsh'
         }"
       >
@@ -90,7 +90,7 @@
         (click)="changeSideBarTab('allChannel')"
         routerLink="/user/channel/all"
         [ngClass]="{
-          'submenu3 submenuAll pointer': true,
+          'submenu3 onHoverShowMenu submenuAll pointer': true,
           activeTab: activeTab === 'allChannel'
         }"
       >
@@ -121,7 +121,7 @@
       </div> -->
     </div>
 
-    <div class="sidebar_3 pointer pb-4 position-relative" (click)="submenu = !submenu">
+    <div class="sidebar_3 onHoverShowMenu pointer pb-4 position-relative" (click)="submenu = !submenu">
       <img
         [ngClass]="{ 'd-inline-block min-20 userProfileImage': true }"
         src="../../assets/dummy-img/settings-02.svg"
