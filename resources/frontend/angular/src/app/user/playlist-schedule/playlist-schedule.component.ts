@@ -413,7 +413,7 @@ export class PlaylistScheduleComponent
     localStorage.setItem('scrollPosition', this.channelList1.nativeElement.scrollTop.toString());
   }
   
-  scrollContent(position: number) {
+  scrollContent(position: number,isNextData?:boolean) {
     if (this.isProcessing) return;     
     if (this.shouldResetScroll(position)) return;
     
@@ -421,7 +421,7 @@ export class PlaylistScheduleComponent
   
     try {
       if (position !== 0) {
-        this.handleScroll(position);
+        this.handleScroll(position,isNextData);
       } else {
         this.resetScroll();
       }
@@ -444,7 +444,7 @@ export class PlaylistScheduleComponent
   }
   
   // Extracted Method: Handle scrolling logic
-  private handleScroll(position: number) {
+  private handleScroll(position: number,isNextValue?:boolean) {
     this.changeColorBackgroung = true;
     this.toggleLeftArrow = true;
     this.go_Live = true;
@@ -453,30 +453,44 @@ export class PlaylistScheduleComponent
   
     this.scrollableContent.nativeElement.scrollLeft += position;
     this.scrollableContent1.nativeElement.scrollLeft += position;
-    this.updateCount(position);
+    this.updateCount(position,isNextValue);
   }
   
   // Extracted Method: Update count & boundary conditions
-  private updateCount(position: number) {
+  private updateCount(position: number,isNextValue?:boolean) {
     this.count += position > 0 ? 1 : -1;
     this.count = Math.max(0, Math.min(this.count, this.getCurrentTimeDate.length - 1));
+    // alert(`1st = ${this.count}`);
   
-    this.updateDayState();
+    this.updateDayState(isNextValue);
   }
   
   // Extracted Method: Handle isNextDay & UI updates
-  private updateDayState() {
-    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count || this.selectedDay == 'Tomorrow';
-  
-    if (!this.isNextDay) {
+  private updateDayState(isNextValue:boolean = false) {
+    // alert(`2nd = ${this.count}`);
+    // this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
+    if(isNextValue){
+      this.count = this.totalScroll;
+    }
+    this.isNextDay = isNextValue ? isNextValue : this.count > this.totalTomNumber;
+    // console.log(
+    // "this.isNextDay => ",this.isNextDay,
+    // this.checkIfNextDay(this.getCurrentTimeDate[this.count]),
+    // this.selectedDay == 'Tomorrow' ,
+    // "this.totalTomNumber < this.count " ,this.totalTomNumber < this.count ,
+    // this.totalTomNumber 
+    // , "this.count ", this.count,
+    // this.getCurrentTimeDate[this.count]);
+
+    if (this.isNextDay) {
+      this.changeDays('Tomorrow');
+    }else{
       this.selectedDay = 'Today';
       setTimeout(() => {
         this.changeDays('Today', false);
         this.getCurrentTimeSlot('today');
         this.cdr.markForCheck();
       }, 100);
-    }else{
-      this.changeDays('Tomorrow');
     }
   
     this.cdr.markForCheck();
@@ -798,7 +812,8 @@ changeCategory(genre?: string){
         if(!this.isNextDay){
 
           if(this.count != 0){
-            this.scrollContent((this.totalScroll - this.count)  * 150 );
+            this.isNextDay = true;
+            this.scrollContent((this.totalScroll - this.count)  * 150 ,true);
           }
   
           if(this.count == 0){          
@@ -997,7 +1012,7 @@ changeCategory(genre?: string){
     providedDate.setHours(hours, minutes, 0, 0);
   
     // If the provided time is earlier than the current time, consider it as the next day
-    if (providedDate.getTime() <= currentDate.getTime()) {
+    if (providedDate.getTime() <= currentDate.getTime() && this.totalTomNumber <= this.count) {
       return true; // It is considered as the next day
     }
   
