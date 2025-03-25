@@ -393,24 +393,31 @@ class NewChannelApiController extends Controller
 
             $programs = $pquery->get();
             // Process each program to add image URI and type, and remove assets
-            $programs->map(function ($program) {
-                $program->image = $this->getURIFromAssetForProgram($program->assets);
-                $program->roku_image = $program->image;
-                $program->type = 'event';
-                $program->callSign = null;
-                $program->url = null;
-                // Convert start and end timestamps to Carbon instances
-                $startTime = Carbon::parse($program->start, 'UTC');
-                $endTime = Carbon::parse($program->end, 'UTC');
+            $filteredPrograms = collect($programs)
+                ->map(function ($program) {
+                    $program->image = $this->getURIFromAssetForProgram($program->assets);
+                    $program->roku_image = $program->image;
+                    $program->type = 'event';
+                    $program->callSign = null;
+                    $program->url = null;
+                    // Convert start and end timestamps to Carbon instances
+                    $startTime = Carbon::parse($program->start, 'UTC');
+                    $endTime = Carbon::parse($program->end, 'UTC');
 
-                // Get the current timestamp in the UTC timezone
-                $currentTimestamp = Carbon::now('UTC');
-                // Determine if play_icon should be true or false
-                $program->play_icon = $currentTimestamp->between($startTime, $endTime) ?? false;
-                unset($program->assets);
-                unset($program->start);
-                unset($program->end);
-            });
+                    // Get the current timestamp in the UTC timezone
+                    $currentTimestamp = Carbon::now('UTC');
+                    // Determine if play_icon should be true or false
+                    $program->play_icon = $currentTimestamp->between($startTime, $endTime) ?? false;
+                    unset($program->assets);
+                    unset($program->start);
+                    unset($program->end);
+                    return $program;
+                })->groupBy('TMSId') // Group by TMSId to filter duplicates
+                ->map(function ($group) {
+                    // Sort so the one with play_icon = true comes first
+                    return $group->sortByDesc('play_icon')->first();
+                })
+                ->values();;
 
             // Fetch channels matching the search query
             $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
@@ -450,7 +457,7 @@ class NewChannelApiController extends Controller
             });
 
             // $programs = ($programs->unique('name')->toArray());
-            $data = collect(array_merge($channels->toArray(), $programs->toArray()));
+            $data = collect(array_merge($channels->toArray(), $filteredPrograms->toArray()));
 
             $response = [
                 'success' => true,
