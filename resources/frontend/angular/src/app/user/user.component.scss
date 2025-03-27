@@ -135,7 +135,7 @@ main {
   }
 }
 
-.profileUserMenu2{
+.profileUserMenu2 {
   position: absolute;
   width: 220px;
   height: auto;
@@ -521,7 +521,6 @@ footer .contain:first-child {
     gap: 36px;
     overflow-x: auto;
     &::-webkit-scrollbar {
-      
     }
 
     .card_page {
@@ -620,7 +619,44 @@ footer .contain:first-child {
         }
       }
 
+      // CurrentShowPlaying
+      .isCurrentShowPlaying {
+        position: absolute;
+        background: #000000a3;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        max-width: 160px;
+        gap: 2px;
+      }
 
+      .play-icon {
+        width: 30px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      
+      .play-icon:hover {
+        transform: scale(1.1);
+      }
+      
+      .play-icon::before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 16px solid white; /* Triangle shape */
+      }
     }
 
     &::-webkit-scrollbar {
@@ -628,12 +664,12 @@ footer .contain:first-child {
     }
   }
 
-  .card_page_no_data{
+  .card_page_no_data {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50vh;
-    h2{
+    h2 {
       color: #fff;
     }
   }
@@ -1248,7 +1284,7 @@ footer .contain:first-child {
 }
 
 // =======================================program details end
-.history_ch-play-icon{
+.history_ch-play-icon {
   width: 60px;
   height: 60px;
 }
@@ -1260,106 +1296,104 @@ footer .contain:first-child {
 
 // ===================mobile start ==============
 
+/* Navbar Styles */
+.navbar-container {
+  position: relative;
+}
 
-  /* Navbar Styles */
-  .navbar-container {
-    position: relative;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 3px;
+  background-color: #fac700;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+}
+
+.closeMenuList {
+  color: #ffffff;
+  top: 48px;
+  right: 30px;
+  cursor: pointer;
+  &:hover {
+    background-color: #00000061;
+    color: #fac700;
   }
+}
 
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #333;
-    color: white;
+.navbar-logo {
+  margin-left: 1rem;
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.navbar-right .search-input {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.fullscreen-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10005;
+}
+
+.menu-list {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.menu-list li {
+  margin: 1rem 0;
+}
+
+.menu-list .menu-list-item {
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.1);
   }
+}
 
-  .navbar-left {
-    display: flex;
-    align-items: center;
-  }
-
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-  }
-
-  .hamburger span {
-    width: 22px;
-    height: 3px;
-    background-color: #fac700;
-    margin: 3px 0;
-    transition: all 0.3s ease;
-  }
-
-  .closeMenuList{
-    color: #ffffff;
-    top: 48px;
-    right: 30px;
-    cursor: pointer;
-    &:hover{
-      background-color: #00000061;
-      color: #fac700;
-    }
-  }
-
-  .navbar-logo {
-    margin-left: 1rem;
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-  }
-
-  .navbar-right .search-input {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-  }
-
-  .fullscreen-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10005;
-  }
-
-  .menu-list {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .menu-list li {
-    margin: 1rem 0;
-  }
-
-  .menu-list .menu-list-item {
-    color: white;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: color 0.3s ease;
-    gap: 0.5rem;
-    padding-left: 0.5rem;
-    transition: transform 0.3s ease;
-    &:hover{
-      transform: scale(1.1);
-    }
-  }
-
-  .menu-list .menu-list-item:hover {
-    color: #ddd;
-  }
-
+.menu-list .menu-list-item:hover {
+  color: #ddd;
+}
 
 // ===================mobile end ===============
 
@@ -1372,9 +1406,9 @@ footer .contain:first-child {
 }
 
 @media screen and (min-width: 768px) {
-.isExpandable{
-  visibility: hidden;
-}
+  .isExpandable {
+    visibility: hidden;
+  }
 }
 
 @media screen and (max-width: 450px) {
@@ -1420,20 +1454,19 @@ footer .contain:first-child {
     padding-left: 0rem;
   }
 
-  .hamburger{
+  .hamburger {
     display: flex;
     justify-content: center;
   }
 
-  .schedule_profile{
-  display: flex !important; 
+  .schedule_profile {
+    display: flex !important;
   }
 
-  .profileUserMenu{
+  .profileUserMenu {
     display: flex;
   }
 }
-
 
 // contain
 @media screen and (max-width: 392px) {
