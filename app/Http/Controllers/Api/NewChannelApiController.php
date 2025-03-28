@@ -373,7 +373,7 @@ class NewChannelApiController extends Controller
                 $zipcode = "18344";
             }
             // Fetch programs matching the search query
-            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId')
+            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId', "channels.$type as url")
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%");
             if ($validate == 1) {
@@ -399,7 +399,7 @@ class NewChannelApiController extends Controller
                     $program->roku_image = $program->image;
                     $program->type = 'event';
                     $program->callSign = null;
-                    $program->url = null;
+                    // $program->url = null;
                     // Convert start and end timestamps to Carbon instances
                     $startTime = Carbon::parse($program->start, 'UTC');
                     $endTime = Carbon::parse($program->end, 'UTC');
@@ -418,8 +418,13 @@ class NewChannelApiController extends Controller
                     return $group->sortByDesc('play_icon')->first();
                 })
                 ->values();;
+            // Sorting in ascending order by 'price'
+            $sortedPrograms = $filteredPrograms->sortByDesc('play_icon');
 
+            // Convert back to indexed array (optional)
+            $sortedPrograms = $sortedPrograms->values();
             // Fetch channels matching the search query
+
             $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
@@ -457,7 +462,7 @@ class NewChannelApiController extends Controller
             });
 
             // $programs = ($programs->unique('name')->toArray());
-            $data = collect(array_merge($channels->toArray(), $filteredPrograms->toArray()));
+            $data = collect(array_merge($channels->toArray(), $sortedPrograms->toArray()));
 
             $response = [
                 'success' => true,
