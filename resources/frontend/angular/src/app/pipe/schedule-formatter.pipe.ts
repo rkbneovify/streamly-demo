@@ -36,7 +36,7 @@ export class ScheduleFormatterPipe implements PipeTransform {
       const [hour, minute] = timeStr.time.split(':');
       const date = new Date();
       date.setHours(parseInt(h), parseInt(m));
-      return `${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+      return `${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
     };
 
     const filterAndFormat = (date: string) => {

@@ -400,11 +400,14 @@
                 (mouseenter)=" (i === row.length - 2 || i === row.length - 1) ? expandLastCard(i) : closeExpandedCard()"
                 (click)="closeExpandedCard()">
                 @if (item.type === 'event' && item.play_icon) {
-                  <div class="isCurrentShowPlaying">Now Playing 
-                    <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="12" fill="#FFFFFF" opacity="0.8"/> <!-- Background circle -->
-                      <path d="M9 17V7L17 12L9 17Z" fill="#000000"/> <!-- Play triangle -->
-                    </svg>
+                  <div class="isCurrentShowPlaying">
+                    <div class="gap-1 justify-content-center d-flex align-item-center"  (click)="setplayerData(item.url,item.id)">
+                      Now Playing 
+                      <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="12" fill="#FFFFFF" opacity="0.8"/> <!-- Background circle -->
+                        <path d="M9 17V7L17 12L9 17Z" fill="#000000"/> <!-- Play triangle -->
+                      </svg>
+                    </div>
                   </div>
                 }
                   <img

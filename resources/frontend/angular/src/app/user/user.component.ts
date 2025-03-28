@@ -500,10 +500,17 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   setplayerData(channelUrl: string, playerChannelId?: any) {
     localStorage.setItem('playerId', channelUrl);
     localStorage.setItem('playerChannelId', playerChannelId);
+
+    if(this.searchTerm){
+      this.searchTerm = '';
+    }
+
     this.router.navigateByUrl('/user/playstream');
     this.searchShow = !this.searchShow;
     this.currentProgramDetail = false;
     this.playlist_details_show = false;
+
+
   }
 
   closeSearchData() {
