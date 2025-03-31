@@ -2,39 +2,6 @@
 
     <header class="pb-3">
       <div class="carousel carousel_height">
-        <!-- <div class="controls">
-            <button class="btn">
-              <svg style="rotate: 180deg" width="20" height="36"
-                viewBox="0 0 20 36" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                <path
-                  d="M2 34L18 18L2 2"
-                  stroke="currentColor"
-                  stroke-opacity="0.7"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
-            <button class="btn">
-              <svg
-                width="20"
-                height="36"
-                viewBox="0 0 20 36"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2 34L18 18L2 2"
-                  stroke="currentColor"
-                  stroke-opacity="0.7"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
-          </div> -->
         <div
           id="carouselExampleControls"
           class="carousel slide scroller"
@@ -98,7 +65,13 @@
             your alternative to
             <span class="clr-400">cable!</span>
           </p>
-          <svg
+          @if (isWidth800 > 800) {
+            <img class="svg_width" width="367"
+          height="102" src="../../../assets/dummy-img/logo_slider.png" alt="slider_logo">
+          }
+          
+          @if (isWidth800 <= 800) {
+            <svg
             class="svg_width"
             width="367"
             height="102"
@@ -128,6 +101,8 @@
               />
             </defs>
           </svg>
+          }
+
           <p class="mb-md-3">
             Watch live TV on your IOS or android, Amazon Fire, Roku and
             SmartTV's
