@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -15,6 +15,7 @@ export class SubContentComponent implements OnInit{
   categoryList:any = ['Movies','News','Kids','Comedy','Family','Others'];
   activeCategoryTab = 'Movies';
   @ViewChild('nextBtn') sliderNexrButton!: ElementRef;
+  isWidth800: number = window.innerWidth;
 
 
   constructor(private apiService:CrudService){}
@@ -71,4 +72,10 @@ export class SubContentComponent implements OnInit{
       }
     }
     }
+
+      @HostListener('window:resize', ['$event'])
+      onResize(event: Event): void {
+        this.isWidth800 = window.innerWidth;
+        console.log(this.isWidth800)
+      }
 }

@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxStripeModule, provideNgxStripe } from 'ngx-stripe';
@@ -14,7 +14,7 @@ import { authInterceptor } from './_interceptor/auth.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideRouter(routes),
+    provideRouter(routes,withViewTransitions()),
     provideClientHydration(),
     provideNgxStripe(),
     importProvidersFrom(
