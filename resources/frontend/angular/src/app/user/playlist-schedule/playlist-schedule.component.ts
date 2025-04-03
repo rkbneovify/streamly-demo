@@ -96,48 +96,48 @@ export class PlaylistScheduleComponent
   scheduleHours = [
     '12:00 AM',
     '12:30 AM',
-    '01:00 AM',
-    '01:30 AM',
-    '02:00 AM',
-    '02:30 AM',
-    '03:00 AM',
-    '03:30 AM',
-    '04:00 AM',
-    '04:30 AM',
-    '05:00 AM',
-    '05:30 AM',
-    '06:00 AM',
-    '06:30 AM',
-    '07:00 AM',
-    '07:30 AM',
-    '08:00 AM',
-    '08:30 AM',
-    '09:00 AM',
-    '09:30 AM',
+    '1:00 AM',
+    '1:30 AM',
+    '2:00 AM',
+    '2:30 AM',
+    '3:00 AM',
+    '3:30 AM',
+    '4:00 AM',
+    '4:30 AM',
+    '5:00 AM',
+    '5:30 AM',
+    '6:00 AM',
+    '6:30 AM',
+    '7:00 AM',
+    '7:30 AM',
+    '8:00 AM',
+    '8:30 AM',
+    '9:00 AM',
+    '9:30 AM',
     '10:00 AM',
     '10:30 AM',
     '11:00 AM',
     '11:30 AM',
     '12:00 PM',
     '12:30 PM',
-    '01:00 PM',
-    '01:30 PM',
-    '02:00 PM',
-    '02:30 PM',
-    '03:00 PM',
-    '03:30 PM',
-    '04:00 PM',
-    '04:30 PM',
-    '05:00 PM',
-    '05:30 PM',
-    '06:00 PM',
-    '06:30 PM',
-    '07:00 PM',
-    '07:30 PM',
-    '08:00 PM',
-    '08:30 PM',
-    '09:00 PM',
-    '09:30 PM',
+    '1:00 PM',
+    '1:30 PM',
+    '2:00 PM',
+    '2:30 PM',
+    '3:00 PM',
+    '3:30 PM',
+    '4:00 PM',
+    '4:30 PM',
+    '5:00 PM',
+    '5:30 PM',
+    '6:00 PM',
+    '6:30 PM',
+    '7:00 PM',
+    '7:30 PM',
+    '8:00 PM',
+    '8:30 PM',
+    '9:00 PM',
+    '9:30 PM',
     '10:00 PM',
     '10:30 PM',
     '11:00 PM',
@@ -180,6 +180,7 @@ export class PlaylistScheduleComponent
     });
   }
 
+  // this is not using anywhere nouse
   getTwoDaysSchedule(utcStartTime: number, scheduleHours: string[]): string[] {
     // Convert UTC start time to local time
     const localTime = new Date(utcStartTime * 1000); // Convert seconds to milliseconds
@@ -220,8 +221,11 @@ export class PlaylistScheduleComponent
     let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
       currentMinute < 30 ? 0 : 30
     )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
+
+    closestTime = closestTime.replace(/^0/, '');
+
     this.getClosetTime = closestTime;
-  
+
     const closestIndex = this.scheduleHours.indexOf(closestTime);
   
     if (dayFilter != 'tomorrow') {
@@ -252,12 +256,12 @@ export class PlaylistScheduleComponent
   
     this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
 
-        // Cache the current time slot data
-        this.cacheService.setCurrentTimeSlot({
-          dayFilter,
-          data: this.getCurrentTimeDate,
-          firstIndex: this.getCurrentTimeDataFirstIndex,
-        });
+    // Cache the current time slot data
+    this.cacheService.setCurrentTimeSlot({
+      dayFilter,
+      data: this.getCurrentTimeDate,
+      firstIndex: this.getCurrentTimeDataFirstIndex,
+    });
     this.totalTomNumber= (this.calculateIntervalsRemaining(this.getClosetTime)-1);
   }
 
@@ -340,7 +344,7 @@ export class PlaylistScheduleComponent
       }
     }
 
-    this.utilsService.timeDifferenceInMinutes('02:00 PM')
+    this.utilsService.timeDifferenceInMinutes('2:00 PM')
 
     setInterval(() => {
       this.isTimePassed = false;
@@ -355,7 +359,7 @@ export class PlaylistScheduleComponent
 
     // Format the time to the local timezone
     const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true
     };
@@ -950,9 +954,10 @@ changeCategory(genre?: string){
     this.selected_category = category;
   }
 
+  // nouse
   async generateTimeArray(
     currentTime: string = new Date().toLocaleTimeString('en-US', {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true,
     }),
@@ -970,7 +975,7 @@ changeCategory(genre?: string){
     // Function to format time as "hh:mm AM/PM"
     const formatTime = (date: Date): string => {
       return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
+        hour: 'numeric',
         minute: '2-digit',
         hour12: true,
       });
