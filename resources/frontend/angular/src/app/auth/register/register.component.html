@@ -1404,6 +1404,7 @@
                 type="text"
                 placeholder="Enter State"
                 formControlName="paymentState"
+                (keypress)="allowOnlyStrings($event)"
               />
               <!--validation error -->
               <div
