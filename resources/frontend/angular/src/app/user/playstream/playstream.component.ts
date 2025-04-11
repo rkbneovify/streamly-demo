@@ -68,6 +68,12 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+      // Add before existing code
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem('shouldAutoPlay', 'true');
+  });
+
     if (!this.isIOS()) {
       this.getPlayerData();
     }
@@ -86,9 +92,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     this.videoElement = this.videoPlayer.nativeElement;
-    console.log('vieo eleme', this.videoElement);
     if (this.videoElement) {
-      console.log('=================>', this.videoPlayer.nativeElement);
       this.initializePlayer();
       this.videoElement.addEventListener(
         'error',
@@ -110,6 +114,20 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       menuElement.style.position = 'fixed';
       menuElement.style.top = '120px';
     }
+
+      // Add after video element initialization
+  if (localStorage.getItem('shouldAutoPlay') === 'true') {
+    setTimeout(() => {
+      try {
+        this.showMenu = true;
+        this.videoElement.play();
+        console.log(this.videoElement.play());
+        localStorage.removeItem('shouldAutoPlay');
+      } catch (err) {
+        console.error('Refresh autoplay failed:', err);
+      }
+    }, 1000);
+  }
   }
 
   private handleVideoError(event: Event) {
@@ -432,6 +450,16 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         if (response.error) {
           console.log('erro', response.error);
         }
+
+              // Add play() after initialization
+      setTimeout(() => {
+        try {
+          this.videoPlayer.nativeElement.play();
+        } catch (err) {
+          console.error('Dash autoplay failed:', err);
+        }
+      }, 1000);
+
       });
   }
 

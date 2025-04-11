@@ -382,13 +382,6 @@
             font-size: 14px;
           }
         }
-
-      //   &:first-child .schedule_time:hover{
-          
-      //     .program_ep{
-      //       display: none;
-      //     }
-      // }
       }
     }
   }
@@ -705,6 +698,22 @@
 .hover-active:hover .program_time{
   // display: none !important;
   visibility: hidden;
+}
+
+.display_flex{
+  display: flex;
+}
+
+.display_none{
+  display: none;
+}
+
+.visibility_hidden{
+  visibility: hidden;
+}
+
+.opacity_full{
+  opacity: 1  !important;
 }
 
 
