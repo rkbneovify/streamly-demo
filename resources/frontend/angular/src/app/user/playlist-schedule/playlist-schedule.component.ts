@@ -146,6 +146,12 @@ export class PlaylistScheduleComponent
   dayfilter: string = 'today';
   categories: any;
   isTimePassed:boolean = true;
+
+  // show_icon play button
+  isPlayButtonVisible = false;
+  programTMSID:string = '';
+  channelID:string = '';
+
   // get category list
   getAllCategories() {
     this.isLoading = true;
@@ -292,6 +298,11 @@ export class PlaylistScheduleComponent
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
     if(this.previousRoute !== "/user/playstream"){
       this.cacheService.clearCache();
+      localStorage.removeItem("programTMSID");
+      localStorage.removeItem("showPlayerIcon");
+    }else{
+      this.programTMSID = localStorage.getItem('programTMSID');
+      this.channelID = localStorage.getItem("showPlayerIcon");
     }
     // Check for cached data
     const cachedCategories = this.cacheService.getCategories();
@@ -729,7 +740,8 @@ changeCategory(genre?: string){
     tmsId?: string,
     index?: any,
     channelId?: string,
-    channelUrl?: string
+    channelUrl?: string,
+    programTMSID?:string
   ) {
     this.isLoading = true;
     if (index == 0 && this.selectedDay == 'Today') {
@@ -748,6 +760,7 @@ changeCategory(genre?: string){
         if (!!res?.data) {
           this.showPlaylist();
           this.programDetailData = res.data;
+          this.programTMSID =programTMSID; 
         } else {
           
           this.toaster.error('No Program details found.');
@@ -773,8 +786,17 @@ changeCategory(genre?: string){
 
 
 
-  setChannelId(id: string, url: string) {
+  setChannelId(id: string, url: string,ischannel:boolean = true) {
     localStorage.setItem('playerChannelId', id);
+    // localStorage.setItem('programTMSID', programTMSID);
+    if(ischannel){
+      localStorage.removeItem('programTMSID');
+      localStorage.setItem('showPlayerIcon', id);
+    }else{
+      localStorage.setItem('programTMSID',this.programTMSID);
+      localStorage.removeItem('showPlayerIcon');
+    }
+    localStorage.setItem('programTMSID', this.programTMSID);
     localStorage.setItem('playerId', url);
     this.router.navigateByUrl('user/playstream', {
       state: { channelId: id, playerUrl: url },

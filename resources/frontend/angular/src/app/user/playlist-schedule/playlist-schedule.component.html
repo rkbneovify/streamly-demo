@@ -56,7 +56,7 @@
         <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
           <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
             <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
-            <div class="history_ch-play-icon">
+            <div class="history_ch-play-icon" [class.opacity_full]="channelID == channel.id">
               <img loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
             </div>
           </div>
@@ -97,21 +97,23 @@
         </div>
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
-            <div 
+            <div
+
             [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
             class="schedule_time"
             *ngFor="let program of data.program; let index = index"  
             [ngClass]="{'hover-active position-relative': index == 0 && this.selectedDay == 'Today','px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
-            (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url)"
+            (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url,program?.TMSId )"
             >
-            <div class="position-absolute play-icon-container" [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width}"
+            <div class="position-absolute play-icon-container" [class.display_flex]="index == 0 && programTMSID === program.TMSId" [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width}"
             *ngIf="index == 0">
               <img class="play-icon-img mt-auto" style="width: 45px;" loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
             </div>
                 <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
-                <p class="program_time my-2 overflow-hidden">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
+                <p class="program_time my-2 overflow-hidden" [class.visibility_hidden]="index == 0 && programTMSID === program.TMSId">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
                 <div
                   class="program_ep d-flex justify-content-between align-items-center"
+                  [class.visibility_hidden]="index == 0 && programTMSID === program.TMSId"
                 >
                   <p class="">{{program?.TMSId | extractFirstTwo}}</p>
                   <p class="overflow-hidden">{{program?.start | durationFormat:program?.end}}</p>
@@ -136,7 +138,7 @@
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
-        <div (click)="setChannelId(programChannelId,programChannelUrl)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
+        <div (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
         </div>
