@@ -138,7 +138,7 @@
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
-        <div (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
+        <div [@scaleAnimation] (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
         </div>
