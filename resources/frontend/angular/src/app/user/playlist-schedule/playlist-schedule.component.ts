@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
@@ -65,6 +65,16 @@ declare let window: Window;
         animate('300ms ease-in', style({ transform: 'translateX(100%)' })),
       ]),
     ]),
+
+    trigger('scaleAnimation', [
+      state('start', style({ transform: 'scale(1)' })),
+      state('scaled', style({ transform: 'scale(1)' })),
+      transition('void => *', [
+        style({ transform: 'scale(0)' }),
+        animate('300ms ease-out', style({ transform: 'scale(1.2)' })),
+        animate('300ms ease-in', style({ transform: 'scale(1)' }))
+      ])
+    ])
   ],
 })
 export class PlaylistScheduleComponent
@@ -160,7 +170,6 @@ export class PlaylistScheduleComponent
         this.categories = res.data;
         // this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
         // this.categories.push({name:'Others',image:''})
-
         // Add 'All' category at the beginning if it doesn't already exist
         const allCategory = {
           name: 'All',
@@ -301,7 +310,7 @@ export class PlaylistScheduleComponent
       localStorage.removeItem("programTMSID");
       localStorage.removeItem("showPlayerIcon");
     }else{
-      this.programTMSID = localStorage.getItem('programTMSID');
+      this.programTMSID = localStorage.getItem('programTMSID') || '';
       this.channelID = localStorage.getItem("showPlayerIcon");
     }
     // Check for cached data
@@ -760,7 +769,7 @@ changeCategory(genre?: string){
         if (!!res?.data) {
           this.showPlaylist();
           this.programDetailData = res.data;
-          this.programTMSID =programTMSID; 
+          this.programTMSID = programTMSID; 
         } else {
           
           this.toaster.error('No Program details found.');
@@ -791,6 +800,7 @@ changeCategory(genre?: string){
     // localStorage.setItem('programTMSID', programTMSID);
     if(ischannel){
       localStorage.removeItem('programTMSID');
+      this.programTMSID = '';
       localStorage.setItem('showPlayerIcon', id);
     }else{
       localStorage.setItem('programTMSID',this.programTMSID);
