@@ -733,12 +733,30 @@
 }
 
 .playstream_Play_icon{
-  width: 40px;
   align-items: center;
   cursor: pointer;
-  img{
-    object-fit: contain;
-    width: 40px;
+  height: 100%;
+  top: 0;
+  width: 100%;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.523);
+  div{
+    max-width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 43px;
+    img{
+      object-fit: contain;
+      width: 40px;
+    }
+  }
+}
+
+.play-icon-hover{
+  transition: transform 200ms ease-in-out;
+  &:hover{
+    transform: scale(1.2);
   }
 }
 
