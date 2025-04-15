@@ -129,27 +129,33 @@
             </div>
       </div>
     </div>
+
+    <!-- program details page -->
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
       <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
         <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
-      <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
-      
+        <!-- <p class="no-img" *ngIf="!programDetailData.image">No Image</p> -->
+
+        <div (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon position-absolute" *ngIf="programPlayable">
+          <div class="play-icon-hover" [@scaleAnimation]>
+            <img class="" src="../../../assets/dummy-img/play-circle.png">
+            <p>Play</p>
+          </div>
+        </div>
+
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
-        <div [@scaleAnimation] (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
-          <img class="" src="../../../assets/dummy-img/play-circle.png">
-          <p>Play</p>
-        </div>
+        <h1 title="Program Name">{{programDetailData?.title}}</h1>
+        <p title="Channel Name" class="my-1 playstream_title">{{programDetailData?.stationName}}</p>
         <div class="play_btn_container_1 mt-2 flex-wrap">
           <button class="playbtn_time text-nowrap">{{programDetailData.duration | durationISOFormat}}</button>
-          <button class="playbtn_hd">
+          <button class="playbtn_hd" *ngIf="programDetailData?.quals">
             <img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt="" />
             <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
-        <p class="my-1 playstream_title">{{programDetailData?.title | truncate:20}}</p>
+        
         <p class="playstream_desc my-2">
           {{programDetailData?.description}}
         </p>
@@ -159,30 +165,7 @@
             <span class="text-nowrap">Genre :</span
             ><span class="text-nowrap pe-1" *ngFor="let genre of programDetailData?.genre">{{genre}}</span>
           </button>
-          <!-- <button class="plan_btn playbtn_aired mt-3">
-            <span class="text-nowrap">Aired :</span
-            ><span class="text-nowrap">Starts in 15 mins</span>
-          </button> 
-          -->
         </div>
-        <!-- <div class="playstream_onNow_container">
-                <div>
-                    <h2 class="play_stream_now">On Now</h2>
-                    <p class="mt-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-    
-                <div class="playstream_bottom_child mt-3">
-                    <h2>Up Next</h2>
-                    <div class="playstream_liveTime d-flex align-items-baseline gap-3 mt-3">
-                        <div class="text-nowrap">
-                            1:00 PM
-                        </div>
-                        <div class="taj">
-                            Dorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </div>
-                    </div>
-                </div>
-            </div> -->
       </div>
       <div class="col-4 schedule_details_section3">
         <div class="schedule_details_data d-flex align-items-center gap-2">
