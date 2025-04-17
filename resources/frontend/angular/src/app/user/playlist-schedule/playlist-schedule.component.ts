@@ -770,6 +770,7 @@ changeCategory(genre?: string){
           this.showPlaylist();
           this.programDetailData = res.data;
           this.programTMSID = programTMSID; 
+          this.channelID ='';
         } else {
           
           this.toaster.error('No Program details found.');
