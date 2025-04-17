@@ -140,14 +140,14 @@
         <div (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon position-absolute" *ngIf="programPlayable">
           <div class="play-icon-hover" [@scaleAnimation]>
             <img class="" src="../../../assets/dummy-img/play-circle.png">
-            <p>Play</p>
+            <!-- <p>Play</p> -->
           </div>
         </div>
 
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1 title="Program Name">{{programDetailData?.title}}</h1>
-        <p title="Channel Name" class="my-1 playstream_title">{{programDetailData?.stationName}}</p>
+        <h1 title="Program Name">{{programDetailData?.stationName}}</h1>
+        <p title="Channel Name" class="my-1 playstream_title">{{programDetailData?.title}} </p>
         <div class="play_btn_container_1 mt-2 flex-wrap">
           <button class="playbtn_time text-nowrap">{{programDetailData.duration | durationISOFormat}}</button>
           <button class="playbtn_hd" *ngIf="programDetailData?.quals">
