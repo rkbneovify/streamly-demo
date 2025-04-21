@@ -714,6 +714,21 @@ changeCategory(genre?: string){
   
     return { width, margin_left };
   }
+
+  isCurrentTimeBetween(startTime: number, endTime: number): boolean {
+    // Convert Unix timestamps (seconds) to milliseconds
+    const startDate = new Date(startTime * 1000);
+    const endDate = new Date(endTime * 1000);
+    const currentDate = new Date();
+
+    // Debug logs (optional)
+    // console.log('Start Time (Local):', startDate);
+    // console.log('End Time (Local):', endDate);
+    // console.log('Current Time (Local):', currentDate);
+
+    // Check if current time is between start and end times
+    return currentDate >= startDate && currentDate <= endDate;
+  }
   
 
   getDateTimeWithProvidedTime(timeStr: string) {
@@ -750,10 +765,12 @@ changeCategory(genre?: string){
     index?: any,
     channelId?: string,
     channelUrl?: string,
-    programTMSID?:string
+    programTMSID?:string,
+    start?:number,
+    end?:number
   ) {
     this.isLoading = true;
-    if (index == 0 && this.selectedDay == 'Today') {
+    if (this.isCurrentTimeBetween(start,end) && this.selectedDay == 'Today') {
       this.programPlayable = true;
       this.programChannelId = channelId;
       this.programChannelUrl = channelUrl;
