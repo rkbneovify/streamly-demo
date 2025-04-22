@@ -70,9 +70,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
       // Add before existing code
-  window.addEventListener('beforeunload', () => {
-    localStorage.setItem('shouldAutoPlay', 'true');
-  });
+  // window.addEventListener('beforeunload', () => {
+  //   localStorage.setItem('shouldAutoPlay', 'true');
+  // });
 
     if (!this.isIOS()) {
       this.getPlayerData();
@@ -116,18 +116,18 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
 
       // Add after video element initialization
-  if (localStorage.getItem('shouldAutoPlay') === 'true') {
-    setTimeout(() => {
-      try {
-        this.showMenu = true;
-        this.videoElement.play();
-        console.log(this.videoElement.play());
-        localStorage.removeItem('shouldAutoPlay');
-      } catch (err) {
-        console.error('Refresh autoplay failed:', err);
-      }
-    }, 1000);
-  }
+  // if (localStorage.getItem('shouldAutoPlay') === 'true') {
+  //   setTimeout(() => {
+  //     try {
+  //       // this.showMenu = true;
+  //       // this.videoElement.;
+  //       // console.log(this.videoElement.play);
+  //       localStorage.removeItem('shouldAutoPlay');
+  //     } catch (err) {
+  //       console.error('Refresh autoplay failed:', err);
+  //     }
+  //   }, 1000);
+  // }
   }
 
   private handleVideoError(event: Event) {
