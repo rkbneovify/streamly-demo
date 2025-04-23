@@ -32,6 +32,7 @@ class ChannelSliderApiController extends Controller
 
         $channel_slides = ChannelSlider::Join('channels', 'channel_slider.channel_id', '=', 'channels.id')
             ->select('channel_slider.channel_id', 'channel_slider.program_name', 'channel_slider.description', 'channel_slider.status', 'channel_slider.image', 'channel_slider.optimised_image', 'channel_slider.background_image', 'channels.name as channel_name', 'channels.callSign', 'channels.stationName', 'channels.url', 'channels.dash_url', 'channels.smooth_url', 'channels.zip_code')
+            ->where('channel_slider.status', 'active')
             ->get()
             ->map(function ($slide) {
                 $slide->image = env('APP_URL') . $slide->image;
@@ -56,6 +57,7 @@ class ChannelSliderApiController extends Controller
 
         $channel_slides = ChannelSlider::Join('channels', 'channel_slider.channel_id', '=', 'channels.id')
             ->select('channel_slider.channel_id', 'channel_slider.program_name', 'channel_slider.description', 'channel_slider.status', 'channel_slider.image', 'channel_slider.background_image', 'channels.name as channel_name', 'channels.callSign', 'channels.stationName', 'channels.url', 'channels.dash_url', 'channels.smooth_url', 'channels.zip_code')
+            ->where('channel_slider.status', 'active')
             ->get()
             ->map(function ($slide) {
                 $slide->image = env('APP_URL') . $slide->image;
