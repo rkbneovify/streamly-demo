@@ -168,9 +168,6 @@ export class PlaylistScheduleComponent
     this.apiService.getRequest('auth/all-genre').subscribe({
       next: (res: any) => {
         this.categories = res.data;
-        // this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
-        // this.categories.push({name:'Others',image:''})
-        // Add 'All' category at the beginning if it doesn't already exist
         const allCategory = {
           name: 'All',
           image: '../../../assets/dummy-img/All.svg',
@@ -469,6 +466,7 @@ export class PlaylistScheduleComponent
   
   // Extracted Method: Handle scrolling logic
   private handleScroll(position: number,isNextValue?:boolean) {
+    console.log("position => ",position);
     this.changeColorBackgroung = true;
     this.toggleLeftArrow = true;
     this.go_Live = true;
@@ -477,6 +475,8 @@ export class PlaylistScheduleComponent
   
     this.scrollableContent.nativeElement.scrollLeft += position;
     this.scrollableContent1.nativeElement.scrollLeft += position;
+    console.log("scrollLeft => ",this.scrollableContent.nativeElement.scrollLeft);
+    console.log("scrollLeft1 => ",this.scrollableContent1.nativeElement.scrollLeft);
     this.updateCount(position,isNextValue);
   }
   
@@ -491,21 +491,10 @@ export class PlaylistScheduleComponent
   
   // Extracted Method: Handle isNextDay & UI updates
   private updateDayState(isNextValue:boolean = false) {
-    // alert(`2nd = ${this.count}`);
-    // this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
     if(isNextValue){
       this.count = this.totalScroll;
     }
     this.isNextDay = isNextValue ? isNextValue : this.count > this.totalTomNumber;
-    // console.log(
-    // "this.isNextDay => ",this.isNextDay,
-    // this.checkIfNextDay(this.getCurrentTimeDate[this.count]),
-    // this.selectedDay == 'Tomorrow' ,
-    // "this.totalTomNumber < this.count " ,this.totalTomNumber < this.count ,
-    // this.totalTomNumber 
-    // , "this.count ", this.count,
-    // this.getCurrentTimeDate[this.count]);
-
     if (this.isNextDay) {
       this.changeDays('Tomorrow');
     }else{
@@ -536,9 +525,6 @@ export class PlaylistScheduleComponent
       this.isProcessing = false;
     }, 500);
   }
-  
-  
-  
 
   private resetScroll() {
     if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
@@ -552,8 +538,6 @@ export class PlaylistScheduleComponent
     this.isNextDay = false;
   }
 
-
-  // getScheduleProgram: any;
   // getAllScheduleData:any;
   getScheduleChannelLogo: any = [];
   // filterProgram
@@ -599,7 +583,6 @@ getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
   });
 }
 
-
 changeCategory(genre?: string){
   this.cacheService.clearCache();
   this.getScheduleData(genre);
@@ -607,8 +590,6 @@ changeCategory(genre?: string){
   this.changeDays("Today");
   this.scrollContent(0);
 }
-
-
 
   // Listen to scroll event
   onScroll() {
@@ -639,8 +620,6 @@ changeCategory(genre?: string){
         url: station.url,
       }));
   }
-
-
 
   setLiveMinWith() {
     const currentTimeIndex = this.getDateTimeWithProvidedTime(
@@ -721,11 +700,6 @@ changeCategory(genre?: string){
     const endDate = new Date(endTime * 1000);
     const currentDate = new Date();
 
-    // Debug logs (optional)
-    // console.log('Start Time (Local):', startDate);
-    // console.log('End Time (Local):', endDate);
-    // console.log('Current Time (Local):', currentDate);
-
     // Check if current time is between start and end times
     return currentDate >= startDate && currentDate <= endDate;
   }
@@ -752,8 +726,6 @@ changeCategory(genre?: string){
     currentDate.setHours(hours, minutes, 0, 0);
     return currentDate;
   }
-
-
 
   programDetailData: any;
   programPlayable: boolean = false;
@@ -811,11 +783,8 @@ changeCategory(genre?: string){
     this.tabInactivityService.resetTimer();
   }
 
-
-
   setChannelId(id: string, url: string,ischannel:boolean = true) {
     localStorage.setItem('playerChannelId', id);
-    // localStorage.setItem('programTMSID', programTMSID);
     if(ischannel){
       localStorage.removeItem('programTMSID');
       this.programTMSID = '';
@@ -864,19 +833,16 @@ changeCategory(genre?: string){
       } else {
 
         if(!this.isNextDay){
-
           if(this.count != 0){
             this.isNextDay = true;
             this.scrollContent((this.totalScroll - this.count)  * 150 ,true);
           }
-  
           if(this.count == 0){          
             this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
             this.isNextDay = true;
             this.scrollContent(this.totalScroll * 150 )
           }
         }
-
       }
     }
   }
@@ -943,24 +909,6 @@ changeCategory(genre?: string){
   }
 
   favListData: any;
-  // Fetch favorite list
-  // getFavoriteList(): void {
-  //   this.isLoading = true;
-  //   const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
-  //   if (storedFavoriteChannels) {
-  //     this.favoriteChannels = JSON.parse(storedFavoriteChannels);
-  //   } else {
-  //     // Fetch from API if not found in local storage
-  //     this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
-  //       if (res.response_code === 200) {
-  //         // this.favListData = res;
-  //         this.favoriteChannels = res.data.map((channel: any) => channel.id);
-  //         this.updateFavoriteChannels(); // Update local storage
-  //       }
-  //       this.isLoading = false;
-  //     });
-  //   }
-  // }
   getFavoriteList(): void {
     this.isLoading = true;
 
@@ -988,7 +936,6 @@ changeCategory(genre?: string){
       }
     }
   }
-
 
   // Update local storage with current favorite channels
   updateFavoriteChannels(): void {
@@ -1070,11 +1017,9 @@ changeCategory(genre?: string){
     if (providedDate.getTime() <= currentDate.getTime() && this.totalTomNumber <= this.count) {
       return true; // It is considered as the next day
     }
-  
     // Otherwise, it is the same day
     return false;
   }
-  
 
   calculateIntervalsRemaining(currentTime: string): number {
     // Parse the input time
