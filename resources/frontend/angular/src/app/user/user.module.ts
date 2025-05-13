@@ -70,6 +70,7 @@ const routes: Routes = [
   imports: [
     CommonModule, 
     RouterModule.forChild(routes),
+    PlaystreamComponent
   ]
 })
 export class UserModule { }
