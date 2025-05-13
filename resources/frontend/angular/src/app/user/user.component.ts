@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  effect,
   HostListener,
   NgModule,
   OnDestroy,
@@ -34,6 +35,8 @@ import { FormsModule } from '@angular/forms';
 import { ScreenSizeService } from '../services/screenSize/screen-size.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { environment } from '../../environments/environment';
+import { PlaystreamComponent } from './playstream/playstream.component';
+import { SharedStateService } from '../services/globalState/global-state.service';
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -48,6 +51,7 @@ import { environment } from '../../environments/environment';
     SearchComponent,
     DurationISOFormatPipe,
     TruncatePipe,
+    PlaystreamComponent,
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
@@ -82,6 +86,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   navOpen: boolean = false;
   setActivePlanId!: string;
   expandedCardIndex: number | null = null;
+  isMiniPlayer:boolean = null;
   zipcode: any;
   dash_board_link: string = environment.baseUrl;
 
@@ -92,7 +97,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private ts: ToastrService,
     private viewportScroller: ViewportScroller,
     private screenSizeService: ScreenSizeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sharedStateService: SharedStateService,
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -103,6 +109,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isAdmin = JSON.parse(
       localStorage.getItem('userDetails')
     ).roles[0].name;
+
+    console.log('shre1 ==>',this.sharedStateService.isMiniPlayer());
+    effect(()=>{
+      this.isMiniPlayer = this.sharedStateService.isMiniPlayer();
+      console.log('shre ==>',this.sharedStateService.isMiniPlayer());
+    })
   }
 
   checkIsAdmin(): string {

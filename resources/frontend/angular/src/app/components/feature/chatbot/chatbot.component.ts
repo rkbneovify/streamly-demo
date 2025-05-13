@@ -2,11 +2,12 @@ import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@ang
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CrudService } from '../../../services/crud.service';
 
 interface ChatMessage {
   type: string;
   text: string;
-  isHtml?: boolean; // Add flag for HTML content
+  isHtml?: boolean;
   attachment?: any;
   additionalParameters?: any[];
   actions?: ChatAction[];
@@ -41,7 +42,7 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
   userId:string = null;
   showTextBubble = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private apiService:CrudService) {}
 
   ngOnInit(): void {
     this.userId = this.generateUserId();
@@ -82,12 +83,9 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
       attachment: null,
       interactive
     };
-
-    const headers = new HttpHeaders({ 'Accept': 'application/json' });
-
-    this.http.post<{ status: number; messages: ChatMessage[] }>('https://staging.streamlytv.com/api/botman', payload, { headers })
+    this.apiService.postRequest('botman', payload)
       .subscribe({
-        next: response => {
+        next: (response:any) => {
           // Remove loading message
           if (this.loadingMessageIndex !== null) {
             this.messages.splice(this.loadingMessageIndex, 1);
