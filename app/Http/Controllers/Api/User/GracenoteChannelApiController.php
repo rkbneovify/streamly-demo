@@ -37,10 +37,10 @@ class GracenoteChannelApiController extends Controller
                 $validate = 2;
                 $zipcode = "18344";
             } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "75662";
             } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "85215";
             }
             $imagePath = url("/uploads/channellogo/");
@@ -170,10 +170,10 @@ class GracenoteChannelApiController extends Controller
                 $validate = 2;
                 $zipcode = "18344";
             } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "75662";
             } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "85215";
             }
             $imagePath = url("/uploads/channellogo/");
