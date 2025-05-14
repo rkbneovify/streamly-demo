@@ -63,15 +63,6 @@
       }
     }
   }
-  // .schedule_time_programs_counter_timer{
-  //   height: 100%;
-  //   width: 150px;
-  //   background: #FFFFFF0D;
-  //   border-right: 2px solid #004480;
-  //   height: 451px;
-  //   position: fixed;
-  //   left: 280px;
-  // }
   .schedule_time_container {
     display: flex;
     background-color: #ffffff2e;
@@ -84,8 +75,6 @@
       padding-top: 8px;
       height: 40px;
       will-change: box-shadow, transform;
-      // box-shadow: 0px 2px 4px rgba(45, 35, 66, 0.4), 0px 7px 13px -3px rgba(45, 35, 66, 0.3);
-      /* height: 48px; */
       font-size: 18px;
       transition: box-shadow 0.15s ease, transform 0.15s ease;
       &:hover {
@@ -182,8 +171,6 @@
 
         height: 40px;
         will-change: box-shadow, transform;
-        // box-shadow: 0px 2px 4px rgba(45, 35, 66, 0.4), 0px 7px 13px -3px rgba(45, 35, 66, 0.3);
-        /* height: 48px; */
         font-size: 18px;
         transition: box-shadow 0.15s ease, transform 0.15s ease;
         &:hover {
@@ -197,26 +184,6 @@
     }
   }
 }
-
-
-// display: inline-block;
-// outline: 0;
-// border: 0;
-// cursor: pointer;
-// font-weight: 600;
-// color: rgb(72, 76, 122);
-// font-size: 14px;
-// height: 38px;
-// padding: 8px 24px;
-// border-radius: 50px;
-// background-image: linear-gradient(180deg,#fff,#f5f5fa);
-// box-shadow: 0 4px 11px 0 rgb(37 44 97 / 15%), 0 1px 3px 0 rgb(93 100 148 / 20%);
-// transition: all .2s ease-out;
-// :hover{
-//     box-shadow: 0 8px 22px 0 rgb(37 44 97 / 15%), 0 4px 6px 0 rgb(93 100 148 / 20%);
-// }
-
-
 .active_categories{
   border-bottom: 2px solid #ffffff;
 }
@@ -329,23 +296,13 @@
       background: #FFFFFF0D;
       border-right: 2px solid #004480;
     }
-
     
     .schedule_time_programs_container {
       margin-left: 168px;
-        // #004480 background
-  // #FFFFFF0D border
       .schedule_time_programs {
-        // flex: 1;
-        // display: grid;
-        // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        // overflow-x: auto;
-        // grid-auto-flow: column;
         cursor: pointer;
         height: 100px;
         border-bottom: 1px solid #ffffff1a;
-        // overflow: hidden;
-        // padding: 0 2px;
         white-space: nowrap;
         .child:not(:first-child){
           border-top: 1px solid #ffffff1a;
@@ -355,7 +312,6 @@
           padding: 12px 11px 12px 11px;
           height: 100px;
           border: 1px solid #ffffff1a;
-          // overflow-x: auto;
           &::-webkit-scrollbar{
             height: 0;
             width: 0;
@@ -661,14 +617,9 @@
   }
 }
 
-
-// .schedule_time_programs:first-of-type .schedule_time:first-of-type:hover .program_ep {
-//   display: none;
-// }
-
 .hover-active:hover {
-          display: none;
-        }
+  display: none;
+}
 
 .play-icon-container{
   display: none;

@@ -2,6 +2,7 @@ import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   HostListener,
   OnDestroy,
@@ -14,6 +15,9 @@ import * as dashjs from 'dashjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
+import { RouteChangeService } from '../../services/routeChange/route-change.service';
+import { SharedStateService } from '../../services/globalState/global-state.service';
+
 
 @Component({
   selector: 'app-playstream',
@@ -52,8 +56,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   constructor(
     private crud: CrudService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private routeChangeService: RouteChangeService,
+    private sharedStateService: SharedStateService
   ) {
+    effect(()=>{
+      this.isMiniPlayer = this.sharedStateService.isMiniPlayer();
+      console.log('isMiniPlayer',this.isMiniPlayer);
+    })
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
     if (this.playerChannelId) {
@@ -65,20 +75,33 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         this.ngOnDestroy();
       }
     });
+      // Subscribe to route changes
+  this.routerSubscription = this.router.events.subscribe((event) => {
+    if (event instanceof NavigationEnd) {
+      const currentUrl = event.urlAfterRedirects;
+      console.log('NavigationEnd - current URL:', currentUrl);
+
+      const isVideoRoute = currentUrl === '/user/playstream';
+      const isMiniPlayerLoc = JSON.parse(localStorage.getItem('isMiniPlayer'));
+      console.log('isVideoRoute', isVideoRoute, currentUrl);
+      console.log('isMiniPlayerLoc', isMiniPlayerLoc);
+
+      if (isVideoRoute && isMiniPlayerLoc) {
+        this.sharedStateService.updateMiniPlayer(false);
+      }
+
+      this.ngOnDestroy();
+    }
+  });
   }
 
   ngOnInit() {
-
-      // Add before existing code
-  // window.addEventListener('beforeunload', () => {
-  //   localStorage.setItem('shouldAutoPlay', 'true');
-  // });
-
     if (!this.isIOS()) {
       this.getPlayerData();
     }
     this.setUpControlVisibility(); // Set up control visibility behavior
     this.getAllChannels();
+
     this.videoPlayer.nativeElement.addEventListener('play', () => {
       if (!this.videoPlayer.nativeElement.paused) {
         this.showMenu = false;
@@ -86,8 +109,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         console.log('Not playing');
       }
     });
-
-    // this.totalchannels = localStorage.getItem('').
+    console.log('this.isMiniPlayer ++++++>',this.isMiniPlayer);
   }
 
   ngAfterViewInit() {
@@ -98,7 +120,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         'error',
         this.handleVideoError.bind(this)
       );
-      console.log('start');
     }
 
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
@@ -106,7 +127,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
     if (document.fullscreenElement) {
       const menuElement = this.menuList.nativeElement;
-
       // Example styles
       menuElement.style.backgroundColor = '#3498db';
       menuElement.style.color = 'white';
@@ -114,20 +134,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       menuElement.style.position = 'fixed';
       menuElement.style.top = '120px';
     }
-
-      // Add after video element initialization
-  // if (localStorage.getItem('shouldAutoPlay') === 'true') {
-  //   setTimeout(() => {
-  //     try {
-  //       // this.showMenu = true;
-  //       // this.videoElement.;
-  //       // console.log(this.videoElement.play);
-  //       localStorage.removeItem('shouldAutoPlay');
-  //     } catch (err) {
-  //       console.error('Refresh autoplay failed:', err);
-  //     }
-  //   }, 1000);
-  // }
   }
 
   private handleVideoError(event: Event) {
@@ -177,6 +183,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  
 
   // Listen for fullscreen changes
   @HostListener('document:fullscreenchange')
@@ -232,14 +240,11 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   private licenseUrl = 'https://fairplay.keyos.com/api/v4/getLicense';
   private playbackUrl =
     'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8';
-  // private customData = 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTA1IDA4OjM5OjEwLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDYgMDg6Mzk6MTAuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZGY5MDJmOWE1YzNjMTI5ZGRiZWJmMzA0MDM0MzYwMDU8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+cXdCd2lMVE1GNitBTUpLVUQ2YTVQYXpyeVJjN1lnTllsYVFNT1hORVVyUzlDaWI4OTlGUlVGVGl1bFNRalUyTXlVY3JpWGZaN1Fkd3JzKzF2czFHR2pCc0UxeVh2SXZYMERuK21ackFwSThxWHpzZkpKTUdzNU9GODN4MHRJdUx6Y0tsMWg3RXNZWXF5MVo5YmFwS1g2dnFHYWpXSFJ2dWJ2OGV2Sy9mOFFtQlVlQ0lFKzFNWW5mQjFwcGpxNGNZaGNuY3JSRTV6a0ZWRlFUN1Vjbm1lQ3JBUmtCTHBFaEFON0RheFpkYXJlVGFPUHdnUm5ITmNsSnh2clNwcVNXVHppOE50d0RUeUF4QjNneTIvU3JMWk9TU0J6ZHhNNGwrRDl5dVIxdVVtK3dHZlhKSjBISzlNVkNVTjFpYjVVaDU3TjJDblBMV3gzM21mcktkQSs2V2NRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=='
-
   private initializePlayertesr() {
-    // Fetch DRM Key and Video Source in parallel
     Promise.all([this.getDRMKeys().toPromise(), this.getPlayerData()])
       .then(([drmKeyRes, playerDataRes]) => {
-        const authKey: any = drmKeyRes.data; // Ensure this matches your API response
-        const videoSrc: any = playerDataRes.data.channel.url; // Ensure this matches your API response
+        const authKey: any = drmKeyRes.data;
+        const videoSrc: any = playerDataRes.data.channel.url; 
         console.log(authKey, videoSrc);
         this.startVideo(authKey, videoSrc);
       })
@@ -273,6 +278,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     );
     this.videoElement.addEventListener('error', (e) => {
       console.error('Video error:', e);
+      this.sharedStateService.updateMiniPlayer(false);
       alert(
         'Due to some technical reasons, the channel gets interrupted. Kindly try again later.'
       );
@@ -664,6 +670,39 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
   }
 
+  isPlaying = false;
+  volume = 1;
+  isFullscreen = false;
+
+  togglePlayPause() {
+    const video = this.videoPlayer.nativeElement;
+    if (video.paused) {
+      video.play();
+      this.isPlaying = true;
+    } else {
+      video.pause();
+      this.isPlaying = false;
+    }
+  }
+
+  setVolume(event: Event) {
+    const volume = (event.target as HTMLInputElement).value;
+    this.videoPlayer.nativeElement.volume = parseFloat(volume);
+    this.volume = parseFloat(volume);
+  }
+
+  toggleFullScreen0() {
+    const videoContainer = this.videoPlayer.nativeElement.parentElement!;
+    if (!document.fullscreenElement) {
+      videoContainer.requestFullscreen();
+      this.isFullscreen = true;
+    } else {
+      document.exitFullscreen();
+      this.isFullscreen = false;
+    }
+  }
+  
+
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
     console.log('channel change');
@@ -876,5 +915,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         this.isLoading = true;
       },
     });
+  }
+
+  closeMiniplayer(){
+    this.sharedStateService.updateMiniPlayer(false);
+    this.ngOnDestroy();
   }
 }
