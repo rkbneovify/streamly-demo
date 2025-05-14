@@ -230,6 +230,12 @@ class NewChannelApiController extends Controller
             if ($user->email == "streamlymtairy@gmail.com") {
                 $validate = 2;
                 $zipcode = "18344";
+            } elseif ($user->email == "willis@cybrsecsolutions.com") {
+                $validate = 2;
+                $zipcode = "75662";
+            } elseif ($user->email == "streamlytestbox@gmail.com") {
+                $validate = 2;
+                $zipcode = "85215";
             }
 
             if ($urlType == 'manifest') {
@@ -267,7 +273,7 @@ class NewChannelApiController extends Controller
                 $query->whereNull('genre.name');
             }
             $query->groupBy('channels.id');
-            if ($user->email == "streamlymtairy@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "willis@cybrsecsolutions.com" || $user->email == "streamlytestbox@gmail.com") {
                 $query->orderBy('channels.id', 'desc');
             } else {
                 $query->orderBy('channels.id', 'asc');
@@ -371,6 +377,12 @@ class NewChannelApiController extends Controller
             if ($user->email == "streamlymtairy@gmail.com") {
                 $validate = 2;
                 $zipcode = "18344";
+            } elseif ($user->email == "willis@cybrsecsolutions.com") {
+                $validate = 2;
+                $zipcode = "75662";
+            } elseif ($user->email == "streamlytestbox@gmail.com") {
+                $validate = 2;
+                $zipcode = "85215";
             }
             // Fetch programs matching the search query
             $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId', "channels.$type as url")
@@ -625,6 +637,12 @@ class NewChannelApiController extends Controller
             if ($user->email == "streamlymtairy@gmail.com") {
                 $validate = 2;
                 $zipcode = "18344";
+            } elseif ($user->email == "willis@cybrsecsolutions.com") {
+                $validate = 2;
+                $zipcode = "75662";
+            } elseif ($user->email == "streamlytestbox@gmail.com") {
+                $validate = 2;
+                $zipcode = "85215";
             }
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
