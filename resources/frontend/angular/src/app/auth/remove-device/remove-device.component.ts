@@ -184,9 +184,6 @@ export class RemoveDeviceComponent implements OnInit {
               timeOut:3000
             }
               );
-
-            // this.crudService.sendResponse(err.error.loggedindeviceinfolist.data);
-            // this.router.navigate(['auth/remove-device']);
           } else {
             this.toastr.error(err.error.message);
           }
