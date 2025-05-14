@@ -9,6 +9,7 @@ use App\Http\Requests\BugReporting\Store;
 use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use App\Models\UserZipcode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -215,6 +216,14 @@ class NewChannelApiController extends Controller
             $hoursoffset = $request->get('hoursoffset');
             $pattern = '/^(-?\d{2}:\d{2})$/';
 
+            // Insert zipcode only if it doesn't already exist for this user
+            if ($zipcode && $user) {
+                UserZipcode::firstOrCreate([
+                    'user_id' => $user->id,
+                    'zipcode' => $zipcode
+                ]);
+            }
+
             if (preg_match($pattern, $hoursoffset, $matches)) {
                 // String matches the format, and $matches[1] contains the matched value
                 $hoursofset = $matches[1];
@@ -231,10 +240,10 @@ class NewChannelApiController extends Controller
                 $validate = 2;
                 $zipcode = "18344";
             } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "75662";
             } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "85215";
             }
 
@@ -273,7 +282,7 @@ class NewChannelApiController extends Controller
                 $query->whereNull('genre.name');
             }
             $query->groupBy('channels.id');
-            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "willis@cybrsecsolutions.com" || $user->email == "streamlytestbox@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com") {
                 $query->orderBy('channels.id', 'desc');
             } else {
                 $query->orderBy('channels.id', 'asc');
@@ -378,10 +387,10 @@ class NewChannelApiController extends Controller
                 $validate = 2;
                 $zipcode = "18344";
             } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "75662";
             } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "85215";
             }
             // Fetch programs matching the search query
@@ -638,10 +647,10 @@ class NewChannelApiController extends Controller
                 $validate = 2;
                 $zipcode = "18344";
             } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "75662";
             } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 2;
+                $validate = 1;
                 $zipcode = "85215";
             }
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
