@@ -10,6 +10,7 @@ use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
 use App\Models\UserZipcode;
+use App\Models\UserZipcodeRule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -233,18 +234,14 @@ class NewChannelApiController extends Controller
             }
             $day = $request->day;
             $validate = 0;
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
-            }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
             }
 
             if ($urlType == 'manifest') {
@@ -380,19 +377,16 @@ class NewChannelApiController extends Controller
                 $type = 'dash_url';
             }
             $validate = 0;
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
-            }
+
             // Fetch programs matching the search query
             $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId', "channels.$type as url")
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
@@ -640,19 +634,16 @@ class NewChannelApiController extends Controller
             $current_datetime = $request->current_datetime;
             $validate = 0;
             $user = JWTAuth::user();
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
-            }
+
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(genre.id), ',', '\",\"'), '\"]') as genre_ids")

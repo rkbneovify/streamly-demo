@@ -10,6 +10,7 @@ use App\Http\Requests\BugReporting\Store;
 use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use App\Models\UserZipcodeRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -125,19 +126,16 @@ class RokuEpgGuideApiController extends Controller
             }
             $day = $request->day;
             $validate = 0;
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
-            }
+
             if ($urlType == 'manifest') {
                 $type = 'smooth_url';
             } else if ($urlType == 'm3u8') {
