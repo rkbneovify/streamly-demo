@@ -621,6 +621,11 @@ class AuthController extends Controller
             SessionTable::where('status', 1)->where('connected_devices', '!=', 1)
                 ->update(['connected_devices' => DB::raw('`connected_devices` - 1')]);
 
+            $accesstoken =  $session->get('access_token')[0]->access_token;
+            // dd($accesstoken);
+            $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
+            $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
+            $request->server->set('HTTP_AUTHORIZATION', 'Bearer ' . $accesstoken);
             // Invalidate token (this could be its own method)
             invalidateToken();
 
