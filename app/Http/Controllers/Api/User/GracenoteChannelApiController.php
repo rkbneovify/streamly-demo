@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Channel;
 use App\Models\FavouriteChannel;
+use App\Models\UserZipcodeRule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -30,19 +31,16 @@ class GracenoteChannelApiController extends Controller
             $urlType = $request->get('typeurl');
             $zipcode = $request->get('zipcode');
             $validate = 0;
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
-            }
+
             $imagePath = url("/uploads/channellogo/");
 
             if ($urlType == 'manifest') {
@@ -163,19 +161,16 @@ class GracenoteChannelApiController extends Controller
             $zipcode = $request->get('zipcode');
             $genre = $request->get('genre');
             $validate = 0;
-            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 2;
-                $zipcode = "18344";
-            } elseif ($user->email == "willis@cybrsecsolutions.com") {
-                $validate = 1;
-                $zipcode = "75662";
-            } elseif ($user->email == "streamlytestbox@gmail.com") {
-                $validate = 1;
-                $zipcode = "85215";
-            }
+
             $imagePath = url("/uploads/channellogo/");
 
             if ($urlType == 'manifest') {
