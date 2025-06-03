@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\HotelRoomTable;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
@@ -581,101 +582,89 @@ class AuthController extends Controller
             'id' => 'required'
         ]);
 
-        $authToken = $request->header('Authorization');
-
-        if ($authToken) {
-            $str = str_replace("Bearer", "", $authToken);
-            $str = preg_replace('/\s+/', '', $str);
-            $str = preg_replace('/^null$/i', '', $str);
-            if ($str !== "") {
-                $tokenExist = SessionTable::where([
-                    ['status', '=', '1'],
-                    ['access_token', '=', $str]
-                ]);
-
-                if (!$tokenExist->exists()) {
-                    $response = array('success' => false, "status" => false, 'response_code' => 401, 'message' => 'Token is Invalid');
-                    return response()->json($response, 401);
-                }
-            }
-        }
-
         if ($validate->fails()) {
-            $response = array('success' => false, 'response_code' => 400, 'message' => 'Validation error', 'data' => $validate->messages());
-            return response()->json($response, 400);
+            return response()->json([
+                'success' => false,
+                'response_code' => 400,
+                'message' => 'Validation error',
+                'data' => $validate->messages()
+            ], 400);
         }
-        // dump($request->id);
-        $id = UnHashUserID($request->id);
-        $checkDeviceDetails = SessionTable::where([
-            ['status', '=', '1'],
-            ['id', '=', $id],
-        ]);
 
-        $checkDeviceAlreadyLogout = SessionTable::where([
-            ['status', '=', '0'],
-            ['id', '=', $id],
-        ]);
-        if ($checkDeviceDetails->exists()) {
-            //   dump($checkDeviceDetails->get());
-            $accesstoken =  $checkDeviceDetails->get('access_token')[0]->access_token;
-            // dd($accesstoken);
-            $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
-            $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
-            $request->server->set('HTTP_AUTHORIZATION', 'Bearer ' . $accesstoken);
-            // header("Authorization: Bearer" . $accesstoken);
-            //    $request = Request::create(route('api.v1.b.show', ['booking' => 4]), 'GET');
-            //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
-            // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
-            // $this->logout()->middleware(['jwt.verify']);
-            $user = SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
-            SessionTable::where([
-                ['status', '=', '1'],
-                ['connected_devices', '!=', '1'],
-            ])
-                ->update([
-                    'connected_devices' => DB::raw('`connected_devices` - 1 ')
-                ]);
-            $error = invalidateToken();
-            if ($user) {
-                $response = [
-                    "response_code" => 200,
-                    "success" => true,
-                    "message" => "logged out successful",
-                    "error" => false,
-                ];
-                return response()->json($response, 200);
-            } else {
-                $response = [
+        // Extract and clean Authorization token
+        $authToken = $request->header('Authorization');
+        if ($authToken) {
+            $str = preg_replace('/\s+/', '', str_replace("Bearer", "", $authToken));
+            $str = preg_replace('/^null$/i', '', $str);
 
+            if ($str && !SessionTable::where('status', 1)->where('access_token', $str)->exists()) {
+                return response()->json([
                     'success' => false,
-                    'data' => 'Empty',
-                    'message' => 'id not found.',
-                    'response_code' => 404,
-                ];
-                return response()->json($response, 404);
+                    'status' => false,
+                    'response_code' => 401,
+                    'message' => 'Token is Invalid'
+                ], 401);
             }
+        }
 
-            //$this->logout()->middleware(['jwt.verify']);
-        } else if ($checkDeviceAlreadyLogout->exists()) {
-            $response = [
+        // Unhash the user ID
+        $id = UnHashUserID($request->id);
 
+        // Retrieve the session record
+        $session = SessionTable::where('status', 1)->where('id', $id)->first();
+        $sessionLogout = SessionTable::where('status', 0)->where('id', $id)->first();
+
+        // If the device is logged in
+        if ($session) {
+            // Log out the user and update connected devices
+            $session->update(['status' => 0, 'modified_on' => Carbon::now()]);
+            SessionTable::where('status', 1)->where('connected_devices', '!=', 1)
+                ->update(['connected_devices' => DB::raw('`connected_devices` - 1')]);
+
+            // Invalidate token (this could be its own method)
+            invalidateToken();
+
+            $this->updateHotelRoomSession($id);
+
+            return response()->json([
+                "response_code" => 200,
+                "success" => true,
+                "message" => "logged out successful",
+                "error" => false,
+            ], 200);
+        }
+
+        // If the device is already logged out
+        if ($sessionLogout) {
+            $this->updateHotelRoomSession($id);
+
+            return response()->json([
                 'success' => true,
                 'data' => 'Empty',
                 'message' => 'logged out successful',
                 'response_code' => 200,
-            ];
-            return response()->json($response, 200);
-        } else {
-            $response = [
+            ], 200);
+        }
 
-                'success' => false,
-                'data' => 'Empty',
-                'message' => 'id not found.',
-                'response_code' => 404,
-            ];
-            return response()->json($response, 404);
+        // If the session does not exist
+        return response()->json([
+            'success' => false,
+            'data' => 'Empty',
+            'message' => 'id not found.',
+            'response_code' => 404,
+        ], 404);
+    }
+
+    // Helper function to update hotel room sessions
+    private function updateHotelRoomSession($sessionId)
+    {
+        $hotelRoomCount = HotelRoomTable::where('session_id', $sessionId)->count();
+
+        if ($hotelRoomCount > 0) {
+            HotelRoomTable::where('session_id', $sessionId)->update(['session_id' => null]);
         }
     }
+
 
     public function logoutDevice(Request $request)
     {
