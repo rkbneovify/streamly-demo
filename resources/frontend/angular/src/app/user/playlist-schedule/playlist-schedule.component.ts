@@ -494,8 +494,13 @@ export class PlaylistScheduleComponent
     // this.scrollableContent1.nativeElement.scrollLeft += position;
 
     const scrollOffset = position;
+    let test = position;
     this.scrollableContent.nativeElement.scrollLeft += scrollOffset;
     this.scrollableContent1.nativeElement.scrollLeft += scrollOffset;
+
+    test+= scrollOffset;
+    console.log('test => ', test);
+
     this.updateCount(position, isNextValue);
   }
 
@@ -520,7 +525,7 @@ export class PlaylistScheduleComponent
       ? isNextValue
       : this.count > this.totalTomNumber;
     if (this.isNextDay) {
-      this.changeDays('Tomorrow');
+      // this.changeDays('Tomorrow');
     } else {
       this.selectedDay = 'Today';
       setTimeout(() => {
@@ -868,7 +873,8 @@ export class PlaylistScheduleComponent
           }
           if (this.count == 0) {
             this.count =
-              this.calculateIntervalsRemaining(this.getClosetTime) - 1;
+              +this.calculateIntervalsRemaining(this.getClosetTime) - 1;
+              console.log('count => ', this.count);
             this.isNextDay = true;
             this.scrollContent(this.totalScroll * 150);
           }
