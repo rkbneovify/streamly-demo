@@ -21,7 +21,7 @@
   <div class="schedule_time_container position-relative">
     <div class="schedule_days">
       <select class="position-relative" [(ngModel)]="selectedDay" (ngModelChange)="changeDays(selectedDay)">
-        <option [selected]="isNextDay" disabled *ngIf="isNextDay" style="display: none;">Tomorrow</option>
+        <option [selected]="isNextDay" disabled *ngIf="isNextDay">Tomorrow</option>
         <ng-container *ngFor="let day of days">Tomorrow
           <option  [value]="day">{{ day }}</option>
         </ng-container>

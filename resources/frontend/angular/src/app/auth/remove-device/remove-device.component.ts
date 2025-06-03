@@ -45,10 +45,9 @@ export class RemoveDeviceComponent implements OnInit {
 
   removedevice(id: string): void {
     this.loading[id] = true;
-    this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
+    this.apiService.postRequest('auth/multi-session-destroy', { 'id': id }).subscribe({
       next: (res: any) => {
         if (res.response_code == 200) {
-          // this.loading[id] = false;
           this.toastr.success('Device removed successfully')
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id);
           this.response = this.connectedDevice;
