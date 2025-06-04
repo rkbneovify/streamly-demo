@@ -928,6 +928,11 @@ class APIController extends Controller
                         $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
                         return response()->json($response, 400);
                     }
+                    try {
+                        $User->subscription('main')->skipTrial()->cancelNow();
+                    } catch (Exception $e) {
+                        return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);
+                    }
 
                     DB::table('users')
                         ->where('id', $id)
