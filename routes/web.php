@@ -170,6 +170,13 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Zipcode Routes
     Route::get('zipcode2', 'Admin\ZipcodeController@index');
     Route::get('zipcode', 'Admin\ZipcodeController@index2');
+    Route::get('userzipcoderule', 'Admin\ZipcodeController@userZipcodeRuleShow');
+    Route::get('/userzipcoderule/edit/{id}', 'Admin\ZipcodeController@userZipcodeRuleEdit');
+    Route::put('/userzipcoderuleupdate/{id}', 'Admin\ZipcodeController@userZipcodeRuleUpdate')->name('userzipcoderuleupdate');
+    Route::get('/userzipcoderule/create', 'Admin\ZipcodeController@userZipcodeRuleCreate');
+    Route::post('/userzipcoderuleadd', 'Admin\ZipcodeController@userZipcodeRuleAdd')->name('userzipcoderuleadd');
+    Route::delete('/userzipcoderule/delete/{id}', 'Admin\ZipcodeController@userZipcodeRuleDelete')->name('userzipcoderuledelete');
+
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
     Route::get('address', 'Admin\ZipcodeController@addressindex');
     Route::get('addressdatatable', 'Admin\ZipcodeController@addressindexDatatables');

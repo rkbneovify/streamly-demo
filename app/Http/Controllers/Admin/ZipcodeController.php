@@ -8,50 +8,125 @@ use App\Models\Zipcode;
 
 
 use App\Models\AddressesCheckAvailability;
+use App\Models\UserZipcodeRule;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
-
-
+use function PHPSTORM_META\elementType;
 
 class ZipcodeController extends Controller
 {
-       /**
+    /**
      * Display a listing of the resource.
      *
      * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
         // return view('admin.zipcodes.index', compact('zipcodes'));
-       
-       return view('admin.zipcodes.index');
-    }  
+
+        return view('admin.zipcodes.index');
+    }
     public function index2()
-    {   
+    {
         // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
         // return view('admin.zipcodes.index', compact('zipcodes'));
-       
-       return view('admin.zipcodes.index2');
-    }  
+
+        return view('admin.zipcodes.index2');
+    }
+
     public function allowedZipcodes()
-    { 
+    {
         // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
-       
-    //    return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
-       return view('admin.zipcodes.allowedzipcode');
-    }  
-   
-    public function zipjson() 
+
+        //    return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
+        return view('admin.zipcodes.allowedzipcode');
+    }
+
+    public function userZipcodeRuleShow()
+    {
+        $UserZipcodeRule = UserZipcodeRule::select('*')->get();
+        return view('admin.zipcodes.user-zipcode-rule-show', compact('UserZipcodeRule'));
+
+        // return view('admin.zipcodes.user-zipcode-rule-show');
+    }
+
+    public function userZipcodeRuleEdit($id)
+    {
+        // $zipcode = Zipcode::find($id);
+        // return view('admin.zipcodes.edit', compact('zipcode'));
+        $UserZipcodeRule = UserZipcodeRule::find($id);
+        $emails = User::select('email')->where('is_active', 1)->get();
+        return view('admin.zipcodes.user-zipcode-rule-edit', compact('UserZipcodeRule', 'emails'));
+    }
+
+    public function userZipcodeRuleCreate()
+    {
+        $emails = User::select('email')->where('is_active', 1)->get();
+        return view('admin.zipcodes.user-zipcode-rule-create', compact('emails'));
+    }
+
+    public function userZipcodeRuleUpdate(Request $request, $id)
+    {
+        $this->validate($request, [
+            'zipcode' => 'required|max:20',
+            'email' => 'required|email|exists:users,email',
+            'validate' => 'required',
+        ]);
+
+        $input = $request->only('zipcode', 'email', 'validate');
+        $model = UserZipcodeRule::find($id);
+        if (!$model) {
+            return redirect('admin/userzipcoderule')->with('info', 'user zipcode rule with id ' . $id . ' cannot be found.');
+        } else {
+            $model->update($input);
+
+            return redirect('admin/userzipcoderule')->with('info', 'user zipcode rule updated Successfully');
+        }
+    }
+
+    public function userZipcodeRuleAdd(Request $request)
+    {
+        $this->validate($request, [
+            'zipcode' => 'required|max:20',
+            'email' => 'required|email|exists:users,email',
+            'validate' => 'required',
+        ]);
+
+        $input = $request->only('zipcode', 'email', 'validate');
+        $model = new UserZipcodeRule;
+        $model->fill($input);
+        $model->save();
+        return redirect('admin/userzipcoderule')->with('info', 'user zipcode rule added Successfully');
+    }
+
+    public function userZipcodeRuleDelete($id)
+    {
+        $model = UserZipcodeRule::destroy($id);
+        if ($model) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User zipcode rule deleted successfully.'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong while deleting.'
+            ], 500);
+        }
+    }
+
+    public function zipjson()
     {
         $zipcodes = Zipcode::paginate(10);
-        
+
         return response()->json($zipcodes);
     }
 
-    
+
     /**
      * Display the specified resource.
      *
@@ -59,7 +134,7 @@ class ZipcodeController extends Controller
      * @param  Zipcode  $zipcode
      * @return \Illuminate\Http\Response
      */
-     /**
+    /**
      * Display the specified resource.
      *
      * @param  Show  $request
@@ -67,11 +142,11 @@ class ZipcodeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {  $zipcode = Zipcode::find($id); 
+    {
+        $zipcode = Zipcode::find($id);
         return view('admin.zipcodes.show', compact('zipcode'));
-        
-
-    }     /**
+    }
+    /**
      * Show the form for creating a new resource.
      *
      * @param  Request  $request
@@ -81,7 +156,8 @@ class ZipcodeController extends Controller
     {
 
         return view('admin.zipcodes.create');
-    }    /**
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
@@ -89,31 +165,29 @@ class ZipcodeController extends Controller
      */
     public function store(Request $request)
     {
-        $model=new Zipcode;
+        $model = new Zipcode;
         $model->fill($request->all());
 
         if ($model->save()) {
-            
-            return redirect('admin/zipcode')->with('info','Zipcode Added Successfully');
-        
-            } else {
-                return redirect('admin/zipcode')->with('info','Some error occured');
-        
-            }
-        
-    } /**
+
+            return redirect('admin/zipcode')->with('info', 'Zipcode Added Successfully');
+        } else {
+            return redirect('admin/zipcode')->with('info', 'Some error occured');
+        }
+    }
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  Request  $request
      * @param  Zipcode  $zipcode
      * @return \Illuminate\Http\Response
      */
-     public function edit($id)
+    public function edit($id)
     {
-        $zipcode = Zipcode::find($id); 
+        $zipcode = Zipcode::find($id);
         return view('admin.zipcodes.edit', compact('zipcode'));
-        
-    }   /**
+    }
+    /**
      * Update a existing resource in storage.
      *
      * @param  Request  $request
@@ -121,34 +195,36 @@ class ZipcodeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   $this->validate($request, [
-        'zipcode' => 'required|max:20',
-        'city' => 'required',
-        'state' => 'required',
-        
-        
+    {
+        $this->validate($request, [
+            'zipcode' => 'required|max:20',
+            'city' => 'required',
+            'state' => 'required',
 
-    ]);
 
-    $input = $request->only('zipcode', 'city', 'state','state_abbr','county_area','code','latitude','longitude');
-    if ($request->has('toggleswitch')) {
-        // $archived="helllo block user on";
-         $input['status'] = 0;
-        // $user->is_active=0;
-     } else{
-        // $archived="bye block off";
-         //$user->is_active=1;
-         $input['status'] = 1;
-     }
-    $model = Zipcode::find($id);
-    if(!$model){
-        return redirect('admin/allowedzipcode')->with('info','zipcode with id ' . $id . ' cannot be found.'); 
+
+        ]);
+
+        $input = $request->only('zipcode', 'city', 'state', 'state_abbr', 'county_area', 'code', 'latitude', 'longitude');
+        if ($request->has('toggleswitch')) {
+            // $archived="helllo block user on";
+            $input['status'] = 0;
+            // $user->is_active=0;
+        } else {
+            // $archived="bye block off";
+            //$user->is_active=1;
+            $input['status'] = 1;
+        }
+        $model = Zipcode::find($id);
+        if (!$model) {
+            return redirect('admin/allowedzipcode')->with('info', 'zipcode with id ' . $id . ' cannot be found.');
+        } else {
+            $model->update($input); //update the subscription info
+
+            return redirect('admin/allowedzipcode')->with('info', 'zipcode updated Successfully');
+        }
     }
-    else{$model->update($input); //update the subscription info
-
-        return redirect('admin/allowedzipcode')->with('info','zipcode updated Successfully');
-   }
-    }    /**
+    /**
      * Delete a  resource from  storage.
      *
      * @param  Request  $request
@@ -159,10 +235,10 @@ class ZipcodeController extends Controller
     public function destroy(Request $request, Zipcode $zipcode)
     {
         if ($zipcode->delete()) {
-                session()->flash('app_message', 'Zipcode successfully deleted');
-            } else {
-                session()->flash('app_error', 'Error occurred while deleting Zipcode');
-            }
+            session()->flash('app_message', 'Zipcode successfully deleted');
+        } else {
+            session()->flash('app_error', 'Error occurred while deleting Zipcode');
+        }
 
         return redirect()->back();
     }
@@ -175,321 +251,324 @@ class ZipcodeController extends Controller
     }
 
     public function categoryData()
-    { $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    {
+        $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         return DataTables::of($data)
-        ->addColumn('action', function($row) {
-            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
-        })
-        ->make(true);
+            ->addColumn('action', function ($row) {
+                return '<a href="/admin/zipcode/view/' . $row->id . '" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/' . $row->id . '" class="btn btn-xs btn-info">Edit</a>';
+            })
+            ->make(true);
     }
     public function allowedZipdata(Request $request)
-    {  
+    {
         ## Read value
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // Rows display per page
-    
+
         $columnIndex_arr = $request->get('order');
         $columnName_arr = $request->get('columns');
         $order_arr = $request->get('order');
         $search_arr = $request->get('search');
-    
+
         $columnIndex = $columnIndex_arr[0]['column']; // Column index
         $columnName = $columnName_arr[$columnIndex]['data']; // Column name
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue = $search_arr['value']; // Search value
-    
-        // Total records
-        $totalRecords = Zipcode::select('count(*) as allcount')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
-        $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
-        ->where([
-            ['zipcodes.status', '=', '1'],
-            ['zipcodes.zipcode', 'like', '%' .$searchValue . '%'],
-        ])->count();
-    
-        // Fetch records
-        $records = Zipcode::orderBy($columnName,$columnSortOrder)
-        ->where('zipcodes.status', '=',  '1')
-        ->where(function ($query) use ($searchValue) {
-            $query->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%');
-            $query->orWhere('zipcodes.city', 'like', '%' .$searchValue . '%');
-            $query->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%');
-        })
-          ->select('zipcodes.*')
-          ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
-          ->skip($start)
-          ->take($rowperpage)
-          ->get();
-    
-        $data_arr = array();
-        
-        foreach($records as $record){
-           $id = $record->id;
-           $zipcode = $record->zipcode;
-           $city = $record->city;
-           $state = $record->state;
-           $status = $record->status;
-           
-    
-         // view Button
-         $viewButton = "<a href='/admin/zipcode/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
-         $editButton = "<a href='/admin/zipcode/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
 
-     $action2 ="<input type='checkbox' class='update_check' id='delcheck_".$id."'  value='".$id."'>";
-    
-    
-         $action = $viewButton." ".$editButton;
-    
-           $data_arr[] = array(
-             "id" => $id,
-             "zipcode" => $zipcode,
-             "city" => $city,
-             "state" => $state,
-             "status" => $status,
-             "action" => $action,
-             "action2" => $action2
-           );
+        // Total records
+        $totalRecords = Zipcode::select('count(*) as allcount')->where('zipcodes.status', 1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
+        $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+            ->where([
+                ['zipcodes.status', '=', '1'],
+                ['zipcodes.zipcode', 'like', '%' . $searchValue . '%'],
+            ])->count();
+
+        // Fetch records
+        $records = Zipcode::orderBy($columnName, $columnSortOrder)
+            ->where('zipcodes.status', '=',  '1')
+            ->where(function ($query) use ($searchValue) {
+                $query->where('zipcodes.zipcode', 'like', '%' . $searchValue . '%');
+                $query->orWhere('zipcodes.city', 'like', '%' . $searchValue . '%');
+                $query->orWhere('zipcodes.state', 'like', '%' . $searchValue . '%');
+            })
+            ->select('zipcodes.*')
+            ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = array();
+
+        foreach ($records as $record) {
+            $id = $record->id;
+            $zipcode = $record->zipcode;
+            $city = $record->city;
+            $state = $record->state;
+            $status = $record->status;
+
+
+            // view Button
+            $viewButton = "<a href='/admin/zipcode/view/" . $id . "' class='btn btn-xs btn-primary'>View</a>";
+            $editButton = "<a href='/admin/zipcode/edit/" . $id . "' class='btn btn-xs btn-info'>Edit</a>";
+
+            $action2 = "<input type='checkbox' class='update_check' id='delcheck_" . $id . "'  value='" . $id . "'>";
+
+
+            $action = $viewButton . " " . $editButton;
+
+            $data_arr[] = array(
+                "id" => $id,
+                "zipcode" => $zipcode,
+                "city" => $city,
+                "state" => $state,
+                "status" => $status,
+                "action" => $action,
+                "action2" => $action2
+            );
         }
-    
+
         $response = array(
-           "draw" => intval($draw),
-           "iTotalRecords" => $totalRecords,
-           "iTotalDisplayRecords" => $totalRecordswithFilter,
-           "aaData" => $data_arr
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
         );
-    
+
         echo json_encode($response);
         exit;
-    
-
     }
 
     public function map()
-    {  $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    {
+        $data = Zipcode::select('zipcodes.*', DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status', 1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
 
         # Build GeoJSON feature collection array
-    $geojson = array(
-        'type'      => 'FeatureCollection',
-        
-        // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
-        'features'  => array()
-     );
-     
-        if($data->isEmpty()){
+        $geojson = array(
+            'type'      => 'FeatureCollection',
+
+            // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
+            'features'  => array()
+        );
+
+        if ($data->isEmpty()) {
             $response = [
                 'success' => false,
                 'data' => $data,
-                'message'=>'No zipcode is allowed',
-                'response_code'=>200,
+                'message' => 'No zipcode is allowed',
+                'response_code' => 200,
             ];
-            return response()->json($response, 200); 
+            return response()->json($response, 200);
         }
-        
-          foreach($data as $fieldnam) {
+
+        foreach ($data as $fieldnam) {
             $properties =  array(
-                'color'=> 'red',
+                'color' => 'red',
                 'title' => $fieldnam['zipcode']
-                
+
             );
-            
+
             $feature = array(
                 'type' => 'Feature',
                 'properties' => $properties,
-                
+
                 'geometry' => $fieldnam->shape,
-                 
-           );
-                            
-      
-        
-             array_push($geojson['features'], $feature);
-         }
-         
+
+            );
+
+
+
+            array_push($geojson['features'], $feature);
+        }
+
         return view('admin.zipcodes.map', compact('geojson'));
     }
-    
-   /*
+
+    /*
    AJAX request
    */
-   public function categoryData2(Request $request){
+    public function categoryData2(Request $request)
+    {
 
-    ## Read value
-    $draw = $request->get('draw');
-    $start = $request->get("start");
-    $rowperpage = $request->get("length"); // Rows display per page
+        ## Read value
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
 
-    $columnIndex_arr = $request->get('order');
-    $columnName_arr = $request->get('columns');
-    $order_arr = $request->get('order');
-    $search_arr = $request->get('search');
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
 
-    $columnIndex = $columnIndex_arr[0]['column']; // Column index
-    $columnName = $columnName_arr[$columnIndex]['data']; // Column name
-    $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-    $searchValue = $search_arr['value']; // Search value
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
 
-    // Total records
-    $totalRecords = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
-    $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
-    ->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%')->count();
+        // Total records
+        $totalRecords = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
+        $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+            ->where('zipcodes.zipcode', 'like', '%' . $searchValue . '%')->count();
 
-    // Fetch records
-    $records = Zipcode::orderBy($columnName,$columnSortOrder)
-      ->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%')
-      ->orWhere('zipcodes.city', 'like', '%' .$searchValue . '%')
-      ->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%')
-      ->select('zipcodes.*')
-      ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
-      ->skip($start)
-      ->take($rowperpage)
-      ->get();
+        // Fetch records
+        $records = Zipcode::orderBy($columnName, $columnSortOrder)
+            ->where('zipcodes.zipcode', 'like', '%' . $searchValue . '%')
+            ->orWhere('zipcodes.city', 'like', '%' . $searchValue . '%')
+            ->orWhere('zipcodes.state', 'like', '%' . $searchValue . '%')
+            ->select('zipcodes.*')
+            ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
 
-    $data_arr = array();
-    
-    foreach($records as $record){
-       $id = $record->id;
-       $zipcode = $record->zipcode;
-       $city = $record->city;
-       $state = $record->state;
-       $status = $record->status;
-       
+        $data_arr = array();
 
-     // view Button
-     $viewButton = "<a href='/admin/zipcode/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
-     $editButton = "<a href='/admin/zipcode/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
-     $action2 ="<input type='checkbox' class='update_check' id='delcheck_".$id."'  value='".$id."'>";
+        foreach ($records as $record) {
+            $id = $record->id;
+            $zipcode = $record->zipcode;
+            $city = $record->city;
+            $state = $record->state;
+            $status = $record->status;
 
 
-     $action = $viewButton." ".$editButton;
+            // view Button
+            $viewButton = "<a href='/admin/zipcode/view/" . $id . "' class='btn btn-xs btn-primary'>View</a>";
+            $editButton = "<a href='/admin/zipcode/edit/" . $id . "' class='btn btn-xs btn-info'>Edit</a>";
+            $action2 = "<input type='checkbox' class='update_check' id='delcheck_" . $id . "'  value='" . $id . "'>";
 
-       $data_arr[] = array(
-         "id" => $id,
-         "zipcode" => $zipcode,
-         "city" => $city,
-         "state" => $state,
-         "status" => $status,
-         "action" => $action,
-         "action2" => $action2
-       );
+
+            $action = $viewButton . " " . $editButton;
+
+            $data_arr[] = array(
+                "id" => $id,
+                "zipcode" => $zipcode,
+                "city" => $city,
+                "state" => $state,
+                "status" => $status,
+                "action" => $action,
+                "action2" => $action2
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+        );
+
+        echo json_encode($response);
+        exit;
     }
-
-    $response = array(
-       "draw" => intval($draw),
-       "iTotalRecords" => $totalRecords,
-       "iTotalDisplayRecords" => $totalRecordswithFilter,
-       "aaData" => $data_arr
-    );
-
-    echo json_encode($response);
-    exit;
-  }
     public function webfenceturf()
-    {   $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    {
+        $data = Zipcode::select('zipcodes.*', DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status', 1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         # Build GeoJSON feature collection array
-    $geojson = array(
-        'type'      => 'FeatureCollection',
-        
-        // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
-        'features'  => array()
-     );
-        if($data->isEmpty()){
+        $geojson = array(
+            'type'      => 'FeatureCollection',
+
+            // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
+            'features'  => array()
+        );
+        if ($data->isEmpty()) {
             $response = [
                 'success' => false,
                 'data' => $data,
-                'message'=>'No zipcode is allowed',
-                'response_code'=>200,
+                'message' => 'No zipcode is allowed',
+                'response_code' => 200,
             ];
-            return response()->json($response, 200); 
+            return response()->json($response, 200);
         }
-        
-          foreach($data as $fieldnam) {
+
+        foreach ($data as $fieldnam) {
             $properties =  array(
-                'color'=> 'red',
+                'color' => 'red',
                 'title' => $fieldnam['zipcode']
-                
+
             );
-            
+
             $feature = array(
                 'type' => 'Feature',
                 'properties' => $properties,
-                
-                'geometry' => $fieldnam->shape,
-                 
-           );
-                            
-      
-        
-             array_push($geojson['features'], $feature);
-         }
 
-        return view('admin.zipcodes.mapfence',compact('geojson'));
+                'geometry' => $fieldnam->shape,
+
+            );
+
+
+
+            array_push($geojson['features'], $feature);
+        }
+
+        return view('admin.zipcodes.mapfence', compact('geojson'));
     }
 
     public function addressindex()
     {
-        
-     
+
+
         return view('admin.zipcodes.addresses');
     }
 
     public function addressindexDatatables()
-    {  $data = AddressesCheckAvailability::select('id','address2','city','state','zip5')->get();
+    {
+        $data = AddressesCheckAvailability::select('id', 'address2', 'city', 'state', 'zip5')->get();
         return DataTables::of($data)
-        ->addColumn('action', function($row) {
-            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/addressupdateedit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
-        })
+            ->addColumn('action', function ($row) {
+                return '<a href="/admin/zipcode/view/' . $row->id . '" class="btn btn-xs btn-primary">View</a> <a href="/admin/addressupdateedit/' . $row->id . '" class="btn btn-xs btn-info">Edit</a>';
+            })
 
-        ->addIndexColumn()
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
 
-    public function addressupdateedit($id){
+    public function addressupdateedit($id)
+    {
 
-        $zipstate = AddressesCheckAvailability::find($id); 
+        $zipstate = AddressesCheckAvailability::find($id);
         return view('admin.zipcodes.addressedit', compact('zipstate'));
     }
-    public function addressupdate(Request $request, $id){
+    public function addressupdate(Request $request, $id)
+    {
         $this->validate($request, [
             'zip5' => 'required|max:20',
             'city' => 'required',
             'state' => 'required',
             'address2' => 'required',
-            
-            
-    
+
+
+
         ]);
-    
-        $input = $request->only('zip5', 'city', 'state','address2');
-        
+
+        $input = $request->only('zip5', 'city', 'state', 'address2');
+
         $model = AddressesCheckAvailability::find($id);
-        if(!$model){
-            return redirect('admin/address')->with('info','AddressesCheckAvailability with id ' . $id . ' cannot be found.'); 
+        if (!$model) {
+            return redirect('admin/address')->with('info', 'AddressesCheckAvailability with id ' . $id . ' cannot be found.');
+        } else {
+            $model->update($input); //update the subscription info
+
+            return redirect('admin/address')->with('info', 'AddressesCheckAvailability updated Successfully');
         }
-        else{$model->update($input); //update the subscription info
-    
-            return redirect('admin/address')->with('info','AddressesCheckAvailability updated Successfully');
-       }    }
+    }
 
-       public function UpdateAll(Request $request)
-       {  $this->validate($request, [
-        'id' => 'required|array',
-        "id.*"  => "required|numeric|distinct",
-        'status' => 'required|numeric|min:0|max:1',
+    public function UpdateAll(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|array',
+            "id.*"  => "required|numeric|distinct",
+            'status' => 'required|numeric|min:0|max:1',
 
-    ]);
-           $ids = $request->id;
-           $status = $request->status;
-           
+        ]);
+        $ids = $request->id;
+        $status = $request->status;
+
         //    print_r($ids);exit;
-           $input['status'] = $status;
-           if(Zipcode::whereIn('id', $ids)->update($input)){
-            return response()->json(['message'=>"Zipcode Updated successfully."],200);
-           }else{
-            return response()->json(['message'=>"Zipcode Updated Error occured"],400);
-           }
-
-           
-       }
-    
+        $input['status'] = $status;
+        if (Zipcode::whereIn('id', $ids)->update($input)) {
+            return response()->json(['message' => "Zipcode Updated successfully."], 200);
+        } else {
+            return response()->json(['message' => "Zipcode Updated Error occured"], 400);
+        }
+    }
 }
-
