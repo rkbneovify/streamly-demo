@@ -873,7 +873,7 @@ export class PlaylistScheduleComponent
           }
           if (this.count == 0) {
             this.count =
-              +this.calculateIntervalsRemaining(this.getClosetTime) - 1;
+              +this.calculateIntervalsRemaining(this.getClosetTime) -1;
               console.log('count => ', this.count);
             this.isNextDay = true;
             this.scrollContent(this.totalScroll * 150);

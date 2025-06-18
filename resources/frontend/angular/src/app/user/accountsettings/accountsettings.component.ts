@@ -52,6 +52,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   total_price: any = 0;
   cancelSubscription:FormGroup;
 
+  isSubscription: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -76,6 +78,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       this.cancelSubscription = this.fb.group({
         password: ['', [Validators.required]],
       });
+
+      this.isSubscription = JSON.parse(localStorage.getItem('deviceInfo') || '').subscribed;
   }
 
 
