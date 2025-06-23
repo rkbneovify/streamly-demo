@@ -331,29 +331,38 @@ export class SubPaymentComponent implements OnInit {
   }
 
   getTotalPrice() {
-    if (this.checkoutPlans) {
+    if (this.checkoutPlans?.plandetails?.tiers?.length > 0) {
       this.totalPrice = 0;
-      const amount10 =
-        +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
-      const amount18 =
-        +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
-      const amount16 =
-        +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
-
-      if (this.device_per_unit <= 10) {
-        this.devicePlanAmount = amount10;
-        this.totalPrice = amount10 * this.device_per_unit;
-      } else if (this.device_per_unit <= 15) {
-        this.devicePlanAmount = amount18;
-        this.totalPrice = amount18 * this.device_per_unit;
-      } else {
-        this.devicePlanAmount = amount16;
-        this.totalPrice = amount16 * this.device_per_unit;
+  
+      const tiers = this.checkoutPlans.plandetails.tiers;
+      let selectedTier: any = null;
+  
+      // Loop through each tier to find the correct one
+      for (let i = 0; i < tiers.length; i++) {
+        const tier = tiers[i];
+        const upTo = tier.up_to;
+  
+        if (upTo === null || this.device_per_unit <= upTo) {
+          selectedTier = tier;
+          break; // Stop at the first matching tier
+        }
       }
+  
+      // If no tier matched (very unlikely unless data is invalid), use the last tier
+      if (!selectedTier) {
+        selectedTier = tiers[tiers.length - 1];
+      }
+  
+      const unitAmount = selectedTier.unit_amount || 0;
+      this.devicePlanAmount = unitAmount / 100;
+      this.totalPrice = this.devicePlanAmount * this.device_per_unit;
+  
       this.grandTotalPrice = this.totalPrice;
+  
       this.discountCode();
     }
   }
+  
 
   onChange(error: any) {
     if (error) {
@@ -521,46 +530,56 @@ export class SubPaymentComponent implements OnInit {
 
   // selectedplansbyid
   selectedPlanById() {
-    if (this.selectedPlan) {
-      const id = this.selectedPlan;
-
-      if (this.selectedPlanType == 'per_unit') {
-        this.crud.getRequest('get-basic-plan/' + id).subscribe({
-          next: (data: any) => {
-            this.checkoutPlans = data;
-            this.totalPrice = this.checkoutPlans.plandetails.amount / 100;
-            this.grandTotalPrice = this.checkoutPlans.plandetails.amount / 100;
-
-            this.initializeKey(data.STRIPE_KEY);
-            // this.initiateCardElement();
-          },
-          error: (err: any) => {
-            console.log(err);
-          },
-        });
-      }
-
-      if (this.selectedPlanType == 'tiered') {
-        this.crud.getRequest('get-tier-plan/' + id).subscribe({
-          next: (data: any) => {
-            this.checkoutPlans = data;
-            // this.initiateCardElement();
-            // this.paymentFormDetailSub
-            //   .get('cardEmail')
-            //   ?.setValue(this.availabilityForm.get('email')?.value);
-            // console.log(
-            //   'avail email',
-            //   this.availabilityForm.get('email')?.value
-            // );
-            this.initializeKey(data.STRIPE_KEY);
-          },
-          error: (err: any) => {
-            console.log(err);
-          },
-        });
-      }
+    if (!this.selectedPlan) return;
+  
+    const id = this.selectedPlan;
+  
+    if (this.selectedPlanType === 'per_unit') {
+      this.crud.getRequest('get-basic-plan/' + id).subscribe({
+        next: (data: any) => {
+          this.checkoutPlans = data;
+          const amount = this.checkoutPlans?.plandetails?.amount || 0;
+          this.totalPrice = amount / 100;
+          this.grandTotalPrice = this.totalPrice;
+  
+          this.initializeKey(data.STRIPE_KEY);
+          // this.initiateCardElement();
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+    }
+  
+    if (this.selectedPlanType === 'tiered') {
+      this.crud.getRequest('get-tier-plan/' + id).subscribe({
+        next: (data: any) => {
+          this.checkoutPlans = data;
+  
+          // After setting plan, calculate total based on device count
+          this.getTotalPrice();
+  
+          this.initializeKey(data.STRIPE_KEY);
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
     }
   }
+
+  getTierUnitAmount(tiers: any[], devices: number): number {
+    if (!tiers || !devices) return 0;
+  
+    for (let tier of tiers) {
+      if (tier.up_to === null || devices <= +tier.up_to) {
+        return +tier.unit_amount;
+      }
+    }
+    return 0;
+  }
+  
+  
 
   Bearer_token: any;
   getAuthHeaders(): HttpHeaders {
