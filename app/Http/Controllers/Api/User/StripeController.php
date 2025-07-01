@@ -155,6 +155,7 @@ class StripeController extends Controller
             'country' => 'required',
             'card_brand' => 'required',
             'card_last_four' => 'required',
+            'plan_type' => 'required',
             'zip_code' => ['required', 'regex:/^[0-9]{3,7}$/', 'exists:zipcodes,zipcode,status,1'],
         ], ['zip_code.exists' => 'Unfortunately, the service is not yet available for the submitted zip code.']);
         if ($validator->fails()) {
@@ -203,10 +204,17 @@ class StripeController extends Controller
             $user->card_last_four = $request->card_last_four;
 
             if ($user->save()) {
+                if ($request->plan_type === 'tiered') {
+                    $tieruserrole = Role::where('name', 'tieruser')->first();
+                    $role_id = $tieruserrole->id;
+                } else {
+                    $role_id = $this->DEFAULT_ROLE_ID;
+                }
+
                 // Assign default role
                 $role = RoleUser::create([
                     'user_id' => $user->id,
-                    'role_id' => $this->DEFAULT_ROLE_ID,
+                    'role_id' => $role_id,
                 ]);
 
                 // Generate email HTML
@@ -293,6 +301,7 @@ class StripeController extends Controller
             // Send confirmation email
             $this->sendSubscriptionConfirmationEmail($user);
         }
+        $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
     }
 
@@ -318,8 +327,27 @@ class StripeController extends Controller
             // Send confirmation email
             $this->sendSubscriptionConfirmationEmail($user);
         }
-
+        $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
+    }
+
+    // insert data in hotel room table if tier plan
+    private function handleTierRoomCreation($user, $request)
+    {
+        if ($request->plan_type === 'tiered') {
+
+            $quantity = $request->quantity ?? 1;
+
+            for ($i = 0; $i < $quantity; $i++) {
+                DB::table('hotel_rooms')->insert([
+                    'user_id'    => $user->id,
+                    'hotel_room' => 'Room' . $i,
+                    'session_id' => null,
+                    'created_on' => now(),
+                    'modified_on' => now(),
+                ]);
+            }
+        }
     }
 
     private function sendSubscriptionConfirmationEmail($user)
@@ -511,6 +539,7 @@ class StripeController extends Controller
             'stripeToken' => 'required',
             'trial_days' => 'required',
             'plan_id' => 'required',
+            'plan_type' => 'required',
             'quantity' => 'required',
             'line1' => 'required',
             'line2' => 'nullable',
@@ -642,7 +671,7 @@ class StripeController extends Controller
 
     public function updateUserRoleBasedOnSubscription($user, $request)
     {
-        if ($request->tier == 'tiered') {
+        if ($request->plan_type == 'tiered') {
             $tieruserrole = Role::where('name', 'tieruser')->first();
 
             $userRole =  $user->roles->first()->display_name;
