@@ -696,31 +696,7 @@ export class RegisterComponent
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
 
-  // getTotalPrice() {
-  //   if (this.checkoutPlans) {
-  //     this.totalPrice = 0;
-  //     const amount10 =
-  //       +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
-  //     const amount18 =
-  //       +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
-  //     const amount16 =
-  //       +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
-
-  //     if (this.device_per_unit <= 10) {
-  //       this.devicePlanAmount = amount10;
-  //       this.totalPrice = amount10 * this.device_per_unit;
-  //     } else if (this.device_per_unit <= 15) {
-  //       this.devicePlanAmount = amount18;
-  //       this.totalPrice = amount18 * this.device_per_unit;
-  //     } else {
-  //       this.devicePlanAmount = amount16;
-  //       this.totalPrice = amount16 * this.device_per_unit;
-  //     }
-  //     this.grandTotalPrice = this.totalPrice;
-  //     this.discountCode();
-  //   }
-  // }
-
+ 
   getTotalPrice() {
     if (this.checkoutPlans?.plandetails?.tiers?.length > 0) {
       this.totalPrice = 0;
@@ -907,6 +883,7 @@ export class RegisterComponent
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetails.value.cardZip,
       coupon: this.couponCode,
+      plan_type: this.selectedPlanType,
     };
 
     this.crud.postRequest('auth/register', body).subscribe({
