@@ -130,19 +130,14 @@
         <div
           class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column"
         >
-          <p class="text-nowrap">
-            $
-            <span *ngIf="device_per_unit <= 10">{{
-              +checkoutPlans?.plandetails.tiers[0].unit_amount / 100
-            }}</span>
-            <span *ngIf="+device_per_unit >= 11 && +device_per_unit <= 15">{{
-              +checkoutPlans?.plandetails.tiers[1].unit_amount / 100
-            }}</span>
-            <span *ngIf="+device_per_unit >= 16">{{
-              +checkoutPlans?.plandetails.tiers[2].unit_amount / 100
-            }}</span>
-            per device/ per month
-          </p>
+        <p class="text-nowrap">
+          $
+          {{
+            getTierUnitAmount(checkoutPlans?.plandetails?.tiers, device_per_unit) / 100
+          }}
+          per device/ per month
+        </p>
+        
           <div class="counter d-flex justify-content-center mt-3">
             <button class="btn-inc btn-count me-2" (click)="decrement()">
               -
