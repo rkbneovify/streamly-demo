@@ -492,6 +492,7 @@ export class SubPaymentComponent implements OnInit {
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetailSub.value.cardZip,
       coupon:  this.couponCode,
+      plan_type: this.selectedPlanType,
     };
 
     this.crud
