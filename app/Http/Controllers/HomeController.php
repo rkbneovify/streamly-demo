@@ -591,7 +591,7 @@ public function PlanRenews(Request $request)
                 return [
                     'id' => $plan->id,
                     'nickname' => $plan->nickname,
-                    'amount' => $plan->amount,
+                    'amount' => $plan->amount, 
                     'currency' => $plan->currency,
                     'interval' => $plan->interval,
                     'metadata' => $plan->metadata,
