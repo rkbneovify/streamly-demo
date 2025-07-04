@@ -696,30 +696,52 @@ export class RegisterComponent
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
 
+ 
   getTotalPrice() {
-    if (this.checkoutPlans) {
+    if (this.checkoutPlans?.plandetails?.tiers?.length > 0) {
       this.totalPrice = 0;
-      const amount10 =
-        +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
-      const amount18 =
-        +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
-      const amount16 =
-        +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
-
-      if (this.device_per_unit <= 10) {
-        this.devicePlanAmount = amount10;
-        this.totalPrice = amount10 * this.device_per_unit;
-      } else if (this.device_per_unit <= 15) {
-        this.devicePlanAmount = amount18;
-        this.totalPrice = amount18 * this.device_per_unit;
-      } else {
-        this.devicePlanAmount = amount16;
-        this.totalPrice = amount16 * this.device_per_unit;
+  
+      const tiers = this.checkoutPlans.plandetails.tiers;
+      let selectedTier: any = null;
+  
+      // Loop through each tier to find the correct one
+      for (let i = 0; i < tiers.length; i++) {
+        const tier = tiers[i];
+        const upTo = tier.up_to;
+  
+        if (upTo === null || this.device_per_unit <= upTo) {
+          selectedTier = tier;
+          break; // Stop at the first matching tier
+        }
       }
+  
+      // If no tier matched (very unlikely unless data is invalid), use the last tier
+      if (!selectedTier) {
+        selectedTier = tiers[tiers.length - 1];
+      }
+  
+      const unitAmount = selectedTier.unit_amount || 0;
+      this.devicePlanAmount = unitAmount / 100;
+      this.totalPrice = this.devicePlanAmount * this.device_per_unit;
+  
       this.grandTotalPrice = this.totalPrice;
+  
       this.discountCode();
     }
   }
+
+  getTierUnitAmount(tiers: any[], devices: number): number {
+    if (!tiers || !devices) return 0;
+  
+    for (let tier of tiers) {
+      if (tier.up_to === null || devices <= +tier.up_to) {
+        return +tier.unit_amount;
+      }
+    }
+    return 0;
+  }
+  
+  
 
   onCouponInputChange(event: any) {
     this.searchCoupnTerm.next(event.target.value);
@@ -861,6 +883,7 @@ export class RegisterComponent
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetails.value.cardZip,
       coupon: this.couponCode,
+      plan_type: this.selectedPlanType,
     };
 
     this.crud.postRequest('auth/register', body).subscribe({
