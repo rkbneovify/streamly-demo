@@ -84,6 +84,9 @@ class UsersController extends Controller
                 'address' => $request->address ?? null,
                 'zipcode' => $request->zipcode,
                 'email_verified_at' => null,
+                'stripe_id' => 'sub_K6XMZT4knnWBOI',
+                'card_brand' => 'visa',
+                'card_last_four' => '4242',
                 'is_active' => 0,
                 'forced_change' => 1,
             ]);
@@ -156,7 +159,7 @@ class UsersController extends Controller
             // $stripePlanId = $matchedPlan['id'];
 
             $stripeId = 'sub_' . Str::random(16);
-            $now = now();
+            $now = now(); 
             
            $roleId = $request->roles;
            $tieruserId = 5; 
@@ -181,10 +184,6 @@ class UsersController extends Controller
             'updated_at' => now(),
         ]);
         
-            
-
-            
-    
             Log::info("Subscription added for user: {$user->id}");
     
 
