@@ -46,6 +46,42 @@ input[type=number] {
     font-weight: bold !important;
     color: #ffffff !important;
 } 
+<style>
+  .device-counter {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  .device-counter input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    outline: none;
+    padding: 6px 10px;
+  }
+
+  .device-counter button {
+    width: 32px;
+    height: 100%;
+    border: none;
+    background: #f4f4f4;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .device-counter button:hover {
+    background: #e0e0e0;
+  }
+
+  .device-counter button:focus {
+    outline: none;
+  }
+</style>
 
 </style>
 @stop
@@ -107,26 +143,49 @@ input[type=number] {
                         </div>
                         @endif
                         <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}">
-                {{ csrf_field() }}
+                        {{ csrf_field() }}
 
 
                       </div>
-                      <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
-                    <label for="roles">Roles</label>
+                    <!-- Roles dropdown -->
+                    
+                    <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
+                        <label for="roles">Roles</label>
+                        <select name="roles" id="roles" class="form-control" onchange="handleRoleChange()">
+                          @foreach($roles as $id => $pack)
+                            <option value="{{ $id }}" {{ old('roles') == $id ? 'selected' : '' }}>
+                              {{ $pack }}
+                            </option>
+                          @endforeach
+                        </select>
+                        @if ($errors->has('roles'))
+                          <span class="help-block">
+                            <strong>{{ $errors->first('roles') }}</strong>
+                          </span>
+                        @endif
+                      </div>
 
-                    <select name="roles" id="roles" class="form-control">
-                      @foreach($roles as $id => $pack)
-                      <option value="{{ $id }}">
-                        {{ $pack }}
-                      </option>
-                      @endforeach
-                    </select>
-                    @if ($errors->has('roles'))
-                    <span class="help-block">
-                      <strong>{{ $errors->first('roles') }}</strong>
-                    </span>
-                    @endif
-                  </div>
+
+
+                    <!-- Number of Devices section (initially hidden) -->
+                    <div class="" id="deviceSection" style="display: none;">
+                      <div class="form-group{{ $errors->has('number_of_devices') ? ' has-error' : '' }}">
+                        <label for="number_of_devices">Number of Devices</label>
+                        <div class="device-counter">
+                          <button type="button" onclick="decreaseDevices()">−</button>
+                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}" readonly>
+                          <button type="button" onclick="increaseDevices()">+</button>
+                        </div>
+                        @if ($errors->has('number_of_devices'))
+                          <span class="help-block">
+                            <strong>{{ $errors->first('number_of_devices') }}</strong>
+                          </span>
+                        @endif
+                      </div>
+                    </div> 
+
+
+
                   <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                     <label for="name" class="col-md-4 control-label">Name</label>
 
@@ -224,7 +283,7 @@ input[type=number] {
                     
                   </div>
 
-                  <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
+                  <!-- <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
                     <label for="contact" class="col-md-4 control-label">contact</label>
 
                     
@@ -236,11 +295,11 @@ input[type=number] {
                       </span>
                       @endif
                     
-                  </div>
+                  </div> -->
 
 
 
-                  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                  <!-- <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
                     <label for="address" class="col-md-4 control-label">address</label>
 
                     
@@ -252,10 +311,10 @@ input[type=number] {
                       </span>
                       @endif
             
-                  </div>
+                  </div> -->
 
 
-                  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                  <!-- <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
                     <label for="country" class="col-md-4 control-label">country</label>
 
                     
@@ -267,8 +326,9 @@ input[type=number] {
                       </span>
                       @endif
                     
-                  </div>
-                  <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
+                  </div> -->
+
+                  <!-- <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
                     <label for="gender" class="col-md-4 control-label">gender</label>
       
       
@@ -280,8 +340,72 @@ input[type=number] {
                       <strong>{{ $errors->first('gender') }}</strong>
                     </span>
                     @endif
-      
-                  </div> 
+                  </div>  -->
+
+                      <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+                      <label for="city">City</label>
+                      <input type="text" name="city" class="form-control">
+                      @if ($errors->has('city'))
+                        <span class="help-block">
+                          <strong>{{ $errors->first('city') }}</strong>
+                        </span>
+                      @endif
+                    </div>
+
+
+
+                        <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+                        <label for="state">State</label>
+                        <input type="text" name="state" class="form-control">
+                        @if ($errors->has('state'))
+                          <span class="help-block">
+                            <strong>{{ $errors->first('state') }}</strong>
+                          </span>
+                        @endif
+                      </div>
+
+ 
+
+                        <div class="form-group{{ $errors->has('plan_duration') ? ' has-error' : '' }}">
+                      <label for="plan_duration">Plan Duration</label>
+                      <select name="plan_duration" class="form-control">
+                        <option value="">Select Duration</option>
+                        <option value="1 Month">1 Month</option>
+                        <option value="3 Months">3 Months</option>
+                        <option value="6 Months">6 Months</option>
+                        <option value="12 Months">12 Months</option>
+                      </select>
+                      @if ($errors->has('plan_duration'))
+                        <span class="help-block">
+                          <strong>{{ $errors->first('plan_duration') }}</strong>
+                        </span>
+                      @endif
+                    </div>
+
+
+                    <div class="form-group">
+                      <label>Channel Availability 
+                        <span style="font-weight: normal; color: #999;">(Select only one)</span>
+                      </label>
+
+                      <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <!-- Show All Channels -->
+                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+                          <input type="checkbox" name="channel_availability" value="1" class="channel-check" id="all_channel" style="margin-right: 8px;">
+                          Show All Channels
+                        </label>
+
+                        <!-- Show Local Channels -->
+                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+                          <input type="checkbox" name="channel_availability" value="2" class="channel-check" id="local_channel" style="margin-right: 8px;">
+                          Show Local Channels
+                        </label>
+                      </div>
+                    </div>
+
+
+
+
                     <!-- /.card-body -->
                   </div>
                   <!-- /.card -->
@@ -341,5 +465,50 @@ input[type=number] {
     }
       });
       });
+
+      function handleRoleChange() {
+      const selectedRole = document.getElementById('roles').value;
+      const deviceSection = document.getElementById('deviceSection');
+
+      if (selectedRole === '5') { // role ID for 'tieruser'
+        deviceSection.style.display = 'block';
+      } else {
+        deviceSection.style.display = 'none';
+        document.getElementById('number_of_devices').value = 1;
+      }
+    }
+
+  function increaseDevices() {
+    let input = document.getElementById('number_of_devices');
+    input.value = parseInt(input.value) + 1;
+  }
+
+  function decreaseDevices() {
+    let input = document.getElementById('number_of_devices');
+    if (parseInt(input.value) > 1) {
+      input.value = parseInt(input.value) - 1;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    handleRoleChange();
+  });
+
+
+
+  document.querySelectorAll('.channel-check').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+      if (this.checked) {
+        document.querySelectorAll('.channel-check').forEach(function (other) {
+          if (other !== checkbox) {
+            other.checked = false;
+          }
+        });
+      }
+    });
+  });
+
+
+
       </script>
     @stop
