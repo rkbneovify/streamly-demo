@@ -336,8 +336,7 @@
                         <button type="submit" class="btn btn-lg login-btn">REGISTER</button>
                     </div>
 
-                    <span>Already have an account?</span> <a href="javascript:void(0)"
-                        onclick="openNav(event);"style="padding: 0;">Log in</a>
+                    <span>Already have an account?</span> <a href="/auth/login" style="padding: 0;">Log in</a>
 
                     {!! csrf_field() !!}
                 </form>
@@ -349,11 +348,11 @@
     <section class="page-section">
         <div class="container">
             @if ($alreadyVerify)
-                <h2 class="section-heading text-center">Account already verified, <a href="javascript:void(0)"
-                        onclick="openNav(event)">Please login to continue</a></h2>
+                <h2 class="section-heading text-center">Account already verified, <a href="/auth/login">Please login to
+                        continue</a></h2>
             @else
-                <h2 class="section-heading text-center">Account successfully verified, <a href="javascript:void(0)"
-                        onclick="openNav(event)">Click here to Login</a></h2>
+                <h2 class="section-heading text-center">Account successfully verified, <a href="/auth/login">Click here to
+                        Login</a></h2>
             @endif
 
             @if ($errors->any())
