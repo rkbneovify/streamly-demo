@@ -163,12 +163,12 @@ class UsersController extends Controller
 
         // Assign plan_id based on role
         if ((int)$roleId === $tieruserId) {
-            $stripePlanId = 'bIDgJlA2fLmS'; // tieruser plan
+            $stripePlanId = 'FJZCNhouM8Nr'; // tieruser plan
             $roleType = 'tieruser';
         } else {
             $stripePlanId = 'plan_P9HdM8mHmthvuR'; // regular user plan
-            $roleType = 'user';
-        }
+            $roleType = 'user'; 
+        }  
         DB::table('subscriptions')->insert([
             'user_id' => $user->id,
             'name' => $request->name,
