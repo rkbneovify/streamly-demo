@@ -89,6 +89,7 @@ class UsersController extends Controller
                 'card_last_four' => '4242',
                 'is_active' => 0,
                 'forced_change' => 1,
+                'mode' => 'Testing'
             ]);
     
             Log::info("User created: ID {$user->id}");
@@ -164,22 +165,36 @@ class UsersController extends Controller
            $roleId = $request->roles;
            $tieruserId = 5; 
 
-        // Assign plan_id based on role
-        if ((int)$roleId === $tieruserId) {
-            $stripePlanId = 'FJZCNhouM8Nr'; // tieruser plan
-            $roleType = 'tieruser';
+           if (env('APP_URl') === 'production') {
+
+            if ((int)$roleId === $tieruserId) {
+                $stripePlanId = 'lLqM2zp3oUMO'; 
+                $roleType = 'tieruser';
+            } else {
+                $stripePlanId = 'price_1MqxXZGbCi8tAySGisSrhf0S'; 
+                $roleType = 'user'; 
+            }  
+        
         } else {
-            $stripePlanId = 'plan_P9HdM8mHmthvuR'; // regular user plan
-            $roleType = 'user'; 
-        }  
+        
+            if ((int)$roleId === $tieruserId) {
+                $stripePlanId = 'bIDgJlA2fLmS'; 
+                $roleType = 'tieruser';
+            } else {
+                $stripePlanId = 'FJZCNhouM8Nr'; 
+                $roleType = 'user'; 
+            }  
+        
+        }
+        
         DB::table('subscriptions')->insert([
             'user_id' => $user->id,
-            'name' => $request->name,
+            'name' => 'main',
             'stripe_id' => 'sub_' . Str::random(16),
             'stripe_status' => 'active',
             'stripe_plan' => $stripePlanId, 
             'quantity' => $request->number_of_devices ?? 1,
-            'ends_at' => $endsAt,
+            'ends_at' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -193,7 +208,7 @@ class UsersController extends Controller
                 for ($i = 0; $i < $quantity; $i++) {
                     DB::table('hotel_rooms')->insert([
                         'user_id' => $user->id,
-                        'hotel_room' => 'Room ' . ($i + 1),
+                        'hotel_room' => 'Room' . ($i),
                         'session_id' => null,
                         'created_on' => $now,
                         'modified_on' => $now,
@@ -230,118 +245,7 @@ class UsersController extends Controller
             return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
         }
     }
-    
 
-    // public function update(Request $request, $id)
-    // {
-    //     $this->validate($request, [
-    //         'name' => 'required|max:255',
-    //         'email' => 'required|email|unique:users,email,'.$id,
-    //         'password' => 'confirmed',
-    //         'roles' => 'required',
-    //         'number_of_devices' => 'nullable|integer|min:1',
-    //         'plan_duration' => 'nullable|string',
-    
-    //     ]);
-    //     $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
-    //     if ($request->has('toggleswitch')) {
-    //        // $archived="helllo block user on";
-    //         $input['is_active'] = 0;
-    //        // $user->is_active=0;
-    //     } else{
-    //        // $archived="bye block off";
-    //         //$user->is_active=1;
-    //         $input['is_active'] = 1;
-    //     }
-    
-        
-    //  // dd($archived);
-        
-    //     if(!empty($input['password'])){
-    //         $input['password'] = Hash::make($input['password']); //update the password
-    //     }else{
-    //         $input = Arr::except($input,array('password')); //remove password from the input array
-    //     }
-    //    //$allpost= $request->post();
-    //    // dd($input); exit; get all the post data
-    //     $user = User::find($id);
-    //     $user->update($input); //update the user info
-
-    //     //delete all roles currently linked to this user
-    //     DB::table('role_user')->where('user_id',$id)->delete();
-
-    //     //attach the new roles to the user
-    //     foreach ($request->input('roles') as $key => $value) {
-    //         $user->attachRole($value);
-    //     }
-
-    //     $tieruserId = 5;
-    //     $previousRoles = $user->roles->pluck('id')->toArray();
-    //     $wasTierUser = $tieruserId;
-    //     $isNowTierUser = (int) $request->roles === $tieruserId;
-        
-    //     if ($wasTierUser && !$isNowTierUser) {
-    //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-    //     }
-        
-    //     if (!$wasTierUser && $isNowTierUser) {
-    //         $quantity = (int) ($request->number_of_devices ?? 1);
-    //         for ($i = 0; $i < $quantity; $i++) {
-    //             DB::table('hotel_rooms')->insert([
-    //                 'user_id' => $user->id,
-    //                 'hotel_room' => 'Room ' . ($i + 1),
-    //                 'session_id' => null,
-    //                 'created_on' => now(),
-    //                 'modified_on' => now(),
-    //             ]);
-    //         }
-    //     }
-        
-    
-    //     // Update or insert zipcode rule
-    //     DB::table('user_zipcode_rules')
-    //     ->where('email', $user->email)
-    //     ->where('zipcode', $request->zipcode)
-    //     ->update([
-    //         'validate' => $request->channel_availability
-    //     ]);
-    
-    
-    //     $endsAt = null;
-    //     switch ($request->plan_duration) {
-    //         case '1 Month':
-    //             $endsAt = Carbon::now()->addMonth();
-    //             break;
-    //         case '3 Months':
-    //             $endsAt = Carbon::now()->addMonths(3);
-    //             break;
-    //         case '6 Months':
-    //             $endsAt = Carbon::now()->addMonths(6);
-    //             break;
-    //         case '12 Months':
-    //             $endsAt = Carbon::now()->addMonths(12);
-    //             break;
-    //         case 'Never':
-    //         default:
-    //             $endsAt = null;
-    //             break;
-    //     }
-    
-    //     // Update or insert into subscriptions
-    //     DB::table('subscriptions')->where('user_id', $user->id)->update(
-    //         [
-    //             'name' => $request->name,
-    //             'stripe_status' => 'active',
-    //             'ends_at' => $endsAt,
-    //             'quantity' => $number_of_devices,
-    //             'updated_at' => now(),
-    //         ]
-    //     );
-    
-    //     return redirect('admin/users')->with('info','User Updated Successfully');
-        
-        
-    // } 
 
     public function update(Request $request, $id)
     {
@@ -393,7 +297,7 @@ class UsersController extends Controller
             for ($i = 0; $i < $newDeviceCount; $i++) {
                 DB::table('hotel_rooms')->insert([
                     'user_id' => $user->id,
-                    'hotel_room' => 'Room ' . ($i + 1),
+                    'hotel_room' => 'Room' . ($i),
                     'session_id' => null,
                     'created_on' => now(),
                     'modified_on' => now(),
@@ -406,7 +310,7 @@ class UsersController extends Controller
                 for ($i = 0; $i < $newDeviceCount; $i++) {
                     DB::table('hotel_rooms')->insert([
                         'user_id' => $user->id,
-                        'hotel_room' => 'Room ' . ($i + 1),
+                        'hotel_room' => 'Room' . ($i),
                         'session_id' => null,
                         'created_on' => now(),
                         'modified_on' => now(),
@@ -448,9 +352,9 @@ class UsersController extends Controller
             DB::table('subscriptions')->updateOrInsert(
                 ['user_id' => $user->id],
                 [
-                    'name' => $request->name,
+                    'name' => 'main',
                     'stripe_status' => 'active',
-                    'ends_at' => $endsAt,
+                    'ends_at' => null,
                     'quantity' => $newDeviceCount,
                     'updated_at' => now(),
                 ]
