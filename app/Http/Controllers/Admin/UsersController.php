@@ -91,7 +91,7 @@ class UsersController extends Controller
                 'forced_change' => 1,
                 'mode' => 'Testing'
             ]);
-    
+        
             Log::info("User created: ID {$user->id}");
     
             $user->roles()->sync([$request->roles]);
