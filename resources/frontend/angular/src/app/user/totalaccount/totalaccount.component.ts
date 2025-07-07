@@ -186,7 +186,7 @@ export class TotalaccountComponent {
               JSON.stringify(this.response)
             );
             
-            this.deviceId = null;
+            this.deviceId = [];
             this.isLoading = false;
           }
         },
