@@ -8,6 +8,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Illuminate\Support\Str;
 use Crypt;
 use Mail;
 use App\User;
@@ -20,6 +21,8 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class UsersController extends Controller
 {     
@@ -46,130 +49,468 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-
         try {
-
-            $email_verified_at=Carbon::now();
-
-            $checkExist = User::WHERE('email',"=",$request->email);
-
-            if($checkExist->exists()){
-                $id = $checkExist->first()->id;
-                return redirect()->back()->with('existuser',$id);
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|confirmed|min:6',
+                'zipcode' => 'required',
+                'roles' => 'required|numeric',
+                'plan_duration' => 'required|string',
+                'number_of_devices' => 'nullable|integer|min:1',
+            ]);
+    
+            if ($validator->fails()) {
+                Log::error('Validation failed', $validator->errors()->toArray());
+                return redirect()->back()->withErrors($validator)->withInput();
             }
-
+    
+            $existing = User::where('email', $request->email)->first();
+            if ($existing) {
+                Log::warning("User already exists: " . $request->email);
+                return redirect()->back()->with('existuser', $existing->id);
+            }
+    
             $user = User::create([
                 'name' => $request->name,
-                'email'=>$request->email,
-                'password'=>Hash::make($request->password),
-                'contact'=>$request->contact??'null',
-                'gender'=>$request->gender??'null',
-                'dob'=>$request->dob??'null',
-                'country'=>$request->country??'null',
-                'address'=>$request->address??'null',
-                'zipcode'=>$request->zipcode,
-                'email_verified_at'=>null,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'contact' => $request->contact ?? null,
+                'gender' => $request->gender ?? null,
+                'dob' => $request->dob ?? null,
+                'country' => $request->country ?? null,
+                'city' => $request->city ?? null,
+                'state' => $request->state ?? null,
+                'address' => $request->address ?? null,
+                'zipcode' => $request->zipcode,
+                'email_verified_at' => null,
+                'stripe_id' => 'sub_K6XMZT4knnWBOI',
+                'card_brand' => 'visa',
+                'card_last_four' => '4242',
                 'is_active' => 0,
-                'forced_change'=> 1,
+                'forced_change' => 1,
             ]);
-            $user->roles()->sync($request->input('roles', []));
-
-            $verification_code=Crypt::encrypt($user->email);
-
-            $FRONTEND_URL=env('FRONTEND_URL');
     
-            $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+            Log::info("User created: ID {$user->id}");
     
+            $user->roles()->sync([$request->roles]);
+
+            $roleId = $request->roles;
+            $roleType = null;
+
+            if ((int)$roleId === 5) {
+                $roleType = 'tieruser';
+            } else {
+                $roleType = 'user';
+            }
+
+    
+            DB::table('user_zipcode_rules')->insert([
+                'zipcode' => $request->zipcode,
+                'email' => $request->email,
+                'validate' => $request->channel_availability,
+            ]);
+    
+            $endsAt = null;
+            switch ($request->plan_duration) {
+                case '1 Month':
+                    $endsAt = Carbon::now()->addMonth();
+                    break;
+                case '3 Months':
+                    $endsAt = Carbon::now()->addMonths(3);
+                    break;
+                case '6 Months':
+                    $endsAt = Carbon::now()->addMonths(6);
+                    break;
+                case '12 Months':
+                    $endsAt = Carbon::now()->addMonths(12);
+                    break;
+                case 'Never':
+                    $endsAt = null;
+                    break;
+            }
+
+            // \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            // $plans = \Stripe\Plan::all(['active' => true, 'expand' => ['data.tiers']]);
             
-        $html2='<html>
-            Hi, '.$request->name.'<br><br>
+            // $formattedPlans = collect($plans->data)->map(function ($plan) {
+            //     return [
+            //         'id' => $plan->id,
+            //         'metadata' => $plan->metadata,
+            //     ]; 
+            // });
+            
+            // $roleType = ((int)$request->roles === 5) ? 'tieruser' : 'user';
+            
+            // $matchedPlan = $formattedPlans->first(function ($plan) use ($roleType) {
+            //     return isset($plan['metadata']['role']) && $plan['metadata']['role'] === $roleType;
+            // }); 
+
+            // foreach ($formattedPlans as $plan) {
+            //     Log::info("Plan: {$plan['id']} | Role: " . ($plan['metadata']['role'] ?? 'none'));
+            // }
+            
+            
+            // if (!$matchedPlan) {
+            //     Log::error("No Stripe plan found for role: $roleType");
+            //     return redirect()->back()->with('errormsg', "No Stripe plan available for this role.");
+            // }
+            
+            // $stripePlanId = $matchedPlan['id'];
+
+            $stripeId = 'sub_' . Str::random(16);
+            $now = now(); 
+            
+           $roleId = $request->roles;
+           $tieruserId = 5; 
+
+        // Assign plan_id based on role
+        if ((int)$roleId === $tieruserId) {
+            $stripePlanId = 'FJZCNhouM8Nr'; // tieruser plan
+            $roleType = 'tieruser';
+        } else {
+            $stripePlanId = 'plan_P9HdM8mHmthvuR'; // regular user plan
+            $roleType = 'user'; 
+        }  
+        DB::table('subscriptions')->insert([
+            'user_id' => $user->id,
+            'name' => $request->name,
+            'stripe_id' => 'sub_' . Str::random(16),
+            'stripe_status' => 'active',
+            'stripe_plan' => $stripePlanId, 
+            'quantity' => $request->number_of_devices ?? 1,
+            'ends_at' => $endsAt,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+            Log::info("Subscription added for user: {$user->id}");
     
-            Thank you for registering for '.env('APP_NAME').'.<br>
-            Please click the following link to verify your account.
-            <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
-            width: 115px;
-            height: 25px;
-            background: #004E92 0% 0% no-repeat padding-box;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            line-height: 25px;">Verify</a><br>
-            Your login credentials<br>
-            Email: '.$request->email.'<br>
-            Temp. Password: '.$request->password.'<br><br>
-            Thank you!<br>
-            The '.env('APP_NAME').' Team!
-        </html>';
+
+            $tieruserId = 5;
+            if ((int)$request->roles === $tieruserId) {
+                $quantity = $request->number_of_devices ?? 1;
+                for ($i = 0; $i < $quantity; $i++) {
+                    DB::table('hotel_rooms')->insert([
+                        'user_id' => $user->id,
+                        'hotel_room' => 'Room ' . ($i + 1),
+                        'session_id' => null,
+                        'created_on' => $now,
+                        'modified_on' => $now,
+                    ]);
+                }
+                Log::info("Hotel rooms added: {$quantity} for user {$user->id}");
+            }
     
-            Mail::send('emails.general',["html"=>$html2] , function($message) use ($request,$user){
-                    $message->to($request->email, $request->name);
-                    $message->bcc('rahul.gupta@oodles.io')
-                    ->subject(env('APP_NAME').': Account Verification and Signup Details');
+            $verification_code = Crypt::encrypt($user->email);
+            $FRONTEND_URL = env('FRONTEND_URL');
+            $account_verification_link = $FRONTEND_URL . '/api/auth/verify?token=' . $verification_code;
+    
+            $html = "<html>
+                Hi, {$request->name}<br><br>
+                Thank you for registering.<br>
+                Please verify: <a href='{$account_verification_link}' target='_blank'>Verify</a><br>
+                Email: {$request->email}<br>
+                Temp Password: {$request->password}<br><br>
+                Thank you!<br>
+            </html>";
+    
+            Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
+                $msg->to($request->email, $request->name)
+                    ->bcc('rahul.gupta@oodles.io')
+                    ->subject(env('APP_NAME') . ': Account Verification');
             });
-            
-            return redirect('admin/users')->with('info','User Added Successfully');
-        } catch (Exception $e) {
-            return redirect()->back()->with('errormsg','Error creating user, please try again.');
+    
+            Log::info("Mail sent to: {$request->email}");
+    
+            return redirect('admin/users')->with('info', 'User Added Successfully');
+    
+        } catch (\Exception $e) {
+            Log::error('Exception occurred while creating user: ' . $e->getMessage());
+            return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
         }
-
-     
     }
+    
+
+    // public function update(Request $request, $id)
+    // {
+    //     $this->validate($request, [
+    //         'name' => 'required|max:255',
+    //         'email' => 'required|email|unique:users,email,'.$id,
+    //         'password' => 'confirmed',
+    //         'roles' => 'required',
+    //         'number_of_devices' => 'nullable|integer|min:1',
+    //         'plan_duration' => 'nullable|string',
+    
+    //     ]);
+    //     $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
+    //     if ($request->has('toggleswitch')) {
+    //        // $archived="helllo block user on";
+    //         $input['is_active'] = 0;
+    //        // $user->is_active=0;
+    //     } else{
+    //        // $archived="bye block off";
+    //         //$user->is_active=1;
+    //         $input['is_active'] = 1;
+    //     }
+    
+        
+    //  // dd($archived);
+        
+    //     if(!empty($input['password'])){
+    //         $input['password'] = Hash::make($input['password']); //update the password
+    //     }else{
+    //         $input = Arr::except($input,array('password')); //remove password from the input array
+    //     }
+    //    //$allpost= $request->post();
+    //    // dd($input); exit; get all the post data
+    //     $user = User::find($id);
+    //     $user->update($input); //update the user info
+
+    //     //delete all roles currently linked to this user
+    //     DB::table('role_user')->where('user_id',$id)->delete();
+
+    //     //attach the new roles to the user
+    //     foreach ($request->input('roles') as $key => $value) {
+    //         $user->attachRole($value);
+    //     }
+
+    //     $tieruserId = 5;
+    //     $previousRoles = $user->roles->pluck('id')->toArray();
+    //     $wasTierUser = $tieruserId;
+    //     $isNowTierUser = (int) $request->roles === $tieruserId;
+        
+    //     if ($wasTierUser && !$isNowTierUser) {
+    //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+    //     }
+        
+    //     if (!$wasTierUser && $isNowTierUser) {
+    //         $quantity = (int) ($request->number_of_devices ?? 1);
+    //         for ($i = 0; $i < $quantity; $i++) {
+    //             DB::table('hotel_rooms')->insert([
+    //                 'user_id' => $user->id,
+    //                 'hotel_room' => 'Room ' . ($i + 1),
+    //                 'session_id' => null,
+    //                 'created_on' => now(),
+    //                 'modified_on' => now(),
+    //             ]);
+    //         }
+    //     }
+        
+    
+    //     // Update or insert zipcode rule
+    //     DB::table('user_zipcode_rules')
+    //     ->where('email', $user->email)
+    //     ->where('zipcode', $request->zipcode)
+    //     ->update([
+    //         'validate' => $request->channel_availability
+    //     ]);
+    
+    
+    //     $endsAt = null;
+    //     switch ($request->plan_duration) {
+    //         case '1 Month':
+    //             $endsAt = Carbon::now()->addMonth();
+    //             break;
+    //         case '3 Months':
+    //             $endsAt = Carbon::now()->addMonths(3);
+    //             break;
+    //         case '6 Months':
+    //             $endsAt = Carbon::now()->addMonths(6);
+    //             break;
+    //         case '12 Months':
+    //             $endsAt = Carbon::now()->addMonths(12);
+    //             break;
+    //         case 'Never':
+    //         default:
+    //             $endsAt = null;
+    //             break;
+    //     }
+    
+    //     // Update or insert into subscriptions
+    //     DB::table('subscriptions')->where('user_id', $user->id)->update(
+    //         [
+    //             'name' => $request->name,
+    //             'stripe_status' => 'active',
+    //             'ends_at' => $endsAt,
+    //             'quantity' => $number_of_devices,
+    //             'updated_at' => now(),
+    //         ]
+    //     );
+    
+    //     return redirect('admin/users')->with('info','User Updated Successfully');
+        
+        
+    // } 
+
     public function update(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'confirmed',
-            'roles' => 'required',
-    
+            'roles' => 'required|array',
+            'number_of_devices' => 'nullable|integer|min:1',
+            'plan_duration' => 'nullable|string',
         ]);
-        $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
-        if ($request->has('toggleswitch')) {
-           // $archived="helllo block user on";
-            $input['is_active'] = 0;
-           // $user->is_active=0;
-        } else{
-           // $archived="bye block off";
-            //$user->is_active=1;
-            $input['is_active'] = 1;
+    
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
+        $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
+    
+        if (!empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, ['password']);
         }
     
-        
-     // dd($archived);
-        
-        if(!empty($input['password'])){
-            $input['password'] = Hash::make($input['password']); //update the password
-        }else{
-            $input = Arr::except($input,array('password')); //remove password from the input array
-        }
-       //$allpost= $request->post();
-       // dd($input); exit; get all the post data
         $user = User::find($id);
-        $user->update($input); //update the user info
-
-        //delete all roles currently linked to this user
-        DB::table('role_user')->where('user_id',$id)->delete();
-
-        //attach the new roles to the user
-        foreach ($request->input('roles') as $key => $value) {
+        $user->update($input);
+    
+        $tieruserId = 5;
+    
+        // Step 1: Get previous roles
+        $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
+        $wasTierUser = in_array($tieruserId, $previousRoles);
+    
+        // Step 2: Update roles
+        DB::table('role_user')->where('user_id', $id)->delete();
+        foreach ($request->input('roles') as $value) {
             $user->attachRole($value);
         }
-        return redirect('admin/users')->with('info','User Updated Successfully');
-        
-        
+    
+        // Step 3: Check if tier role is now applied
+        $isNowTierUser = in_array($tieruserId, $request->input('roles'));
+    
+        // Step 4: Device & hotel room handling
+        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+        $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : $currentDeviceCount;
+    
+        if ($wasTierUser && !$isNowTierUser) {
+            // Downgraded: delete all rooms
+            DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+        } elseif (!$wasTierUser && $isNowTierUser) {
+            // Became tier: insert rooms
+            for ($i = 0; $i < $newDeviceCount; $i++) {
+                DB::table('hotel_rooms')->insert([
+                    'user_id' => $user->id,
+                    'hotel_room' => 'Room ' . ($i + 1),
+                    'session_id' => null,
+                    'created_on' => now(),
+                    'modified_on' => now(),
+                ]);
+            }
+        } elseif ($wasTierUser && $isNowTierUser && $request->filled('number_of_devices')) {
+            // Still tier, number changed?
+            if ($newDeviceCount !== $currentDeviceCount) {
+                DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+                for ($i = 0; $i < $newDeviceCount; $i++) {
+                    DB::table('hotel_rooms')->insert([
+                        'user_id' => $user->id,
+                        'hotel_room' => 'Room ' . ($i + 1),
+                        'session_id' => null,
+                        'created_on' => now(),
+                        'modified_on' => now(),
+                    ]);
+                }
+            }
+        }
+    
+        // Step 5: Update zipcode rule
+        DB::table('user_zipcode_rules')
+            ->where('email', $user->email)
+            ->where('zipcode', $request->zipcode)
+            ->update([
+                'validate' => $request->channel_availability
+            ]);
+    
+        $endsAt = null;
+        switch ($request->plan_duration) {
+            case '1 Month':
+                $endsAt = Carbon::now()->addMonth();
+                break;
+            case '3 Months':
+                $endsAt = Carbon::now()->addMonths(3);
+                break;
+            case '6 Months':
+                $endsAt = Carbon::now()->addMonths(6);
+                break;
+            case '12 Months':
+                $endsAt = Carbon::now()->addMonths(12);
+                break;
+            case 'Never':
+            default:
+                $endsAt = null;
+                break;
+        }
+    
+        // Step 7: Update subscription if tier
+        if ($isNowTierUser) {
+            DB::table('subscriptions')->updateOrInsert(
+                ['user_id' => $user->id],
+                [
+                    'name' => $request->name,
+                    'stripe_status' => 'active',
+                    'ends_at' => $endsAt,
+                    'quantity' => $newDeviceCount,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+    
+        return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
+    
+    
 
-     public function edit($id)
-    {
-        $user = User::find($id);
-        $roles = Role::get(); //get all roles
-        $userRoles = $user->roles->pluck('id')->toArray();
-        //dd($roles);
-        return view('admin.users.edit',compact('user','roles','userRoles'));
-    }
 
+
+    public function edit($id)
+{
+    $user = User::find($id);
+    $roles = Role::get();
+    $userRoles = $user->roles->pluck('id')->toArray();
+
+    // Fetch latest subscription for the user
+    $subscription = DB::table('subscriptions')
+                    ->where('user_id', $id)
+                    ->latest('created_at')
+                    ->first();
+
+    // Fetch zipcode rule for the user based on email
+    $channelRule = DB::table('user_zipcode_rules')
+                    ->where('email', $user->email)
+                    ->first();
+
+   $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
+                  
+
+        $planDuration = '';
+        
+        if (!empty($subscription->ends_at)) {
+            $endsAt = Carbon::parse($subscription->ends_at)->startOfDay();
+            $now = Carbon::now()->startOfDay();
+        
+            if ($endsAt->equalTo($now->copy()->addMonth())) {
+                $planDuration = '1 Month';
+            } elseif ($endsAt->equalTo($now->copy()->addMonths(3))) {
+                $planDuration = '3 Months';
+            } elseif ($endsAt->equalTo($now->copy()->addMonths(6))) {
+                $planDuration = '6 Months';
+            } elseif ($endsAt->equalTo($now->copy()->addMonths(12))) {
+                $planDuration = '12 Months';
+            } else {
+                $planDuration = '';
+            }
+        } else {
+            $planDuration = 'Never';
+        }
+                    
+                
+    return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'subscription', 'channelRule','planDuration','currentDeviceCount'));
+}
+
+ 
     
 
     public function show($id)
@@ -278,23 +619,23 @@ class UsersController extends Controller
         ['users_id', '=', $id],
         ['status', '=', '1'],
         ['connected_devices', '!=', '1'],
-         ])
-->update([
-    'connected_devices' => DB::raw('`connected_devices` - 1 ')
-]);
-//print_r($user); exit;
-config([
-  'jwt.blacklist_enabled' => true
-]);
-// JWTAuth::parseToken()->invalidate();
-$errors=[];
-try{
-JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
-}catch (Exception $e) {
-    $errors['error']=$e->getMessage();
-}catch (JWTException $e){
-    $errors['error']=$e->getMessage();
-}
+                    ])
+            ->update([
+                'connected_devices' => DB::raw('`connected_devices` - 1 ')
+            ]);
+            //print_r($user); exit;
+            config([
+            'jwt.blacklist_enabled' => true
+            ]);
+            // JWTAuth::parseToken()->invalidate();
+            $errors=[];
+            try{
+            JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
+            }catch (Exception $e) {
+                $errors['error']=$e->getMessage();
+            }catch (JWTException $e){
+                $errors['error']=$e->getMessage();
+            }
         
          if($user){
              if($errors){
