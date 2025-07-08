@@ -466,14 +466,13 @@ function handleRoleChange() {
   if (selectedRoles.includes('5')) {
     deviceSection.style.display = 'block';
 
-    // Add name only if manually changed
-    if (deviceChanged) {
-      deviceInput.setAttribute('name', 'number_of_devices');
-    }
+    // ✅ Always set name so it submits
+    deviceInput.setAttribute('name', 'number_of_devices');
   } else {
     deviceSection.style.display = 'none';
     deviceInput.removeAttribute('name');
     deviceInput.value = 1;
+    deviceChanged = false;
   }
 }
 
@@ -492,6 +491,7 @@ function decreaseDevices() {
     input.setAttribute('name', 'number_of_devices');
   }
 }
+
 
 
   document.addEventListener('DOMContentLoaded', function () {
