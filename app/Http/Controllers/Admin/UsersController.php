@@ -165,7 +165,7 @@ class UsersController extends Controller
            $roleId = $request->roles;
            $tieruserId = 5; 
 
-           if (env('APP_URl') === 'production') {
+           if (env('APP_URl') === 'https://streamlytv.com') {
 
             if ((int)$roleId === $tieruserId) {
                 $stripePlanId = 'lLqM2zp3oUMO'; 
@@ -282,44 +282,30 @@ class UsersController extends Controller
             $user->attachRole($value);
         }
     
-        // Step 3: Check if tier role is now applied
-        $isNowTierUser = in_array($tieruserId, $request->input('roles'));
-    
-        // Step 4: Device & hotel room handling
-        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
-        $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : $currentDeviceCount;
-    
-        if ($wasTierUser && !$isNowTierUser) {
-            // Downgraded: delete all rooms
+        // Step 3: Device & hotel room handling (always reset if tier role selected)
+        $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
+    // dd($newDeviceCount);  
+        if (in_array($tieruserId, $request->input('roles'))) {
+            // Became or still is a tier user — reset hotel rooms
             DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-        } elseif (!$wasTierUser && $isNowTierUser) {
-            // Became tier: insert rooms
-            for ($i = 0; $i < $newDeviceCount; $i++) {
-                DB::table('hotel_rooms')->insert([
-                    'user_id' => $user->id,
-                    'hotel_room' => 'Room' . ($i),
-                    'session_id' => null,
-                    'created_on' => now(),
-                    'modified_on' => now(),
-                ]);
-            }
-        } elseif ($wasTierUser && $isNowTierUser && $request->filled('number_of_devices')) {
-            // Still tier, number changed?
-            if ($newDeviceCount !== $currentDeviceCount) {
-                DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+    
+            if ($newDeviceCount > 0) {
                 for ($i = 0; $i < $newDeviceCount; $i++) {
                     DB::table('hotel_rooms')->insert([
                         'user_id' => $user->id,
-                        'hotel_room' => 'Room' . ($i),
+                        'hotel_room' => 'Room' . $i,
                         'session_id' => null,
                         'created_on' => now(),
                         'modified_on' => now(),
                     ]);
                 }
             }
+        } else {
+            // Not a tier user — delete any existing hotel rooms
+            DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
         }
     
-        // Step 5: Update zipcode rule
+        // Step 4: Update zipcode rule
         DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->where('zipcode', $request->zipcode)
@@ -327,6 +313,7 @@ class UsersController extends Controller
                 'validate' => $request->channel_availability
             ]);
     
+        // Step 5: Calculate subscription end date
         $endsAt = null;
         switch ($request->plan_duration) {
             case '1 Month':
@@ -347,8 +334,8 @@ class UsersController extends Controller
                 break;
         }
     
-        // Step 7: Update subscription if tier
-        if ($isNowTierUser) {
+        // Step 6: Update subscription if tier user
+        if (in_array($tieruserId, $request->input('roles'))) {
             DB::table('subscriptions')->updateOrInsert(
                 ['user_id' => $user->id],
                 [
@@ -363,6 +350,7 @@ class UsersController extends Controller
     
         return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
+    
     
     
 
@@ -435,20 +423,24 @@ class UsersController extends Controller
 
     public function destroy($id)
     {
-        $user= User::whereId($id)->delete(); 
-         if($user){
-            return response()->json(['success'=>'User deleted successfully.']);
-          //  return redirect('admin/users')->with('info','User Deleted Successfully');
-                      
-        
-        }else{
-            return response()->json(['success'=>'User Not found.']);
-           // return redirect('admin/users')->with('info','User Not found');
-            
+        // Step 1: Get user details (especially email)
+        $user = User::find($id);
+    
+        if (!$user) {
+            return response()->json(['success' => 'User Not found.']);
         }
-
-        
+    
+        $email = $user->email;
+    
+        // Step 2: Delete related zipcode rules
+        DB::table('user_zipcode_rules')->where('email', $email)->delete();
+    
+        // Step 3: Delete user
+        $user->delete();
+    
+        return response()->json(['success' => 'User deleted successfully.']);
     }
+    
 
     public function massDestroy(Request $request)
     {
