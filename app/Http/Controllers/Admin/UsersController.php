@@ -332,7 +332,7 @@ class UsersController extends Controller
             case '12 Months':
                 $endsAt = Carbon::now()->addMonths(12);
                 break;
-            case 'Never':
+            case 'Never':  
             default:
                 $endsAt = null;
                 break;
