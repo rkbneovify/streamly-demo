@@ -203,8 +203,8 @@ input[type=number] {
               <label for="email" class="col-md-4 control-label">E-Mail</label>
 
 
-              <input id="email" type="text" class="form-control" name="email" value="{{$user->email}}" required
-                autofocus>
+              <input id="email" type="text" class="form-control" name="email" value="{{$user->email}}" required readonly
+                >
 
               @if ($errors->has('email'))
               <span class="help-block">
@@ -218,7 +218,7 @@ input[type=number] {
               <label for="password" class="col-md-4 control-label">Password</label>
 
 
-              <input id="password" type="password" class="form-control" name="password" autofocus>
+              <input id="password" type="password" class="form-control" name="password">
               @if ($errors->has('password'))
               <span class="help-block">
                 <strong>{{ $errors->first('password') }}</strong>
@@ -355,14 +355,14 @@ input[type=number] {
                       <div style="display: flex; gap: 10px; margin-top: 8px;">
                         <!-- Show All Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                        <input type="checkbox" name="channel_availability" value="1" class="channel-check"
+                        <input type="checkbox" name="channel_availability" value=1 class="channel-check"
     {{ isset($channelRule) && $channelRule->validate == 1 ? 'checked' : '' }}>
                   Show All Channels
                         </label>
 
                         <!-- Show Local Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                        <input type="checkbox" name="channel_availability" value="2" class="channel-check"
+                        <input type="checkbox" name="channel_availability" value=2   class="channel-check"
     {{ isset($channelRule) && $channelRule->validate == 2 ? 'checked' : '' }}>
                     Show Local Channels 
                         </label>

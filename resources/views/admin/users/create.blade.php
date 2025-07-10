@@ -391,13 +391,13 @@ input[type=number] {
                       <div style="display: flex; gap: 10px; margin-top: 8px;">
                         <!-- Show All Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="channel_availability" value="1" class="channel-check" id="all_channel" style="margin-right: 8px;">
+                          <input type="checkbox" name="channel_availability" value=1 class="channel-check" id="all_channel" style="margin-right: 8px;">
                           Show All Channels
                         </label>
 
                         <!-- Show Local Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="channel_availability" value="2" class="channel-check" id="local_channel" style="margin-right: 8px;">
+                          <input type="checkbox" name="channel_availability" value=1 class="channel-check" id="local_channel" style="margin-right: 8px;">
                           Show Local Channels
                         </label>
                       </div>
