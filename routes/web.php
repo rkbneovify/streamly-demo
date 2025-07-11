@@ -14,6 +14,7 @@ use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AngularController;
+use App\Http\Controllers\SubscriptionCronController;
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -426,4 +427,9 @@ Route::get('/fail', 'PaymentlinkController@paymentfail');
 
 Route::any('/{any}', [AngularController::class, 'index'])
     ->where('any', '^(?!api|admin|stripe).*$')
-    ->name('angular');
+    ->name('angular'); 
+
+
+// cron route custom user
+
+Route::post('/subscriptioncron', 'SubscriptionCronController@subscriptioncron');

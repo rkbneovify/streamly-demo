@@ -171,6 +171,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     Route::post('/sync-session-with-room', 'Admin\HotelController@syncSessionWithHotelRoom')->middleware(['jwt.verify']);
     Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
+    Route::post('/get-hotelroom', 'Admin\HotelController@getHotelRoomspagination')->middleware(['jwt.verify']);
 
     /** Channel SLider API */
     Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
@@ -227,3 +228,7 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whet
 //         'response_code'=>404,
 //         'message' => 'Page Not Found or Wrong method used in postman. If error persists, contact info@website.com'], 404);
 // });
+
+
+// cron subscription table 
+Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');

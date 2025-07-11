@@ -190,7 +190,7 @@ class UsersController extends Controller
         DB::table('subscriptions')->insert([
             'user_id' => $user->id,
             'name' => 'main',
-            'stripe_id' => 'sub_' . Str::random(16),
+            'stripe_id' => 'sub_custom_' . Str::random(16),
             'stripe_status' => 'active',
             'stripe_plan' => $stripePlanId, 
             'quantity' => $request->number_of_devices ?? 1,
