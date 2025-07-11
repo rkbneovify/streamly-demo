@@ -209,6 +209,74 @@ class HotelController extends Controller
         ], 403);
     }
 
+
+    //  andriod api add pagination 
+
+    public function getHotelRoomspagination()
+{
+    $request = request();
+    $user = JWTAuth::user();
+
+    if ($user->hasRole('tieruser')) {
+        $uid = $user->id;
+
+        $page = (int) $request->input('page', 1);
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+
+        // Get paginated data
+        $rooms = DB::table('hotel_rooms')
+            ->where('user_id', $uid)
+            ->orderByDesc('id')
+            ->offset($offset)
+            ->limit($perPage)
+            ->get();
+
+        // Total room count for pagination
+        $total = DB::table('hotel_rooms')
+            ->where('user_id', $uid)
+            ->count();
+
+        $totalPages = ceil($total / $perPage);
+
+        if ($rooms->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No rooms available, remove other session from web and refresh this screen',
+                'response_code' => 200,
+                'data' => [],
+                'pagination' => [
+                    'current_page' => $page,
+                    'per_page' => $perPage,
+                    'total_items' => $total,
+                    'total_pages' => $totalPages,
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Available Hotel rooms for User: ' . $user->name,
+            'response_code' => 200,
+            'data' => $rooms,
+            'pagination' => [
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_items' => $total,
+                'total_pages' => $totalPages,
+            ]
+        ], 200);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Unauthorized, only tiered user can access this API',
+        'response_code' => 403,
+    ], 403);
+}
+
+
+
     /**
      * Store a newly created resource in storage.
      *
