@@ -158,12 +158,12 @@ public function setCookie(Request $request) {
             ->where('channels.status','=','1')
             ->orderBy('channels.StationName', 'asc');
 
-return $second->get()
-->reject(function($element) use($imagePath) {
+        return $second->get()
+        ->reject(function($element) use($imagePath) {
 
-    return $element->image === null;
-})->groupBy('genrenae');
-          });
+            return $element->image === null;
+        })->groupBy('genrenae');
+                });
 
 
 
@@ -257,6 +257,7 @@ return $second->get()
         // $response = new GuzzleHttp\Client();('http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat=28.7441&lon=77.0732&zoom=27&addressdetails=1');
 
     } */
+   
     public function geofence(Request $request)
     {
         $LAT= $request['latitude'];
