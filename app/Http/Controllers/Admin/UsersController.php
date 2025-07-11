@@ -165,7 +165,7 @@ class UsersController extends Controller
            $roleId = $request->roles;
            $tieruserId = 5; 
 
-           if (env('APP_URl') === 'https://streamlytv.com') {
+           if (env('APP_URL') === 'https://streamlytv.com') {
 
             if ((int)$roleId === $tieruserId) {
                 $stripePlanId = 'lLqM2zp3oUMO'; 
@@ -190,11 +190,12 @@ class UsersController extends Controller
         DB::table('subscriptions')->insert([
             'user_id' => $user->id,
             'name' => 'main',
-            'stripe_id' => 'sub_' . Str::random(16),
+            'stripe_id' => 'sub_custom_' . Str::random(16),
             'stripe_status' => 'active',
             'stripe_plan' => $stripePlanId, 
             'quantity' => $request->number_of_devices ?? 1,
             'ends_at' => null,
+            'renews_at' => $endsAt,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -256,8 +257,9 @@ class UsersController extends Controller
             'roles' => 'required|array',
             'number_of_devices' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
-        ]);
-    
+            'channel_availability' => 'required',
+        ]);  
+          
         $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
         $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
     
@@ -306,13 +308,15 @@ class UsersController extends Controller
         }
     
         // Step 4: Update zipcode rule
-        DB::table('user_zipcode_rules')
+      DB::table('user_zipcode_rules')
             ->where('email', $user->email)
-            ->where('zipcode', $request->zipcode)
             ->update([
                 'validate' => $request->channel_availability
             ]);
-    
+
+
+            
+
         // Step 5: Calculate subscription end date
         $endsAt = null;
         switch ($request->plan_duration) {
@@ -328,7 +332,7 @@ class UsersController extends Controller
             case '12 Months':
                 $endsAt = Carbon::now()->addMonths(12);
                 break;
-            case 'Never':
+            case 'Never':  
             default:
                 $endsAt = null;
                 break;
@@ -342,6 +346,7 @@ class UsersController extends Controller
                     'name' => 'main',
                     'stripe_status' => 'active',
                     'ends_at' => null,
+                    'renews_at' => $endsAt,
                     'quantity' => $newDeviceCount,
                     'updated_at' => now(),
                 ]
@@ -377,26 +382,24 @@ class UsersController extends Controller
 
                   
 
-        $planDuration = '';
-        
-        if (!empty($subscription->ends_at)) {
-            $endsAt = Carbon::parse($subscription->ends_at)->startOfDay();
-            $now = Carbon::now()->startOfDay();
-        
-            if ($endsAt->equalTo($now->copy()->addMonth())) {
-                $planDuration = '1 Month';
-            } elseif ($endsAt->equalTo($now->copy()->addMonths(3))) {
-                $planDuration = '3 Months';
-            } elseif ($endsAt->equalTo($now->copy()->addMonths(6))) {
-                $planDuration = '6 Months';
-            } elseif ($endsAt->equalTo($now->copy()->addMonths(12))) {
-                $planDuration = '12 Months';
-            } else {
-                $planDuration = '';
-            }
-        } else {
-            $planDuration = 'Never';
-        }
+   $planDuration = '';
+
+   if (!empty($subscription->renews_at)) {
+       $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+       $now = Carbon::now()->startOfDay();
+   
+       if ($endsAt->equalTo($now->copy()->addMonth())) {
+           $planDuration = '1 Month';
+       } elseif ($endsAt->equalTo($now->copy()->addMonths(3))) {
+           $planDuration = '3 Months';
+       } elseif ($endsAt->equalTo($now->copy()->addMonths(6))) {
+           $planDuration = '6 Months';
+       } elseif ($endsAt->equalTo($now->copy()->addMonths(12))) {
+           $planDuration = '12 Months';
+       }
+       // else leave it as '' if no match
+   }
+   
                     
                 
     return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'subscription', 'channelRule','planDuration','currentDeviceCount'));
