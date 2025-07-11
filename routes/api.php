@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SubscriptionCronController;
 
 Route::get('/', function (Request $request) {
     return 'Working';
