@@ -345,7 +345,7 @@ input[type=number] {
                         </span>
                       @endif
                     </div>
-
+ 
 
                     <div class="form-group">
                       <label>Channel Availability 
