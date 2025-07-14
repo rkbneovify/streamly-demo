@@ -423,26 +423,50 @@ class UsersController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-    public function destroy($id)
-    {
-        // Step 1: Get user details (especially email)
-        $user = User::find($id);
+    // public function destroy($id)
+    // {
+    //     // Step 1: Get user details (especially email)
+    //     $user = User::find($id);
     
+    //     if (!$user) {
+    //         return response()->json(['success' => 'User Not found.']);
+    //     }
+    
+    //     $email = $user->email;
+    
+    //     // Step 2: Delete related zipcode rules
+    //     DB::table('user_zipcode_rules')->where('email', $email)->delete();
+    
+    //     // Step 3: Delete user
+    //     $user->delete();
+    
+    //     return response()->json(['success' => 'User deleted successfully.']);
+    // }
+
+    
+    public function destroy($id)
+{
+    try {
+        $user = User::find($id);
         if (!$user) {
             return response()->json(['success' => 'User Not found.']);
         }
-    
+
         $email = $user->email;
-    
-        // Step 2: Delete related zipcode rules
+
+        DB::table('session_table')->where('users_id', $user->id)->delete();
+
         DB::table('user_zipcode_rules')->where('email', $email)->delete();
-    
-        // Step 3: Delete user
+
         $user->delete();
-    
+
         return response()->json(['success' => 'User deleted successfully.']);
+    } catch (\Exception $e) {
+        \Log::error('Delete user failed: ' . $e->getMessage());
+        return response()->json(['error' => 'Something went wrong.']);
     }
-    
+}
+
 
     public function massDestroy(Request $request)
     {
