@@ -359,52 +359,51 @@ class UsersController extends Controller
     
     
 
-
-
     public function edit($id)
-{
-    $user = User::find($id);
-    $roles = Role::get();
-    $userRoles = $user->roles->pluck('id')->toArray();
-
-    // Fetch latest subscription for the user
-    $subscription = DB::table('subscriptions')
-                    ->where('user_id', $id)
-                    ->latest('created_at')
-                    ->first();
-
-    // Fetch zipcode rule for the user based on email
-    $channelRule = DB::table('user_zipcode_rules')
-                    ->where('email', $user->email)
-                    ->first();
-
-   $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
-
-                  
-
-   $planDuration = '';
-
-   if (!empty($subscription->renews_at)) {
-       $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
-       $now = Carbon::now()->startOfDay();
-   
-       if ($endsAt->equalTo($now->copy()->addMonth())) {
-           $planDuration = '1 Month';
-       } elseif ($endsAt->equalTo($now->copy()->addMonths(3))) {
-           $planDuration = '3 Months';
-       } elseif ($endsAt->equalTo($now->copy()->addMonths(6))) {
-           $planDuration = '6 Months';
-       } elseif ($endsAt->equalTo($now->copy()->addMonths(12))) {
-           $planDuration = '12 Months';
-       }
-       // else leave it as '' if no match
-   }
-   
-                    
-                
-    return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'subscription', 'channelRule','planDuration','currentDeviceCount'));
-}
-
+    {
+        $user = User::find($id);
+        $roles = Role::get();
+        $userRoles = $user->roles->pluck('id')->toArray();
+    
+        $subscription = DB::table('subscriptions')
+            ->where('user_id', $id)
+            ->latest('created_at')
+            ->first();
+        // dd($subscription);
+        $channelRule = DB::table('user_zipcode_rules')
+            ->where('email', $user->email)
+            ->first();
+    
+        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+    
+        $planDuration = '';
+    
+        if (!empty($subscription->renews_at)) {
+            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+            $now = Carbon::now()->startOfDay();
+    
+            if ($endsAt->diffInDays($now->copy()->addMonth()) === 0) {
+                $planDuration = '1 Month';
+            } elseif ($endsAt->diffInDays($now->copy()->addMonths(3)) === 0) {
+                $planDuration = '3 Months';
+            } elseif ($endsAt->diffInDays($now->copy()->addMonths(6)) === 0) {
+                $planDuration = '6 Months';
+            } elseif ($endsAt->diffInDays($now->copy()->addMonths(12)) === 0) {
+                $planDuration = '12 Months';
+            }
+        }
+    
+        return view('admin.users.edit', compact(
+            'user',
+            'roles',
+            'userRoles',
+            'subscription',
+            'channelRule',
+            'planDuration',
+            'currentDeviceCount'
+        ));
+    }
+    
  
     
 
