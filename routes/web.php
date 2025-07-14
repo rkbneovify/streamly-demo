@@ -60,7 +60,7 @@ Route::get('/subscriptions/allcust', 'Admin\SubscriptionController@showAllcustom
 Route::get('/subscriptions/syncuser', 'Admin\SubscriptionController@syncStripeUser');
 
 
-Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('admin')->group(function () {
+Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::post('insertsubscriptionpack', 'Admin\SubscriptionPackController@store')->name('insertsubscriptionpack');
 
@@ -101,7 +101,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('hoteladmin/data', 'Admin\HotelController@HotelAdminUserAjaxData');
     Route::get('user/data', 'Admin\UsersController@UserAjaxData');
-    Route::get('/users/session', 'Admin\UsersController@activeSession'); //for user session
+    Route::get('/users/session', 'Admin\UsersController@activeSession')->name('user.session'); //for user session
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails'); //for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis'); //for user session piyush
     Route::get('/report/subscriptionsreport/{sort}', 'Admin\ReportController@SubscriptionsReports'); //for user session piyush
@@ -427,7 +427,7 @@ Route::get('/fail', 'PaymentlinkController@paymentfail');
 
 Route::any('/{any}', [AngularController::class, 'index'])
     ->where('any', '^(?!api|admin|stripe).*$')
-    ->name('angular'); 
+    ->name('angular');
 
 
 // cron route custom user
