@@ -391,41 +391,39 @@ input[type=number] {
                       <div style="display: flex; gap: 10px; margin-top: 8px;">
                         <!-- Show All Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="channel_availability" value=1 class="channel-check" id="all_channel" style="margin-right: 8px;">
+                          <input type="checkbox" name="channel_availability" value=1 class="channel-check" id="all_channel" style="margin-right: 8px;" checked>
                           Show All Channels
                         </label>
 
                         <!-- Show Local Channels -->
                         <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="channel_availability" value=1 class="channel-check" id="local_channel" style="margin-right: 8px;">
+                          <input type="checkbox" name="channel_availability" value=2 class="channel-check" id="local_channel" style="margin-right: 8px;">
                           Show Local Channels
                         </label>
                       </div>
                     </div>
 
 
-                    <div class="form-group">
-                      <label>Connected Device
-                        <span style="font-weight: normal; color: #999;">(Select only one)</span>
-                      </label>
+      <!-- Connected Device Section -->
+      <div class="form-group" id="connecteddeviceSection" style="display: none;">
+        <label>Connected Device
+          <span style="font-weight: normal; color: #999;">(Select only one)</span>
+        </label>
 
-                      <div style="display: flex; gap: 10px; margin-top: 8px;">
-                        <!-- Show All Channels -->
-                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="show_device" value=1 class="channel-check" id="show_device" style="margin-right: 8px;">
-                          Show
-                        </label>
- 
-                        <!-- Show Local Channels -->
-                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                          <input type="checkbox" name="no_device" value=0 class="channel-check" id="no_device" style="margin-right: 8px;">
-                        Hide
-                        </label>
-                      </div>
-                    </div>
+        <div style="display: flex; gap: 10px; margin-top: 8px;">
+          <!-- Hide -->
+          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" name="connected_device" value="0" class="connected-device" id="no_device" style="margin-right: 8px;" checked>
+            Hide
+          </label>
 
-
-
+          <!-- Show -->
+          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" name="connected_device" value="1" class="connected-device" id="show_device" style="margin-right: 8px;">
+            Show
+          </label>
+        </div>
+      </div>
 
                     <!-- /.card-body -->
                   </div>
@@ -529,6 +527,43 @@ input[type=number] {
     });
   });
 
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const connecteddeviceSection = document.getElementById('connecteddeviceSection');
+    const roleSelect = document.getElementById('roles');
+    const checkboxes = document.querySelectorAll('.connected-device');
+    const hideCheckbox = document.getElementById('no_device');
+
+    function handleRoleChange() {
+      const selectedRole = roleSelect.value;
+
+      if (selectedRole === '5') {
+        connecteddeviceSection.style.display = 'block';
+      } else {
+        connecteddeviceSection.style.display = 'none';
+
+        // Reset checkbox values
+        checkboxes.forEach(cb => cb.checked = false);
+        hideCheckbox.checked = true; // default to Hide
+      }
+    }
+
+    // Ensure only one checkbox is selected at a time
+    checkboxes.forEach((box) => {
+      box.addEventListener('change', function () {
+        if (this.checked) {
+          checkboxes.forEach((cb) => {
+            if (cb !== this) cb.checked = false;
+          });
+        }
+      });
+    });
+
+    handleRoleChange();
+
+    // Attach to change event
+    roleSelect.addEventListener('change', handleRoleChange);
+  });
 
 
       </script>
