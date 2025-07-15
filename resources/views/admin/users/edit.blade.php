@@ -371,28 +371,33 @@ input[type=number] {
 
 
                     <!-- new code  -->
-
                     <div class="form-group">
-        <label>Connected Device
-          <span style="font-weight: normal; color: #999;">(Select only one)</span>
+    <label>Connected Device
+        <span style="font-weight: normal; color: #999;">(Select only one)</span>
+    </label>
+
+    <!-- Hidden input to ensure value is submitted -->
+    <input type="hidden" name="connected_device" id="connected_device_input" value="{{ $user->connected_device ?? '' }}">
+
+    <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <!-- Hide -->
+        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" value="0" class="channel-checkk" 
+              {{ isset($user) && $user->connected_device == 0 ? 'checked' : '' }}>
+            &nbsp; Hide
         </label>
 
-        <div style="display: flex; gap: 10px; margin-top: 8px;">
-          <!-- Show All Channels -->
-          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-            <input type="checkbox" name="connected_device" value="0" class="channel-checkk"
-              {{ isset($user) && $user->connected_device == 0 ? 'checked' : '' }}>
-         Hide
-          </label>
-
-          <!-- Show Local Channels -->
-          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-            <input type="checkbox" name="connected_device" value="1" class="channel-checkk"
+        <!-- Show -->
+        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" value="1" class="channel-checkk" 
               {{ isset($user) && $user->connected_device == 1 ? 'checked' : '' }}>
-           Show          
-          </label>
-        </div>
-      </div>
+            &nbsp; Show
+        </label>
+    </div>
+</div>
+
+
+
 
 
 
@@ -524,9 +529,10 @@ function decreaseDevices() {
     handleRoleChange();
   });
 
-
+   
   document.addEventListener('DOMContentLoaded', function () {
     const checkboxes = document.querySelectorAll('.channel-checkk');
+    const hiddenInput = document.getElementById('connected_device_input');
 
     checkboxes.forEach((box) => {
       box.addEventListener('change', function () {
@@ -534,10 +540,16 @@ function decreaseDevices() {
           checkboxes.forEach((cb) => {
             if (cb !== this) cb.checked = false;
           });
+          hiddenInput.value = this.value;
+        } else {
+          if (![...checkboxes].some(cb => cb.checked)) {
+            hiddenInput.value = '';
+          }
         }
       });
     });
   });
+
   </script>
 
 @stop
