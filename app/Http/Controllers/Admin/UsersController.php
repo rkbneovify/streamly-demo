@@ -509,9 +509,9 @@ class UsersController extends Controller
             ->where('mode', $mode);
         //  search conditions
         if (!empty($request->search)) {
-            if (str_contains($request->search, '@')) {
+            if (strpos($request->search, '@') !== false) {
                 $query->where('email', 'Like', '%' . $request->search . '%');
-            } elseif (str_contains($request->search, '.')) {
+            } elseif (strpos($request->search, '.') !== false) {
                 $query->where('email', 'Like', '%' . $request->search . '%');
             } else {
                 $query->where('name', 'Like', '%' . $request->search . '%');
