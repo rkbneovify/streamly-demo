@@ -404,6 +404,27 @@ input[type=number] {
                     </div>
 
 
+                    <div class="form-group">
+                      <label>Connected Device
+                        <span style="font-weight: normal; color: #999;">(Select only one)</span>
+                      </label>
+
+                      <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <!-- Show All Channels -->
+                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+                          <input type="checkbox" name="show_device" value=1 class="channel-check" id="show_device" style="margin-right: 8px;">
+                          Show
+                        </label>
+ 
+                        <!-- Show Local Channels -->
+                        <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+                          <input type="checkbox" name="no_device" value=0 class="channel-check" id="no_device" style="margin-right: 8px;">
+                        Hide
+                        </label>
+                      </div>
+                    </div>
+
+
 
 
                     <!-- /.card-body -->
