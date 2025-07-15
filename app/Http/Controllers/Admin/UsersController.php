@@ -258,38 +258,38 @@ class UsersController extends Controller
     //         'plan_duration' => 'nullable|string',
     //         'channel_availability' => 'required',
     //     ]);  
-          
+
     //     $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
     //     $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
-    
+
     //     if (!empty($input['password'])) {
     //         $input['password'] = Hash::make($input['password']);
     //     } else {
     //         $input = Arr::except($input, ['password']);
     //     }
-    
+
     //     $user = User::find($id);
     //     $user->update($input);
-    
+
     //     $tieruserId = 5;
-    
+
     //     // Step 1: Get previous roles
     //     $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
     //     $wasTierUser = in_array($tieruserId, $previousRoles);
-    
+
     //     // Step 2: Update roles
     //     DB::table('role_user')->where('user_id', $id)->delete();
     //     foreach ($request->input('roles') as $value) {
     //         $user->attachRole($value);
     //     }
-    
+
     //     // Step 3: Device & hotel room handling (always reset if tier role selected)
     //     $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
     // // dd($newDeviceCount);  
     //     if (in_array($tieruserId, $request->input('roles'))) {
     //         // Became or still is a tier user — reset hotel rooms
     //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-    
+
     //         if ($newDeviceCount > 0) {
     //             for ($i = 0; $i < $newDeviceCount; $i++) {
     //                 DB::table('hotel_rooms')->insert([
@@ -305,7 +305,7 @@ class UsersController extends Controller
     //         // Not a tier user — delete any existing hotel rooms
     //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
     //     }
-    
+
     //     // Step 4: Update zipcode rule
     //   DB::table('user_zipcode_rules')
     //         ->where('email', $user->email)
@@ -314,7 +314,7 @@ class UsersController extends Controller
     //         ]);
 
 
-            
+
 
     //     // Step 5: Calculate subscription end date
     //     $endsAt = null;
@@ -336,7 +336,7 @@ class UsersController extends Controller
     //             $endsAt = null;
     //             break;
     //     }
-    
+
     //     // Step 6: Update subscription if tier user
     //     if (in_array($tieruserId, $request->input('roles'))) {
     //         DB::table('subscriptions')->updateOrInsert(
@@ -351,128 +351,128 @@ class UsersController extends Controller
     //             ]
     //         );
     //     }
-    
+
     //     return redirect('admin/users')->with('info', 'User Updated Successfully');
     // }
-    
+
 
 
 
     public function update(Request $request, $id)
-{
-    $this->validate($request, [
-        'name' => 'required|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'confirmed',
-        'roles' => 'required|array',
-        'number_of_devices' => 'nullable|integer|min:1',
-        'plan_duration' => 'nullable|string',
-        'channel_availability' => 'required',
-    ]);
-
-    $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
-    $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
-
-    if (!empty($input['password'])) {
-        $input['password'] = Hash::make($input['password']);
-    } else {
-        $input = Arr::except($input, ['password']);
-    }
-
-    $user = User::find($id);
-    $user->update($input);
-
-    $tieruserId = 5;
-
-    // Step 1: Get previous roles
-    $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
-    $wasTierUser = in_array($tieruserId, $previousRoles);
-
-    // Step 2: Update roles
-    DB::table('role_user')->where('user_id', $id)->delete();
-    foreach ($request->input('roles') as $value) {
-        $user->attachRole($value);
-    }
-
-    // Step 3: Device & hotel room handling
-    $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
-
-    if (in_array($tieruserId, $request->input('roles'))) {
-        $existingRooms = DB::table('hotel_rooms')->where('user_id', $user->id)->orderBy('id')->get();
-        $existingCount = $existingRooms->count();
-
-        if ($newDeviceCount > $existingCount) {
-            // Add only the difference
-            $roomsToAdd = $newDeviceCount - $existingCount;
-            for ($i = 0; $i < $roomsToAdd; $i++) {
-                DB::table('hotel_rooms')->insert([
-                    'user_id' => $user->id,
-                    'hotel_room' => 'Room' . ($existingCount + $i),
-                    'session_id' => null,
-                    'created_on' => now(),
-                    'modified_on' => now(),
-                ]);
-            }
-        } elseif ($newDeviceCount < $existingCount) {
-            // Delete extra rooms from the end
-            $extraRooms = $existingRooms->slice($newDeviceCount);
-            foreach ($extraRooms as $room) {
-                DB::table('hotel_rooms')->where('id', $room->id)->delete();
-            }
-        }
-    } else {
-        // Not a tier user — delete all hotel rooms
-        DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-    }
-
-    // Step 4: Update zipcode rule
-    DB::table('user_zipcode_rules')
-        ->where('email', $user->email)
-        ->update([
-            'validate' => $request->channel_availability
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'confirmed',
+            'roles' => 'required|array',
+            'number_of_devices' => 'nullable|integer|min:1',
+            'plan_duration' => 'nullable|string',
+            'channel_availability' => 'required',
         ]);
 
-    // Step 5: Calculate subscription end date
-    $endsAt = null;
-    switch ($request->plan_duration) {
-        case '1 Month':
-            $endsAt = Carbon::now()->addMonth();
-            break;
-        case '3 Months':
-            $endsAt = Carbon::now()->addMonths(3);
-            break;
-        case '6 Months':
-            $endsAt = Carbon::now()->addMonths(6);
-            break;
-        case '12 Months':
-            $endsAt = Carbon::now()->addMonths(12);
-            break;
-        case 'Never':
-        default:
-            $endsAt = null;
-            break;
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
+        $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
+
+        if (!empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, ['password']);
+        }
+
+        $user = User::find($id);
+        $user->update($input);
+
+        $tieruserId = 5;
+
+        // Step 1: Get previous roles
+        $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
+        $wasTierUser = in_array($tieruserId, $previousRoles);
+
+        // Step 2: Update roles
+        DB::table('role_user')->where('user_id', $id)->delete();
+        foreach ($request->input('roles') as $value) {
+            $user->attachRole($value);
+        }
+
+        // Step 3: Device & hotel room handling
+        $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
+
+        if (in_array($tieruserId, $request->input('roles'))) {
+            $existingRooms = DB::table('hotel_rooms')->where('user_id', $user->id)->orderBy('id')->get();
+            $existingCount = $existingRooms->count();
+
+            if ($newDeviceCount > $existingCount) {
+                // Add only the difference
+                $roomsToAdd = $newDeviceCount - $existingCount;
+                for ($i = 0; $i < $roomsToAdd; $i++) {
+                    DB::table('hotel_rooms')->insert([
+                        'user_id' => $user->id,
+                        'hotel_room' => 'Room' . ($existingCount + $i),
+                        'session_id' => null,
+                        'created_on' => now(),
+                        'modified_on' => now(),
+                    ]);
+                }
+            } elseif ($newDeviceCount < $existingCount) {
+                // Delete extra rooms from the end
+                $extraRooms = $existingRooms->slice($newDeviceCount);
+                foreach ($extraRooms as $room) {
+                    DB::table('hotel_rooms')->where('id', $room->id)->delete();
+                }
+            }
+        } else {
+            // Not a tier user — delete all hotel rooms
+            DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+        }
+
+        // Step 4: Update zipcode rule
+        DB::table('user_zipcode_rules')
+            ->where('email', $user->email)
+            ->update([
+                'validate' => $request->channel_availability
+            ]);
+
+        // Step 5: Calculate subscription end date
+        $endsAt = null;
+        switch ($request->plan_duration) {
+            case '1 Month':
+                $endsAt = Carbon::now()->addMonth();
+                break;
+            case '3 Months':
+                $endsAt = Carbon::now()->addMonths(3);
+                break;
+            case '6 Months':
+                $endsAt = Carbon::now()->addMonths(6);
+                break;
+            case '12 Months':
+                $endsAt = Carbon::now()->addMonths(12);
+                break;
+            case 'Never':
+            default:
+                $endsAt = null;
+                break;
+        }
+
+        // Step 6: Update subscription if tier user
+        if (in_array($tieruserId, $request->input('roles'))) {
+            DB::table('subscriptions')->updateOrInsert(
+                ['user_id' => $user->id],
+                [
+                    'name' => 'main',
+                    'stripe_status' => 'active',
+                    'ends_at' => null,
+                    'renews_at' => $endsAt,
+                    'quantity' => $newDeviceCount,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
 
-    // Step 6: Update subscription if tier user
-    if (in_array($tieruserId, $request->input('roles'))) {
-        DB::table('subscriptions')->updateOrInsert(
-            ['user_id' => $user->id],
-            [
-                'name' => 'main',
-                'stripe_status' => 'active',
-                'ends_at' => null,
-                'renews_at' => $endsAt,
-                'quantity' => $newDeviceCount,
-                'updated_at' => now(),
-            ]
-        );
-    }
 
-    return redirect('admin/users')->with('info', 'User Updated Successfully');
-}
 
-    
-    
 
     public function edit($id)
     {
@@ -563,33 +563,33 @@ class UsersController extends Controller
     {
         try {
             $user = User::find($id);
-    
+
             if (!$user) {
                 \Log::warning("User delete attempt failed: User ID {$id} not found.");
                 return response()->json(['error' => 'User not found.'], 404);
             }
-    
+
             $email = $user->email;
-    
+
             \Log::info("Attempting to delete related data for user ID {$id}");
-    
+
             // Delete related rows in foreign key tables first
             DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
-    
+
             DB::table('session_table')->where('users_id', $user->id)->delete();
             DB::table('user_zipcode_rules')->where('email', $email)->delete();
-    
+
             $user->delete();
-    
+
             \Log::info("User ID {$id} successfully deleted.");
             return response()->json(['success' => 'User deleted successfully.']);
         } catch (\Exception $e) {
             \Log::error("Delete user failed for ID {$id}: " . $e->getMessage());
             return response()->json(['error' => 'Something went wrong while deleting the user.'], 500);
         }
-    }  
-    
-    
+    }
+
+
 
 
     public function massDestroy(Request $request)
@@ -634,9 +634,9 @@ class UsersController extends Controller
             ->where('mode', $mode);
         //  search conditions
         if (!empty($request->search)) {
-            if (strpos($request->search, '@') !== false) {
-                $query->where('email', 'Like', '%' . $request->search . '%');
-            } elseif (strpos($request->search, '.') !== false) {
+            $subQuery = User::query();
+            $data = $subQuery->where('email', 'Like', '%' . $request->search . '%')->get();
+            if (count($data) > 0) {
                 $query->where('email', 'Like', '%' . $request->search . '%');
             } else {
                 $query->where('name', 'Like', '%' . $request->search . '%');
@@ -653,10 +653,14 @@ class UsersController extends Controller
             ->where("status", '1')
             ->whereIn('users_id', $userIds)
             ->groupBy('users_id')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends(request()->query());
 
         // return response()->json(['success' => true, "datalist" => $allSession]);
         $roles = Role::get();
+        if ($request->ajax()) {
+            return view('admin.users.partials.users-table', compact('allSession', 'roles'))->render();
+        }
         return view('admin.users.sessions', compact('allSession', 'roles'));
     }
 
@@ -842,7 +846,7 @@ class UsersController extends Controller
             ->where('email', 'like', '%' . $searchValue . '%')->count();
 
         // Fetch records
-        $records = User::whereHas('roles', function ($query) use ($searchroleValue) {
+        $records = User::latest()->whereHas('roles', function ($query) use ($searchroleValue) {
             $query->where('roles.name', 'like',  '%' . $searchroleValue . '%');
         })->where('email', 'like', '%' . $searchValue . '%')
             ->orderBy($columnName, $columnSortOrder)
