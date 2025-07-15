@@ -334,12 +334,13 @@ class APIController extends Controller
         return response()->json($response, 200);
     }
 
-    // new code show/hide connected deviceapi 
+
+    // new code show/hide connected deviceapi for andriod api
 
 
     public function newconnecteddevice()
     {
- 
+
         $user = JWTAuth::user(); // All the user info
         $uid = $user->id;
         $userRole = $user->roles->first()->name;
