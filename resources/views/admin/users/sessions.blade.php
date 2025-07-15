@@ -1,3 +1,25 @@
+<style>
+    .input-container {
+        position: relative;
+
+    }
+
+    .btn-clear {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 30px;
+        color: #888;
+        display: none;
+    }
+
+    .btn-clear:hover {
+        color: #000;
+    }
+</style>
 @extends('master')
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -25,133 +47,67 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Users ({{ $allSession->total() }})</h3>
+                    @if (empty(Request()->role))
+                        <h3 class="card-title"> Users ({{ $allSession->total() }})</h3>
+                    @else
+                        @foreach ($roles as $role)
+                            @if (Request()->role == $role->id)
+                                <h3 class="card-title">{{ Str::ucfirst($role->display_name) }}
+                                    ({{ $allSession->total() }})
+                                </h3>
+                            @endif
+                        @endforeach
+                    @endif
 
-                    <div class="card-tools">
+
+                    {{-- <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                             title="Collapse">
                             <i class="fas fa-minus"></i></button>
                         <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip"
                             title="Remove">
                             <i class="fas fa-times"></i></button>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="card-header">
-                    <form class="row g-3">
+                    <div class="row">
                         <div class="col-md-3">
                             <select class="form-control" name="role">
                                 <option selected value="">Select role</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}"
                                         {{ Request()->role == $role->id ? 'selected' : '' }}>
-                                        {{ $role->display_name }}</option>
+                                        {{ Str::ucfirst($role->display_name) }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-5">
-                            <input type="text" name="search" value="{{ Request()->search }}" class="form-control"
-                                placeholder="Search by name, email">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control" placeholder="Search by name, email">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
                         </div>
                         <div class="col-md-2"></div>
 
-                        <div class="col-md-1">
-                            <button type="submit" class="btn btn-primary mb-3 w-100">Search</button>
-                        </div>
-                        <div class="col-md-1">
-                            <button name="btnClear" type="button" class="btn btn-light mb-3 w-100">Clear</button>
-                        </div>
-                    </form>
+
+                    </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-striped projects">
-                        <thead>
-                            <tr>
-                                <th style="width: 1%">
-                                    #
-                                </th>
-                                <th style="width: 20%">
-                                    Role
-                                </th>
-                                <th style="width: 20%">
-                                    Name
-                                </th>
-                                <th style="width: 20%">
-                                    Email
-                                </th>
-                                <th style="width: 30%">
-                                    No. connected device
-                                </th>
+                <div id="user-data">
 
-                                {{-- <th style="width: 8%" class="text-center">
-                          Status
-                      </th> --}}
-                                <th style="width: 20%">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($allSession as $key => $user)
-                                <tr data-entry-id="">
-                                    <td>
-                                        {{ $key + $allSession->firstItem() }}
-                                    </td>
-                                    <td>
-                                        {{ $user->user->roles->first()->display_name ?? '' }}
-                                    </td>
-                                    <td>
-                                        {{ $user->user->name ?? '' }}
-                                    </td>
-                                    <td>
-                                        {{ $user->user->email ?? '' }}
-                                    </td>
-
-
-                                    <td>
-                                        {{ $user->activesession ?? '' }}
-                                    </td>
-                                    {{-- <td class="project-state">
-                            @if ($user->is_active === 1)
-                            <span class="badge badge-success">Active</span>
-@elseif ($user->is_active===0)
-<span class="badge badge-danger">Inactive</span>
-@else
-    unknown
-@endif
-                          
-                            
-                          
-                      </td> --}}
-                                    <td class="project-actions text-right">
-
-                                        <a class="btn btn-xs btn-primary"
-                                            href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
-                                        {{-- <a class="btn btn-xs btn-info" href="{{ url('admin/users/connected', $user->users_id) }}">Edit</a>
-                          
-                                    <form action="{{ url('admin/users/destroy', $user->users_id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                    </form> --}}
-
-
-
-
-                                    </td>
-
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    @include('admin.users.partials.users-table')
                 </div>
-                <div class="container">
+
+                {{-- <div class="container">
                     <div class="row justify-content-end">
                         <div class="col-md-5">
                             {{ $allSession->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
-                </div>
+                </div> --}}
+
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -162,7 +118,7 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('select[name="role"]').change(function() {
                 let url = new URL(window.location.href);
@@ -172,11 +128,55 @@
                 window.location.href = url.toString();
             });
 
+            $('input[name="search"]').on('input', function() {
+                let value = $(this).val();
+                let url = new URL(window.location.href);
+                url.searchParams.set('search', $(this).val());
+                window.location.href = url.toString();
+                //    alert($(this).val());
+            });
+
             $('button[name="btnClear"]').click(function() {
                 // $('select[name="role"]')[0].selectedIndex = 0;
                 // $('input[name="search"]').val('');
                 location.href = "{{ route('admin.user.session') }}"
             })
         });
+    </script> --}}
+    <script>
+        $('#btnClear').hide();
+
+        function fetchData(page = 1) {
+
+            let search = $('input[name="search"]').val();
+            // let role = $('select[name="role"]').val();
+
+            $.ajax({
+                url: "{{ route('admin.user.session') }}" + "?page=" + page + "&search=" + search,
+                success: function(data) {
+                    $('#user-data').html(data);
+                }
+            });
+        }
+
+        $(document).on('keyup', 'input[name="search"]', function() {
+            let search = $('input[name="search"]').val();
+            if (search.length > 0) {
+                $('#btnClear').show();
+            }
+            fetchData();
+        });
+        $('select[name="role"]').change(function() {
+            let url = new URL(window.location.href);
+            url.searchParams.set('role', $(this).val());
+            window.location.href = url.toString();
+        });
+        $('#btnClear').click(function() {
+
+            $('input[name="search"]').val('');
+            fetchData();
+            $('#btnClear').hide();
+
+        })
     </script>
 @endsection
