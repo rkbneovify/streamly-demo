@@ -432,48 +432,45 @@ class UsersController extends Controller
             'validate' => $request->channel_availability
         ]);
 
-
-            
-
-        // Step 5: Calculate subscription end date
-        $endsAt = null;
-        switch ($request->plan_duration) {
-            case '1 Month':
-                $endsAt = Carbon::now()->addMonth();
-                break;
-            case '3 Months':
-                $endsAt = Carbon::now()->addMonths(3);
-                break;
-            case '6 Months':
-                $endsAt = Carbon::now()->addMonths(6);
-                break;
-            case '12 Months':
-                $endsAt = Carbon::now()->addMonths(12);
-                break;
-            case 'Never':  
-            default:
-                $endsAt = null;
-                break;
-        }
-    
-        // Step 6: Update subscription if tier user
-        if (in_array($tieruserId, $request->input('roles'))) {
-            DB::table('subscriptions')->updateOrInsert(
-                ['user_id' => $user->id],
-                [
-                    'name' => 'main',
-                    'stripe_status' => 'active',
-                    'ends_at' => null,
-                    'renews_at' => $endsAt,
-                    'quantity' => $newDeviceCount,
-                    'updated_at' => now(),
-                ]
-            );
-        }
-    
-        return redirect('admin/users')->with('info', 'User Updated Successfully');
+    // Step 5: Calculate subscription end date
+    $endsAt = null;
+    switch ($request->plan_duration) {
+        case '1 Month':
+            $endsAt = Carbon::now()->addMonth();
+            break;
+        case '3 Months':
+            $endsAt = Carbon::now()->addMonths(3);
+            break;
+        case '6 Months':
+            $endsAt = Carbon::now()->addMonths(6);
+            break;
+        case '12 Months':
+            $endsAt = Carbon::now()->addMonths(12);
+            break;
+        case 'Never':
+        default:
+            $endsAt = null;
+            break;
     }
-    
+
+    // Step 6: Update subscription if tier user
+    if (in_array($tieruserId, $request->input('roles'))) {
+        DB::table('subscriptions')->updateOrInsert(
+            ['user_id' => $user->id],
+            [
+                'name' => 'main',
+                'stripe_status' => 'active',
+                'ends_at' => null,
+                'renews_at' => $endsAt,
+                'quantity' => $newDeviceCount,
+                'updated_at' => now(),
+            ]
+        );
+    }
+
+    return redirect('admin/users')->with('info', 'User Updated Successfully');
+}
+
     
     
 
@@ -563,27 +560,36 @@ class UsersController extends Controller
 
 
     public function destroy($id)
-{
-    try {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['success' => 'User Not found.']);
+    {
+        try {
+            $user = User::find($id);
+    
+            if (!$user) {
+                \Log::warning("User delete attempt failed: User ID {$id} not found.");
+                return response()->json(['error' => 'User not found.'], 404);
+            }
+    
+            $email = $user->email;
+    
+            \Log::info("Attempting to delete related data for user ID {$id}");
+    
+            // Delete related rows in foreign key tables first
+            DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
+    
+            DB::table('session_table')->where('users_id', $user->id)->delete();
+            DB::table('user_zipcode_rules')->where('email', $email)->delete();
+    
+            $user->delete();
+    
+            \Log::info("User ID {$id} successfully deleted.");
+            return response()->json(['success' => 'User deleted successfully.']);
+        } catch (\Exception $e) {
+            \Log::error("Delete user failed for ID {$id}: " . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong while deleting the user.'], 500);
         }
-
-        $email = $user->email;
-
-        DB::table('session_table')->where('users_id', $user->id)->delete();
-
-        DB::table('user_zipcode_rules')->where('email', $email)->delete();
-
-        $user->delete();
-
-        return response()->json(['success' => 'User deleted successfully.']);
-    } catch (\Exception $e) {
-        \Log::error('Delete user failed: ' . $e->getMessage());
-        return response()->json(['error' => 'Something went wrong.']);
-    }
-}
+    }  
+    
+    
 
 
     public function massDestroy(Request $request)
