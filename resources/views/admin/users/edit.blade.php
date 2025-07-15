@@ -370,6 +370,32 @@ input[type=number] {
                     </div>
 
 
+                    <!-- new code  -->
+
+                    <div class="form-group">
+        <label>Connected Device
+          <span style="font-weight: normal; color: #999;">(Select only one)</span>
+        </label>
+
+        <div style="display: flex; gap: 10px; margin-top: 8px;">
+          <!-- Show All Channels -->
+          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" name="connected_device" value="0" class="channel-checkk"
+              {{ isset($user) && $user->connected_device == 0 ? 'checked' : '' }}>
+         Hide
+          </label>
+
+          <!-- Show Local Channels -->
+          <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
+            <input type="checkbox" name="connected_device" value="1" class="channel-checkk"
+              {{ isset($user) && $user->connected_device == 1 ? 'checked' : '' }}>
+           Show          
+          </label>
+        </div>
+      </div>
+
+
+
 
             <div class="form-group">
               <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
@@ -498,7 +524,20 @@ function decreaseDevices() {
     handleRoleChange();
   });
 
-  
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.channel-checkk');
+
+    checkboxes.forEach((box) => {
+      box.addEventListener('change', function () {
+        if (this.checked) {
+          checkboxes.forEach((cb) => {
+            if (cb !== this) cb.checked = false;
+          });
+        }
+      });
+    });
+  });
   </script>
 
 @stop
