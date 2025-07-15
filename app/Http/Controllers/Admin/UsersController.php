@@ -58,6 +58,8 @@ class UsersController extends Controller
                 'roles' => 'required|numeric',
                 'plan_duration' => 'required|string',
                 'number_of_devices' => 'nullable|integer|min:1',
+               'connected_device' => 'required|in:0,1',
+
             ]);
     
             if ($validator->fails()) {
@@ -83,6 +85,7 @@ class UsersController extends Controller
                 'state' => $request->state ?? null,
                 'address' => $request->address ?? null,
                 'zipcode' => $request->zipcode,
+                'connected_device' => $request->connected_device,
                 'email_verified_at' => null,
                 'stripe_id' => 'sub_K6XMZT4knnWBOI',
                 'card_brand' => 'visa',
@@ -360,28 +363,38 @@ class UsersController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    $this->validate($request, [
-        'name' => 'required|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'confirmed',
-        'roles' => 'required|array',
-        'number_of_devices' => 'nullable|integer|min:1',
-        'plan_duration' => 'nullable|string',
-        'channel_availability' => 'required',
-    ]);
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'confirmed',
+            'roles' => 'required|array',
+            'number_of_devices' => 'nullable|integer|min:1',
+            'connected_device' => 'nullable|integer|min:1',
+            'plan_duration' => 'nullable|string',
+            'channel_availability' => 'required',
+        ]);
+    
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
+    
+        $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
+    
+        // Handle password
+        if (!empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, ['password']);
+        }
+    
+        $user = User::find($id);
 
-    $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
-    $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
-
-    if (!empty($input['password'])) {
-        $input['password'] = Hash::make($input['password']);
-    } else {
-        $input = Arr::except($input, ['password']);
-    }
-
-    $user = User::find($id);
-    $user->update($input);
+            if ($request->has('connected_device')) {
+            $input['connected_device'] = $request->connected_device; // use new value
+        } else {
+            $input['connected_device'] = $user->connected_device; // keep old value
+        } 
+    
+        $user->update($input);
 
     $tieruserId = 5;
 
