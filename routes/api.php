@@ -150,6 +150,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('timezonefrontendepg', 'Admin\ChannelController@timezoneEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
+    Route::get('newconnecteddevice', 'APIController@newconnecteddevice');
+
+
+    
     Route::match(['put', 'patch', 'post'], 'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
     Route::get('/homescreenbanner', 'HomescreenBannerController@index'); //piyush banner
