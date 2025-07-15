@@ -369,12 +369,14 @@ class UsersController extends Controller
             'password' => 'confirmed',
             'roles' => 'required|array',
             'number_of_devices' => 'nullable|integer|min:1',
-            'connected_device' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
             'channel_availability' => 'required',
+            'connected_device' => 'required|in:0,1',
+
         ]);
-    
-        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
+
+
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact','connected_device');
     
         $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
     
@@ -391,7 +393,7 @@ class UsersController extends Controller
             $input['connected_device'] = $request->connected_device; // use new value
         } else {
             $input['connected_device'] = $user->connected_device; // keep old value
-        } 
+        }  
     
         $user->update($input);
 
