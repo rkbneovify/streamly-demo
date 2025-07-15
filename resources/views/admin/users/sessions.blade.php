@@ -118,31 +118,7 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-    {{-- <script>
-        $(document).ready(function() {
-            $('select[name="role"]').change(function() {
-                let url = new URL(window.location.href);
-                url.searchParams.set('role', $(this).val());
-                url.searchParams.set('search', '');
-                url.searchParams.set('page', '');
-                window.location.href = url.toString();
-            });
-
-            $('input[name="search"]').on('input', function() {
-                let value = $(this).val();
-                let url = new URL(window.location.href);
-                url.searchParams.set('search', $(this).val());
-                window.location.href = url.toString();
-                //    alert($(this).val());
-            });
-
-            $('button[name="btnClear"]').click(function() {
-                // $('select[name="role"]')[0].selectedIndex = 0;
-                // $('input[name="search"]').val('');
-                location.href = "{{ route('admin.user.session') }}"
-            })
-        });
-    </script> --}}
+   
     <script>
         $('#btnClear').hide();
 
