@@ -344,78 +344,77 @@ class APIController extends Controller
         $user = JWTAuth::user(); // All the user info
         $uid = $user->id;
         $userRole = $user->roles->first()->name;
-    
+
         // Fetch `connected_device` from users table
         $userConnectedDevice = $user->connected_device; // This is the new value you want
-    
+
         if ($userRole == 'tieruser') {
             $prevConnectDevicecount = SessionTable::with([
                 'hotel:id,hotel_room,session_id',
                 'pdname' => function ($q) use ($uid) {
                     $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                      ->where('user_id', '=', $uid);
+                        ->where('user_id', '=', $uid);
                 }
             ])
-            ->select('user_ip', 'logintime')
-            ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
-            ->where([
-                ['status', '=', '1'],
-                ['users_id', '=', $uid],
-            ])
-            ->orderBy('connected_devices', 'asc');
-    
+                ->select('user_ip', 'logintime')
+                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $uid],
+                ])
+                ->orderBy('connected_devices', 'asc');
+
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-    
+
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
                 return $address;
             });
-    
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
                     $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                      ->where('user_id', '=', $uid);
+                        ->where('user_id', '=', $uid);
                 }
             ])
-            ->where([
-                ['status', '=', '1'],
-                ['users_id', '=', $uid],
-            ])
-            ->select('user_ip', 'logintime')
-            ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
-            ->orderBy('connected_devices', 'asc');
-    
+                ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $uid],
+                ])
+                ->select('user_ip', 'logintime')
+                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                ->orderBy('connected_devices', 'asc');
+
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-    
+
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
             });
-        }  
-    
+        }
+
         $numofdevice = $prevConnectDevicecount->count();
-    
+
         // Final response
         $response = [
             'success' => true,
             'response_code' => 200,
             'numofdevice' => $numofdevice,
             'userDeviceLimit' => GetLimitForUser($uid),
-            'user_connected_device' => $userConnectedDevice, 
+            'user_connected_device' => $userConnectedDevice,
             'message' => 'Connected device found successfully',
             'data' => $s,
         ];
-    
+
         return response()->json($response, 200);
     }
-    
-    
+
+
 
     public function support()
     {
