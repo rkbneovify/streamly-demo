@@ -136,6 +136,8 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+
+
         $deviceDetails    = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
@@ -154,6 +156,8 @@ class AuthController extends Controller
 
         $user = JWTAuth::user();
 
+
+
         if ($user->email_verified_at == null) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
         }
@@ -161,12 +165,31 @@ class AuthController extends Controller
         if ($user->is_active == 0) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
+
+        if ($user->is_custom_user == 1) {
+            $deviceLimit =  GetLimitForUser($user->id);
+            $userActiveDeviceCount = SessionTable::with('user', 'hotel')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+                ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $user->id],
+                ])->orderBy('connected_devices', 'asc')->count();
+            if ($deviceLimit == $userActiveDeviceCount) {
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 401,
+                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
+
+                ], 401);
+            }
+        }
+
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
             $uid =  $user['id'];
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
+
         $this->authenticated($request, $user, $token);
         return $this->respondWithToken($token);
     }
