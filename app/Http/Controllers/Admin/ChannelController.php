@@ -30,7 +30,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete','channelStore']]);
+        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore']]);
     }
     public function index()
     {
@@ -216,6 +216,7 @@ class ChannelController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'name' => 'required',
             'url' => 'required',
@@ -477,16 +478,20 @@ class ChannelController extends Controller
             [
                 'store_name' => "Channel Store 1",
                 'store_url' => "https://channelstore1.streamlytv.com/admin/#/"
-            ], [
+            ],
+            [
                 'store_name' => "Channel Store 2",
                 'store_url' => "https://channelstore2.streamlytv.com/admin/#/"
-            ], [
+            ],
+            [
                 'store_name' => "Channel Store 3",
                 'store_url' => "https://channelstore3.streamlytv.com/admin/#/"
-            ], [
+            ],
+            [
                 'store_name' => "Channel Store 4",
                 'store_url' => "https://channelstore4.streamlytv.com/admin/#/"
-            ], [
+            ],
+            [
                 'store_name' => "Channel Store 5",
                 'store_url' => "https://channelstore5.streamlytv.com/admin/#/"
             ],
