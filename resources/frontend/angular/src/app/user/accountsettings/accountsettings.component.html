@@ -94,55 +94,64 @@
         <label for=""> Current Timezone </label>
         <p>{{getUserTimezoneName()}}</p>
       </div>
-      <div *ngIf="userinfo?.passcode" class="acoount_user_currtimezone my-3">
-        <label for=""> passcode</label>
-        <p class="position-relative">
-          {{ togglePasscode ? userinfo?.passcode : "********" }}
-          <img
-            *ngIf="togglePasscode"
-            class="pointer position-absolute"
-            (click)="togglePasscode = !togglePasscode"
-            src="../../../assets/dummy-img/eye.svg"
-            alt=""
-            loading="lazy"
-          />
-          <svg
-            *ngIf="!togglePasscode"
-            (click)="togglePasscode = !togglePasscode"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-eye-slash pointer position-absolute"
-            viewBox="0 0 16 16"
-            style="color: white"
-          >
-            <path
-              d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+      <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+        <div *ngIf="userinfo?.passcode" class="acoount_user_currtimezone my-3">
+          <label for=""> passcode</label>
+          <p class="position-relative">
+            {{ togglePasscode ? userinfo?.passcode : "********" }}
+            <img
+              *ngIf="togglePasscode"
+              class="pointer position-absolute"
+              (click)="togglePasscode = !togglePasscode"
+              src="../../../assets/dummy-img/eye.svg"
+              alt=""
+              loading="lazy"
             />
-            <path
-              d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
-            />
-            <path
-              d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c-.335.48-.83 1.12-1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
-            />
-          </svg>
-        </p>
-      </div>
+            <svg
+              *ngIf="!togglePasscode"
+              (click)="togglePasscode = !togglePasscode"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-eye-slash pointer position-absolute"
+              viewBox="0 0 16 16"
+              style="color: white"
+            >
+              <path
+                d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+              />
+              <path
+                d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+              />
+              <path
+                d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c-.335.48-.83 1.12-1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+              />
+            </svg>
+          </p>
+        </div>
+      </ng-container>
+      
+
       <div class="acoount_user_zipcode my-3">
         <label for=""> Zipcode </label>
         <!-- <input class="input_plane" formControlName="zipcode" type="text" name="" id=""> -->
         <p>{{ updateuserDetatils.get("zipcode")?.value }}</p>
       </div>
     </div>
+
     <div class="accountbtn_container">
-      <button
-        (click)="showPopDeleteAccount()"
-        *ngIf="!editMode"
-        class="plan_btn btn-delete text-nowrap"
-      >
-        Account Delete
-      </button>
+      
+      <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+        <button
+          (click)="showPopDeleteAccount()"
+          *ngIf="!editMode"
+          class="plan_btn btn-delete text-nowrap"
+        >
+          Account Delete
+        </button>
+      </ng-container>
+
       <button
         *ngIf="!editMode"
         class="plan_btn btn-edit"
@@ -167,156 +176,165 @@
         Cancel
       </button>
     </div>
+
+
   </form>
 
-  <div
-    class="account_details_container account_subscription_container mb-4"
-    *ngIf="subscribed && planName"
-  >
-    <p class="account-heading mb-4">Subscription</p>
-    <div class="accountdetails">
-      <div class="acoount_user_name">
-        <label>Current Plan</label>
-        <p>{{ planName }}</p>
-      </div>
-      <div
-        [ngClass]="{
-          'acoount_user_name my-4': true,
-          'h-auto-min': billingScheme == 'tiered'
-        }"
-      >
-        <label [ngClass]="{ 'flex-1': billingScheme == 'tiered' }"
-          >Current Plan Type</label
-        >
-        <p *ngIf="billingScheme == 'per_unit'">{{ billingScheme }}</p>
+  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+    <div
+      class="account_details_container account_subscription_container mb-4"
+      *ngIf="subscribed && planName"
+    >
+      <p class="account-heading mb-4">Subscription</p>
+      <div class="accountdetails">
+        <div class="acoount_user_name">
+          <label>Current Plan</label>
+          <p>{{ planName }}</p>
+        </div>
         <div
-          *ngIf="billingScheme == 'tiered'"
           [ngClass]="{
-            'row_total align-items-start flex-column justify-content-between': true,
-            'h-auto-min flex-1': billingScheme == 'tiered'
+            'acoount_user_name my-4': true,
+            'h-auto-min': billingScheme == 'tiered'
           }"
         >
-          <div class="pointer" (click)="showTiredPlan = !showTiredPlan">
-            <img
-              loading="lazy"
-              [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
-              src="../../../assets/dummy-img/chevron-down.svg"
-              alt=""
-            />
-            <div class="text-center tiers def-color">
-              Tiers {{ interval_count }} {{ planInterval }}
-            </div>
-          </div>
-
-          <div
-            [ngClass]="{
-              tiers_plan_dec: true,
-              'h-auto-min': billingScheme == 'tiered'
-            }"
-            *ngIf="showTiredPlan"
+          <label [ngClass]="{ 'flex-1': billingScheme == 'tiered' }"
+            >Current Plan Type</label
           >
-            <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
-              <div class="h-auto py-3">Quantity</div>
-              <div class="h-auto py-3">Price per unit</div>
-              <div class="h-auto py-3">Flat amount</div>
-            </div>
-
-            <div
-              *ngFor="let tPlans of tiredPlansDetails"
-              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
-            >
-              <div *ngIf="tPlans.up_to">
-                For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
-                {{ tPlans.up_to }}
+          <p *ngIf="billingScheme == 'per_unit'">{{ billingScheme }}</p>
+          <div
+            *ngIf="billingScheme == 'tiered'"
+            [ngClass]="{
+              'row_total align-items-start flex-column justify-content-between': true,
+              'h-auto-min flex-1': billingScheme == 'tiered'
+            }"
+          >
+            <div class="pointer" (click)="showTiredPlan = !showTiredPlan">
+              <img
+                loading="lazy"
+                [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+                src="../../../assets/dummy-img/chevron-down.svg"
+                alt=""
+              />
+              <div class="text-center tiers def-color">
+                Tiers {{ interval_count }} {{ planInterval }}
               </div>
-              <div *ngIf="tPlans.up_to == null">For the rest</div>
-              <div>${{ +tPlans.unit_amount / 100 }}</div>
-              <div>${{ +tPlans.flat_amount / 100 }}</div>
+            </div>
+  
+            <div
+              [ngClass]="{
+                tiers_plan_dec: true,
+                'h-auto-min': billingScheme == 'tiered'
+              }"
+              *ngIf="showTiredPlan"
+            >
+              <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
+                <div class="h-auto py-3">Quantity</div>
+                <div class="h-auto py-3">Price per unit</div>
+                <div class="h-auto py-3">Flat amount</div>
+              </div>
+  
+              <div
+                *ngFor="let tPlans of tiredPlansDetails"
+                class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
+              >
+                <div *ngIf="tPlans.up_to">
+                  For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
+                  {{ tPlans.up_to }}
+                </div>
+                <div *ngIf="tPlans.up_to == null">For the rest</div>
+                <div>${{ +tPlans.unit_amount / 100 }}</div>
+                <div>${{ +tPlans.flat_amount / 100 }}</div>
+              </div>
             </div>
           </div>
         </div>
+  
+        <div class="acoount_user_email my-4">
+          <label>Current Pack</label>
+          <p>
+            {{ billingScheme }} with {{ qunantity }} quantity ${{
+              total_price
+            }}
+            per {{ interval_count }} {{ planInterval }}
+          </p>
+        </div>
+        <!-- Silver 34fn sd  -->
+        <div class="acoount_user_email my-4">
+          <label>Plan Renewal Date</label>
+          <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
+          <ng-template #formatDate>
+            <p>{{ renewalDate | date }}</p>
+          </ng-template>
+        </div>
+        <div class="acoount_user_password">
+          <label for="">Payment Method</label>
+          <p>{{ cardDetails }}</p>
+        </div>
       </div>
+      <div class="accountbtn_container my-4">
+        <button
+          class="plan_btn btn-delete w-auto text-nowrap"
+          (click)="showPopCancelSubc()"
+        >
+          Cancel Subscription
+        </button>
+      </div>
+    </div>
+  </ng-container>
 
-      <div class="acoount_user_email my-4">
-        <label>Current Pack</label>
-        <p>
-          {{ billingScheme }} with {{ qunantity }} quantity ${{
-            total_price
-          }}
-          per {{ interval_count }} {{ planInterval }}
-        </p>
-      </div>
-      <!-- Silver 34fn sd  -->
-      <div class="acoount_user_email my-4">
-        <label>Plan Renewal Date</label>
-        <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
-        <ng-template #formatDate>
-          <p>{{ renewalDate | date }}</p>
-        </ng-template>
-      </div>
-      <div class="acoount_user_password">
-        <label for="">Payment Method</label>
-        <p>{{ cardDetails }}</p>
+  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email) && !checkEmailExists(willEmail, userinfo.email)">
+    <div
+      class="account_details_container account_subscription_container"
+      *ngIf="subscribed && cardDetails1?.card_last_four"
+    >
+      <p class="account-heading mb-4">Card Details</p>
+      <div class="accountdetails">
+        <div class="acoount_user_name">
+          <label>Card Type</label>
+          <p>{{ cardDetails1?.card_brand }}</p>
+        </div>
+        <div class="acoount_user_email my-4">
+          <label>Card Number</label>
+          <p>*********{{ cardDetails1?.card_last_four }}</p>
+        </div>
       </div>
     </div>
-    <div class="accountbtn_container my-4">
-      <button
-        class="plan_btn btn-delete w-auto text-nowrap"
-        (click)="showPopCancelSubc()"
-      >
-        Cancel Subscription
-      </button>
-    </div>
-  </div>
+  </ng-container>
+
+  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+    <div
+      class="account_details_container mt-4 account_Invoices_container overflow-auto py-2"
+      *ngIf="invoices?.length"
+    >
+      <p class="account-heading">Invoices</p>
+      <div class="invoicesdetails_main">
+        <div class="invoicesdetails invoicesdetail_heading">
+          <p>Invoices</p>
+          <p>Amount</p>
+          <p>Date</p>
+          <p>Download</p>
+        </div>
+        <div *ngFor="let data of invoices" class="invoicesdetails">
+          <p>{{ data?.id }}</p>
+          <p>{{ data?.amount }}</p>
+          <p>{{ data?.date | date }}</p>
+          <p class="pointer">
+              <a *ngIf="data.receipt_link" [href]="data.receipt_link" title="Click to download" target="_blank">Invoices</a>
+              <span *ngIf="!data.receipt_link" title="No able to download">Invoices</span>
+          </p>
+        </div>
+        <!-- <div class="invoicesdetails">
+          <p>12345678</p>
+          <p>11/03/2024</p>
+          <p class="pointer">Invoice</p>
+        </div> -->
+      </div>
+    </div>  
+  </ng-container>
+
 
   <div
-    class="account_details_container account_subscription_container"
-    *ngIf="subscribed && cardDetails1?.card_last_four"
-  >
-    <p class="account-heading mb-4">Card Details</p>
-    <div class="accountdetails">
-      <div class="acoount_user_name">
-        <label>Card Type</label>
-        <p>{{ cardDetails1?.card_brand }}</p>
-      </div>
-      <div class="acoount_user_email my-4">
-        <label>Card Number</label>
-        <p>*********{{ cardDetails1?.card_last_four }}</p>
-      </div>
-    </div>
-  </div>
-
-  <div
-    class="account_details_container mt-4 account_Invoices_container overflow-auto py-2"
-    *ngIf="invoices?.length"
-  >
-    <p class="account-heading">Invoices</p>
-    <div class="invoicesdetails_main">
-      <div class="invoicesdetails invoicesdetail_heading">
-        <p>Invoices</p>
-        <p>Amount</p>
-        <p>Date</p>
-        <p>Download</p>
-      </div>
-      <div *ngFor="let data of invoices" class="invoicesdetails">
-        <p>{{ data?.id }}</p>
-        <p>{{ data?.amount }}</p>
-        <p>{{ data?.date | date }}</p>
-        <p class="pointer">
-            <a *ngIf="data.receipt_link" [href]="data.receipt_link" title="Click to download" target="_blank">Invoices</a>
-            <span *ngIf="!data.receipt_link" title="No able to download">Invoices</span>
-        </p>
-      </div>
-      <!-- <div class="invoicesdetails">
-        <p>12345678</p>
-        <p>11/03/2024</p>
-        <p class="pointer">Invoice</p>
-      </div> -->
-    </div>
-  </div>
-
-  <div
-  class="account_details_container account_subscription_container"
+  class="account_details_container account_subscription_container mt-4"
   *ngIf="subscribed && !(!!planName) && !(!!cardDetails1?.lenght)"
   >
   <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
