@@ -112,7 +112,7 @@ class HotelController extends Controller
             ], 500);
         }
     }
-    public function activeSession()
+    public function activeSession(Request $request)
     {
         // $user = JWTAuth::user();//all the user info
         $uid = 6;
@@ -133,16 +133,34 @@ class HotelController extends Controller
         //  return response()->json($response, 200);
         //get the users with there session
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
-        $allSession = HotelRoomTable::with('user')
+        $query = User::query();
+        $query = User::query()
+            ->where('mode', $mode);
+        //  search conditions
+        if (!empty($request->search)) {
+            $subQuery = User::query();
+            $data = $subQuery->where('email', 'Like', '%' . $request->search . '%')->get();
+            if (count($data) > 0) {
+                $query->where('email', 'Like', '%' . $request->search . '%');
+            } else {
+                $query->where('name', 'Like', '%' . $request->search . '%');
+            }
+        }
+        $userIds = $query->pluck('id')->toArray();
+        $allSession = HotelRoomTable::whereIn('user_id', $userIds)->with('user')
             ->whereHas('user', function ($query) use ($mode) {
                 $query->where('mode', $mode);
             })
             ->selectRaw("id,user_id , count(id) activesession")
             ->groupBy('user_id')
-            ->get();
+            ->paginate(10)->appends($request->query());
         //  echo $allSession; exit;
-        //  dd($allSession);
+        // dd($allSession);
+
         // return response()->json($allSession, 200);
+        if ($request->ajax()) {
+            return view('admin.hotels.partials.users-table', compact('allSession'))->render();
+        }
         return view('admin.hotels.sessions', compact('allSession'));
     }
     public function connectedhotel($id)

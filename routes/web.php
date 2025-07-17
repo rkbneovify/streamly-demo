@@ -94,7 +94,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
     Route::get('/hotelrooms', 'Admin\HotelController@hotelrooms');
-    Route::get('/hotelroomsess', 'Admin\HotelController@activeSession');
+    Route::get('/hotelroomsess', 'Admin\HotelController@activeSession')->name('hotel.room');
     Route::get('/hotelroomsess/{id}', 'Admin\HotelController@connectedhotel');
 
     Route::resource('/hotelcontracts', 'Admin\HotelContractsController');

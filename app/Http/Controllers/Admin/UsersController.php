@@ -60,7 +60,7 @@ class UsersController extends Controller
                 'roles' => 'required|numeric',
                 'plan_duration' => 'required|string',
                 'number_of_devices' => 'nullable|integer|min:1',
-               'connected_device' => 'required|in:0,1',
+                'connected_device' => 'required|in:0,1',
 
             ]);
 
@@ -240,6 +240,9 @@ class UsersController extends Controller
                     ->subject(env('APP_NAME') . ': Account Verification');
             });
 
+            $user->is_custom_user = 1;
+            $user->save();
+
             Log::info("Mail sent to: {$request->email}");
 
             return redirect('admin/users')->with('info', 'User Added Successfully');
@@ -376,25 +379,25 @@ class UsersController extends Controller
         ]);
 
 
-        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact','connected_device');
-    
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact', 'connected_device');
+
         $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
-    
+
         // Handle password
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
             $input = Arr::except($input, ['password']);
         }
-    
+
         $user = User::find($id);
 
-            if ($request->has('connected_device')) {
+        if ($request->has('connected_device')) {
             $input['connected_device'] = $request->connected_device; // use new value
         } else {
             $input['connected_device'] = $user->connected_device; // keep old value
-        }  
-    
+        }
+
         $user->update($input);
 
     $tieruserId = 5;
