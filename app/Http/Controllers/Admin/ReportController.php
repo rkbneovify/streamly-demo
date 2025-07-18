@@ -19,6 +19,7 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
+use Stripe\Stripe;
 
 class ReportController extends Controller
 {
@@ -120,7 +121,47 @@ class ReportController extends Controller
         // dd($alltransactions);
         // die();
 
+
+
         return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
+    }
+    public function TransactionsReportsX(Request $request)
+    {
+
+        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        Stripe::setApiKey($STRIPE_SECRET);
+        $startDate = Carbon::parse('2025-07-01')->timestamp; // From July 1, 2024
+        $endDate = Carbon::parse('2025-07-30')->timestamp;   // To July 15, 2024
+
+        if ($request->page == null) {
+            $request->page = 1; // Default to page 1 if not provided
+
+        }
+        $paymentIntents = \Stripe\PaymentIntent::all();
+        return response()->json($paymentIntents, 200);
+        $payments = collect($paymentIntents->data)->map(function ($intent) {
+            $user = User::where('stripe_id', $intent->customer)->firstOrFail(); // Ensure user exists
+            return [
+                'id' => $intent->id,
+                'amount' => $intent->amount,
+                'status' => $intent->status,
+                'created' => date("Y-m-d H:i:s", $intent->created),
+                'customer' => $intent->customer,
+                'currency' => $intent->currency,
+                'name' => $user ? $user->name : null,
+                'email' => $user ? $user->email : null
+            ];
+        });
+
+        return response()->json([
+            'payments' => $payments,
+            'current_page' => $request->page,
+            'per_page' => 10,
+            'has_more' => $paymentIntents->has_more,
+            'next_page_url' => $paymentIntents->has_more ? url()->current() . '?page=' . ($request->page + 1) : null,
+            'prev_page_url' => $request->page > 1 ? url()->current() . '?page=' . ($request->page - 1) : null
+
+        ], 200);
     }
 
     public function TransactionspagingReports($order, $id, $no, $number)
