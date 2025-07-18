@@ -412,4 +412,16 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       }
     });
   }
+
+  emails:string[] = ['woodlochtemp1@gmail.com', 'woodlochtemp2@gmail.com'];
+  willEmail:string[] = ['willthiswork2023@outlook.com']
+
+  checkEmailExists(emailList: string[], emailToCheck: string): boolean {
+    // console.log('Checking email:', emailToCheck, 'in list:', emailList);
+    if (!emailToCheck || !Array.isArray(emailList)) {
+      return false;
+    }
+    return emailList.includes(emailToCheck.trim().toLowerCase());
+  }
+  
 }
