@@ -169,11 +169,9 @@ class AuthController extends Controller
         if ($user->is_custom_user == 1) {
 
             $deviceLimit =  GetLimitForUser($user->id);
-            $userActiveDeviceCount = SessionTable::where([
-                ['status', '=', '1'],
-                ['users_id', '=', $user->id],
-            ])->orderBy('connected_devices', 'asc')->count();
-            if ($deviceLimit <= $userActiveDeviceCount) {
+
+            $userActiveDeviceCount = SessionTable::where("users_id", $user->id)->where("status", 1)->count();
+            if ($userActiveDeviceCount >= $deviceLimit) {
                 return response()->json([
                     'success' => false,
                     'response_code' => 401,
