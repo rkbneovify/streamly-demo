@@ -97,7 +97,7 @@
 
                 <div id="user-data">
 
-                    @include('admin.users.partials.users-table')
+                    @include('admin.users.partials.table')
                 </div>
 
                 {{-- <div class="container">
@@ -118,7 +118,6 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-   
     <script>
         $('#btnClear').hide();
 
