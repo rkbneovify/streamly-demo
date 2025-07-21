@@ -58,7 +58,7 @@ class SubscriptionPackController extends Controller
     public function create()
     {  $plan_id = \Stripe\Plan::all();
         $Product = \Stripe\Product::all();
- $Product->data;
+        $Product->data;
         return view('admin.subscriptionpack.create', compact('plan_id','Product'));
     } 
     public function viewPlan(Request $request){
