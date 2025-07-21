@@ -173,7 +173,8 @@ input[type=number] {
                         <label for="number_of_devices">Number of Devices</label>
                         <div class="device-counter">
                           <button type="button" onclick="decreaseDevices()">−</button>
-                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}">
+                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}"  class="form-control form-control-sm text-center"
+                          style="width: 50px; height: 30px; padding: 2px 6px;">
                           <button type="button" onclick="increaseDevices()">+</button>
                         </div>
                         @if ($errors->has('number_of_devices'))
@@ -374,6 +375,7 @@ input[type=number] {
                         <option value="3 Months">3 Months</option>
                         <option value="6 Months">6 Months</option>
                         <option value="12 Months">12 Months</option>
+                        <option value="Never">Never</option>
                       </select>
                       @if ($errors->has('plan_duration'))
                         <span class="help-block">

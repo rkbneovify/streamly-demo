@@ -468,7 +468,6 @@ class UsersController extends Controller
             $endsAt = Carbon::now()->addMonths(12);
             break;
         case 'Never':
-        default:
             $endsAt = null;
             break;
     }
@@ -526,20 +525,27 @@ if ($isNowTierUser) {
 
         $planDuration = '';
 
-        if (!empty($subscription->renews_at)) {
+        $planDuration = '';
+
+        if (empty($subscription->renews_at)) {
+            $planDuration = 'Never';
+        } else {
             $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
             $now = Carbon::now()->startOfDay();
-
-            if ($endsAt->diffInDays($now->copy()->addMonth()) === 0) {
+        
+            if ($endsAt->eq($now->copy()->addMonth())) {
                 $planDuration = '1 Month';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(3)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
                 $planDuration = '3 Months';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(6)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
                 $planDuration = '6 Months';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(12)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
                 $planDuration = '12 Months';
+            } else {
+                $planDuration = ''; 
             }
         }
+        
 
         return view('admin.users.edit', compact(
             'user',
