@@ -292,11 +292,10 @@ input[type=number] {
                         <label for="number_of_devices">Number of Devices</label>
                         <div class="device-counter">
                           <button type="button" onclick="decreaseDevices()">−</button>
-                          <!-- <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}"> -->
-
-                          <!-- <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old( $deviceCount ?? 1) }}"> -->
+                         
                           <input type="text" id="number_of_devices" name="number_of_devices"
-       value="{{ old('number_of_devices', $currentDeviceCount ?? 1) }}">
+       value="{{ old('number_of_devices', $currentDeviceCount ?? 1) }}" class="form-control form-control-sm text-center"
+       style="width: 50px; height: 30px; padding: 2px 6px;">
 
                           <button type="button" onclick="increaseDevices()">+</button>
                         </div>
@@ -335,6 +334,7 @@ input[type=number] {
     <option value="3 Months" {{ $planDuration == '3 Months' ? 'selected' : '' }}>3 Months</option>
     <option value="6 Months" {{ $planDuration == '6 Months' ? 'selected' : '' }}>6 Months</option>
     <option value="12 Months" {{ $planDuration == '12 Months' ? 'selected' : '' }}>12 Months</option>
+    <option value="Never" {{ $planDuration == 'Never' ? 'selected' : '' }}>Never</option>
 </select>
 
 
