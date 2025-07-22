@@ -294,8 +294,7 @@ input[type=number] {
                           <button type="button" onclick="decreaseDevices()">−</button>
                          
                           <input type="text" id="number_of_devices" name="number_of_devices"
-       value="{{ old('number_of_devices', $currentDeviceCount ?? 1) }}" class="form-control form-control-sm text-center"
-       style="width: 50px; height: 30px; padding: 2px 6px;">
+       value="{{ old('number_of_devices', $currentDeviceCount ?? 1) }}">
 
                           <button type="button" onclick="increaseDevices()">+</button>
                         </div>
