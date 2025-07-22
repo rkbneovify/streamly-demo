@@ -209,7 +209,7 @@ class AuthController extends Controller
         if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
         }
-
+  
         $user = JWTAuth::user();
 
         if ($user->email_verified_at == null) {
@@ -224,7 +224,7 @@ class AuthController extends Controller
             $uid =  $user['id'];
             checkHoteluserLoginLimit($uid, $token, $deviceDetails);
             exit;
-        }
+        }  
         $this->authenticated($request, $user, $token);
         return $this->respondWithToken($token);
     }
