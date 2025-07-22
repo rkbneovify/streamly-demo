@@ -174,7 +174,7 @@ class AuthController extends Controller
             if ($userActiveDeviceCount >= $deviceLimit) {
                 return response()->json([
                     'success' => false,
-                    'response_code' => 401,
+                    'response_code' => 402,
                     'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
 
                 ], 401);
