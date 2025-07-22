@@ -173,8 +173,8 @@ input[type=number] {
                         <label for="number_of_devices">Number of Devices</label>
                         <div class="device-counter">
                           <button type="button" onclick="decreaseDevices()">−</button>
-                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}"  class="form-control form-control-sm text-center"
-                          style="width: 50px; height: 30px; padding: 2px 6px;">
+                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}" 
+                         >
                           <button type="button" onclick="increaseDevices()">+</button>
                         </div>
                         @if ($errors->has('number_of_devices'))
