@@ -415,7 +415,7 @@ input[type=number] {
         <div style="display: flex; gap: 10px; margin-top: 8px;">
           <!-- Hide -->
           <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-            <input type="checkbox" name="connected_device" value="0" class="connected-device" id="no_device" style="margin-right: 8px;" checked>
+            <input type="checkbox" name="connected_device" value="0" class="connected-device" id="no_device" style="margin-right: 8px;">
             Hide
           </label>
 
@@ -529,43 +529,41 @@ input[type=number] {
     });
   });
 
-
   document.addEventListener('DOMContentLoaded', function () {
-    const connecteddeviceSection = document.getElementById('connecteddeviceSection');
-    const roleSelect = document.getElementById('roles');
-    const checkboxes = document.querySelectorAll('.connected-device');
-    const hideCheckbox = document.getElementById('no_device');
+  const connecteddeviceSection = document.getElementById('connecteddeviceSection');
+  const roleSelect = document.getElementById('roles');
+  const checkboxes = document.querySelectorAll('.connected-device');
 
-    function handleRoleChange() {
-      const selectedRole = roleSelect.value;
+  function handleRoleChange() {
+    const selectedRole = roleSelect.value;
 
-      if (selectedRole === '5') {
-        connecteddeviceSection.style.display = 'block';
-      } else {
-        connecteddeviceSection.style.display = 'none';
+    if (selectedRole === '5') {
+      connecteddeviceSection.style.display = 'block';
+    } else {
+      connecteddeviceSection.style.display = 'none';
 
-        // Reset checkbox values
-        checkboxes.forEach(cb => cb.checked = false);
-        hideCheckbox.checked = true; // default to Hide
-      }
+      // Reset checkbox values — all unchecked
+      checkboxes.forEach(cb => cb.checked = false);
     }
+  }
 
-    // Ensure only one checkbox is selected at a time
-    checkboxes.forEach((box) => {
-      box.addEventListener('change', function () {
-        if (this.checked) {
-          checkboxes.forEach((cb) => {
-            if (cb !== this) cb.checked = false;
-          });
-        }
-      });
+  // Ensure only one checkbox is selected at a time
+  checkboxes.forEach((box) => {
+    box.addEventListener('change', function () {
+      if (this.checked) {
+        checkboxes.forEach((cb) => {
+          if (cb !== this) cb.checked = false;
+        });
+      }
     });
+  }); 
 
-    handleRoleChange();
+  handleRoleChange();
 
-    // Attach to change event
-    roleSelect.addEventListener('change', handleRoleChange);
-  });
+  // Attach to change event
+  roleSelect.addEventListener('change', handleRoleChange);
+});
+
 
 
       </script>
