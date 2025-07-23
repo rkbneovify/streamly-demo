@@ -177,7 +177,7 @@ class AuthController extends Controller
                     'response_code' => 402,
                     'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
 
-                ], 401);
+                ], 402);
             }
         }
 
