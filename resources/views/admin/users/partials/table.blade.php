@@ -47,8 +47,9 @@
                                  {{ $user->user->email ?? '' }}
                              </td>
                              <td>
-                                 {{ $user->user->mode ?? '' }}
-                             </td>
+                                {{ $user->mode_label ?? '' }}
+                            </td>
+
 
                              <td>
                                  {{ $user->activesession ?? '' }}
