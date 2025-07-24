@@ -94,7 +94,8 @@ class UsersController extends Controller
                 'card_last_four' => '4242',
                 'is_active' => 0,
                 'forced_change' => 1,
-                'mode' => 'Testing'
+                'mode' => 'Testing',
+                'user_type' => 'custom'
             ]);
 
             Log::info("User created: ID {$user->id}");
@@ -622,16 +623,30 @@ class UsersController extends Controller
             ->groupBy('users_id')
             ->paginate(10);
     
-        // Step 6: Get all roles
+        // Step 6: Attach `mode_label` to each session
+        foreach ($allSession as $session) {
+            $user = $session->user;
+    
+            if ($user->mode === 'Testing' && $user->user_type === 'custom') {
+                $session->mode_label = 'Custom Testing';
+            } elseif ($user->mode === 'Testing' && is_null($user->user_type)) {
+                $session->mode_label = 'Web Testing';
+            } elseif ($user->mode === 'Live') {
+                $session->mode_label = 'Live';
+            } 
+        }
+    
+        // Step 7: Get all roles
         $roles = Role::all();
     
-        // Step 7: Return view
+        // Step 8: Return view
         if ($request->ajax()) {
             return view('admin.users.partials.table', compact('allSession', 'roles'));
         }
     
         return view('admin.users.sessions', compact('allSession', 'roles'));
     }
+    
     
     
 
