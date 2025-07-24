@@ -59,6 +59,10 @@ class SessionTable extends Model
     {
         return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')->where('user_id', auth()->id());
     }
+    public function pdInfo()
+    {
+        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id');
+    }
     /**
     protected static function boot()
     {
