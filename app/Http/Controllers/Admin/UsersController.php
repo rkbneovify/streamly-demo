@@ -594,47 +594,46 @@ class UsersController extends Controller
 
     public function activeSession(Request $request)
     {
-        // Step 1: Get current Stripe mode ('test' or 'live')
-        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
-
-        // Step 2: Build the base User query
-        $userQuery = User::where('mode', $mode);
-
-        // Step 3: Apply search filter (by email or name)
+        // Step 1: Build base User query (no mode filter, both test/live users)
+        $query = User::query();
+    
+        // Step 2: Apply search filter (email or name)
         if (!empty($request->search)) {
-            $userQuery->where(function ($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('email', 'like', '%' . $request->search . '%')
-                    ->orWhere('name', 'like', '%' . $request->search . '%');
+                  ->orWhere('name', 'like', '%' . $request->search . '%');
             });
         }
-
-        // Step 4: Apply role filter
+    
+        // Step 3: Apply role filter
         if (!empty($request->role)) {
             $userIdsByRole = RoleUser::where('role_id', $request->role)->pluck('user_id');
-            $userQuery->whereIn('id', $userIdsByRole);
+            $query->whereIn('id', $userIdsByRole);
         }
-
-        // Step 5: Get filtered user IDs
-        $filteredUserIds = $userQuery->pluck('id')->toArray();
-
-        // Step 6: Get active sessions grouped by user
+    
+        // Step 4: Get filtered user IDs
+        $filteredUserIds = $query->pluck('id')->toArray();
+    
+        // Step 5: Get active sessions grouped by user
         $allSession = SessionTable::with(['user.roles'])
             ->selectRaw("users_id, COUNT(id) as activesession")
-            ->where('status', '1') // active sessions only
+            ->where("status", '1')
             ->whereIn('users_id', $filteredUserIds)
             ->groupBy('users_id')
             ->paginate(10);
-
-        // Step 7: Get all roles (used in filters/dropdowns)
+    
+        // Step 6: Get all roles
         $roles = Role::all();
-
-        // Step 8: Return view based on request type
+    
+        // Step 7: Return view
         if ($request->ajax()) {
             return view('admin.users.partials.table', compact('allSession', 'roles'));
         }
-
+    
         return view('admin.users.sessions', compact('allSession', 'roles'));
     }
+    
+    
 
 
 
