@@ -422,7 +422,7 @@ class UsersController extends Controller
         } else {
             $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
             $now = Carbon::now()->startOfDay();
-        
+
             if ($endsAt->eq($now->copy()->addMonth())) {
                 $planDuration = '1 Month';
             } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
@@ -432,10 +432,10 @@ class UsersController extends Controller
             } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
                 $planDuration = '12 Months';
             } else {
-                $planDuration = ''; 
+                $planDuration = '';
             }
         }
-        
+
 
         return view('admin.users.edit', compact(
             'user',
@@ -592,49 +592,49 @@ class UsersController extends Controller
 
     // new code of active session
 
-public function activeSession(Request $request)
-{
-    // Step 1: Get current Stripe mode ('test' or 'live')
-    $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+    public function activeSession(Request $request)
+    {
+        // Step 1: Get current Stripe mode ('test' or 'live')
+        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
 
-    // Step 2: Build the base User query
-    $userQuery = User::where('mode', $mode);
+        // Step 2: Build the base User query
+        $userQuery = User::where('mode', $mode);
 
-    // Step 3: Apply search filter (by email or name)
-    if (!empty($request->search)) {
-        $userQuery->where(function ($q) use ($request) {
-            $q->where('email', 'like', '%' . $request->search . '%')
-              ->orWhere('name', 'like', '%' . $request->search . '%');
-        });
+        // Step 3: Apply search filter (by email or name)
+        if (!empty($request->search)) {
+            $userQuery->where(function ($q) use ($request) {
+                $q->where('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Step 4: Apply role filter
+        if (!empty($request->role)) {
+            $userIdsByRole = RoleUser::where('role_id', $request->role)->pluck('user_id');
+            $userQuery->whereIn('id', $userIdsByRole);
+        }
+
+        // Step 5: Get filtered user IDs
+        $filteredUserIds = $userQuery->pluck('id')->toArray();
+
+        // Step 6: Get active sessions grouped by user
+        $allSession = SessionTable::with(['user.roles'])
+            ->selectRaw("users_id, COUNT(id) as activesession")
+            ->where('status', '1') // active sessions only
+            ->whereIn('users_id', $filteredUserIds)
+            ->groupBy('users_id')
+            ->paginate(10);
+
+        // Step 7: Get all roles (used in filters/dropdowns)
+        $roles = Role::all();
+
+        // Step 8: Return view based on request type
+        if ($request->ajax()) {
+            return view('admin.users.partials.table', compact('allSession', 'roles'));
+        }
+
+        return view('admin.users.sessions', compact('allSession', 'roles'));
     }
-
-    // Step 4: Apply role filter
-    if (!empty($request->role)) {
-        $userIdsByRole = RoleUser::where('role_id', $request->role)->pluck('user_id');
-        $userQuery->whereIn('id', $userIdsByRole);
-    }
-
-    // Step 5: Get filtered user IDs
-    $filteredUserIds = $userQuery->pluck('id')->toArray();
-
-    // Step 6: Get active sessions grouped by user
-    $allSession = SessionTable::with(['user.roles'])
-        ->selectRaw("users_id, COUNT(id) as activesession")
-        ->where('status', '1') // active sessions only
-        ->whereIn('users_id', $filteredUserIds)
-        ->groupBy('users_id')
-        ->paginate(10);
-
-    // Step 7: Get all roles (used in filters/dropdowns)
-    $roles = Role::all();
-
-    // Step 8: Return view based on request type
-    if ($request->ajax()) {
-        return view('admin.users.partials.table', compact('allSession', 'roles'));
-    }
-
-    return view('admin.users.sessions', compact('allSession', 'roles'));
-}
 
 
 
@@ -644,11 +644,12 @@ public function activeSession(Request $request)
         $roles = Role::get(); //get all roles
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
-        $allSession = SessionTable::with('user', 'hotel')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+        $allSession = SessionTable::with('user', 'hotel', 'pdInfo')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
             ->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
             ])->orderBy('connected_devices', 'asc')->get();
+        // return response()->json(['success' => true, "datalist" => $allSession]);
         return view('admin.users.connected', compact('allSession'));
     }
 
