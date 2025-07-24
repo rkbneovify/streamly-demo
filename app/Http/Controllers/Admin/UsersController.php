@@ -253,117 +253,6 @@ class UsersController extends Controller
     }
 
 
-    // public function update(Request $request, $id)
-    // {
-    //     $this->validate($request, [
-    //         'name' => 'required|max:255',
-    //         'email' => 'required|email|unique:users,email,' . $id,
-    //         'password' => 'confirmed',
-    //         'roles' => 'required|array',
-    //         'number_of_devices' => 'nullable|integer|min:1',
-    //         'plan_duration' => 'nullable|string',
-    //         'channel_availability' => 'required',
-    //     ]);  
-
-    //     $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact');
-    //     $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
-
-    //     if (!empty($input['password'])) {
-    //         $input['password'] = Hash::make($input['password']);
-    //     } else {
-    //         $input = Arr::except($input, ['password']);
-    //     }
-
-    //     $user = User::find($id);
-    //     $user->update($input);
-
-    //     $tieruserId = 5;
-
-    //     // Step 1: Get previous roles
-    //     $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
-    //     $wasTierUser = in_array($tieruserId, $previousRoles);
-
-    //     // Step 2: Update roles
-    //     DB::table('role_user')->where('user_id', $id)->delete();
-    //     foreach ($request->input('roles') as $value) {
-    //         $user->attachRole($value);
-    //     }
-
-    //     // Step 3: Device & hotel room handling (always reset if tier role selected)
-    //     $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
-    // // dd($newDeviceCount);  
-    //     if (in_array($tieruserId, $request->input('roles'))) {
-    //         // Became or still is a tier user — reset hotel rooms
-    //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-
-    //         if ($newDeviceCount > 0) {
-    //             for ($i = 0; $i < $newDeviceCount; $i++) {
-    //                 DB::table('hotel_rooms')->insert([
-    //                     'user_id' => $user->id,
-    //                     'hotel_room' => 'Room' . $i,
-    //                     'session_id' => null,
-    //                     'created_on' => now(),
-    //                     'modified_on' => now(),
-    //                 ]);
-    //             }
-    //         }
-    //     } else {
-    //         // Not a tier user — delete any existing hotel rooms
-    //         DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-    //     }
-
-    //     // Step 4: Update zipcode rule
-    //   DB::table('user_zipcode_rules')
-    //         ->where('email', $user->email)
-    //         ->update([
-    //             'validate' => $request->channel_availability
-    //         ]);
-
-
-
-
-    //     // Step 5: Calculate subscription end date
-    //     $endsAt = null;
-    //     switch ($request->plan_duration) {
-    //         case '1 Month':
-    //             $endsAt = Carbon::now()->addMonth();
-    //             break;
-    //         case '3 Months':
-    //             $endsAt = Carbon::now()->addMonths(3);
-    //             break;
-    //         case '6 Months':
-    //             $endsAt = Carbon::now()->addMonths(6);
-    //             break;
-    //         case '12 Months':
-    //             $endsAt = Carbon::now()->addMonths(12);
-    //             break;
-    //         case 'Never':  
-    //         default:
-    //             $endsAt = null;
-    //             break;
-    //     }
-
-    //     // Step 6: Update subscription if tier user
-    //     if (in_array($tieruserId, $request->input('roles'))) {
-    //         DB::table('subscriptions')->updateOrInsert(
-    //             ['user_id' => $user->id],
-    //             [
-    //                 'name' => 'main',
-    //                 'stripe_status' => 'active',
-    //                 'ends_at' => null,
-    //                 'renews_at' => $endsAt,
-    //                 'quantity' => $newDeviceCount,
-    //                 'updated_at' => now(),
-    //             ]
-    //         );
-    //     }
-
-    //     return redirect('admin/users')->with('info', 'User Updated Successfully');
-    // }
-
-
-
-
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -526,20 +415,27 @@ class UsersController extends Controller
 
         $planDuration = '';
 
-        if (!empty($subscription->renews_at)) {
+        $planDuration = '';
+
+        if (empty($subscription->renews_at)) {
+            $planDuration = 'Never';
+        } else {
             $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
             $now = Carbon::now()->startOfDay();
-
-            if ($endsAt->diffInDays($now->copy()->addMonth()) === 0) {
+        
+            if ($endsAt->eq($now->copy()->addMonth())) {
                 $planDuration = '1 Month';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(3)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
                 $planDuration = '3 Months';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(6)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
                 $planDuration = '6 Months';
-            } elseif ($endsAt->diffInDays($now->copy()->addMonths(12)) === 0) {
+            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
                 $planDuration = '12 Months';
+            } else {
+                $planDuration = ''; 
             }
         }
+        
 
         return view('admin.users.edit', compact(
             'user',
@@ -632,66 +528,114 @@ class UsersController extends Controller
         return response(null, 204);
     }
 
-    public function activeSession(Request $request)
-    {
+    // public function activeSession(Request $request)
+    // {
 
 
-        // $user = JWTAuth::user();//all the user info
-        $uid = 6;
-        //  $user['id'];
-        //and get the number of last connected device
-        //     $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
-        //     ->where([
-        //     ['status', '=', '1'],
-        //     ['users_id', '=', $uid],
-        //      ])->orderBy('connected_devices', 'asc');
-        //     $s='';$numofdevice='';
-        // $s=$prevConnectDevicecount->toSql();
-        // echo $s; 
-        // $numofdevice=$prevConnectDevicecount->count();
+    //     // $user = JWTAuth::user();//all the user info
+    //     $uid = 6;
+    //     //  $user['id'];
+    //     //and get the number of last connected device
+    //     //     $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+    //     //     ->where([
+    //     //     ['status', '=', '1'],
+    //     //     ['users_id', '=', $uid],
+    //     //      ])->orderBy('connected_devices', 'asc');
+    //     //     $s='';$numofdevice='';
+    //     // $s=$prevConnectDevicecount->toSql();
+    //     // echo $s; 
+    //     // $numofdevice=$prevConnectDevicecount->count();
 
 
-        //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
-        //  return response()->json($response, 200);
-        //get the users with there session
+    //     //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+    //     //  return response()->json($response, 200);
+    //     //get the users with there session
 
-        //old query
-        //  $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
+    //     //old query
+    //     //  $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
 
-        //new query
-        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+    //     //new query
+    //     $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
 
 
 
-        $query = User::query()
-            ->where('mode', $mode);
-        //  search conditions
-        if (!empty($request->search)) {
-            $query->where(function ($q) use ($request) {
-                $q->where('email', 'like', '%' . $request->search . '%')
-                    ->orWhere('name', 'like', '%' . $request->search . '%');
-            });
-        }
-        if (!empty($request->role)) {
-            $userIds = RoleUser::where('role_id', $request->role)->pluck('user_id');
-            $query->whereIn('id', $userIds);
-        }
-        $userIds = $query->pluck('id')->toArray();
+    //     $query = User::query()
+    //         ->where('mode', $mode);
+    //     //  search conditions
+    //     if (!empty($request->search)) {
+    //         $query->where(function ($q) use ($request) {
+    //             $q->where('email', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('name', 'like', '%' . $request->search . '%');
+    //         });
+    //     }
+    //     if (!empty($request->role)) {
+    //         $userIds = RoleUser::where('role_id', $request->role)->pluck('user_id');
+    //         $query->whereIn('id', $userIds);
+    //     }
+    //     $userIds = $query->pluck('id')->toArray();
 
-        $allSession = SessionTable::with(['user.roles'])
-            ->selectRaw("users_id, count(id) as activesession")
-            ->where("status", '1')
-            ->whereIn('users_id', $userIds)
-            ->groupBy('users_id')
-            ->paginate(10);
+    //     $allSession = SessionTable::with(['user.roles'])
+    //         ->selectRaw("users_id, count(id) as activesession")
+    //         ->where("status", '1')
+    //         ->whereIn('users_id', $userIds)
+    //         ->groupBy('users_id')
+    //         ->paginate(10);
 
-        // return response()->json(['success' => true, "datalist" => $allSession]);
-        $roles = Role::get();
-        if ($request->ajax()) {
-            return view('admin.users.partials.table', compact('allSession', 'roles'));
-        }
-        return view('admin.users.sessions', compact('allSession', 'roles'));
+    //     // return response()->json(['success' => true, "datalist" => $allSession]);
+    //     $roles = Role::get();
+    //     if ($request->ajax()) {
+    //         return view('admin.users.partials.table', compact('allSession', 'roles'));
+    //     }
+    //     return view('admin.users.sessions', compact('allSession', 'roles'));
+    // }
+
+
+    // new code of active session
+
+public function activeSession(Request $request)
+{
+    // Step 1: Get current Stripe mode ('test' or 'live')
+    $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+    // Step 2: Build the base User query
+    $userQuery = User::where('mode', $mode);
+
+    // Step 3: Apply search filter (by email or name)
+    if (!empty($request->search)) {
+        $userQuery->where(function ($q) use ($request) {
+            $q->where('email', 'like', '%' . $request->search . '%')
+              ->orWhere('name', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // Step 4: Apply role filter
+    if (!empty($request->role)) {
+        $userIdsByRole = RoleUser::where('role_id', $request->role)->pluck('user_id');
+        $userQuery->whereIn('id', $userIdsByRole);
+    }
+
+    // Step 5: Get filtered user IDs
+    $filteredUserIds = $userQuery->pluck('id')->toArray();
+
+    // Step 6: Get active sessions grouped by user
+    $allSession = SessionTable::with(['user.roles'])
+        ->selectRaw("users_id, COUNT(id) as activesession")
+        ->where('status', '1') // active sessions only
+        ->whereIn('users_id', $filteredUserIds)
+        ->groupBy('users_id')
+        ->paginate(10);
+
+    // Step 7: Get all roles (used in filters/dropdowns)
+    $roles = Role::all();
+
+    // Step 8: Return view based on request type
+    if ($request->ajax()) {
+        return view('admin.users.partials.table', compact('allSession', 'roles'));
+    }
+
+    return view('admin.users.sessions', compact('allSession', 'roles'));
+}
+
 
 
     public function connecteddevice($id)
