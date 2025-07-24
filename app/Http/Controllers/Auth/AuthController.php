@@ -174,10 +174,10 @@ class AuthController extends Controller
             if ($userActiveDeviceCount >= $deviceLimit) {
                 return response()->json([
                     'success' => false,
-                    'response_code' => 401,
+                    'response_code' => 402,
                     'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
 
-                ], 401);
+                ], 402);
             }
         }
 
@@ -209,7 +209,7 @@ class AuthController extends Controller
         if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
         }
-
+  
         $user = JWTAuth::user();
 
         if ($user->email_verified_at == null) {
@@ -224,7 +224,7 @@ class AuthController extends Controller
             $uid =  $user['id'];
             checkHoteluserLoginLimit($uid, $token, $deviceDetails);
             exit;
-        }
+        }  
         $this->authenticated($request, $user, $token);
         return $this->respondWithToken($token);
     }

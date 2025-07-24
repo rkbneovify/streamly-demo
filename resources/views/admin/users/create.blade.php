@@ -173,7 +173,8 @@ input[type=number] {
                         <label for="number_of_devices">Number of Devices</label>
                         <div class="device-counter">
                           <button type="button" onclick="decreaseDevices()">−</button>
-                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}">
+                          <input type="text" id="number_of_devices" name="number_of_devices" value="{{ old('number_of_devices', 1) }}" 
+                         >
                           <button type="button" onclick="increaseDevices()">+</button>
                         </div>
                         @if ($errors->has('number_of_devices'))
@@ -374,6 +375,7 @@ input[type=number] {
                         <option value="3 Months">3 Months</option>
                         <option value="6 Months">6 Months</option>
                         <option value="12 Months">12 Months</option>
+                        <option value="Never">Never</option>
                       </select>
                       @if ($errors->has('plan_duration'))
                         <span class="help-block">
@@ -413,13 +415,13 @@ input[type=number] {
         <div style="display: flex; gap: 10px; margin-top: 8px;">
           <!-- Hide -->
           <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-            <input type="checkbox" name="connected_device" value="0" class="connected-device" id="no_device" style="margin-right: 8px;" checked>
+            <input type="checkbox" name="connected_device" value="0" class="connected-device" id="no_device" style="margin-right: 8px;">
             Hide
           </label>
 
           <!-- Show -->
           <label style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-            <input type="checkbox" name="connected_device" value="1" class="connected-device" id="show_device" style="margin-right: 8px;">
+            <input type="checkbox" name="connected_device" value="1" class="connected-device" id="show_device" style="margin-right: 8px;" checked>
             Show
           </label>
         </div>
@@ -532,7 +534,7 @@ input[type=number] {
     const connecteddeviceSection = document.getElementById('connecteddeviceSection');
     const roleSelect = document.getElementById('roles');
     const checkboxes = document.querySelectorAll('.connected-device');
-    const hideCheckbox = document.getElementById('no_device');
+    const hideCheckbox = document.getElementById('show_device');
 
     function handleRoleChange() {
       const selectedRole = roleSelect.value;
