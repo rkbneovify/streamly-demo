@@ -49,7 +49,7 @@ class ReportController extends Controller
         return 'Under Maintenance';
     }
 
-    public function TransactionsReports()
+    public function TransactionsReportsOld()
     {
 
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
@@ -125,20 +125,49 @@ class ReportController extends Controller
 
         return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
     }
-    public function TransactionsReportsX(Request $request)
+    public function TransactionsReports(Request $request)
     {
 
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         Stripe::setApiKey($STRIPE_SECRET);
-        $startDate = Carbon::parse('2025-07-01')->timestamp; // From July 1, 2024
-        $endDate = Carbon::parse('2025-07-30')->timestamp;   // To July 15, 2024
+        $startDate = Carbon::parse($request->start_date)->timestamp;
+        $endDate = Carbon::parse($request->end_date)->timestamp;
 
-        if ($request->page == null) {
-            $request->page = 1; // Default to page 1 if not provided
 
+
+        // Fetch payment intents
+        $limit = 10;
+        $startingAfter = request()->get('starting_after');
+        $endingBefore = request()->get('ending_before');
+
+        $params = ['limit' => $limit];
+
+        if ($startingAfter) {
+            $params['starting_after'] = $startingAfter;
+        } elseif ($endingBefore) {
+            $params['ending_before'] = $endingBefore;
         }
-        $paymentIntents = \Stripe\PaymentIntent::all();
-        return response()->json($paymentIntents, 200);
+
+        $paymentIntents = \Stripe\PaymentIntent::all($params);
+        // dd($paymentIntents);
+
+        // return response()->json([
+        //     'data' => $paymentIntents,
+        //     'payments' => $this->PaymentModifyData($paymentIntents),
+        //     'previous_page_url' => $paymentIntents->has_more  ? url()->current() . '?ending_before=' . reset($paymentIntents->data)->id : null,
+        //     'next_page_url' => $paymentIntents->has_more ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id : null,
+
+        // ], 200);
+
+        $alltransactions = $this->PaymentModifyData($paymentIntents);
+        $previousPageUrl = url()->previous();
+        $nextPageUrl = $paymentIntents->has_more ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id : null;
+
+        return view('admin.reports.transactionsreport', compact('alltransactions', 'previousPageUrl', 'nextPageUrl'));
+    }
+
+    private function PaymentModifyData($paymentIntents)
+    {
         $payments = collect($paymentIntents->data)->map(function ($intent) {
             $user = User::where('stripe_id', $intent->customer)->firstOrFail(); // Ensure user exists
             return [
@@ -152,16 +181,7 @@ class ReportController extends Controller
                 'email' => $user ? $user->email : null
             ];
         });
-
-        return response()->json([
-            'payments' => $payments,
-            'current_page' => $request->page,
-            'per_page' => 10,
-            'has_more' => $paymentIntents->has_more,
-            'next_page_url' => $paymentIntents->has_more ? url()->current() . '?page=' . ($request->page + 1) : null,
-            'prev_page_url' => $request->page > 1 ? url()->current() . '?page=' . ($request->page - 1) : null
-
-        ], 200);
+        return $payments;
     }
 
     public function TransactionspagingReports($order, $id, $no, $number)
