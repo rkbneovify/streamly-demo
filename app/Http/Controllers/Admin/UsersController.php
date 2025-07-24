@@ -628,9 +628,9 @@ class UsersController extends Controller
             $user = $session->user;
     
             if ($user->mode === 'Testing' && $user->user_type === 'custom') {
-                $session->mode_label = 'Custom Testing';
+                $session->mode_label = 'Custom Test';
             } elseif ($user->mode === 'Testing' && is_null($user->user_type)) {
-                $session->mode_label = 'Web Testing';
+                $session->mode_label = 'Web Test';
             } elseif ($user->mode === 'Live') {
                 $session->mode_label = 'Live';
             } 
