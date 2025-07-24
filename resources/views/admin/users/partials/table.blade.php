@@ -17,6 +17,9 @@
                              Email
                          </th>
                          <th>
+                             Mode
+                         </th>
+                         <th>
                              Active Devices
                          </th>
 
@@ -43,7 +46,9 @@
                              <td>
                                  {{ $user->user->email ?? '' }}
                              </td>
-
+                             <td>
+                                 {{ $user->user->mode ?? '' }}
+                             </td>
 
                              <td>
                                  {{ $user->activesession ?? '' }}
