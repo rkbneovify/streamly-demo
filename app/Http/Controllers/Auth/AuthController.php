@@ -935,7 +935,7 @@ class AuthController extends Controller
             'zip' => 'required|max:255',
             'city' => 'required|max:255',
             'state' => 'required|max:255',
-        ]);
+        ]);  
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
