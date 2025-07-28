@@ -19,7 +19,9 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
+use Illuminate\Support\Facades\Session;
 use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class ReportController extends Controller
 {
@@ -128,60 +130,106 @@ class ReportController extends Controller
     public function TransactionsReports(Request $request)
     {
 
+
+
+
+
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         Stripe::setApiKey($STRIPE_SECRET);
-        $startDate = Carbon::parse($request->start_date)->timestamp;
-        $endDate = Carbon::parse($request->end_date)->timestamp;
 
+
+
+
+
+        $params = ['limit' => 10];
+        // Date range filter
+        if ($request->daterange !== null) {
+            [$startDate, $endDate] = explode(' - ', $request->daterange);
+
+            // Convert to timestamps
+            $startTimestamp = strtotime($startDate . ' 00:00:00');
+            $endTimestamp = strtotime($endDate . ' 23:59:59');
+            $params['created'] = [
+                'gte' => $startTimestamp,
+                'lte' => $endTimestamp
+            ];
+        }
 
 
         // Fetch payment intents
-        $limit = 10;
+
+        if ($request->page == null) {
+            $request->merge(['page' => 1]);
+            Session::put('page', 1);
+        } else {
+            Session::put('page', $request->page);
+        }
         $startingAfter = request()->get('starting_after');
         $endingBefore = request()->get('ending_before');
 
-        $params = ['limit' => $limit];
+
 
         if ($startingAfter) {
             $params['starting_after'] = $startingAfter;
         } elseif ($endingBefore) {
             $params['ending_before'] = $endingBefore;
         }
+        // return response()->json($params);
+        try {
+            $paymentIntents = PaymentIntent::all($params);
+            // $paymentIntents = PaymentIntent::all($params);
+            // $alltransactions = $this->PaymentModifyData($paymentIntents);
+            // $previousPageUrl = $paymentIntents->has_more  ? url()->current() . '?ending_before=' . reset($paymentIntents->data)->id . '&page=' . ($request->page - 1) : null;
+            // $nextPageUrl = $paymentIntents->has_more || $request->page == 1 ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id . '&page=' . ($request->page + 1) : null;
+            // return response()->json([
+            //     'data' => $paymentIntents,
+            //     'payments' => $this->PaymentModifyData($paymentIntents),
+            //     'previous_page_url' => $paymentIntents->has_more  ? url()->current() . '?ending_before=' . reset($paymentIntents->data)->id . '&page=' . ($request->page - 1) : null,
+            //     'next_page_url' => $paymentIntents->has_more ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id . '&page=' . ($request->page + 1) : null,
 
-        $paymentIntents = \Stripe\PaymentIntent::all($params);
-        // dd($paymentIntents);
+            // ], 200);
 
-        // return response()->json([
-        //     'data' => $paymentIntents,
-        //     'payments' => $this->PaymentModifyData($paymentIntents),
-        //     'previous_page_url' => $paymentIntents->has_more  ? url()->current() . '?ending_before=' . reset($paymentIntents->data)->id : null,
-        //     'next_page_url' => $paymentIntents->has_more ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id : null,
 
-        // ], 200);
 
-        $alltransactions = $this->PaymentModifyData($paymentIntents);
-        $previousPageUrl = url()->previous();
-        $nextPageUrl = $paymentIntents->has_more ? url()->current() . '?starting_after=' . end($paymentIntents->data)->id : null;
 
-        return view('admin.reports.transactionsreport', compact('alltransactions', 'previousPageUrl', 'nextPageUrl'));
+            $alltransactions = $this->PaymentModifyData($paymentIntents);
+            $previousPageUrl = $request->page < 2 ? ($request->page <= 1 ? null : url()->current()) : url()->current() . '?page=' . ($request->page - 1) . '&ending_before=' . reset($paymentIntents->data)->id;
+            $nextPageUrl = $paymentIntents->has_more || $request->page == 1 ? url()->current() . '?page=' . ($request->page + 1) . '&starting_after=' . end($paymentIntents->data)->id : null;
+
+            if ($request->query() && $request->query('daterange') !== null) {
+                $previousPageUrl = $request->page < 2 ? ($request->page <= 1 ? null : url()->current()) : url()->current() . '?daterange=' . $request->query('daterange') . '&page=' . ($request->page - 1) . '&ending_before=' . reset($paymentIntents->data)->id;
+                $nextPageUrl = $paymentIntents->has_more || $request->page == 1 ? url()->current() . '?daterange=' . $request->query('daterange') . '&page=' . ($request->page + 1) . '&starting_after=' . end($paymentIntents->data)->id : null;
+            }
+            if ($request->ajax()) {
+                return view('admin.reports.table', compact('alltransactions', 'previousPageUrl', 'nextPageUrl'));
+            }
+            return view('admin.reports.transactionsreport', compact('alltransactions', 'previousPageUrl', 'nextPageUrl'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            // dd('Error: ' . $th->getMessage());
+        }
     }
+
+
 
     private function PaymentModifyData($paymentIntents)
     {
         $payments = collect($paymentIntents->data)->map(function ($intent) {
-            $user = User::where('stripe_id', $intent->customer)->firstOrFail(); // Ensure user exists
-            return [
-                'id' => $intent->id,
-                'amount' => $intent->amount,
-                'status' => $intent->status,
-                'created' => date("Y-m-d H:i:s", $intent->created),
-                'customer' => $intent->customer,
-                'currency' => $intent->currency,
-                'name' => $user ? $user->name : null,
-                'email' => $user ? $user->email : null
-            ];
+            $user = User::where('stripe_id', $intent->customer)->first(); // Ensure user exists
+            if ($user !== null) {
+                return [
+                    'id' => $intent->id,
+                    'amount' => $intent->amount,
+                    'status' => $intent->status,
+                    'created' => date("Y-m-d H:i:s", $intent->created),
+                    'customer' => $intent->customer,
+                    'currency' => $intent->currency,
+                    'name' => $user ? $user->name : null,
+                    'email' => $user ? $user->email : null
+                ];
+            }
         });
-        return $payments;
+        return $payments->filter()->values();
     }
 
     public function TransactionspagingReports($order, $id, $no, $number)
