@@ -10,11 +10,14 @@
                          <th>
                              Role
                          </th>
-                         <th>
+                         <th> 
                              Name
                          </th>
                          <th>
                              Email
+                         </th>
+                         <th>
+                             Mode
                          </th>
                          <th>
                              Active Devices
@@ -43,6 +46,9 @@
                              <td>
                                  {{ $user->user->email ?? '' }}
                              </td>
+                             <td>
+                                {{ $user->mode_label ?? '' }}
+                            </td>
 
 
                              <td>
