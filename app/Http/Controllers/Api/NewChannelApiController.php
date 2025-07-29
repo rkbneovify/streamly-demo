@@ -412,7 +412,7 @@ class NewChannelApiController extends Controller
             if ($user->email == "streamlymtairy@gmail.com") {
                 $query->orderBy('channels.id', 'desc');
             } else {
-                $query->orderBy('channels.id', 'asc');
+                $query->orderBy('channels.id', 'asc'); 
             }
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
