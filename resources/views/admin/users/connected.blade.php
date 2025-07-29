@@ -90,8 +90,7 @@
 
                                     <td>
                                         {{ $user->pdInfo->personal_devicename ?? '' }}
-                                        {{-- ser-pdInfo-personal_devicename ?? --}}
-                                        {{-- {{ $user->pd_info->id }} --}}
+                                       
                                     </td>
 
                                     <td> @isset($user->hotel)
