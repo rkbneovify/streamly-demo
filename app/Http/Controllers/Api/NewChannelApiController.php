@@ -438,10 +438,14 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
 
-                if (trim($channel->stationName) === 'TV Guide' && trim($channel->callSign) !== 'TVGN') {
+                if (
+                    trim($channel->stationName) === 'TV Guide' ||
+                    trim($channel->callSign) === 'TVGN'
+                ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fanduel.png'; // ← update this path
-                } 
+                    $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
+                }
+                
                 unset($channel->db_image);
                 return $channel;
             });
