@@ -399,6 +399,8 @@ class ReportController extends Controller
             ->orderBy('created_at', $sort)
             ->get();
 
+
+
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 
         $array = [];
