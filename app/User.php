@@ -103,14 +103,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function favorites()
-{
-    return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id','name',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'),'url','smooth_url','dash_url','image')->where('status','1')->withTimeStamps();
-}
+    {
+        return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id','name',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'),'url','smooth_url','dash_url','image')->where('status','1')->withTimeStamps();
+    }
 
-public function recentschannel()
-{
-    return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->where('status','1')->latest()->take(10)->distinct();
-}
+    public function recentschannel()
+    {
+        return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->where('status','1')->latest()->take(10)->distinct();
+    }
 
     // public function subscriptions()
     // {
