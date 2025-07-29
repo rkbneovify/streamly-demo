@@ -154,6 +154,12 @@ class ReportController extends Controller
         Stripe::setApiKey($STRIPE_SECRET);
 
 
+        // $paymentIntents = \Stripe\PaymentIntent::all([
+        //     'customer' => 'cus_P3GSZBpYVPkJZ2', // Customer ID
+        //     'limit' => 10,
+        // ]);
+
+        // return response()->json($paymentIntents);
 
 
 
