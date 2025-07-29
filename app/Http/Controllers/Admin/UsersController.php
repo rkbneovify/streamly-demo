@@ -239,7 +239,7 @@ class UsersController extends Controller
                 Hi, {$request->name}<br><br>
                 Thank you for registering.<br>
                 Email: {$request->email}<br>
-                Temp Password: {$request->password}<br><br>
+                Password: {$request->password}<br><br>
                 Thank you!<br>
             </html>";
 
