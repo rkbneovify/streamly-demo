@@ -226,20 +226,28 @@ class UsersController extends Controller
             $FRONTEND_URL = env('FRONTEND_URL');
             $account_verification_link = $FRONTEND_URL . '/api/auth/verify?token=' . $verification_code;
 
+            // $html = "<html>
+            //     Hi, {$request->name}<br><br>
+            //     Thank you for registering.<br>
+            //     Please verify: <a href='{$account_verification_link}' target='_blank'>Verify</a><br>
+            //     Email: {$request->email}<br>
+            //     Temp Password: {$request->password}<br><br>
+            //     Thank you!<br>
+            // </html>";
+
             $html = "<html>
                 Hi, {$request->name}<br><br>
                 Thank you for registering.<br>
-                Please verify: <a href='{$account_verification_link}' target='_blank'>Verify</a><br>
                 Email: {$request->email}<br>
                 Temp Password: {$request->password}<br><br>
                 Thank you!<br>
             </html>";
 
-            // Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
-            //     $msg->to($request->email, $request->name)
-            //         ->bcc('rahul.gupta@oodles.io')
-            //         ->subject(env('APP_NAME') . ': Account Verification');
-            // });
+            Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
+                $msg->to($request->email, $request->name)
+                    ->bcc('rahul.gupta@oodles.io')
+                    ->subject(env('APP_NAME') . ': Account Verification');
+            });
 
             $user->is_custom_user = 1;
             $user->email_verified_at = now();
