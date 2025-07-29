@@ -246,7 +246,7 @@ class UsersController extends Controller
             Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
                 $msg->to($request->email, $request->name)
                     ->bcc('rahul.gupta@oodles.io')
-                    ->subject(env('APP_NAME') . ': Account Details');
+                    ->subject(env('APP_NAME') . ': Login Details');
             });
 
             $user->is_custom_user = 1;
