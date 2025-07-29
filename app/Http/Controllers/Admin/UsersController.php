@@ -246,11 +246,12 @@ class UsersController extends Controller
             Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
                 $msg->to($request->email, $request->name)
                     ->bcc('rahul.gupta@oodles.io')
-                    ->subject(env('APP_NAME') . ': Account Verification');
+                    ->subject(env('APP_NAME') . ': Login Details');
             });
 
             $user->is_custom_user = 1;
             $user->email_verified_at = now();
+            $user->is_active = 1;
             $user->save();
 
             Log::info("Mail sent to: {$request->email}");
