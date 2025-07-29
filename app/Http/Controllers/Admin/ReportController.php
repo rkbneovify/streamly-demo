@@ -30,7 +30,7 @@ class ReportController extends Controller
         $this->middleware('auth');
     }
 
-    public function userdetails()
+    public function userdetails(Request $request)
     {
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
@@ -40,7 +40,23 @@ class ReportController extends Controller
             ->pluck('id')
             ->toArray();
 
-        $allSession = SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status", '1')->whereIn('users_id', $userIds)->groupBy('users_id')->get();
+        $query  = SessionTable::query()->with('user')
+            ->selectRaw("users_id , count(id) activesession")
+            ->where("status", '1')
+            ->whereIn('users_id', $userIds);
+
+        if (!empty($request->search)) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $allSession = $query->groupBy('users_id')->paginate(10)->appends(request()->query());
+
+        if ($request->ajax()) {
+            return view('admin.reports.user-detail-table', compact('allSession'));
+        }
         return view('admin.reports.userdetails', compact('allSession'));
         // return $allSession;
     }
@@ -138,6 +154,12 @@ class ReportController extends Controller
         Stripe::setApiKey($STRIPE_SECRET);
 
 
+        // $paymentIntents = \Stripe\PaymentIntent::all([
+        //     'customer' => 'cus_P3GSZBpYVPkJZ2', // Customer ID
+        //     'limit' => 10,
+        // ]);
+
+        // return response()->json($paymentIntents);
 
 
 
@@ -376,6 +398,8 @@ class ReportController extends Controller
             ->whereIn('user_id', $userIds)
             ->orderBy('created_at', $sort)
             ->get();
+
+
 
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 
