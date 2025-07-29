@@ -235,13 +235,14 @@ class UsersController extends Controller
                 Thank you!<br>
             </html>";
 
-            Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
-                $msg->to($request->email, $request->name)
-                    ->bcc('rahul.gupta@oodles.io')
-                    ->subject(env('APP_NAME') . ': Account Verification');
-            });
+            // Mail::send('emails.general', ["html" => $html], function ($msg) use ($request) {
+            //     $msg->to($request->email, $request->name)
+            //         ->bcc('rahul.gupta@oodles.io')
+            //         ->subject(env('APP_NAME') . ': Account Verification');
+            // });
 
             $user->is_custom_user = 1;
+            $user->email_verified_at = now();
             $user->save();
 
             Log::info("Mail sent to: {$request->email}");
@@ -597,24 +598,24 @@ class UsersController extends Controller
     {
         // Step 1: Build base User query (no mode filter, both test/live users)
         $query = User::query();
-    
+
         // Step 2: Apply search filter (email or name)
         if (!empty($request->search)) {
             $query->where(function ($q) use ($request) {
                 $q->where('email', 'like', '%' . $request->search . '%')
-                  ->orWhere('name', 'like', '%' . $request->search . '%');
+                    ->orWhere('name', 'like', '%' . $request->search . '%');
             });
         }
-    
+
         // Step 3: Apply role filter
         if (!empty($request->role)) {
             $userIdsByRole = RoleUser::where('role_id', $request->role)->pluck('user_id');
             $query->whereIn('id', $userIdsByRole);
         }
-    
+
         // Step 4: Get filtered user IDs
         $filteredUserIds = $query->pluck('id')->toArray();
-    
+
         // Step 5: Get active sessions grouped by user
         $allSession = SessionTable::with(['user.roles'])
             ->selectRaw("users_id, COUNT(id) as activesession")
@@ -622,33 +623,33 @@ class UsersController extends Controller
             ->whereIn('users_id', $filteredUserIds)
             ->groupBy('users_id')
             ->paginate(10);
-    
+
         // Step 6: Attach `mode_label` to each session
         foreach ($allSession as $session) {
             $user = $session->user;
-    
+
             if ($user->mode === 'Testing' && $user->user_type === 'custom') {
                 $session->mode_label = 'Custom Test';
             } elseif ($user->mode === 'Testing' && is_null($user->user_type)) {
                 $session->mode_label = 'Web Test';
             } elseif ($user->mode === 'Live') {
                 $session->mode_label = 'Live';
-            } 
+            }
         }
-    
+
         // Step 7: Get all roles
         $roles = Role::all();
-    
+
         // Step 8: Return view
         if ($request->ajax()) {
             return view('admin.users.partials.table', compact('allSession', 'roles'));
         }
-    
+
         return view('admin.users.sessions', compact('allSession', 'roles'));
     }
-    
-    
-    
+
+
+
 
 
 
