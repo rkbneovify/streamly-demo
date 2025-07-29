@@ -198,6 +198,136 @@ class NewChannelApiController extends Controller
         }
     }
 
+    // public function epgGuide(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'typeurl' => 'required',
+    //         'day' => 'nullable',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'error' => 'validation_error',
+    //             'message' => $validator->errors()
+    //         ], 400);
+    //     } else {
+    //         $user = JWTAuth::user();
+    //         $urlType = $request->get('typeurl');
+    //         $zipcode = $request->get('zipcode');
+    //         $genre = $request->get('genre');
+    //         $hoursoffset = $request->get('hoursoffset');
+    //         $pattern = '/^(-?\d{2}:\d{2})$/';
+
+    //         // Insert zipcode only if it doesn't already exist for this user
+    //         if ($zipcode && $user) {
+    //             UserZipcode::firstOrCreate([
+    //                 'user_id' => $user->id,
+    //                 'zipcode' => $zipcode
+    //             ]);
+    //         }
+
+    //         if (preg_match($pattern, $hoursoffset, $matches)) {
+    //             // String matches the format, and $matches[1] contains the matched value
+    //             $hoursofset = $matches[1];
+    //         } else {
+    //             // String does not match the format
+    //             $hoursofset = '00:00';
+    //         }
+    //         $day = $request->day;
+    //         $validate = 0;
+
+    //         // Check DB for email-specific zipcode rules
+    //         $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+    //         if ($zipcodeRule) {
+    //             $validate = $zipcodeRule->validate;
+    //             $zipcode = $zipcodeRule->zipcode;
+    //         } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+    //             $validate = 1;
+    //         }
+
+    //         if ($urlType == 'manifest') {
+    //             $type = 'smooth_url';
+    //         } else if ($urlType == 'm3u8') {
+    //             $type = 'url';
+    //         } else if ($urlType == "mpd") {
+    //             $type = 'dash_url';
+    //         } else {
+    //             $type = 'dash_url';
+    //         }
+    //         $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+    //             ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+    //             ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
+    //             ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+    //             ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+    //             ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+    //         if ($validate == 1) {
+    //             if (!empty($zipcode)) {
+    //                 // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+    //                 $query->where(function ($q) use ($zipcode) {
+    //                     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+    //                         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+    //                 });
+    //             }
+    //         } elseif ($validate == 2) {
+    //             if (!empty($zipcode)) {
+    //                 $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+    //             }
+    //         }
+    //         $query->where('channels.status', '=', '1');
+    //         if (!empty($genre) && $genre != 'Others') {
+    //             $query->where('genre.name', '=', $genre);
+    //         } else if ($genre == 'Others') {
+    //             $query->whereNull('genre.name');
+    //         }
+    //         $query->groupBy('channels.id');
+    //         if ($user->email == "streamlymtairy@gmail.com") {
+    //             $query->orderBy('channels.id', 'desc');
+    //         } else {
+    //             $query->orderBy('channels.id', 'asc');
+    //         }
+    //         $record = $query->get()->map(function ($channel) use ($day) {
+    //             $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
+    //             $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+    //             $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
+    //             unset($channel->assets);
+    //             if ($channel->stationName == null) {
+    //                 $channel->stationName = "NA";
+    //             }
+    //             if ($channel->callSign == null) {
+    //                 $channel->callSign = "NA";
+    //             }
+    //             if ($channel->timeZone == null) {
+    //                 $channel->timeZone = "NA";
+    //             }
+    //             if ($channel->channel_url == null) {
+    //                 $channel->channel_url = "NA";
+    //             }
+    //             if ($channel->prgSvcId == null) {
+    //                 $channel->prgSvcId = "NA";
+    //             }
+    //             if ($channel->image == null) {
+    //                 $channel->image = env('APP_URL') . '/uploads/No Image.png';
+    //             }
+    //             unset($channel->db_image);
+    //             return $channel;
+    //         });
+
+    //         $response = [];
+    //         $response['success'] = true;
+    //         $response['response_code'] = 200;
+    //         $response['message'] = 'Epg Guide Retrieved successfully.';
+    //         if ($day == 'tomorrow') {
+    //             $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
+    //             $start_time = GracenoteScheduleProgram::select('start')->where('date', $gmdate)->orderBy('start', 'asc')->first();
+    //             // var_dump($start_time);
+    //             $response['start'] = $start_time->start;
+    //         }
+    //         $response['data'] = $record;
+    //         return response()->json($response, 200);
+    //     }
+    // }
+
+
+
     public function epgGuide(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -307,6 +437,11 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
+
+                if (trim($channel->stationName) === 'TV Guide' && trim($channel->callSign) !== 'TVGN') {
+                    $channel->stationName = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fanduel.png'; // ← update this path
+                } 
                 unset($channel->db_image);
                 return $channel;
             });
@@ -325,6 +460,7 @@ class NewChannelApiController extends Controller
             return response()->json($response, 200);
         }
     }
+
 
     private function getProgramScheduleById($prgSvcId, $day)
     {
