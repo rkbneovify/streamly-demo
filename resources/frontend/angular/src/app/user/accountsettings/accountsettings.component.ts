@@ -414,7 +414,9 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   }
 
   emails:string[] = ['woodlochtemp1@gmail.com', 'woodlochtemp2@gmail.com'];
-  willEmail:string[] = ['willthiswork2023@outlook.com']
+  willEmail:string[] = ['willthiswork2023@outlook.com','streamlydemo@gmail.com','streamlymtairy@gmail.com','streamlytestbox@gmail.com','willis@cybrsecsolutions.com','dvitti@mvmtechnology.com','streamlytest001@gmail.com',
+    'Brian_marlin@yahoo.com'
+  ]
 
   checkEmailExists(emailList: string[], emailToCheck: string): boolean {
     // console.log('Checking email:', emailToCheck, 'in list:', emailList);
