@@ -613,16 +613,13 @@ class NewChannelApiController extends Controller
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
-                if (
-                    trim($channel->stationName) === 'TV Guide' ||
-                    trim($channel->callSign) === 'TVGN'
-                ) {
-                    $channel->stationName = 'FanDuel';
+
+                if (strtolower(trim($channel->name)) === 'tv guide') {
+                    $channel->name = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fanduel1.png';
                 }
-
-
-
+            
 
                 unset($channel->assets);
                 $channel->type = 'channel';
@@ -743,10 +740,21 @@ class NewChannelApiController extends Controller
                     ->where('gracenote_schedule_program.prgSvcId', $programs[0]->prgSvcId)
                     ->orderBy('start')
                     ->get();
+
+                    $stationName = $programs[0]->stationName;
+                    $image = $this->getURIFromAssetForProgram($program->assets);
+
+            // Replace logic for TV Guide / TVGN
+            if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+                $stationName = 'FanDuel';
+                $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+            }
+
                 $data = [
                     'channel_id' => $programs[0]->channel_id,
                     'play_icon' => $program_play_icon,
-                    'stationName' => $programs[0]->stationName,
+                    // 'stationName' => $programs[0]->stationName,
+                    'stationName' => $stationName,
                     'url' => $programs[0]->url,
                     'dash_url' => $programs[0]->dash_url,
                     'smooth_url' => $programs[0]->smooth_url,
@@ -755,7 +763,8 @@ class NewChannelApiController extends Controller
                     "duration" => $programs[0]->duration,
                     "quals" => $programs[0]->quals,
                     "genre" =>  json_decode($programs[0]->genre),
-                    "image" => $this->getURIFromAssetForProgram($program->assets),
+                    "image" => $image,
+                    // "image" => $this->getURIFromAssetForProgram($program->assets),
                     "schedule" => $program_details
                 ];
                 unset($program->assets);
@@ -772,6 +781,7 @@ class NewChannelApiController extends Controller
             return response()->json($response);
         }
     }
+
 
     public function playerDetails(Request $request)
     {
