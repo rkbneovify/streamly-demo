@@ -210,9 +210,10 @@ class RokuEpgGuideApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fanduel1.png';
                     $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
                 }
-                
+
                 unset($channel->db_image);
                 return $channel;
             });
