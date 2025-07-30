@@ -485,6 +485,11 @@ class NewChannelApiController extends Controller
         $programs = $query->get();
         $programs->map(function ($program) {
             $program->image = $this->getURIFromAssetForProgram($program->assets);
+
+            if (strtolower($program->title) === 'tvgn') {
+                $program->title = 'FanDuel'; // Replace with desired title
+            }
+            
             unset($program->assets);
         });
 
