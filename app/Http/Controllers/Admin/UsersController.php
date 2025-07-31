@@ -275,6 +275,7 @@ class UsersController extends Controller
             'number_of_devices' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
             'channel_availability' => 'required',
+            'zipcode'=> 'nullable|string',
             'connected_device' => 'required|in:0,1',
 
         ]);
@@ -350,7 +351,8 @@ class UsersController extends Controller
         DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->update([
-                'validate' => $request->channel_availability
+                'validate' => $request->channel_availability,
+                'zipcode'=> $request->zipcode
             ]);
 
         // Step 5: Calculate subscription end date
