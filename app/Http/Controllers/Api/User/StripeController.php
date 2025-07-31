@@ -435,7 +435,8 @@ class StripeController extends Controller
             "email" => $userinfo->email,
             "zipcode" => $resultoffset,
             "timezone" => $timezone,
-            "passcode" => HashUserID($userinfo->id)
+            "passcode" => HashUserID($userinfo->id),
+            "connected_device" => $userinfo->connected_device
         ];
 
         $response_to_send['userinfo'] = $user_data;
