@@ -140,7 +140,7 @@
           />
           <p>Account Settings</p>
         </div>
-        <div class="submenuOptions" (click)="submenu = false" routerLink="connected-device">
+        <div *ngIf="isConnectedDeviceShow" class="submenuOptions" (click)="submenu = false" routerLink="connected-device">
           <img
             loading="lazy"
             src="../../assets/dummy-img/devices.svg"

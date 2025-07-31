@@ -1,53 +1,60 @@
 <main>
-    <div class="remove_Device-Container">
-            <h1>Connected Devices</h1>
-            <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
-                <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId?.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
-            <p class="d-inline-block">Device {{connectedDevice?.length}}/{{numOfDevice}}</p>
-            </div>
-            <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
-                
-                <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
-                    <div class="devi_top">
-                        <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
-                        <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
-                        <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
-                        
-                        <ng-container  *ngIf="current_device == data.personaldeviceid; else btnlogOut">
-                            <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                <img loading="lazy" src="../../../assets/dummy-img/check-circle.svg" alt="">
-                                <p >This Device</p>
-                            </div>
-                        </ng-container>
-
-                        <ng-template #btnlogOut>
-                            <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                <button class="btn_hover w-auto h-auto min-h-auto" (click)="removedevice(data.session_id)" >Log out</button>
-                            </div>
-                        </ng-template>
-
-                    </div>
-                    <div class="devi_bottom">
-                        <div class="remove_dev_con d-flex justify-content-between">
-                            <p class="dev_heading">IP</p>
-                            <p>{{data?.user_ip}}</p>
-                        </div>
-                        <div class="remove_dev_con my-3 d-flex justify-content-between">
-                            <p class="dev_heading">Login</p>
-                            <p>{{(data?.logintime | timeAgo)}}</p>
-                        </div>
-                        <div class="remove_dev_con d-flex justify-content-between">
-                            <p class="dev_heading">{{data.device_type}}</p>
-                            <p class="d-flex gap-1 flex-nowrap">
-                                <img loading="lazy" src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
-                                {{data.device_name}}
-                            </p>
-                        </div>
-                    </div>
+    <ng-container *ngIf="isConnectedDeviceShow; else elseTemplate">
+        <div class="remove_Device-Container">
+                <h1>Connected Devices</h1>
+                <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
+                    <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId?.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
+                <p class="d-inline-block">Device {{connectedDevice?.length}}/{{numOfDevice}}</p>
                 </div>
-
-            </div>
-    </div>
+                <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
+                    
+                    <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
+                        <div class="devi_top">
+                            <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
+                            <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
+                            <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
+                            
+                            <ng-container  *ngIf="current_device == data.personaldeviceid; else btnlogOut">
+                                <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                    <img loading="lazy" src="../../../assets/dummy-img/check-circle.svg" alt="">
+                                    <p >This Device</p>
+                                </div>
+                            </ng-container>
+    
+                            <ng-template #btnlogOut>
+                                <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                    <button class="btn_hover w-auto h-auto min-h-auto" (click)="removedevice(data.session_id)" >Log out</button>
+                                </div>
+                            </ng-template>
+    
+                        </div>
+                        <div class="devi_bottom">
+                            <div class="remove_dev_con d-flex justify-content-between">
+                                <p class="dev_heading">IP</p>
+                                <p>{{data?.user_ip}}</p>
+                            </div>
+                            <div class="remove_dev_con my-3 d-flex justify-content-between">
+                                <p class="dev_heading">Login</p>
+                                <p>{{(data?.logintime | timeAgo)}}</p>
+                            </div>
+                            <div class="remove_dev_con d-flex justify-content-between">
+                                <p class="dev_heading">{{data.device_type}}</p>
+                                <p class="d-flex gap-1 flex-nowrap">
+                                    <img loading="lazy" src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
+                                    {{data.device_name}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+        </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <div class="remove_Device-Container">
+            <h1>You Have No Permssion</h1>
+        </div>
+    </ng-template>   
 </main>
 
     <!-- channels container end -->
