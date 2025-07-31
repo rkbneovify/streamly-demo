@@ -761,7 +761,7 @@ class AuthController extends Controller
             $user = JWTAuth::user();
             $userRole = $user->roles->pluck('name'); //check users role
             if ($userRole[0] == 'user' || 'tieruser') {
-                //check if token exist in table
+                //check if token exist in tablelogoutDevice
                 $acctoken = SessionTable::where([
                     ['status', '=', '1'],
                     ['access_token', '=', $token],
