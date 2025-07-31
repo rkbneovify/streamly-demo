@@ -20,6 +20,7 @@ export class TotalaccountComponent {
   numOfDevice: number = 0;
   deviceId: Array<string> = [];
   isLoading: boolean = false;
+  isConnectedDeviceShow: boolean = false;
   constructor(private apiService: CrudService, private toastr: ToastrService) {
     this.get_all_device();
   }
@@ -43,50 +44,8 @@ export class TotalaccountComponent {
         console.error('Error parsing JSON data:', error);
       }
     } else console.log('not getting logged device');
-
-    // this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
-
     this.connectedDevice = this.response;
-    // this.apiService.apiResponse$.subscribe((response) => {
-    //   console.log('response api--->',response.error.loggedindeviceinfolist.data);
-    //   this.response = response;
-    //   this.connectedDevice = response.error.loggedindeviceinfolist.data;
-    // });
   }
-
-  // get all the devices---
-  // get_all_device(){
-  //   const userToken = localStorage.getItem('deviceInfo');
-  //   if (userToken !== null) {
-  //     try {
-  //       this.access_Token = JSON.parse(
-  //         localStorage.getItem('deviceInfo') || ''
-  //       );
-  //       const tokenData = this.access_Token?.access_token;
-  //       this.current_device = this.access_Token?.personaldeviceid;
-  //       const headers = new HttpHeaders({
-  //         Authorization: `Bearer ${tokenData}`,
-  //         Accept: 'application/json',
-  //       });
-  //       console.log('token', headers);
-
-  //       // if (this.updated_data) {
-  //       let body = {
-
-  //       };
-  //       console.log('updated values -->>>', body);
-  //       this.apiService
-  //         .postRequest('auth/', body, headers)
-  //         .subscribe({
-  //           next:(res)=>console.log(res),
-  //           error:(err)=>console.log(err)
-  //         });
-  //       // }
-  //     } catch (error) {
-  //       console.error('Error parsing JSON data:--->>>', error);
-  //     }
-  //   }
-  // }
 
   get_all_device() {
     this.isLoading = true;
@@ -103,12 +62,12 @@ export class TotalaccountComponent {
           Accept: 'application/json',
         });
         this.apiService
-          .getRequest('auth/connecteddevice', headers)
+          .getRequest('auth/newconnecteddevice', headers)
           .subscribe((res: any) => {
             if (res.response_code == 200) {
               let data = res.data;
               this.numOfDevice = +res.userDeviceLimit;
-              // Sort the connected devices array based on the current user's device ID
+              this.isConnectedDeviceShow = res.user_connected_device
               data = data.sort((a: any, b: any) => {
                 // If the session ID matches the current user's device ID, move it to the top
                 if (a.personaldeviceid === this.current_device) return -1;
