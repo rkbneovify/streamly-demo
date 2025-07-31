@@ -37,6 +37,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { environment } from '../../environments/environment';
 import { PlaystreamComponent } from './playstream/playstream.component';
 import { SharedStateService } from '../services/globalState/global-state.service';
+import { UtilsService } from '../services/utils/utils.service';
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -89,6 +90,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   isMiniPlayer:boolean = null;
   zipcode: any;
   dash_board_link: string = environment.baseUrl;
+  isConnectedDeviceShow: boolean = false;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -99,6 +101,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private screenSizeService: ScreenSizeService,
     private cdr: ChangeDetectorRef,
     private sharedStateService: SharedStateService,
+    private utilsService: UtilsService
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -135,6 +138,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.utilsService.get_all_device().subscribe(() => {
+      this.isConnectedDeviceShow = this.utilsService.isCustomUser();
+      // Update UI or logic here based on new value
+    });
+    console.log('isconn',this.isConnectedDeviceShow)
     this.zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     // Listen for route changes

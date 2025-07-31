@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
+import { UtilsService } from '../../services/utils/utils.service';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -51,6 +52,7 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   togglePasscode: boolean = false;
   total_price: any = 0;
   cancelSubscription:FormGroup;
+  isConnectedDeviceShow: boolean = false;
 
   isSubscription: boolean = false;
 
@@ -59,7 +61,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
     private crud: CrudService,
     private ts: ToastrService,
     private router: Router,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private utilsService: UtilsService
   ) {
     this.updateuserDetatils = this.fb.group({
       fullname: ['', Validators.required],
@@ -86,6 +89,10 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
 
   ngOnInit(): void {
     this.getAllDetails();
+    this.utilsService.get_all_device().subscribe(() => {
+      this.isConnectedDeviceShow = this.utilsService.isCustomUser();
+      // Update UI or logic here based on new value
+    });
     const jsonData = localStorage.getItem('userDetails');
     if (jsonData !== null) {
       try {
