@@ -745,10 +745,21 @@ class NewChannelApiController extends Controller
                     $image = $this->getURIFromAssetForProgram($program->assets);
 
             // Replace logic for TV Guide / TVGN
-            if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+            // if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+            //     $stationName = 'FanDuel';
+            //     $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+            // }
+
+            if (
+                trim($stationName) === 'TV Guide' ||
+                trim($programs[0]->callSign ?? '') === 'TVGN' ||
+                trim($programs[0]->title ?? '') === 'TV Guide'
+            ) {
                 $stationName = 'FanDuel';
                 $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+                $programs[0]->title = 'FanDuel'; // Replace title also
             }
+            
 
                 $data = [
                     'channel_id' => $programs[0]->channel_id,
