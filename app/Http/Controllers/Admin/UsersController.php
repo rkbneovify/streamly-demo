@@ -312,7 +312,7 @@ class UsersController extends Controller
         DB::table('role_user')->where('user_id', $id)->delete();
         foreach ($request->input('roles') as $value) {
             $user->attachRole($value);
-        }
+        } 
 
         // Step 3: Device & hotel room handling
         $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
