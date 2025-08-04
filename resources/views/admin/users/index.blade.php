@@ -223,6 +223,20 @@
     });
 
     });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('roles');
+
+        roleSelect.addEventListener('change', function () {
+            if (this.value === 'choose user role') {
+                location.reload(); // reload on "choose user role"
+            } else {
+                this.form.submit(); // auto-submit when role selected
+            }
+        });
+    });
+
   </script>
     @stop
  
