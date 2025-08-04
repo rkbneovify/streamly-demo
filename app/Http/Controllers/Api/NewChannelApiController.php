@@ -915,7 +915,7 @@ class NewChannelApiController extends Controller
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
-                }
+                } 
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
                     $all_channel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
@@ -1029,8 +1029,13 @@ class NewChannelApiController extends Controller
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
             if (!empty($program)) {
+
+                $title = trim($program->title);
+                if ($title === 'TV Guide' || $title === 'TVGN') {
+                    $title = 'FanDuel';
+                }
                 $data = [
-                    "title" => $program->title,
+                    "title" => $title,
                     "description" => $program->description,
                     "duration" => $program->duration,
                     "quals" => $program->quals,
