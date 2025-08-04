@@ -104,13 +104,15 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/users/session', 'Admin\UsersController@activeSession')->name('user.session'); //for user session
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails'); //for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis'); //for user session piyush
-    Route::get('/report/subscriptionsreport/{sort}', 'Admin\ReportController@SubscriptionsReports'); //for user session piyush
+    Route::get('/report/subscriptionsreport', 'Admin\ReportController@SubscriptionsReports'); //for user session piyush
+    Route::get('/report/subscription/export/{type}', 'Admin\ReportController@exportSubscription')->name('report.subscription.export'); //for user session piyush
     Route::get('/report/subscriptionsreport/search/from={from}&to={to}/{value}', 'Admin\ReportController@SubscriptionsReportstimeframe'); //for user session piyush
     Route::get('/report/transactionsreport', 'Admin\ReportController@TransactionsReports'); //for user session piyush
     Route::get('/report/transactionsreport/{order}/{id}/{no}/page_number={number}', 'Admin\ReportController@TransactionspagingReports'); //for user session piyush
     Route::get('/report/transactionsreport/viewtransaction/{id}', 'Admin\ReportController@Transactionsview'); //for user session piyush
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode'); //for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph'); //for user session piyush
+    Route::get('/report/subscription/detail/{id}', 'Admin\ReportController@subscriptionDetailView')->name('report.subscription.detail');
     Route::get('/slide/view', 'LoginGuideController@slideview'); //slider piyush
     Route::get('/banner/view', 'HomescreenBannerController@bannerview'); //slider piyush
     Route::get('/slide/create', 'LoginGuideController@slidecreate'); //slider piyush

@@ -134,17 +134,18 @@
             });
         }
 
+
+        $('select[name="role"]').change(function() {
+            let url = new URL(window.location.href);
+            url.searchParams.set('role', $(this).val());
+            window.location.href = url.toString();
+        });
         $(document).on('keyup', 'input[name="search"]', function() {
             let search = $('input[name="search"]').val();
             if (search.length > 0) {
                 $('#btnClear').show();
             }
             fetchData();
-        });
-        $('select[name="role"]').change(function() {
-            let url = new URL(window.location.href);
-            url.searchParams.set('role', $(this).val());
-            window.location.href = url.toString();
         });
         $('#btnClear').click(function() {
 

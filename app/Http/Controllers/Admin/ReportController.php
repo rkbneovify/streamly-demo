@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SubscriptionExport;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -21,6 +22,7 @@ use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -528,7 +530,7 @@ class ReportController extends Controller
         //return $resultCount;
     }
 
-    public function SubscriptionsReports($sort)
+    public function SubscriptionsReports(Request $request)
     {
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
@@ -540,13 +542,25 @@ class ReportController extends Controller
 
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         Stripe::setApiKey($STRIPE_SECRET);
-
-        $transaction = Subscription::with('user:id,name,email,zipcode')
-            ->select('id', 'user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+        $query = Subscription::query();
+        $query = $query->with('user:id,name,email,zipcode,stripe_id')
+            ->select('id', 'user_id', 'stripe_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
             ->whereIn('user_id', $userIds)
             ->whereNotIn('stripe_plan', ['price_1R7AsbJSdAGJhCxpc0nHB1e8'])
-            ->orderBy('created_at', $sort)
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($request->status)) {
+            $query->where('stripe_status', $request->status);
+        }
+
+        if (!empty($request->search)) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $transaction =   $query->paginate(10)->appends($request->query());
 
         $transaction->getCollection()->transform(function ($item) {
             $plan = \Stripe\Plan::retrieve($item->stripe_plan);
@@ -562,10 +576,32 @@ class ReportController extends Controller
         //     'customer' => "cus_SevZ2w6UnXHxBd",
         //     'limit' => 10, // Optional: number of subscriptions to fetch
         // ]);
-        // return response()->json($subscriptions);
+        // $customer = \Stripe\Customer::create([
+        //     'email' => 'userkk@yopmail.com',
+        //     'name' => 'John Doe',
+        //     'metadata' => ['user_id' => 123],
+        // ]);
+        // $customer = \Stripe\Customer::retrieve("cus_SYnWZo0EJHbSkk");
+        // return response()->json($transaction);
+        if ($request->ajax()) {
+            return view('admin.reports.subscription-report-table', compact('transaction'));
+        }
         return view('admin.reports.subscriptionsreport', compact('transaction'));
 
         //return $resultCount;
+    }
+
+    public function subscriptionDetailView($subscriptionId)
+    {
+        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        Stripe::setApiKey($STRIPE_SECRET);
+
+        $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+        $customer = \Stripe\Customer::retrieve($subscription->customer);
+        $user = User::where('email', $customer->email)->first();
+
+        // return response()->json($subscription);
+        return view("admin.reports.subscription-detail", compact("subscription", 'user'));
     }
 
     function getAllStripeCustomers($secretKey)
@@ -923,5 +959,18 @@ class ReportController extends Controller
 
         //return view('admin.reports.zipcodreport', compact('UsersINZipcode'));
         return $UsersINZipcode;
+    }
+
+    // export fun
+
+    public function exportSubscription(Request $request, $type)
+    {
+
+        $filters = $request->only(['status']);
+        $date = now()->format('Y-m-d_H-i-s');
+        if ($type === 'csv') {
+            return Excel::download(new SubscriptionExport($filters), "Subscription_{$date}.csv");
+        }
+        return Excel::download(new SubscriptionExport($filters), "Subscription_{$date}.xlsx");
     }
 }
