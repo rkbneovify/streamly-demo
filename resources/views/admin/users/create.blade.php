@@ -96,6 +96,8 @@ input[type=number] {
   </div>
 @endif
 
+
+
           <!-- Content Wrapper. Contains page content -->
           <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -116,6 +118,9 @@ input[type=number] {
             </section>
 
             <!-- Main content -->
+            <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}" id="useradd">
+            {{ csrf_field() }}
+          
             <section class="content">
               <div class="row">
                 <div class="col-md-6">
@@ -142,8 +147,11 @@ input[type=number] {
                           </ul>
                         </div>
                         @endif
-                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}" id="useradd">
-                        {{ csrf_field() }}
+
+                        
+
+    
+                      
 
 
                       </div>
@@ -151,8 +159,7 @@ input[type=number] {
                     
                     <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
                         <label for="roles">Roles</label>
-                        <input type="hidden" name="force_add" id="force_add" value="0">
-
+                       
                         <select name="roles" id="roles" class="form-control" onchange="handleRoleChange()">
                           @foreach($roles as $id => $pack)
                             <option value="{{ $id }}" {{ old('roles') == $id ? 'selected' : '' }}>
@@ -388,14 +395,20 @@ input[type=number] {
                   </a>
                 </div>
               </div>
-              </form>
+
+
             </section>
+            </form>
             <!-- /.content -->
           </div>
           <!-- /.content-wrapper -->
           @endsection
 
     @section('scripts')
+
+
+
+
     <script type="text/javascript">
 
      
@@ -551,25 +564,157 @@ $('#zipcode').on('change', function () {
 });
 
 
-</script> 
+</script>
+<script>
+// document.addEventListener("DOMContentLoaded", function () {
+//     const form = document.getElementById("useradd");
 
-@if(session('zipcode_not_in_local'))
-    <script>
-        console.log('ZIP code not in local session detected');
-        document.addEventListener("DOMContentLoaded", function () {
-            let message = "{{ session('zipcode_warning') }}";
-            if (confirm(message)) {
-                let form = document.querySelector("form");
-                let forceInput = document.createElement("input");
-                forceInput.type = "hidden";
-                forceInput.name = "force_add";
-                forceInput.value = "1";
-                form.appendChild(forceInput);
-                form.submit();
+//     if (!form) return;
+
+//     form.addEventListener("submit", function (e) {
+//         e.preventDefault(); // Stop form from submitting normally
+
+//         const formData = new FormData(form);
+
+//         fetch(form.action, {
+//             method: "POST",
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+//             },
+//             body: formData
+//         })
+//         .then(async response => {
+//             const contentType = response.headers.get("content-type");
+
+//             if (response.ok) {
+//                 alert("User created successfully!");
+//                 form.reset(); // Optional: clear the form
+//             } else if (response.status === 422 && contentType && contentType.includes("application/json")) {
+//                 const data = await response.json();
+
+//                 if (data.status === 'zipcode_not_in_local') {
+//                     if (confirm(data.message)) {
+//                         // User confirmed to force-add
+//                         formData.append("force_add", "1");
+
+//                         // Resubmit with force_add
+//                         fetch(form.action, {
+//                             method: "POST",
+//                             headers: {
+//                                 'Accept': 'application/json',
+//                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+//                             },
+//                             body: formData
+//                         })
+//                         .then(async res => {
+//                             if (res.ok) {
+//                                 alert("User created with local ZIP override.");
+//                                 form.reset(); // Optional
+//                             } else {
+//                                 const errData = await res.json();
+//                                 alert("Failed to force add user.");
+//                                 console.error("Force Add Error:", errData);
+//                             }
+//                         })
+//                         .catch(err => {
+//                             console.error("Force Add Network Error", err);
+//                             alert("Something went wrong while forcing ZIP override.");
+//                         });
+
+//                     } else {
+//                         // User canceled
+//                         return;
+//                     }
+//                 } else {
+//                     // Other validation errors
+//                     alert("Validation failed.");
+//                     console.error("Validation errors", data.errors);
+//                 }
+//             } else {
+//                 alert("Unexpected error occurred.");
+//             }
+//         })
+//         .catch(err => {
+//             console.error("Fetch failed", err);
+//             alert("Request failed.");
+//         });
+//     });
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('useradd'); // Replace with your form ID
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const url = form.action;
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
             }
+        })
+        .then(async response => {
+            const contentType = response.headers.get("content-type") || "";
+
+            if (response.ok) {
+                alert("User created successfully!");
+                console.log("Backend Response:", await response.json());
+                form.reset();
+                return;
+            }
+
+            if (response.status === 422 && contentType.includes("application/json")) {
+                const resData = await response.json();
+                console.warn("⚠️ 422 Validation Response:", resData);
+
+                if (resData.status === 'zipcode_not_in_local') {
+                    console.log(" Showing confirm dialog:", resData.message);
+                   
+
+                    if (confirm(resData.message)) {
+                        console.log(" User confirmed ZIP addition. Resubmitting with force_add...");
+
+                        const forceInput = document.createElement('input');
+                        forceInput.type = 'hidden';
+                        forceInput.name = 'force_add';
+                        forceInput.value = '1';
+                        form.appendChild(forceInput);
+
+                        form.submit(); // 🔁 Resubmit with force_add
+                    } else {
+                        console.log(" User canceled ZIP addition.");
+                    }
+                } else {
+                    console.warn("⚠️ Other 422 error:", resData.errors);
+                    alert("Form submission error. Check required fields.");
+                }
+
+                return;
+            }
+
+            // ❌ Unexpected response
+            const rawText = await response.text();
+            console.error("Unexpected response from server:", rawText);
+            alert("Unexpected error occurred. See console for details.");
+        })
+        .catch(error => {
+            console.error(" Network/JS error:", error);
+            alert("Something went wrong. Check the console.");
         });
-    </script>
-@endif
+    });
+});
+
+
+
+
+</script>
+
 
 
 
