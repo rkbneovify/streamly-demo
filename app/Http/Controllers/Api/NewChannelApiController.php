@@ -926,7 +926,7 @@ class NewChannelApiController extends Controller
             $all = $all_channel_query->first();
 
             $nextChannel = $PrevNext;
-
+ 
             if ($PrevNext == 1) {
                 $PrevNext = 2;
                 $nextChannel = 1;
