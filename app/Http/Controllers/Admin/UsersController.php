@@ -76,6 +76,39 @@ class UsersController extends Controller
                 return redirect()->back()->with('existuser', $existing->id);
             }
 
+
+            $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
+
+            if (!$zipcodeExists) {
+                Log::warning("Invalid zipcode entered: " . $request->zipcode);
+                return redirect()->back()->withErrors(['zipcode' => 'Invalid Zipcode. User not created'])->withInput();
+            }
+
+            $predefinedLocalZipcodes = [
+                "85120", "85215", "85205", "75662", "08872",
+                "08904", "18344", "18438", "18302", "18326"
+            ];
+
+            
+            $zipcode = $request->zipcode;
+            $isZipInLocalList = in_array($zipcode, $predefinedLocalZipcodes);
+
+            if (
+                $request->channel_availability === 2 && // 2 means Local Channels
+                $zipcodeExists &&                      // Zip exists in DB
+                !$isZipInLocalList &&                  // But not in local list
+                !$request->has('force_add')            // User has not yet confirmed
+            ) {
+                return redirect()->back()
+                ->with('zipcode_not_in_local', true)
+                ->with('zipcode_warning', "This ZIP code isn't available in local channels. Add it anyway?")
+                ->withInput();
+            
+            
+            }
+            
+
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -470,7 +503,7 @@ class UsersController extends Controller
     
         $zipcodes = Zipcode::where('zipcode', 'like', $search . '%')
             ->select('zipcode as value', 'city', 'state')
-            ->limit(10)
+            ->limit(5)
             ->get();
     
             

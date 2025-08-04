@@ -142,7 +142,7 @@ input[type=number] {
                           </ul>
                         </div>
                         @endif
-                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}">
+                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}" id="useradd">
                         {{ csrf_field() }}
 
 
@@ -151,6 +151,8 @@ input[type=number] {
                     
                     <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
                         <label for="roles">Roles</label>
+                        <input type="hidden" name="force_add" id="force_add" value="0">
+
                         <select name="roles" id="roles" class="form-control" onchange="handleRoleChange()">
                           @foreach($roles as $id => $pack)
                             <option value="{{ $id }}" {{ old('roles') == $id ? 'selected' : '' }}>
@@ -550,6 +552,26 @@ $('#zipcode').on('change', function () {
 
 
 </script> 
+
+@if(session('zipcode_not_in_local'))
+    <script>
+        console.log('ZIP code not in local session detected');
+        document.addEventListener("DOMContentLoaded", function () {
+            let message = "{{ session('zipcode_warning') }}";
+            if (confirm(message)) {
+                let form = document.querySelector("form");
+                let forceInput = document.createElement("input");
+                forceInput.type = "hidden";
+                forceInput.name = "force_add";
+                forceInput.value = "1";
+                form.appendChild(forceInput);
+                form.submit();
+            }
+        });
+    </script>
+@endif
+
+
 
 
     @stop
