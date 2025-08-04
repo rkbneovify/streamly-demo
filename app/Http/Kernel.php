@@ -20,7 +20,8 @@ class Kernel extends HttpKernel
         //\App\Http\Middleware\DatabaseSwitcher::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-        \Barryvdh\Cors\HandleCors::class,
+        // \Barryvdh\Cors\HandleCors::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -42,7 +43,8 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:100,1',
             'bindings',
-            \Barryvdh\Cors\HandleCors::class,
+            // \Barryvdh\Cors\HandleCors::class,
+            \Fruitcake\Cors\HandleCors::class,
             \App\Http\Middleware\HandlePutFormData::class
         ],
     ];
