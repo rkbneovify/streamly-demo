@@ -1,4 +1,28 @@
 @extends('master')
+@section('stylesheets')
+    <style>
+        .input-container {
+            position: relative;
+
+        }
+
+        .btn-clear {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 30px;
+            color: #888;
+            display: none;
+        }
+
+        .btn-clear:hover {
+            color: #000;
+        }
+    </style>
+@endsection
 @section('content')
     <style>
         .divfilter {
@@ -168,77 +192,49 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Subscriptions</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3 class="card-title">Subscriptions</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" name="status">
+                                <option value="">Select status</option>
+                                <option value="active" {{ request()->status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="canceled" {{ request()->status == 'canceled' ? 'selected' : '' }}>Canceled
+                                </option>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                            title="Collapse">
-                            <i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip"
-                            title="Remove">
-                            <i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-
-                    <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name"> -->
-                    <table id="myTable" class="table table-striped projects">
-                        <thead>
-                            <tr>
-                                <th style="width: 2%">
-                                    Sl:No
-                                </th>
-                                <th style="width: 25%">
-                                    Plan
-                                </th>
-
-
-                                <th style="width: 5%">
-                                    Email
-                                </th>
-                                <th style="width: 5%">
-                                    Zipcode
-                                </th>
-                                <th style="width: 20%">
-                                    Status
-                                </th>
-                                <th style="width: 25%">
-                                    Start Date
-                                </th>
-                                <th style="width: 25%">
-                                    Expiration Date
-                                </th>
-
-                                {{-- <th style="width: 8%" class="text-center">
-                          Status
-                      </th> --}}
-                                <!-- <th style="width: 20%">
-                                                                                                                                                                                                                                                                                              </th> -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($transaction as $key => $item)
-                                <tr>
-                                    <td>{{ $key + $transaction->firstItem() }}</td>
-                                    <td>{{ $item->plan_name }} <br> {{ $item->plan_desc }} </td>
-                                    <td>{{ $item->user->email }}</td>
-                                    <td>{{ $item->user->zipcode }}</td>
-                                    <td>{{ $item->stripe_status }}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>{{ $item->trial_ends_at ?? ($item->renews_at ?? $item->ends_at) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    <div class="card-footer text-body-secondary">
-                        <div class="container px-5 mt-5">
-                            <div class="row justify-content-end">
-                                {{ $transaction->links() }}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control" placeholder="Search by email">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="exportDropdown"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Export
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.report.subscription.export', ['type' => 'xlsx'] + request()->query()) }}">Export
+                                        to Excel</a>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.report.subscription.export', ['type' => 'csv'] + request()->query()) }}">Export
+                                        to CSV</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    {{--  --}}
+
+
+                </div>
+                <div id="user-data">
+
+                    @include('admin.reports.subscription-report-table')
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -248,4 +244,52 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+@endsection
+@section('scripts')
+    <script>
+        $('#btnClear').hide();
+
+        function fetchData(page = 1) {
+
+            let search = $('input[name="search"]').val();
+            // let role = $('select[name="role"]').val();
+
+            $.ajax({
+                url: location.href + "?page=" + page + "&search=" + search,
+                success: function(data) {
+                    $('#user-data').html(data);
+                }
+            });
+        }
+        $(document).ready(function() {
+
+            $('select[name="status"]').on('change', function() {
+                let url = new URL(window.location.href);
+                if ($(this).val() === '') {
+                    url.searchParams.delete('status');
+                } else {
+                    url.searchParams.set('status', $(this).val());
+                }
+                window.location.href = url.toString();
+            })
+
+            $(document).on('keyup', 'input[name="search"]', function() {
+                let search = $('input[name="search"]').val();
+                if (search.length > 0) {
+                    $('#btnClear').show();
+                }
+                fetchData();
+            });
+            $('#btnClear').click(function() {
+
+                $('input[name="search"]').val('');
+                fetchData();
+                $('#btnClear').hide();
+
+            })
+
+
+
+        })
+    </script>
 @endsection
