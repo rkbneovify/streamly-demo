@@ -44,14 +44,16 @@ class UsersController extends Controller
     public function create()
     {
 
+        $predefinedLocalZipcodes = ['85120','85215','85205','75662','08872','08904','18344','85022','18438','18302','18326']; // or fetch from DB
 
         $roles = Role::all()->pluck('name', 'id');
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles','predefinedLocalZipcodes'));
     }
 
     public function store(Request $request)
     {
+        
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -79,36 +81,63 @@ class UsersController extends Controller
 
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
-            if (!$zipcodeExists) {
-                Log::warning("Invalid zipcode entered: " . $request->zipcode);
-                return redirect()->back()->withErrors(['zipcode' => 'Invalid Zipcode. User not created'])->withInput();
-            }
-
             $predefinedLocalZipcodes = [
                 "85120", "85215", "85205", "75662", "08872",
                 "08904", "18344", "18438", "18302", "18326"
             ];
-
             
-            $zipcode = $request->zipcode;
-            $isZipInLocalList = in_array($zipcode, $predefinedLocalZipcodes);
-
-            if (
-                $request->channel_availability === 2 && // 2 means Local Channels
-                $zipcodeExists &&                      // Zip exists in DB
-                !$isZipInLocalList &&                  // But not in local list
-                !$request->has('force_add')            // User has not yet confirmed
-            ) {
-                return redirect()->back()
-                ->with('zipcode_not_in_local', true)
-                ->with('zipcode_warning', "This ZIP code isn't available in local channels. Add it anyway?")
-                ->withInput();
+            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            $newZip = $request->zipcode;
             
-            
+            // 1. If not a valid zipcode
+            if (!$zipcodeExists) {
+                Log::warning("Invalid zipcode entered: " . $newZip);
+                return response()->json([
+                    'status' => 'invalid_zip',
+                    'message' => 'Invalid Zipcode. User not created'
+                ], 421);
             }
             
-
-
+            // 2. If it's a local channel but ZIP not in predefined and force_add not present
+            if (
+                $request->channel_availability == "2" &&
+                !in_array($newZip, $predefinedLocalZipcodes) &&
+                (!$request->has('force_add') || $request->force_add != 1)
+            ) {
+                Log::info("ZIP not in local and force_add not set: " . $newZip);
+            
+                // Force JSON response manually for AJAX call
+                return response()->json([
+                    'status' => 'zipcode_not_in_local',
+                    'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
+                ], 422);
+            }
+            
+            
+            // 3. Add zip to local channels if needed
+            if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+                foreach ($localChannelIds as $channelId) {
+                    $channel = DB::table('channels')->where('id', $channelId)->first();
+                    if ($channel) {
+                        $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                        if (!in_array($newZip, $existingZipcodes)) {
+                            $existingZipcodes[] = $newZip;
+            
+                            DB::table('channels')->where('id', $channelId)->update([
+                                'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                            ]);
+            
+                            Log::info("ZIP $newZip added to channel $channelId");
+                        }
+                    }
+                }
+            }
+            
+            
+            // 4. Proceed with user creation (as you already do)
+            
+            
+            
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
