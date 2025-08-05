@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AngularController;
 use App\Http\Controllers\SubscriptionCronController;
+use App\Http\Controllers\Admin\UsersController;
+
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -93,6 +95,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    // Route::get('/fetchzipcode', 'Admin\UsersController@getZip');
+    Route::get('users/fetchzipcode', 'Admin\UsersController@getZip');
+
+
+
     Route::get('/hotelrooms', 'Admin\HotelController@hotelrooms');
     Route::get('/hotelroomsess', 'Admin\HotelController@activeSession')->name('hotel.room');
     Route::get('/hotelroomsess/{id}', 'Admin\HotelController@connectedhotel');
@@ -433,5 +440,6 @@ Route::any('/{any}', [AngularController::class, 'index'])
 
 
 // cron route custom user
-
+ 
 Route::post('/subscriptioncron', 'SubscriptionCronController@subscriptioncron');
+// Route::get('users/updateall', 'Admin\UsersController@UpdateAll');

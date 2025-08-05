@@ -745,10 +745,21 @@ class NewChannelApiController extends Controller
                     $image = $this->getURIFromAssetForProgram($program->assets);
 
             // Replace logic for TV Guide / TVGN
-            if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+            // if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+            //     $stationName = 'FanDuel';
+            //     $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+            // }
+
+            if (
+                trim($stationName) === 'TV Guide' ||
+                trim($programs[0]->callSign ?? '') === 'TVGN' ||
+                trim($programs[0]->title ?? '') === 'TV Guide'
+            ) {
                 $stationName = 'FanDuel';
                 $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+                $programs[0]->title = 'FanDuel'; // Replace title also
             }
+            
 
                 $data = [
                     'channel_id' => $programs[0]->channel_id,
@@ -904,7 +915,7 @@ class NewChannelApiController extends Controller
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
-                }
+                } 
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
                     $all_channel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
@@ -915,7 +926,7 @@ class NewChannelApiController extends Controller
             $all = $all_channel_query->first();
 
             $nextChannel = $PrevNext;
-
+ 
             if ($PrevNext == 1) {
                 $PrevNext = 2;
                 $nextChannel = 1;
@@ -1018,8 +1029,13 @@ class NewChannelApiController extends Controller
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
             if (!empty($program)) {
+
+                $title = trim($program->title);
+                if ($title === 'TV Guide' || $title === 'TVGN') {
+                    $title = 'FanDuel';
+                }
                 $data = [
-                    "title" => $program->title,
+                    "title" => $title,
                     "description" => $program->description,
                     "duration" => $program->duration,
                     "quals" => $program->quals,

@@ -9,6 +9,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\Zipcode;
 use Illuminate\Support\Str;
 use Crypt;
 use Mail;
@@ -43,14 +44,16 @@ class UsersController extends Controller
     public function create()
     {
 
+        $predefinedLocalZipcodes = ['85120','85215','85205','75662','08872','08904','18344','85022','18438','18302','18326']; // or fetch from DB
 
         $roles = Role::all()->pluck('name', 'id');
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles','predefinedLocalZipcodes'));
     }
 
     public function store(Request $request)
     {
+        
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -75,6 +78,66 @@ class UsersController extends Controller
                 return redirect()->back()->with('existuser', $existing->id);
             }
 
+
+            $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
+
+            $predefinedLocalZipcodes = [
+                "85120", "85215", "85205", "75662", "08872",
+                "08904", "18344", "18438", "18302", "18326"
+            ];
+            
+            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            $newZip = $request->zipcode;
+            
+            // 1. If not a valid zipcode
+            if (!$zipcodeExists) {
+                Log::warning("Invalid zipcode entered: " . $newZip);
+                return response()->json([
+                    'status' => 'invalid_zip',
+                    'message' => 'Invalid Zipcode. User not created'
+                ], 421);
+            }
+            
+            // 2. If it's a local channel but ZIP not in predefined and force_add not present
+            if (
+                $request->channel_availability == "2" &&
+                !in_array($newZip, $predefinedLocalZipcodes) &&
+                (!$request->has('force_add') || $request->force_add != 1)
+            ) {
+                Log::info("ZIP not in local and force_add not set: " . $newZip);
+            
+                // Force JSON response manually for AJAX call
+                return response()->json([
+                    'status' => 'zipcode_not_in_local',
+                    'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
+                ], 422);
+            }
+            
+            
+            // 3. Add zip to local channels if needed
+            if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+                foreach ($localChannelIds as $channelId) {
+                    $channel = DB::table('channels')->where('id', $channelId)->first();
+                    if ($channel) {
+                        $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                        if (!in_array($newZip, $existingZipcodes)) {
+                            $existingZipcodes[] = $newZip;
+            
+                            DB::table('channels')->where('id', $channelId)->update([
+                                'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                            ]);
+            
+                            Log::info("ZIP $newZip added to channel $channelId");
+                        }
+                    }
+                }
+            }
+            
+            
+            // 4. Proceed with user creation (as you already do)
+            
+            
+            
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -274,6 +337,7 @@ class UsersController extends Controller
             'number_of_devices' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
             'channel_availability' => 'required',
+            'zipcode'=> 'nullable|string',
             'connected_device' => 'required|in:0,1',
 
         ]);
@@ -310,7 +374,7 @@ class UsersController extends Controller
         DB::table('role_user')->where('user_id', $id)->delete();
         foreach ($request->input('roles') as $value) {
             $user->attachRole($value);
-        }
+        } 
 
         // Step 3: Device & hotel room handling
         $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
@@ -349,7 +413,8 @@ class UsersController extends Controller
         DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->update([
-                'validate' => $request->channel_availability
+                'validate' => $request->channel_availability,
+                'zipcode'=> $request->zipcode
             ]);
 
         // Step 5: Calculate subscription end date
@@ -459,6 +524,21 @@ class UsersController extends Controller
         ));
     }
 
+
+    public function getZip(Request $request)
+    {
+       
+        $search = $request->input('search');
+    
+        $zipcodes = Zipcode::where('zipcode', 'like', $search . '%')
+            ->select('zipcode as value', 'city', 'state')
+            ->limit(5)
+            ->get();
+    
+            
+        return response()->json($zipcodes);
+    }
+    
 
 
 
