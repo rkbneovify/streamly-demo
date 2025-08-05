@@ -94,7 +94,7 @@
         <label for=""> Current Timezone </label>
         <p>{{getUserTimezoneName()}}</p>
       </div>
-      <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+      <ng-container *ngIf="isConnectedDeviceShow">
         <div *ngIf="userinfo?.passcode" class="acoount_user_currtimezone my-3">
           <label for=""> passcode</label>
           <p class="position-relative">
@@ -142,7 +142,7 @@
 
     <div class="accountbtn_container">
       
-      <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+      <ng-container *ngIf="isConnectedDeviceShow">
         <button
           (click)="showPopDeleteAccount()"
           *ngIf="!editMode"
@@ -180,7 +180,7 @@
 
   </form>
 
-  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+  <ng-container *ngIf="isConnectedDeviceShow">
     <div
       class="account_details_container account_subscription_container mb-4"
       *ngIf="subscribed && planName"
@@ -282,7 +282,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email) && !checkEmailExists(willEmail, userinfo.email)">
+  <ng-container *ngIf="isConnectedDeviceShow && !checkEmailExists(willEmail, userinfo.email)">
     <div
       class="account_details_container account_subscription_container"
       *ngIf="subscribed && cardDetails1?.card_last_four"
@@ -301,7 +301,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="!checkEmailExists(emails, userinfo.email)">
+  <ng-container *ngIf="isConnectedDeviceShow">
     <div
       class="account_details_container mt-4 account_Invoices_container overflow-auto py-2"
       *ngIf="invoices?.length"

@@ -163,7 +163,7 @@ input[type=number] {
 
             <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                       <label for="city">City</label>
-                      <input type="text" name="city" class="form-control" value="{{$user->city}}">
+                      <input type="text" id="city" name="city" class="form-control" value="{{$user->city}}">
                       @if ($errors->has('city'))
                         <span class="help-block">
                           <strong>{{ $errors->first('city') }}</strong>
@@ -175,7 +175,7 @@ input[type=number] {
 
                         <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                         <label for="state">State</label>
-                        <input type="text" name="state" class="form-control" value="{{$user->state}}">
+                        <input type="text" id="state" name="state" class="form-control" value="{{$user->state}}">
                         @if ($errors->has('state'))
                           <span class="help-block">
                             <strong>{{ $errors->first('state') }}</strong>
@@ -395,12 +395,6 @@ input[type=number] {
     </div>
 </div>
 
-
-
-
-
-
-
             <div class="form-group">
               <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                 <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
@@ -548,6 +542,72 @@ function decreaseDevices() {
       });
     });
   });
+
+  
+  let zipData = {}; // Store city/state for each zip
+
+$(document).ready(function () {
+    $('#zipcode').on('input', function () {
+        const val = $(this).val().trim();
+
+        if (val.length >= 2) {
+            $.ajax({
+              url:"{{url('admin/users/fetchzipcode') }}",
+                method: "GET",
+                data: { search: val }, 
+                success: function (data) {
+                    const datalist = $('#zipcodeList');
+                    datalist.empty();
+                    zipData = {};
+
+                    data.forEach(item => {
+                        zipData[item.value] = {
+                            city: item.city,
+                            state: item.state
+                        };
+                        datalist.append(`<option value="${item.value}">`);
+                    });
+                },
+                error: function (xhr) {
+                    console.error('Error fetching zip:', xhr.responseText);
+                }
+            });
+        }
+
+        // Also clear city/state display if field is empty
+        if (val === '') {
+            $('#cityStateDisplay').text('');
+        }
+    });
+
+    $('#zipcode').on('change', function () {
+        const enteredZip = $(this).val().trim();
+
+        if (enteredZip === '') {
+            $('#cityStateDisplay').text('');
+            return;
+        }
+
+        if (zipData.hasOwnProperty(enteredZip)) {
+            const location = zipData[enteredZip];
+            $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
+        } else {
+            $('#cityStateDisplay').text('');
+            alert('This ZIP code does not exist in our records.');
+        }
+    });
+});
+
+$('#zipcode').on('change', function () {
+    const val = $(this).val();
+    if (zipData[val]) {
+        $('#city').val(zipData[val].city);
+        $('#state').val(zipData[val].state);
+    } else {
+        $('#city').val('');
+        $('#state').val('');
+    }
+});
 
   </script>
 

@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { GetLocationComponent } from './auth/userLocation/get-location/get-location.component';
 import { LocationService } from './services/location/location.service';
+import { UtilsService } from './services/utils/utils.service';
 // import { LoaderComponent } from "./components/others/loader/loader.component";
 
 @Component({
@@ -18,9 +19,14 @@ import { LocationService } from './services/location/location.service';
 })
 export class AppComponent {
   isLocaiton: boolean = false;
-  // constructor(private locationService: LocationService) {}
   title = 'angular';
   sripePromise = loadStripe(environment.stripe.publicKey);
+
+  constructor(private utilsService: UtilsService) {
+    // console.log('Environment:')
+    // this.utilsService.get_all_device();
+  }
+
 
   // ngOnInit(): void {
   //   const savedLocation = this.locationService.getSavedLocation();
