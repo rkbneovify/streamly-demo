@@ -96,6 +96,8 @@ input[type=number] {
   </div>
 @endif
 
+
+
           <!-- Content Wrapper. Contains page content -->
           <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -116,6 +118,9 @@ input[type=number] {
             </section>
 
             <!-- Main content -->
+            <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}" id="useradd">
+            {{ csrf_field() }}
+          
             <section class="content">
               <div class="row">
                 <div class="col-md-6">
@@ -142,8 +147,11 @@ input[type=number] {
                           </ul>
                         </div>
                         @endif
-                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertuser') }}">
-                        {{ csrf_field() }}
+
+                        
+
+    
+                      
 
 
                       </div>
@@ -151,6 +159,7 @@ input[type=number] {
                     
                     <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
                         <label for="roles">Roles</label>
+                       
                         <select name="roles" id="roles" class="form-control" onchange="handleRoleChange()">
                           @foreach($roles as $id => $pack)
                             <option value="{{ $id }}" {{ old('roles') == $id ? 'selected' : '' }}>
@@ -274,8 +283,10 @@ input[type=number] {
                     <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
                     
-                      <input id="zipcode"  class="form-control" name="zipcode" autofocus type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" >
+                      <!-- <input id="zipcode"  class="form-control" name="zipcode" autofocus type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" > -->
 
+                      <input id="zipcode" name="zipcode" class="form-control" list="zipcodeList" type="number" onKeyPress="if(this.value.length==5) return false;">
+<datalist id="zipcodeList"></datalist>
                       @if ($errors->has('zipcode'))
                       <span class="help-block">
                         <strong>{{ $errors->first('zipcode') }}</strong>
@@ -283,69 +294,12 @@ input[type=number] {
                       @endif
                     
                   </div>
-
-                  <!-- <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
-                    <label for="contact" class="col-md-4 control-label">contact</label>
-
-                    
-                      <input id="contact" type="text" class="form-control" name="contact" autofocus>
-
-                      @if ($errors->has('contact'))
-                      <span class="help-block">
-                        <strong>{{ $errors->first('contact') }}</strong>
-                      </span>
-                      @endif
-                    
-                  </div> -->
-
-
-
-                  <!-- <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                    <label for="address" class="col-md-4 control-label">address</label>
-
-                    
-                      <input id="address" type="text" class="form-control" name="address" autofocus>
-
-                      @if ($errors->has('address'))
-                      <span class="help-block">
-                        <strong>{{ $errors->first('address') }}</strong>
-                      </span>
-                      @endif
-            
-                  </div> -->
-
-
-                  <!-- <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                    <label for="country" class="col-md-4 control-label">country</label>
-
-                    
-                      <input id="country" type="text" class="form-control" name="country" autofocus>
-
-                      @if ($errors->has('country'))
-                      <span class="help-block">
-                        <strong>{{ $errors->first('country') }}</strong>
-                      </span>
-                      @endif
-                    
-                  </div> -->
-
-                  <!-- <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
-                    <label for="gender" class="col-md-4 control-label">gender</label>
-      
-      
-                    <input id="gender" type="text" class="form-control" name="gender"   
-                      autofocus>
-      
-                    @if ($errors->has('gender'))
-                    <span class="help-block">
-                      <strong>{{ $errors->first('gender') }}</strong>
-                    </span>
-                    @endif
-                  </div>  -->
+ 
+                
 
                       <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                       <label for="city">City</label>
-                      <input type="text" name="city" class="form-control">
+                      <input type="text" id="city" name="city" class="form-control">
                       @if ($errors->has('city'))
                         <span class="help-block">
                           <strong>{{ $errors->first('city') }}</strong>
@@ -357,7 +311,7 @@ input[type=number] {
 
                         <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                         <label for="state">State</label>
-                        <input type="text" name="state" class="form-control">
+                        <input type="text" id="state" name="state" class="form-control">
                         @if ($errors->has('state'))
                           <span class="help-block">
                             <strong>{{ $errors->first('state') }}</strong>
@@ -441,51 +395,23 @@ input[type=number] {
                   </a>
                 </div>
               </div>
-              </form>
+
+
             </section>
+            </form>
             <!-- /.content -->
           </div>
           <!-- /.content-wrapper -->
           @endsection
 
     @section('scripts')
+
+
+
+
     <script type="text/javascript">
 
-      $(document).ready(function(){	
-        		 $( "#zipcode" ).autocomplete({
-        source: function( request, response ) {
-          // Fetch data
-					$.ajaxSetup({
-                  headers: {
-                      
-		'X-CSRF-TOKEN': $("input[name=_token]").val()
-                  }
-              });
-          $.ajax({
-                  url: "{{ url('/getzipcodes') }}",
-            type: 'post',
-            dataType: "json",
-            data: {
-               search: request.term
-            },
-            success: function( data ) {
-               response( data );
-							//  console.log(data);
-            }
-          });
-        },
-        select: function (event, ui) {
-           // Set selection
-           $('#zipcode').val(ui.item.label); // display the selected text
-          //  $('#employeeid').val(ui.item.value); // save selected id to input
-           return false;
-        },
-				open: function() {
-        $("ul.ui-menu").width( $(this).innerWidth() );
-        
-    }
-      });
-      });
+     
 
       function handleRoleChange() {
       const selectedRole = document.getElementById('roles').value;
@@ -569,4 +495,228 @@ input[type=number] {
 
 
       </script>
+
+<script>
+ let zipData = {}; // Store city/state for each zip
+
+$(document).ready(function () {
+    $('#zipcode').on('input', function () {
+        const val = $(this).val().trim();
+
+        if (val.length >= 2) {
+            $.ajax({
+              url:"{{url('admin/users/fetchzipcode') }}",
+                method: "GET",
+                data: { search: val }, 
+                success: function (data) {
+                    const datalist = $('#zipcodeList');
+                    datalist.empty();
+                    zipData = {};
+
+                    data.forEach(item => {
+                        zipData[item.value] = {
+                            city: item.city,
+                            state: item.state
+                        };
+                        datalist.append(`<option value="${item.value}">`);
+                    });
+                },
+                error: function (xhr) {
+                    console.error('Error fetching zip:', xhr.responseText);
+                }
+            });
+        }
+
+        // Also clear city/state display if field is empty
+        if (val === '') {
+            $('#cityStateDisplay').text('');
+        }
+    });
+
+    $('#zipcode').on('change', function () {
+        const enteredZip = $(this).val().trim();
+
+        if (enteredZip === '') {
+            $('#cityStateDisplay').text('');
+            return;
+        }
+
+        if (zipData.hasOwnProperty(enteredZip)) {
+            const location = zipData[enteredZip];
+            $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
+        } else {
+            $('#cityStateDisplay').text('');
+            alert('This ZIP code does not exist in our records.');
+        }
+    });
+});
+ 
+
+$('#zipcode').on('change', function () {
+    const val = $(this).val();
+    if (zipData[val]) {
+        $('#city').val(zipData[val].city);
+        $('#state').val(zipData[val].state);
+    } else {
+        $('#city').val('');
+        $('#state').val('');
+    }
+});
+
+
+</script>
+<script>
+// document.addEventListener("DOMContentLoaded", function () {
+//     const form = document.getElementById("useradd");
+
+//     if (!form) return;
+
+//     form.addEventListener("submit", function (e) {
+//         e.preventDefault(); // Stop form from submitting normally
+
+//         const formData = new FormData(form);
+
+//         fetch(form.action, {
+//             method: "POST",
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+//             },
+//             body: formData
+//         })
+//         .then(async response => {
+//             const contentType = response.headers.get("content-type");
+
+//             if (response.ok) {
+//                 alert("User created successfully!");
+//                 form.reset(); // Optional: clear the form
+//             } else if (response.status === 422 && contentType && contentType.includes("application/json")) {
+//                 const data = await response.json();
+
+//                 if (data.status === 'zipcode_not_in_local') {
+//                     if (confirm(data.message)) {
+//                         // User confirmed to force-add
+//                         formData.append("force_add", "1");
+
+//                         // Resubmit with force_add
+//                         fetch(form.action, {
+//                             method: "POST",
+//                             headers: {
+//                                 'Accept': 'application/json',
+//                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+//                             },
+//                             body: formData
+//                         })
+//                         .then(async res => {
+//                             if (res.ok) {
+//                                 alert("User created with local ZIP override.");
+//                                 form.reset(); // Optional
+//                             } else {
+//                                 const errData = await res.json();
+//                                 alert("Failed to force add user.");
+//                                 console.error("Force Add Error:", errData);
+//                             }
+//                         })
+//                         .catch(err => {
+//                             console.error("Force Add Network Error", err);
+//                             alert("Something went wrong while forcing ZIP override.");
+//                         });
+
+//                     } else {
+//                         // User canceled
+//                         return;
+//                     }
+//                 } else {
+//                     // Other validation errors
+//                     alert("Validation failed.");
+//                     console.error("Validation errors", data.errors);
+//                 }
+//             } else {
+//                 alert("Unexpected error occurred.");
+//             }
+//         })
+//         .catch(err => {
+//             console.error("Fetch failed", err);
+//             alert("Request failed.");
+//         });
+//     });
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('useradd'); // Replace with your form ID
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const url = form.action;
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(async response => {
+            const contentType = response.headers.get("content-type") || "";
+
+            if (response.ok) {
+                alert("User created successfully!");
+                console.log("Backend Response:", await response.json());
+                form.reset();
+                return;
+            }
+
+            if (response.status === 422 && contentType.includes("application/json")) {
+                const resData = await response.json();
+                console.warn("⚠️ 422 Validation Response:", resData);
+
+                if (resData.status === 'zipcode_not_in_local') {
+                    console.log(" Showing confirm dialog:", resData.message);
+                   
+
+                    if (confirm(resData.message)) {
+                        console.log(" User confirmed ZIP addition. Resubmitting with force_add...");
+
+                        const forceInput = document.createElement('input');
+                        forceInput.type = 'hidden';
+                        forceInput.name = 'force_add';
+                        forceInput.value = '1';
+                        form.appendChild(forceInput);
+
+                        form.submit(); // 🔁 Resubmit with force_add
+                    } else {
+                        console.log(" User canceled ZIP addition.");
+                    }
+                } else {
+                    console.warn("⚠️ Other 422 error:", resData.errors);
+                    alert("Form submission error. Check required fields.");
+                }
+
+                return;
+            }
+
+            // ❌ Unexpected response
+            const rawText = await response.text();
+            console.error("Unexpected response from server:", rawText);
+            alert("Unexpected error occurred. See console for details.");
+        })
+        .catch(error => {
+            console.error(" Network/JS error:", error);
+            alert("Something went wrong. Check the console.");
+        });
+    });
+});
+
+
+
+
+</script>
+
+
+
+
+
     @stop
