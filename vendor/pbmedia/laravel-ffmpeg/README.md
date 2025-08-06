@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pbmedia/laravel-ffmpeg.svg?style=flat-square)](https://packagist.org/packages/pbmedia/laravel-ffmpeg)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/protonemedia/laravel-ffmpeg/master.svg?style=flat-square)](https://travis-ci.org/protonemedia/laravel-ffmpeg)
+![run-tests](https://github.com/protonemedia/laravel-ffmpeg/workflows/run-tests/badge.svg)
 [![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-ffmpeg.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-ffmpeg)
 [![Total Downloads](https://img.shields.io/packagist/dt/pbmedia/laravel-ffmpeg.svg?style=flat-square)](https://packagist.org/packages/pbmedia/laravel-ffmpeg)
 
@@ -13,14 +13,15 @@ This package provides an integration with FFmpeg for Laravel 6.0 and higher. [La
 * Integration with [Laravel's Filesystem](http://laravel.com/docs/7.0/filesystem), [configuration system](https://laravel.com/docs/7.0/configuration) and [logging handling](https://laravel.com/docs/7.0/errors).
 * Compatible with Laravel 6.0 and higher, support for [Package Discovery](https://laravel.com/docs/7.0/packages#package-discovery).
 * Built-in support for HLS.
+* Built-in support for encrypted HLS (AES-128) and rotating keys (optional).
 * Built-in support for concatenation, multiple inputs/outputs, image sequences (timelapse), complex filters (and mapping), frame/thumbnail exports.
 * Built-in support for watermarks (positioning and manipulation).
-* PHP 7.2 and higher.
+* PHP 7.3 and higher.
+* Lots of integration tests, GitHub Actions with both Ubuntu and Windows.
 
-## Video Course Builder
-We're developing a package/app/service to set up your course platform quickly. We have one straightforward question, however. Which solution and pricing would you prefer? Vote at [videocoursebuilder.com](https://videocoursebuilder.com) and read all about the features!
+## Support
 
-Are there other features you want to see? Do you have ideas about pricing models? Or do you have other suggestions? Let me know [right here on GitHub](https://github.com/pascalbaljetmedia/laravel-ffmpeg/issues/187) or reach out [on Twitter](https://twitter.com/pascalbaljet).
+We proudly support the community by developing Laravel packages and giving them away for free. Keeping track of issues and pull requests takes time, but we're happy to help! If this package saves you time or if you're relying on it professionally, please consider [supporting the maintenance and development](https://github.com/sponsors/pascalbaljet).
 
 ## Installation
 
@@ -188,7 +189,7 @@ FFMpeg::open('steve_howe.mp4')
     ->export()
     ->resize(640, 480);
 ```
-The first argument is the width, and the second argument the height. The optional third argument is the mode. You can choose between `fit` (default), `inset`, `width` or `height`. You can find about these modes in the `FFMpeg\Filters\Video\ResizeFilter` class.
+The first argument is the width, and the second argument the height. The optional third argument is the mode. You can choose between `fit` (default), `inset`, `width` or `height`. The optional fourth argument is a boolean whether or not to force the use of standards ratios. You can find about these modes in the `FFMpeg\Filters\Video\ResizeFilter` class.
 
 ### Custom filters
 
@@ -293,9 +294,11 @@ Check out [the documentation](https://spatie.be/docs/image/v1/introduction) for 
 This package comes with a `ProtoneMedia\LaravelFFMpeg\FFMpeg\CopyFormat` class that allows you to export a file without transcoding the streams. You might want to use this to use another container:
 
 ```php
+use ProtoneMedia\LaravelFFMpeg\FFMpeg\CopyFormat;
+
 FFMpeg::open('video.mp4')
     ->export()
-    ->inFormat(new \ProtoneMedia\LaravelFFMpeg\FFMpeg\CopyFormat)
+    ->inFormat(new CopyFormat)
     ->save('video.mkv');
 ```
 
@@ -523,6 +526,8 @@ When opening or saving files from or to a remote disk, temporary files will be c
 FFMpeg::cleanupTemporaryFiles();
 ```
 
+By default, the root of the temporary directories is evaluated by PHP's `sys_get_temp_dir()` method, but you can modify it by setting the `temporary_files_root` configuration key to a custom path.
+
 ## HLS
 
 You can create a M3U8 playlist to do [HLS](https://en.wikipedia.org/wiki/HTTP_Live_Streaming).
@@ -590,6 +595,114 @@ FFMpeg::fromDisk('videos')
     });
 ```
 
+### Encrypted HLS
+
+As of version 7.5, you can encrypt each HLS segment using AES-128 encryption. To do this, call the `withEncryptionKey` method on the HLS exporter with a key. We provide a `generateEncryptionKey` helper method on the `HLSExporter` class to generate a key. Make sure you store the key well, as the exported result is worthless without the key. By default, the filename of the key is `secret.key`, but you can change that with the optional second parameter of the `withEncryptionKey` method.
+
+```php
+use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
+
+$encryptionKey = HLSExporter::generateEncryptionKey();
+
+FFMpeg::open('steve_howe.mp4')
+    ->exportForHLS()
+    ->withEncryptionKey($encryptionKey)
+    ->addFormat($lowBitrate)
+    ->addFormat($midBitrate)
+    ->addFormat($highBitrate)
+    ->save('adaptive_steve.m3u8');
+```
+
+To secure your HLS export even further, you can rotate the key on each exported segment. By doing so, it will generate multiple keys that you'll need to store. Use the `withRotatingEncryptionKey` method to enable this feature and provide a callback that implements the storage of the keys.
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->exportForHLS()
+    ->withRotatingEncryptionKey(function ($filename, $contents) {
+        $videoId = 1;
+
+        // use this callback to store the encryption keys
+
+        Storage::disk('secrets')->put($videoId . '/' . $filename, $contents);
+
+        // or...
+
+        DB::table('hls_secrets')->insert([
+            'video_id' => $videoId,
+            'filename' => $filename,
+            'contents' => $contents,
+        ]);
+    })
+    ->addFormat($lowBitrate)
+    ->addFormat($midBitrate)
+    ->addFormat($highBitrate)
+    ->save('adaptive_steve.m3u8');
+```
+
+The `withRotatingEncryptionKey` method has an optional second argument to set the number of segments that use the same key. This defaults to `1`.
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->exportForHLS()
+    ->withRotatingEncryptionKey($callable, 10);
+```
+
+### Protecting your HLS encryption keys
+
+To make working with encrypted HLS even better, we've added a `DynamicHLSPlaylist` class that modifies playlists on-the-fly and specifically for your application. This way, you can add your authentication and authorization logic. As we're using a plain Laravel controller, you can use features like [Gates](https://laravel.com/docs/master/authorization#gates) and [Middleware](https://laravel.com/docs/master/middleware#introduction).
+
+In this example, we've saved the HLS export to the `public` disk, and we've stored the encryption keys to the `secrets` disk, which isn't publicly available. As the browser can't access the encryption keys, it won't play the video. Each playlist has paths to the encryption keys, and we need to modify those paths to point to an accessible endpoint.
+
+This implementation consists of two routes. One that responses with an encryption key and one that responses with a modified playlist. The first route (`video.key`) is relatively simple, and this is where you should add your additional logic.
+
+The second route (`video.playlist`) uses the `DynamicHLSPlaylist` class. Call the `dynamicHLSPlaylist` method on the `FFMpeg` facade, and similar to opening media files, you can open a playlist utilizing the `fromDisk` and `open` methods. Then you must provide three callbacks. Each of them gives you a relative path and expects a full path in return. As the `DynamicHLSPlaylist` class implements the `Illuminate\Contracts\Support\Responsable` interface, you can return the instance.
+
+The first callback (KeyUrlResolver) gives you the relative path to an encryption key. The second callback (MediaUrlResolver) gives you the relative path to a media segment (.ts files). The third callback (PlaylistUrlResolver) gives you the relative path to a playlist.
+
+Now instead of using `Storage::disk('public')->url('adaptive_steve.m3u8')` to get the full url to your primary playlist, you can use `route('video.playlist', ['playlist' => 'adaptive_steve.m3u8'])`. The `DynamicHLSPlaylist` class takes care of all the paths and urls.
+
+```php
+Route::get('/video/secret/{key}', function ($key) {
+    return Storage::disk('secrets')->download($key);
+})->name('video.key');
+
+Route::get('/video/{playlist}', function ($playlist) {
+    return FFMpeg::dynamicHLSPlaylist()
+        ->fromDisk('public')
+        ->open($playlist)
+        ->setKeyUrlResolver(function ($key) {
+            return route('video.key', ['key' => $key]);
+        })
+        ->setMediaUrlResolver(function ($mediaFilename) {
+            return Storage::disk('public')->url($mediaFilename);
+        })
+        ->setPlaylistUrlResolver(function ($playlistFilename) {
+            return route('video.playlist', ['playlist' => $playlistFilename]);
+        });
+})->name('video.playlist');
+```
+
+### Live Coding Session
+
+Here you can find a Live Coding Session about HLS encryption:
+
+[https://www.youtube.com/watch?v=WlbzWoAcez4](https://www.youtube.com/watch?v=WlbzWoAcez4)
+
+## Process Output
+
+You can get the raw process output by calling the `getProcessOutput` method. Though the use-case is limited, you can use it to analyze a file (for example, with the `volumedetect` filter). It returns a `ProtoneMedia\LaravelFFMpeg\Support\ProcessOutput` class that has three methods: `all`, `errors` and `output`. Each method returns an array with the corresponding lines.
+
+```php
+$processOutput = FFMpeg::open('video.mp4')
+    ->export()
+    ->addFilter(['-filter:a', 'volumedetect', '-f', 'null'])
+    ->getProcessOutput();
+
+$processOutput->all();
+$processOutput->errors();
+$processOutput->out();
+```
+
 ## Advanced
 
 The Media object you get when you 'open' a file, actually holds the Media object that belongs to the [underlying driver](https://github.com/PHP-FFMpeg/PHP-FFMpeg). It handles dynamic method calls as you can see [here](https://github.com/pascalbaljetmedia/laravel-ffmpeg/blob/master/src/Media.php#L114-L117). This way all methods of the underlying driver are still available to you.
@@ -639,11 +752,33 @@ FFMpeg::open('video.mp4')
     ->save('new_video.mp4');
 ```
 
+Since we can't get rid of some of the underlying options, you can interact with the final FFmpeg command by adding a callback to the exporter. You can add one or more callbacks by using the `beforeSaving` method:
+
+```php
+FFMpeg::open('video.mp4')
+    ->export()
+    ->inFormat(new X264)
+    ->beforeSaving(function ($commands) {
+        $commands[] = '-hello';
+
+        return $commands;
+    })
+    ->save('concat.mp4');
+```
+
+*Note: this does not work with concatenation and frame exports*
+
 ## Example app
 
 Here's a blog post that will help you get started with this package:
 
 https://protone.media/en/blog/how-to-use-ffmpeg-in-your-laravel-projects
+
+## Using Video.js to play HLS in any browser
+
+Here's a 20-minute overview how to get started with Video.js. It covers including Video.js from a CDN, importing it as an ES6 module with Laravel Mix (Webpack) and building a reusable Vue.js component.
+
+[https://www.youtube.com/watch?v=nA1Jy8BPjys](https://www.youtube.com/watch?v=nA1Jy8BPjys)
 
 ## Wiki
 
@@ -672,7 +807,10 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 * [`Laravel Analytics Event Tracking`](https://github.com/protonemedia/laravel-analytics-event-tracking): Laravel package to easily send events to Google Analytics.
 * [`Laravel Blade On Demand`](https://github.com/protonemedia/laravel-blade-on-demand): Laravel package to compile Blade templates in memory.
 * [`Laravel Cross Eloquent Search`](https://github.com/protonemedia/laravel-cross-eloquent-search): Laravel package to search through multiple Eloquent models.
+* [`Laravel Eloquent Scope as Select`](https://github.com/protonemedia/laravel-eloquent-scope-as-select): Stop duplicating your Eloquent query scopes and constraints in PHP. This package lets you re-use your query scopes and constraints by adding them as a subquery.
+* [`Laravel Eloquent Where Not`](https://github.com/protonemedia/laravel-eloquent-where-not): This Laravel package allows you to flip/invert an Eloquent scope, or really any query constraint.
 * [`Laravel Form Components`](https://github.com/protonemedia/laravel-form-components): Blade components to rapidly build forms with Tailwind CSS Custom Forms and Bootstrap 4. Supports validation, model binding, default values, translations, includes default vendor styling and fully customizable!
+* [`Laravel Mixins`](https://github.com/protonemedia/laravel-mixins): A collection of Laravel goodies.
 * [`Laravel Paddle`](https://github.com/protonemedia/laravel-paddle): Paddle.com API integration for Laravel with support for webhooks/events.
 * [`Laravel Verify New Email`](https://github.com/protonemedia/laravel-verify-new-email): This package adds support for verifying new email addresses: when a user updates its email address, it won't replace the old one until the new one is verified.
 * [`Laravel WebDAV`](https://github.com/protonemedia/laravel-webdav): WebDAV driver for Laravel's Filesystem.

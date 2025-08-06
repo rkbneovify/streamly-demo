@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,12 +9,17 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use function count;
+use function get_class;
+use function preg_match;
+use function str_replace;
 use PHPUnit\Framework\ExpectationFailedException;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Logical NOT.
  */
-class LogicalNot extends Constraint
+final class LogicalNot extends Constraint
 {
     /**
      * @var Constraint
@@ -49,14 +54,14 @@ class LogicalNot extends Constraint
             'not ',
         ];
 
-        \preg_match('/(\'[\w\W]*\')([\w\W]*)("[\w\W]*")/i', $string, $matches);
+        preg_match('/(\'[\w\W]*\')([\w\W]*)("[\w\W]*")/i', $string, $matches);
 
-        if (\count($matches) > 0) {
+        if (count($matches) > 0) {
             $nonInput = $matches[2];
 
-            $negatedString = \str_replace(
+            $negatedString = str_replace(
                 $nonInput,
-                \str_replace(
+                str_replace(
                     $positives,
                     $negatives,
                     $nonInput
@@ -64,7 +69,7 @@ class LogicalNot extends Constraint
                 $string
             );
         } else {
-            $negatedString = \str_replace(
+            $negatedString = str_replace(
                 $positives,
                 $negatives,
                 $string
@@ -79,8 +84,6 @@ class LogicalNot extends Constraint
      */
     public function __construct($constraint)
     {
-        parent::__construct();
-
         if (!($constraint instanceof Constraint)) {
             $constraint = new IsEqual($constraint);
         }
@@ -89,7 +92,7 @@ class LogicalNot extends Constraint
     }
 
     /**
-     * Evaluates the constraint for parameter $other
+     * Evaluates the constraint for parameter $other.
      *
      * If $returnResult is set to false (the default), an exception is thrown
      * in case of a failure. null is returned otherwise.
@@ -98,14 +101,10 @@ class LogicalNot extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @param mixed  $other        value or object to evaluate
-     * @param string $description  Additional information about the test
-     * @param bool   $returnResult Whether to return a result or throw an exception
-     *
      * @throws ExpectationFailedException
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, string $description = '', bool $returnResult = false)
     {
         $success = !$this->constraint->evaluate($other, $description, true);
 
@@ -123,7 +122,7 @@ class LogicalNot extends Constraint
      */
     public function toString(): string
     {
-        switch (\get_class($this->constraint)) {
+        switch (get_class($this->constraint)) {
             case LogicalAnd::class:
             case self::class:
             case LogicalOr::class:
@@ -141,22 +140,22 @@ class LogicalNot extends Constraint
      */
     public function count(): int
     {
-        return \count($this->constraint);
+        return count($this->constraint);
     }
 
     /**
-     * Returns the description of the failure
+     * Returns the description of the failure.
      *
      * The beginning of failure messages is "Failed asserting that" in most
      * cases. This method should return the second part of that sentence.
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function failureDescription($other): string
     {
-        switch (\get_class($this->constraint)) {
+        switch (get_class($this->constraint)) {
             case LogicalAnd::class:
             case self::class:
             case LogicalOr::class:

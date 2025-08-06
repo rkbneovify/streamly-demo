@@ -51,7 +51,7 @@ class MediaOpener
      */
     public function __construct($disk = null, PHPFFMpeg $driver = null, MediaCollection $mediaCollection = null)
     {
-        $this->disk = Disk::make($disk ?: config('filesystems.default'));
+        $this->fromDisk($disk ?: config('filesystems.default'));
 
         $this->driver = ($driver ?: app(PHPFFMpeg::class))->fresh();
 
@@ -93,6 +93,22 @@ class MediaOpener
         foreach (Arr::wrap($paths) as $path) {
             $this->collection->push(Media::make($this->disk, $path));
         }
+
+        return $this;
+    }
+
+    /**
+     * Instantiates a single Media object and sets the given options on the object.
+     *
+     * @param string $path
+     * @param array $options
+     * @return self
+     */
+    public function openWithInputOptions(string $path, array $options = []): self
+    {
+        $this->collection->push(
+            Media::make($this->disk, $path)->setInputOptions($options)
+        );
 
         return $this;
     }
@@ -172,7 +188,7 @@ class MediaOpener
 
     public function cleanupTemporaryFiles(): self
     {
-        TemporaryDirectories::deleteAll();
+        app(TemporaryDirectories::class)->deleteAll();
 
         return $this;
     }

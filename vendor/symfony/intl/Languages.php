@@ -56,7 +56,7 @@ final class Languages extends ResourceBundle
      *
      * @throws MissingResourceException if the language code does not exist
      */
-    public static function getName(string $language, string $displayLocale = null): string
+    public static function getName(string $language, ?string $displayLocale = null): string
     {
         try {
             return self::readEntry(['Names', $language], $displayLocale);
@@ -76,9 +76,9 @@ final class Languages extends ResourceBundle
     /**
      * Gets the list of language names indexed with alpha2 codes as keys.
      *
-     * @return string[]
+     * @return array<string, string>
      */
-    public static function getNames(string $displayLocale = null): array
+    public static function getNames(?string $displayLocale = null): array
     {
         return self::asort(self::readEntry(['Names'], $displayLocale), $displayLocale);
     }
@@ -139,7 +139,7 @@ final class Languages extends ResourceBundle
      *
      * @throws MissingResourceException if the country code does not exists
      */
-    public static function getAlpha3Name(string $language, string $displayLocale = null): string
+    public static function getAlpha3Name(string $language, ?string $displayLocale = null): string
     {
         try {
             return self::getName(self::getAlpha2Code($language), $displayLocale);
@@ -157,9 +157,9 @@ final class Languages extends ResourceBundle
      *
      * Same as method getNames, but with ISO 639-2 three-letter codes instead of ISO 639-1 codes as keys.
      *
-     * @return string[]
+     * @return array<string, string>
      */
-    public static function getAlpha3Names($displayLocale = null): array
+    public static function getAlpha3Names(?string $displayLocale = null): array
     {
         $alpha2Names = self::getNames($displayLocale);
         $alpha3Names = [];

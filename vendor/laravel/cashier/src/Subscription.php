@@ -236,15 +236,8 @@ class Subscription extends Model
     public function syncStripeStatus()
     {
         $subscription = $this->asStripeSubscription();
-        if(is_null($this->ends_at) && 
-        $subscription->status==StripeSubscription::STATUS_CANCELED){
-            $this->stripe_status = $subscription->status;
-            $this->ends_at = Carbon::createFromTimestamp(
-                $subscription->canceled_at
-            );
-        }else{
+
         $this->stripe_status = $subscription->status;
-    }
 
         $this->save();
     }

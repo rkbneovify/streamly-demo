@@ -49,12 +49,12 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     /**
      * Sets the kiloBitrate value.
      *
-     * @param  integer                  $kiloBitrate
+     * @param  int                  $kiloBitrate
      * @throws InvalidArgumentException
      */
     public function setKiloBitrate($kiloBitrate)
     {
-        if ($kiloBitrate < 1) {
+        if ($kiloBitrate < 0) {
             throw new InvalidArgumentException('Wrong kiloBitrate value');
         }
 
@@ -93,7 +93,7 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getModulus()
     {
