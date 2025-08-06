@@ -69,70 +69,74 @@ class UsersController extends Controller
 
             if ($validator->fails()) {
                 Log::error('Validation failed', $validator->errors()->toArray());
+    
+                if ($request->ajax()) {
+                    return response()->json([
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+    
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-
-            $existing = User::where('email', $request->email)->first();
-            if ($existing) {
-                Log::warning("User already exists: " . $request->email);
-                return redirect()->back()->with('existuser', $existing->id);
-            }
-
-
+    
+            // 2️⃣ Check ZIP exists in DB
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
-
+            if (!$zipcodeExists) {
+                Log::warning("Invalid zipcode entered: " . $request->zipcode);
+    
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => 'invalid_zip',
+                        'message' => 'Invalid Zipcode. User not created'
+                    ], 200);
+                }
+    
+                return redirect()->back()->with('errormsg', 'Invalid Zipcode. User not created');
+            }
+    
+            // 3️⃣ Predefined zipcodes
             $predefinedLocalZipcodes = [
                 "85120", "85215", "85205", "75662", "08872",
                 "08904", "18344", "18438", "18302", "18326"
             ];
-            
             $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
             $newZip = $request->zipcode;
-            
-            // 1. If not a valid zipcode
-            if (!$zipcodeExists) {
-                Log::warning("Invalid zipcode entered: " . $newZip);
-                return response()->json([
-                    'status' => 'invalid_zip',
-                    'message' => 'Invalid Zipcode. User not created'
-                ], 421);
-            }
-            
-            // 2. If it's a local channel but ZIP not in predefined and force_add not present
+    
+            // 4️⃣ Local channel but ZIP not predefined → ask for confirmation
             if (
                 $request->channel_availability == "2" &&
                 !in_array($newZip, $predefinedLocalZipcodes) &&
                 (!$request->has('force_add') || $request->force_add != 1)
             ) {
                 Log::info("ZIP not in local and force_add not set: " . $newZip);
-            
-                // Force JSON response manually for AJAX call
-                return response()->json([
-                    'status' => 'zipcode_not_in_local',
-                    'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
-                ], 422);
+    
+                if ($request->ajax()) {
+                    return response()->json([
+                        'status' => 'zipcode_not_in_local',
+                        'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
+                    ], 422);
+                }
+    
+                return redirect()->back()->with('errormsg', "This zipcode isn't available in your local channels.");
             }
-            
-            
-            // 3. Add zip to local channels if needed
+    
+            // 5️⃣ Add ZIP to local channels if needed
             if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
                 foreach ($localChannelIds as $channelId) {
                     $channel = DB::table('channels')->where('id', $channelId)->first();
                     if ($channel) {
-                        $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                        $existingZipcodes = json_decode($channel->zip_code ?? '[]', true);
                         if (!in_array($newZip, $existingZipcodes)) {
                             $existingZipcodes[] = $newZip;
-            
                             DB::table('channels')->where('id', $channelId)->update([
-                                'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                                'zip_code' => json_encode(array_values($existingZipcodes)),
                             ]);
-            
                             Log::info("ZIP $newZip added to channel $channelId");
                         }
                     }
                 }
             }
-            
+    
             
             // 4. Proceed with user creation (as you already do)
             
@@ -354,6 +358,63 @@ class UsersController extends Controller
             $input = Arr::except($input, ['password']);
         }
 
+
+        $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
+
+        $predefinedLocalZipcodes = [
+            "85120", "85215", "85205", "75662", "08872",
+            "08904", "18344", "18438", "18302", "18326"
+        ];
+        
+        $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+        $newZip = $request->zipcode;
+        
+        // 1. If not a valid zipcode
+        if (!$zipcodeExists) {
+            Log::warning("Invalid zipcode entered: " . $newZip);
+            return response()->json([
+                'status' => 'invalid_zip',
+                'message' => 'Invalid Zipcode. User not created'
+            ], 421);
+        }
+        
+        // 2. If it's a local channel but ZIP not in predefined and force_add not present
+        if (
+            $request->channel_availability == "2" &&
+            !in_array($newZip, $predefinedLocalZipcodes) &&
+            (!$request->has('force_add') || $request->force_add != 1)
+        ) {
+            Log::info("ZIP not in local and force_add not set: " . $newZip);
+        
+            // Force JSON response manually for AJAX call
+            return response()->json([
+                'status' => 'zipcode_not_in_local',
+                'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
+            ], 422);
+        }
+        
+        
+        // 3. Add zip to local channels if needed
+        if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+            foreach ($localChannelIds as $channelId) {
+                $channel = DB::table('channels')->where('id', $channelId)->first();
+                if ($channel) {
+                    $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                    if (!in_array($newZip, $existingZipcodes)) {
+                        $existingZipcodes[] = $newZip;
+        
+                        DB::table('channels')->where('id', $channelId)->update([
+                            'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                        ]);
+        
+                        Log::info("ZIP $newZip added to channel $channelId");
+                    }
+                }
+            }
+        }
+        
+
+        
         $user = User::find($id);
 
         if ($request->has('connected_device')) {

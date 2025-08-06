@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,11 +9,13 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
+
 /**
  * Constraint that asserts that the value it is evaluated for is less than
  * a given value.
  */
-class LessThan extends Constraint
+final class LessThan extends Constraint
 {
     /**
      * @var float|int
@@ -25,19 +27,17 @@ class LessThan extends Constraint
      */
     public function __construct($value)
     {
-        parent::__construct();
-
         $this->value = $value;
     }
 
     /**
      * Returns a string representation of the constraint.
      *
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function toString(): string
     {
-        return 'is less than ' . $this->exporter->export($this->value);
+        return 'is less than ' . $this->exporter()->export($this->value);
     }
 
     /**

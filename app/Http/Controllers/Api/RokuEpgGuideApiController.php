@@ -181,6 +181,17 @@ class RokuEpgGuideApiController extends Controller
                 $channel->image = $this->getURIFromAsset($channel->assets);
                 $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : (env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? null);
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
+                // $channel->program = collect($this->getProgramScheduleById($channel->prgSvcId, $day))
+                $channel->program = collect($this->getProgramScheduleById($channel->prgSvcId, $day))
+                ->map(function ($program) {
+                    if (isset($program['title']) && trim($program['title']) === 'TV Guide') {
+                        $program['title'] = 'FanDuel';
+                        $program['image'] = env('APP_URL') . '/uploads/fanduel1.png';
+                    }
+                    return $program;
+                });
+            
+
                 unset($channel->assets);
                 if ($channel->stationName == null) {
                     $channel->stationName = "NA";

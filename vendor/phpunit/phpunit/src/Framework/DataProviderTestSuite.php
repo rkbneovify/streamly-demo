@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * This file is part of PHPUnit.
  *
@@ -9,7 +9,15 @@
  */
 namespace PHPUnit\Framework;
 
-class DataProviderTestSuite extends TestSuite
+use function count;
+use function explode;
+use PHPUnit\Util\Test as TestUtil;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
+
+/**
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ */
+final class DataProviderTestSuite extends TestSuite
 {
     /**
      * @var string[]
@@ -39,6 +47,18 @@ class DataProviderTestSuite extends TestSuite
 
     public function hasDependencies(): bool
     {
-        return \count($this->dependencies) > 0;
+        return count($this->dependencies) > 0;
+    }
+
+    /**
+     * Returns the size of the each test created using the data provider(s).
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getSize(): int
+    {
+        [$className, $methodName] = explode('::', $this->getName());
+
+        return TestUtil::getSize($className, $methodName);
     }
 }

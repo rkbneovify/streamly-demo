@@ -46,6 +46,13 @@ class ZipcodeController extends Controller
         return view('admin.zipcodes.allowedzipcode');
     }
 
+    
+
+    public function localZipcodes()
+    {
+
+        return view('admin.zipcodes.localzipcode');
+    }
     public function userZipcodeRuleShow()
     {
         $UserZipcodeRule = UserZipcodeRule::select('*')->get();
