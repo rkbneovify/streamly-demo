@@ -1032,7 +1032,7 @@ class UsersController extends Controller
             "aaData" => $data_arr,
             "aaDatacount" => count($data_arr),
             //   "vardump"=> $searchroleValue
-
+  
         );
 
         echo json_encode($response);
