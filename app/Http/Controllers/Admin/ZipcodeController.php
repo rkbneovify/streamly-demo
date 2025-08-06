@@ -74,7 +74,7 @@ class ZipcodeController extends Controller
     {
         $emails = User::select('email')->where('is_active', 1)->get();
         return view('admin.zipcodes.user-zipcode-rule-create', compact('emails'));
-    }
+    }  
 
     public function userZipcodeRuleUpdate(Request $request, $id)
     {
