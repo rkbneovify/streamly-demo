@@ -97,7 +97,7 @@ input[type=number] {
             </ul>
           </div>
           @endif
-          <form action="{{ url("admin/userupdate", [$user->id]) }}" method="POST" enctype="multipart/form-data">
+          <form action="{{ url("admin/userupdate", [$user->id]) }}" method="POST" enctype="multipart/form-data" id ="useradd">
             @csrf
             @method('PUT')
 
@@ -311,8 +311,8 @@ input[type=number] {
               <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
               
-                <input id="zipcode" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
-
+                <input id="zipcode" type="number"  list="zipcodeList" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
+                <datalist id="zipcodeList"></datalist>
                 @if ($errors->has('zipcode'))
                 <span class="help-block">
                   <strong>{{ $errors->first('zipcode') }}</strong>
@@ -609,6 +609,87 @@ $('#zipcode').on('change', function () {
     }
 });
 
+
+
+
+ document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('useradd'); // Replace with your form ID
+
+    const predefinedLocalZipcodes = ["85120", "85215", "85205", "75662", "08872", "08904", "18344", "85022", "18438", "18302", "18326"];
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const channelAvailability = formData.get('channel_availability'); 
+        const zipcode = formData.get('zipcode');
+
+        if (channelAvailability === "2" && !predefinedLocalZipcodes.includes(zipcode)) {
+            console.log("Running AJAX for local channel with new ZIP");
+
+            const url = form.action;
+
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async response => {
+                const contentType = response.headers.get("content-type") || "";
+
+                if (response.ok) {
+                    alert("User created successfully!");
+                    console.log("Backend Response:", await response.json());
+                    form.reset();
+                    return;
+                }
+
+                if (response.status === 422 && contentType.includes("application/json")) {
+                    const resData = await response.json();
+                    console.warn(" 422 Validation Response:", resData);
+
+                    if (resData.status === 'zipcode_not_in_local') {
+                        console.log(" Showing confirm dialog:", resData.message);
+
+                        if (confirm(resData.message)) {
+                            console.log(" User confirmed ZIP addition. Resubmitting with force_add...");
+
+                            const forceInput = document.createElement('input');
+                            forceInput.type = 'hidden';
+                            forceInput.name = 'force_add';
+                            forceInput.value = '1';
+                            form.appendChild(forceInput);
+
+                            form.submit(); 
+                        } else {
+                            console.log(" User canceled ZIP addition.");
+                        }
+                    } else {
+                        console.warn("⚠️ Other 422 error:", resData.errors);
+                        alert("Form submission error. Check required fields.");
+                    }
+
+                    return;
+                }
+
+                const rawText = await response.text();
+                console.error("Unexpected response from server:", rawText);
+                alert("Unexpected error occurred. See console for details.");
+            })
+            .catch(error => {
+                console.error(" Network/JS error:", error);
+                alert("Something went wrong. Check the console.");
+            });
+
+        } else {
+            console.log("Submitting normally (non-local or known ZIP)");
+            form.submit();
+        }
+    });
+});
   </script>
 
 @stop

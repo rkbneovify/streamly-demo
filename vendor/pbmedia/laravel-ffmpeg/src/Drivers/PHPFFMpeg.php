@@ -2,11 +2,14 @@
 
 namespace ProtoneMedia\LaravelFFMpeg\Drivers;
 
+use Alchemy\BinaryDriver\Listeners\ListenerInterface;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\Driver\FFMpegDriver;
 use FFMpeg\FFMpeg;
 use FFMpeg\Media\AbstractMediaType;
 use FFMpeg\Media\AdvancedMedia as BaseAdvancedMedia;
+use FFMpeg\Media\Audio;
 use FFMpeg\Media\Concat;
 use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
@@ -47,6 +50,14 @@ class PHPFFMpeg
      * @var \FFMpeg\Media\AbstractMediaType
      */
     private $media;
+
+    /**
+     * Callbacks that should be called just before the
+     * underlying library hits the save method.
+     *
+     * @var array
+     */
+    private $beforeSavingCallbacks = [];
 
     public function __construct(FFMpeg $ffmpeg)
     {
@@ -112,11 +123,18 @@ class PHPFFMpeg
 
             $ffmpegMedia = $this->ffmpeg->open($media->getLocalPath());
 
-            $this->media = $ffmpegMedia instanceof Video
-                ? VideoMedia::make($ffmpegMedia)
-                : AudioMedia::make($ffmpegMedia);
+            // this should be refactored to a factory...
+            if ($ffmpegMedia instanceof Video) {
+                $this->media = VideoMedia::make($ffmpegMedia);
+            } elseif ($ffmpegMedia instanceof Audio) {
+                $this->media = AudioMedia::make($ffmpegMedia);
+            } else {
+                $this->media = $ffmpegMedia;
+            }
 
-            $this->media->setHeaders(Arr::first($mediaCollection->getHeaders()) ?: []);
+            if (method_exists($this->media, 'setHeaders')) {
+                $this->media->setHeaders(Arr::first($mediaCollection->getHeaders()) ?: []);
+            }
         } else {
             $ffmpegMedia = $this->ffmpeg->openAdvanced($mediaCollection->getLocalPaths());
 
@@ -156,6 +174,85 @@ class PHPFFMpeg
         $this->forceAdvanced = true;
 
         return $this->open($mediaCollection);
+    }
+
+    /**
+     * Returns the FFMpegDriver of the underlying library.
+     *
+     * @return \FFMpeg\Driver\FFMpegDriver
+     */
+    private function getFFMpegDriver(): FFMpegDriver
+    {
+        return $this->get()->getFFMpegDriver();
+    }
+
+    /**
+     * Add a Listener to the underlying library.
+     *
+     * @param \Alchemy\BinaryDriver\Listeners\ListenerInterface $listener
+     * @return self
+     */
+    public function addListener(ListenerInterface $listener): self
+    {
+        $this->getFFMpegDriver()->listen($listener);
+
+        return $this;
+    }
+
+    /**
+     * Remove the Listener from the underlying library.
+     *
+     * @param \Alchemy\BinaryDriver\Listeners\ListenerInterface $listener
+     * @return self
+     */
+    public function removeListener(ListenerInterface $listener): self
+    {
+        $this->getFFMpegDriver()->unlisten($listener);
+
+        return $this;
+    }
+
+    /**
+     * Adds a callable to the callbacks array.
+     *
+     * @param callable $callback
+     * @return self
+     */
+    public function beforeSaving(callable $callback): self
+    {
+        $this->beforeSavingCallbacks[] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Set the callbacks on the Media.
+     *
+     * @return self
+     */
+    public function applyBeforeSavingCallbacks(): self
+    {
+        $media = $this->get();
+
+        if (method_exists($media, 'setBeforeSavingCallbacks')) {
+            $media->setBeforeSavingCallbacks($this->beforeSavingCallbacks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add an event handler to the underlying library.
+     *
+     * @param string $event
+     * @param callable $callback
+     * @return self
+     */
+    public function onEvent(string $event, callable $callback): self
+    {
+        $this->getFFMpegDriver()->on($event, $callback);
+
+        return $this;
     }
 
     /**

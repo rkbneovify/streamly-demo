@@ -186,6 +186,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::delete('/userzipcoderule/delete/{id}', 'Admin\ZipcodeController@userZipcodeRuleDelete')->name('userzipcoderuledelete');
 
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
+    Route::get('localzipcode', 'Admin\ZipcodeController@localZipcodes');
     Route::get('address', 'Admin\ZipcodeController@addressindex');
     Route::get('addressdatatable', 'Admin\ZipcodeController@addressindexDatatables');
 

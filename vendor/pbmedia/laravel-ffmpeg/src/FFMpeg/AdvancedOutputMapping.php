@@ -9,6 +9,10 @@ use Illuminate\Support\Collection;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSVideoFilters;
 use ProtoneMedia\LaravelFFMpeg\Filesystem\Media;
 
+/**
+ * This class is basically a wrapper around the map() method
+ * of a the \FFMpeg\Media\AdvancedMedia class.
+ */
 class AdvancedOutputMapping
 {
     /**
@@ -54,8 +58,8 @@ class AdvancedOutputMapping
         if ($this->format instanceof DefaultVideo) {
             $parameters = $this->format->getAdditionalParameters() ?: [];
 
-            if (!in_array('-b:v', $parameters)) {
-                $parameters = ['-b:v', $this->format->getKiloBitrate() . 'k'] + $parameters;
+            if (!in_array('-b:v', $parameters) && $this->format->getKiloBitrate() !== 0) {
+                $parameters = array_merge(['-b:v', $this->format->getKiloBitrate() . 'k'], $parameters);
             }
 
             $this->format->setAdditionalParameters($parameters);

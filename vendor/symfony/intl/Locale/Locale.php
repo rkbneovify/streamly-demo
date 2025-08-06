@@ -23,30 +23,32 @@ use Symfony\Component\Intl\Exception\MethodNotImplementedException;
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
  * @internal
+ *
+ * @deprecated since Symfony 5.3, use symfony/polyfill-intl-icu ^1.21 instead
  */
 abstract class Locale
 {
-    const DEFAULT_LOCALE = null;
+    public const DEFAULT_LOCALE = null;
 
     /* Locale method constants */
-    const ACTUAL_LOCALE = 0;
-    const VALID_LOCALE = 1;
+    public const ACTUAL_LOCALE = 0;
+    public const VALID_LOCALE = 1;
 
     /* Language tags constants */
-    const LANG_TAG = 'language';
-    const EXTLANG_TAG = 'extlang';
-    const SCRIPT_TAG = 'script';
-    const REGION_TAG = 'region';
-    const VARIANT_TAG = 'variant';
-    const GRANDFATHERED_LANG_TAG = 'grandfathered';
-    const PRIVATE_TAG = 'private';
+    public const LANG_TAG = 'language';
+    public const EXTLANG_TAG = 'extlang';
+    public const SCRIPT_TAG = 'script';
+    public const REGION_TAG = 'region';
+    public const VARIANT_TAG = 'variant';
+    public const GRANDFATHERED_LANG_TAG = 'grandfathered';
+    public const PRIVATE_TAG = 'private';
 
     /**
      * Not supported. Returns the best available locale based on HTTP "Accept-Language" header according to RFC 2616.
      *
      * @param string $header The string containing the "Accept-Language" header value
      *
-     * @return string The corresponding locale code
+     * @return string
      *
      * @see https://php.net/locale.acceptfromhttp
      *
@@ -91,7 +93,7 @@ abstract class Locale
      *
      * @param array $subtags A keyed array where the keys identify the particular locale code subtag
      *
-     * @return string The corresponding locale code
+     * @return string
      *
      * @see https://php.net/locale.composelocale
      *
@@ -108,7 +110,7 @@ abstract class Locale
      * @param string $langtag The language tag to check
      * @param string $locale  The language range to check against
      *
-     * @return string The corresponding locale code
+     * @return string
      *
      * @see https://php.net/locale.filtermatches
      *
@@ -124,7 +126,7 @@ abstract class Locale
      *
      * @param string $locale The locale to extract the variants from
      *
-     * @return array The locale variants
+     * @return array
      *
      * @see https://php.net/locale.getallvariants
      *
@@ -136,9 +138,9 @@ abstract class Locale
     }
 
     /**
-     * Returns the default locale.
+     * Returns the default locale, which is always "en".
      *
-     * @return string The default locale code. Always returns 'en'
+     * @return string
      *
      * @see https://php.net/locale.getdefault
      */
@@ -150,16 +152,16 @@ abstract class Locale
     /**
      * Not supported. Returns the localized display name for the locale language.
      *
-     * @param string $locale   The locale code to return the display language from
-     * @param string $inLocale Optional format locale code to use to display the language name
+     * @param string      $locale   The locale code to return the display language from
+     * @param string|null $inLocale Optional format locale code to use to display the language name
      *
-     * @return string The localized language display name
+     * @return string
      *
      * @see https://php.net/locale.getdisplaylanguage
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayLanguage(string $locale, string $inLocale = null)
+    public static function getDisplayLanguage(string $locale, ?string $inLocale = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -167,16 +169,16 @@ abstract class Locale
     /**
      * Not supported. Returns the localized display name for the locale.
      *
-     * @param string $locale   The locale code to return the display locale name from
-     * @param string $inLocale Optional format locale code to use to display the locale name
+     * @param string      $locale   The locale code to return the display locale name from
+     * @param string|null $inLocale Optional format locale code to use to display the locale name
      *
-     * @return string The localized locale display name
+     * @return string
      *
      * @see https://php.net/locale.getdisplayname
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayName(string $locale, string $inLocale = null)
+    public static function getDisplayName(string $locale, ?string $inLocale = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -184,16 +186,16 @@ abstract class Locale
     /**
      * Not supported. Returns the localized display name for the locale region.
      *
-     * @param string $locale   The locale code to return the display region from
-     * @param string $inLocale Optional format locale code to use to display the region name
+     * @param string      $locale   The locale code to return the display region from
+     * @param string|null $inLocale Optional format locale code to use to display the region name
      *
-     * @return string The localized region display name
+     * @return string
      *
      * @see https://php.net/locale.getdisplayregion
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayRegion(string $locale, string $inLocale = null)
+    public static function getDisplayRegion(string $locale, ?string $inLocale = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -201,16 +203,16 @@ abstract class Locale
     /**
      * Not supported. Returns the localized display name for the locale script.
      *
-     * @param string $locale   The locale code to return the display script from
-     * @param string $inLocale Optional format locale code to use to display the script name
+     * @param string      $locale   The locale code to return the display script from
+     * @param string|null $inLocale Optional format locale code to use to display the script name
      *
-     * @return string The localized script display name
+     * @return string
      *
      * @see https://php.net/locale.getdisplayscript
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayScript(string $locale, string $inLocale = null)
+    public static function getDisplayScript(string $locale, ?string $inLocale = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -218,16 +220,16 @@ abstract class Locale
     /**
      * Not supported. Returns the localized display name for the locale variant.
      *
-     * @param string $locale   The locale code to return the display variant from
-     * @param string $inLocale Optional format locale code to use to display the variant name
+     * @param string      $locale   The locale code to return the display variant from
+     * @param string|null $inLocale Optional format locale code to use to display the variant name
      *
-     * @return string The localized variant display name
+     * @return string
      *
      * @see https://php.net/locale.getdisplayvariant
      *
      * @throws MethodNotImplementedException
      */
-    public static function getDisplayVariant(string $locale, string $inLocale = null)
+    public static function getDisplayVariant(string $locale, ?string $inLocale = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -237,7 +239,7 @@ abstract class Locale
      *
      * @param string $locale The locale code to extract the keywords from
      *
-     * @return array Associative array with the extracted variants
+     * @return array
      *
      * @see https://php.net/locale.getkeywords
      *
@@ -253,7 +255,7 @@ abstract class Locale
      *
      * @param string $locale The locale code to extract the language code from
      *
-     * @return string|null The extracted language code or null in case of error
+     * @return string|null
      *
      * @see https://php.net/locale.getprimarylanguage
      *
@@ -269,7 +271,7 @@ abstract class Locale
      *
      * @param string $locale The locale code to extract the region code from
      *
-     * @return string|null The extracted region code or null if not present
+     * @return string|null
      *
      * @see https://php.net/locale.getregion
      *
@@ -285,7 +287,7 @@ abstract class Locale
      *
      * @param string $locale The locale code to extract the script code from
      *
-     * @return string|null The extracted script code or null if not present
+     * @return string|null
      *
      * @see https://php.net/locale.getscript
      *
@@ -299,16 +301,16 @@ abstract class Locale
     /**
      * Not supported. Returns the closest language tag for the locale.
      *
-     * @param array  $langtag      A list of the language tags to compare to locale
-     * @param string $locale       The locale to use as the language range when matching
-     * @param bool   $canonicalize If true, the arguments will be converted to canonical form before matching
-     * @param string $default      The locale to use if no match is found
+     * @param array       $langtag      A list of the language tags to compare to locale
+     * @param string      $locale       The locale to use as the language range when matching
+     * @param bool        $canonicalize If true, the arguments will be converted to canonical form before matching
+     * @param string|null $default      The locale to use if no match is found
      *
      * @see https://php.net/locale.lookup
      *
      * @throws MethodNotImplementedException
      */
-    public static function lookup(array $langtag, string $locale, bool $canonicalize = false, string $default = null)
+    public static function lookup(array $langtag, string $locale, bool $canonicalize = false, ?string $default = null)
     {
         throw new MethodNotImplementedException(__METHOD__);
     }
@@ -318,7 +320,7 @@ abstract class Locale
      *
      * @param string $locale The locale code to extract the subtag array from
      *
-     * @return array Associative array with the extracted subtags
+     * @return array
      *
      * @see https://php.net/locale.parselocale
      *
@@ -332,7 +334,7 @@ abstract class Locale
     /**
      * Not supported. Sets the default runtime locale.
      *
-     * @return bool true on success or false on failure
+     * @return bool
      *
      * @see https://php.net/locale.setdefault
      *
