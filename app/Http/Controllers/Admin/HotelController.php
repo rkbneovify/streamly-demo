@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\UserRoomExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\SessionTable;
 use JWTAuth;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HotelController extends Controller
 {
@@ -133,7 +135,7 @@ class HotelController extends Controller
         //  return response()->json($response, 200);
         //get the users with there session
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
-        $query = User::query();
+
         $query = User::query()
             ->where('mode', $mode);
         //  search conditions
@@ -459,5 +461,24 @@ class HotelController extends Controller
         // })
         // ->addIndexColumn()
         // ->make(true);
+    }
+
+    public function exportUserRoom(Request $request, $type)
+    {
+        // $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+        // $query = User::query()
+        //     ->where('mode', $mode);
+        // $userIds = $query->pluck('id')->toArray();
+        // $rooms = HotelRoomTable::whereIn('user_id', $userIds)->with('user')
+        //     ->whereHas('user', function ($query) use ($mode) {
+        //         $query->where('mode', $mode);
+        //     })
+        //     ->selectRaw("id,user_id , count(id) activesession")
+        //     ->groupBy('user_id')->get();
+        // return response()->json($rooms);
+
+        $filename = 'user-with-room_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new UserRoomExport(), $filename);
     }
 }
