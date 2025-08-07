@@ -102,13 +102,18 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('/hotelrooms', 'Admin\HotelController@hotelrooms');
     Route::get('/hotelroomsess', 'Admin\HotelController@activeSession')->name('hotel.room');
+    Route::get('/hotel/user/room/export/{type}', 'Admin\HotelController@exportUserRoom')->name('hotel.user.room.export');
     Route::get('/hotelroomsess/{id}', 'Admin\HotelController@connectedhotel');
 
     Route::resource('/hotelcontracts', 'Admin\HotelContractsController');
 
     Route::get('hoteladmin/data', 'Admin\HotelController@HotelAdminUserAjaxData');
     Route::get('user/data', 'Admin\UsersController@UserAjaxData');
+    Route::get('users/export/{type}', 'Admin\UsersController@exportUser')->name('users.export');
+    Route::get('users/session/export/{type}', 'Admin\UsersController@exportUserSession')->name('users.session.export');
     Route::get('/users/session', 'Admin\UsersController@activeSession')->name('user.session'); //for user session
+    Route::get('/users/custom', 'Admin\UsersController@customUserList')->name('users.custom.list');
+    Route::get('/users/custom/export/{type}', 'Admin\UsersController@exportCustomUser')->name('users.custom.export');
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails'); //for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis'); //for user session piyush
     Route::get('/report/subscriptionsreport', 'Admin\ReportController@SubscriptionsReports'); //for user session piyush
@@ -147,10 +152,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice'); //connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser', 'Admin\UsersController@store')->name('insertuser');
-    Route::get('/users/view/{id}', 'Admin\UsersController@show');
-    Route::get('/users/edit/{id}', 'Admin\UsersController@edit');
+    Route::get('/users/view/{id}', 'Admin\UsersController@show')->name('users.view');
+    Route::get('/users/edit/{id}', 'Admin\UsersController@edit')->name('users.edit');
     Route::put('userupdate/{id}', 'Admin\UsersController@update')->name('userupdate');
-    Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
+    Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy')->name('users.destroy');
     Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
 
 
@@ -440,6 +445,6 @@ Route::any('/{any}', [AngularController::class, 'index'])
 
 
 // cron route custom user
- 
+
 Route::post('/subscriptioncron', 'SubscriptionCronController@subscriptioncron');
 // Route::get('users/updateall', 'Admin\UsersController@UpdateAll');

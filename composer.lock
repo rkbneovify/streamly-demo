@@ -336,16 +336,16 @@
         },
         {
             "name": "botman/botman",
-            "version": "v2.8.8",
+            "version": "v2.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/botman/botman.git",
-                "reference": "a971e6bbdf2e7b491557471f6339fe541ba31898"
+                "reference": "8b80eab11eb016a2e864eb73bb34460bd529c03c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/botman/botman/zipball/a971e6bbdf2e7b491557471f6339fe541ba31898",
-                "reference": "a971e6bbdf2e7b491557471f6339fe541ba31898",
+                "url": "https://api.github.com/repos/botman/botman/zipball/8b80eab11eb016a2e864eb73bb34460bd529c03c",
+                "reference": "8b80eab11eb016a2e864eb73bb34460bd529c03c",
                 "shasum": ""
             },
             "require": {
@@ -410,9 +410,9 @@
             ],
             "support": {
                 "issues": "https://github.com/botman/botman/issues",
-                "source": "https://github.com/botman/botman/tree/v2.8.8"
+                "source": "https://github.com/botman/botman/tree/v2.8.9"
             },
-            "time": "2024-12-20T12:50:32+00:00"
+            "time": "2025-08-04T14:14:47+00:00"
         },
         {
             "name": "botman/driver-web",

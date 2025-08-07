@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\SubscriptionExport;
+
+use App\Exports\SubscriptionReportExport;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -967,10 +968,7 @@ class ReportController extends Controller
     {
 
         $filters = $request->only(['status']);
-        $date = now()->format('Y-m-d_H-i-s');
-        if ($type === 'csv') {
-            return Excel::download(new SubscriptionExport($filters), "Subscription_{$date}.csv");
-        }
-        return Excel::download(new SubscriptionExport($filters), "Subscription_{$date}.xlsx");
+        $filename = 'subscription_report_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new SubscriptionReportExport($filters), $filename);
     }
 }
