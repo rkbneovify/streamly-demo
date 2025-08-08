@@ -7,9 +7,7 @@
                          <th style="width: 1%">
                              #
                          </th>
-                         <th>
-                             Subscription Id
-                         </th>
+
                          <th>
                              Role
                          </th>
@@ -36,10 +34,7 @@
                              <td>
                                  {{ $key + $users->firstItem() }}
                              </td>
-                             <td>
-                                 <a
-                                     href="{{ route('admin.report.subscription.detail', $item->subscription->stripe_id) }}">{{ $item->subscription->stripe_id }}</a>
-                             </td>
+
                              <td>
                                  {{ $item->roles->first()->display_name ?? '' }}
                              </td>
@@ -57,7 +52,9 @@
                              </td>
 
                              <td class="text-start">
-
+                                 <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
+                                     class="btn btn-sm btn-link mb-1 w-75">Live Subscription</a>
+                                 <br>
                                  <a href="{{ route('admin.users.view', $item->id) }}"
                                      class="btn btn-sm btn-primary mb-1 w-75">View</a>
                                  <br>

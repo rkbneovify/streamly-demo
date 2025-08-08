@@ -1032,7 +1032,7 @@ class UsersController extends Controller
     {
 
         $query = User::query();
-        $query->with(['roles', 'subscription'])->where('is_custom_user', 1);
+        $query->with('roles')->where('is_custom_user', 1);
 
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
@@ -1076,16 +1076,7 @@ class UsersController extends Controller
 
     public function exportCustomUser(Request $request, $type)
     {
-        $query = User::query();
-        $query->with('roles');
-        $query->where('is_custom_user', 1);
-        if (!empty($request->role)) {
-            $query->whereHas('roles', function ($q) use ($request) {
-                $q->where('id', $request->role);
-            });
-        }
-        $users = $query->get();
-        // return response()->json($users);
+
         $filters = $request->only(['role']);
         // dd($filters);
         $filename = 'custom-users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
