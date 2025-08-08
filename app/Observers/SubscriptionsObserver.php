@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Observers;
+
+use App\Models\Subscription as ModelsSubscription;
 use DB;
 use Exception;
 use Carbon\Carbon;
@@ -16,13 +18,13 @@ class SubscriptionsObserver
      */
     public function created(Subscription $subscription)
     {
-       
-          $subscription->renews_at = Carbon::createFromTimestamp($subscription->current_period_end);
-       
-       
-       
- 
-       $subscription->save();
+
+        $subscription->renews_at = Carbon::createFromTimestamp($subscription->current_period_end);
+
+
+
+
+        $subscription->save();
     }
 
     /**
@@ -31,7 +33,7 @@ class SubscriptionsObserver
      * @param  \App\Subscription  $subscription
      * @return void
      */
-    public function updated(Subscription $subscription)
+    public function updated(ModelsSubscription $subscription)
     {
         //
     }
@@ -68,6 +70,4 @@ class SubscriptionsObserver
     {
         //
     }
-
-    
 }

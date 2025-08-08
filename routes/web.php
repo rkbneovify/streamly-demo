@@ -68,6 +68,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     //subscription
     Route::resource('subscriptions', 'Admin\SubscriptionController');
+    Route::get('subscriptions/custom/user/{id}', 'Admin\SubscriptionController@customUserView')->name('subscriptions.custom.view');
+    Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
     Route::get('/subscriptionsstripe', 'Admin\SubscriptionController@subscriptionstripe')->name('ss');
     Route::get('/pg', 'Admin\SubscriptionController@paginatewithscroll');
     Route::get('/subscriptions/view/{id}', 'Admin\SubscriptionController@show');
