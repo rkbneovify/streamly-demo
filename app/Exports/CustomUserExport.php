@@ -22,7 +22,6 @@ class CustomUserExport implements FromCollection, WithHeadings
 
         $query = User::query();
         $query->with('roles');
-        $query->with('subscription');
         $query->where('is_custom_user', 1);
         if (!empty($this->filters['role'])) {
             $query->whereHas('roles', function ($q) {
@@ -32,7 +31,6 @@ class CustomUserExport implements FromCollection, WithHeadings
         return $query->get()->map(function ($user, $key) {
             return [
                 'Sl.No.' => $key + 1,
-                "Subscription Id" => $user->subscription->stripe_id,
                 "Role" => $user->roles->first()->display_name,
                 "Name" => $user->name,
                 "Email" => $user->email,
@@ -44,6 +42,6 @@ class CustomUserExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['Sl.No.', "Subscription Id", 'Role', 'Name', 'Email', 'Status', "Created At"];
+        return ['Sl.No.', 'Role', 'Name', 'Email', 'Status', "Created At"];
     }
 }
