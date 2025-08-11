@@ -465,7 +465,7 @@ input[type=number] {
     
 }
   });
-  });
+  }); 
 
 
   document.querySelectorAll('.channel-check').forEach(function (checkbox) {
