@@ -11,6 +11,7 @@ use App\User;
 use Carbon\Carbon;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\Toaster;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Illuminate\Support\Facades\DB;
@@ -32,9 +33,7 @@ class SubscriptionController extends Controller
     public function __construct()
     {
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-        Stripe::setApiKey($STRIPE_SECRET);
+        Stripe::setApiKey(config('services.stripe.secret'));
     }
     /**
      * Display a listing of the resource.
@@ -750,6 +749,15 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
 
             $user = User::find($request->user_id);
+            if ($user->is_custom_user == 0) {
+                alert()->error('Oops !', 'You can only update custom user on stripe.');
+                return redirect()->back();
+            }
+            if ($user->is_live_on_stripe == 1) {
+                alert()->error('Oops !', 'User already updated on stripe.');
+                return redirect()->back();
+            }
+
             $customer = Customer::create([
                 'email' => $request->email,
                 'name'  => $request->name,
@@ -792,8 +800,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 $userSubs->stripe_status = $subscription->status;
                 $userSubs->quantity = $subscription->items->data[0]->quantity;
                 $userSubs->trial_ends_at = $trialDaysEndDate;
-                $userSubs->renews_at = $subsEndDate;
-                $userSubs->ends_at = $subsRenewalDate;
+                $userSubs->renews_at = $subsRenewalDate;
+                $userSubs->ends_at = $subsEndDate;
                 $userSubs->save();
             }
             Alert::success('Success', 'Subscription update on Stripe successfully !');
