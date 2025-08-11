@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\CustomUserExport;
+use App\Exports\UserExport;
+use App\Exports\UserSessionExport;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -26,6 +29,7 @@ use App\HotelRoomTable;
 use App\Models\RoleUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UsersController extends Controller
 {
@@ -44,16 +48,16 @@ class UsersController extends Controller
     public function create()
     {
 
-        $predefinedLocalZipcodes = ['85120','85215','85205','75662','08872','08904','18344','85022','18438','18302','18326']; // or fetch from DB
+        $predefinedLocalZipcodes = ['85120', '85215', '85205', '75662', '08872', '08904', '18344', '85022', '18438', '18302', '18326']; // or fetch from DB
 
         $roles = Role::all()->pluck('name', 'id');
 
-        return view('admin.users.create', compact('roles','predefinedLocalZipcodes'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes'));
     }
 
     public function store(Request $request)
     {
-        
+
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -96,8 +100,16 @@ class UsersController extends Controller
     
             // 3️⃣ Predefined zipcodes
             $predefinedLocalZipcodes = [
-                "85120", "85215", "85205", "75662", "08872",
-                "08904", "18344", "18438", "18302", "18326"
+                "85120",
+                "85215",
+                "85205",
+                "75662",
+                "08872",
+                "08904",
+                "18344",
+                "18438",
+                "18302",
+                "18326"
             ];
             $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
             $newZip = $request->zipcode;
@@ -139,9 +151,9 @@ class UsersController extends Controller
     
             
             // 4. Proceed with user creation (as you already do)
-            
-            
-            
+
+
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -437,7 +449,7 @@ class UsersController extends Controller
         DB::table('role_user')->where('user_id', $id)->delete();
         foreach ($request->input('roles') as $value) {
             $user->attachRole($value);
-        } 
+        }
 
         // Step 3: Device & hotel room handling
         $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
@@ -477,7 +489,7 @@ class UsersController extends Controller
             ->where('email', $user->email)
             ->update([
                 'validate' => $request->channel_availability,
-                'zipcode'=> $request->zipcode
+                'zipcode' => $request->zipcode
             ]);
 
         // Step 5: Calculate subscription end date
@@ -593,18 +605,18 @@ class UsersController extends Controller
 
     public function getZip(Request $request)
     {
-       
+
         $search = $request->input('search');
-    
+
         $zipcodes = Zipcode::where('zipcode', 'like', $search . '%')
             ->select('zipcode as value', 'city', 'state')
             ->limit(5)
             ->get();
-    
-            
+
+
         return response()->json($zipcodes);
     }
-    
+
 
 
 
@@ -645,7 +657,7 @@ class UsersController extends Controller
     // }
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $user = User::find($id);
@@ -668,7 +680,10 @@ class UsersController extends Controller
             $user->delete();
 
             \Log::info("User ID {$id} successfully deleted.");
-            return response()->json(['success' => 'User deleted successfully.']);
+            if ($request->ajax()) {
+                return response()->json(['success' => 'User deleted successfully.']);
+            }
+            return redirect()->back();
         } catch (\Exception $e) {
             \Log::error("Delete user failed for ID {$id}: " . $e->getMessage());
             return response()->json(['error' => 'Something went wrong while deleting the user.'], 500);
@@ -1077,5 +1092,60 @@ class UsersController extends Controller
         } else {
             return response()->json(['message' => "User Updated Error Occured"], 400);
         }
+    }
+
+    public function customUserList(Request $request)
+    {
+
+        $query = User::query();
+        $query->with('roles')->where('is_custom_user', 1);
+
+        if (!empty($request->role)) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('id', $request->role);
+            });
+        }
+        if (!empty($request->search)) {
+            $query->where(function ($q) use ($request) {
+                $q->where('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $users =   $query->paginate(10);
+        // return response()->json($users);
+        $roles = Role::all();
+        if ($request->ajax()) {
+            return view('admin.users.partials.custom-table', compact('users', 'roles'));
+        }
+        return view('admin.users.custom', compact('users', 'roles'));
+    }
+
+    public function exportUser(Request $request, $type)
+    {
+
+        $filters = $request->only(['role']);
+        // dd($filters);
+        $filename = 'users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new UserExport($filters), $filename);
+    }
+
+    public function exportUserSession(Request $request, $type)
+    {
+
+
+        $filters = $request->only(['role']);
+        // dd($filters);
+        $filename = 'users-sessions_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new UserSessionExport($filters), $filename);
+    }
+
+    public function exportCustomUser(Request $request, $type)
+    {
+
+        $filters = $request->only(['role']);
+        // dd($filters);
+        $filename = 'custom-users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new CustomUserExport($filters), $filename);
     }
 }

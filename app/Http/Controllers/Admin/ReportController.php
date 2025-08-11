@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+
+use App\Exports\SubscriptionReportExport;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -19,7 +21,9 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
+use App\Models\Subscription;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -28,6 +32,7 @@ class ReportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        Stripe::setApiKey(config('services.stripe.secret'));
     }
 
     public function userdetails(Request $request)
@@ -222,6 +227,9 @@ class ReportController extends Controller
                 $previousPageUrl = $request->page < 2 ? ($request->page <= 1 ? null : url()->current()) : url()->current() . '?daterange=' . $request->query('daterange') . '&page=' . ($request->page - 1) . '&ending_before=' . reset($paymentIntents->data)->id;
                 $nextPageUrl = $paymentIntents->has_more || $request->page == 1 ? url()->current() . '?daterange=' . $request->query('daterange') . '&page=' . ($request->page + 1) . '&starting_after=' . end($paymentIntents->data)->id : null;
             }
+
+
+
             if ($request->ajax()) {
                 return view('admin.reports.table', compact('alltransactions', 'previousPageUrl', 'nextPageUrl'));
             }
@@ -383,7 +391,7 @@ class ReportController extends Controller
         return view('admin.reports.viewtransaction', compact('singletransaction'));
     }
 
-    public function SubscriptionsReports($sort)
+    public function SubscriptionsReportsOld($sort)
     {
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
@@ -523,6 +531,105 @@ class ReportController extends Controller
 
         //return $resultCount;
     }
+
+    public function SubscriptionsReports(Request $request)
+    {
+
+        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+        $userIds = DB::table('users')
+            ->where('mode', $mode)
+            ->pluck('id')
+            ->toArray();
+
+
+        $query = Subscription::query();
+        $query = $query->with('user:id,name,email,zipcode,stripe_id')
+            ->select('id', 'user_id', 'stripe_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+            ->whereIn('user_id', $userIds)
+            ->whereNotIn('stripe_plan', ['price_1R7AsbJSdAGJhCxpc0nHB1e8', 'lLqM2zp3oUMO', 'price_1MqxXZGbCi8tAySGisSrhf0S', '4NTNZkcX4wYM'])
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($request->status)) {
+            $query->where('stripe_status', $request->status);
+        }
+
+        if (!empty($request->search)) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $transaction =   $query->paginate(10)->appends($request->query());
+
+        $transaction->getCollection()->transform(function ($item) {
+            $plan = \Stripe\Plan::retrieve($item->stripe_plan);
+            $product = \Stripe\Product::retrieve($plan->product);
+            $item->plan_name = $product->name;
+            $item->plan_desc = $product->description;
+            return $item;
+        });
+
+
+
+        if ($request->ajax()) {
+            return view('admin.reports.subscription-report-table', compact('transaction'));
+        }
+        return view('admin.reports.subscriptionsreport', compact('transaction'));
+
+        //return $resultCount;
+    }
+
+    public function subscriptionDetailView($subscriptionId)
+    {
+        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        Stripe::setApiKey($STRIPE_SECRET);
+
+        $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+        $customer = \Stripe\Customer::retrieve($subscription->customer);
+        $user = User::where('email', $customer->email)->first();
+        $invoices = \Stripe\Invoice::all([
+            'customer' => $subscription->customer,
+            'limit' => 100
+        ]);
+
+        $subscriptions = \Stripe\Subscription::all([
+            'customer' => $subscription->customer,
+            'status'   => 'all', // active, trialing, canceled, unpaid, or all
+            'limit'    => 10
+        ]);
+
+
+        // return response()->json($subscriptions);
+        return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
+    }
+
+    function getAllStripeCustomers($secretKey)
+    {
+        Stripe::setApiKey($secretKey);
+
+        $allCustomers = [];
+        $hasMore = true;
+        $startingAfter = null;
+
+        while ($hasMore) {
+            $params = ['limit' => 100];
+            if ($startingAfter) {
+                $params['starting_after'] = $startingAfter;
+            }
+
+            $response = \Stripe\Customer::all($params);
+            $allCustomers = array_merge($allCustomers, $response->data);
+
+            $hasMore = $response->has_more;
+            $startingAfter = end($response->data)->id ?? null;
+        }
+
+        return $allCustomers;
+    }
+
+
 
     public function SubscriptionsReportstimeframe($to, $from, $value)
     {
@@ -853,5 +960,15 @@ class ReportController extends Controller
 
         //return view('admin.reports.zipcodreport', compact('UsersINZipcode'));
         return $UsersINZipcode;
+    }
+
+    // export fun
+
+    public function exportSubscription(Request $request, $type)
+    {
+
+        $filters = $request->only(['status']);
+        $filename = 'subscription_report_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new SubscriptionReportExport($filters), $filename);
     }
 }
