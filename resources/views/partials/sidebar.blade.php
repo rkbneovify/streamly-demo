@@ -264,6 +264,12 @@
                                 <p>Allowed Zipcode</p>
                             </a>
                         </li>
+                        <li class="nav-item {{ request()->is('admin/localzipcode') ? 'activeElement' : '' }}">
+                            <a href=" {{ url('/admin/localzipcode') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Local Zipcode</p>
+                            </a>
+                        </li>
                         <li class="nav-item {{ request()->is('admin/userzipcoderule') ? 'activeElement' : '' }}">
                             <a href=" {{ url('/admin/userzipcoderule') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
