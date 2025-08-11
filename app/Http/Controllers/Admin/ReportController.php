@@ -32,6 +32,7 @@ class ReportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        Stripe::setApiKey(config('services.stripe.secret'));
     }
 
     public function userdetails(Request $request)
@@ -541,13 +542,12 @@ class ReportController extends Controller
             ->pluck('id')
             ->toArray();
 
-        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-        Stripe::setApiKey($STRIPE_SECRET);
+
         $query = Subscription::query();
         $query = $query->with('user:id,name,email,zipcode,stripe_id')
             ->select('id', 'user_id', 'stripe_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
             ->whereIn('user_id', $userIds)
-            ->whereNotIn('stripe_plan', ['price_1R7AsbJSdAGJhCxpc0nHB1e8'])
+            ->whereNotIn('stripe_plan', ['price_1R7AsbJSdAGJhCxpc0nHB1e8', 'lLqM2zp3oUMO', 'price_1MqxXZGbCi8tAySGisSrhf0S', '4NTNZkcX4wYM'])
             ->orderBy('created_at', 'desc');
 
         if (!empty($request->status)) {
@@ -572,18 +572,7 @@ class ReportController extends Controller
         });
 
 
-        // $customers = $this->getAllStripeCustomers($STRIPE_SECRET);
-        // $subscriptions = \Stripe\Subscription::all([
-        //     'customer' => "cus_SevZ2w6UnXHxBd",
-        //     'limit' => 10, // Optional: number of subscriptions to fetch
-        // ]);
-        // $customer = \Stripe\Customer::create([
-        //     'email' => 'userkk@yopmail.com',
-        //     'name' => 'John Doe',
-        //     'metadata' => ['user_id' => 123],
-        // ]);
-        // $customer = \Stripe\Customer::retrieve("cus_SYnWZo0EJHbSkk");
-        // return response()->json($transaction);
+
         if ($request->ajax()) {
             return view('admin.reports.subscription-report-table', compact('transaction'));
         }
@@ -600,9 +589,20 @@ class ReportController extends Controller
         $subscription = \Stripe\Subscription::retrieve($subscriptionId);
         $customer = \Stripe\Customer::retrieve($subscription->customer);
         $user = User::where('email', $customer->email)->first();
+        $invoices = \Stripe\Invoice::all([
+            'customer' => $subscription->customer,
+            'limit' => 100
+        ]);
 
-        // return response()->json($subscription);
-        return view("admin.reports.subscription-detail", compact("subscription", 'user'));
+        $subscriptions = \Stripe\Subscription::all([
+            'customer' => $subscription->customer,
+            'status'   => 'all', // active, trialing, canceled, unpaid, or all
+            'limit'    => 10
+        ]);
+
+
+        // return response()->json($subscriptions);
+        return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
     }
 
     function getAllStripeCustomers($secretKey)
