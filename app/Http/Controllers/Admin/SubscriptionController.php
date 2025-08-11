@@ -804,6 +804,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 $userSubs->ends_at = $subsEndDate;
                 $userSubs->save();
             }
+            // User update on stripe flag
+            $user->is_live_on_stripe = 1;
+            $user->save();
             Alert::success('Success', 'Subscription update on Stripe successfully !');
             return redirect()->route('admin.users.custom.list');
         } catch (\Throwable $th) {
