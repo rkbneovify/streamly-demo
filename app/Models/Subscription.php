@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 /**
    @property bigint unsigned $user_id user id
 @property varchar $name name
@@ -15,41 +17,44 @@ use Illuminate\Database\Eloquent\Model;
 @property timestamp $updated_at updated at
    
  */
-class Subscription extends Model 
+class Subscription extends Model
 {
-    
+
     /**
-    * Database table name
-    */
+     * Database table name
+     */
     protected $table = 'subscriptions';
 
     /**
-    * Mass assignable columns
-    */
-      /**
-    * Mass assignable columns
-    */
-    protected $fillable=['user_id',
-'name',
-'stripe_id',
-'stripe_status',
-'stripe_plan',
-'quantity',
-'trial_ends_at',
-'renews_at',
-'ends_at'];
+     * Mass assignable columns
+     */
+    /**
+     * Mass assignable columns
+     */
+    protected $fillable = [
+        'user_id',
+        'name',
+        'stripe_id',
+        'stripe_status',
+        'stripe_plan',
+        'quantity',
+        'trial_ends_at',
+        'renews_at',
+        'ends_at'
+    ];
 
     /**
-    * Date time columns.
-    */
-    protected $dates=['trial_ends_at',
-'renews_at',
-'ends_at'];
+     * Date time columns.
+     */
+    protected $dates = [
+        'trial_ends_at',
+        'renews_at',
+        'ends_at'
+    ];
 
 
-public function user()
+    public function user()
     {
-        return $this->belongsTo('App\User','user_id');
+        return $this->belongsTo('App\User', 'user_id');
     }
-
 }
