@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Exceptions;
-
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -49,20 +48,17 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     public function render($request, Throwable $exception)
-    {
-        if ($exception instanceof QueryException && $request->wantsJson()) {
-            return response()->json(['success' => false, 'response_code' => 500, 'error' => $exception->getMessage(), 'message' => 'Internal Server Error'], 500);
-        }
-        if ($exception instanceof BindingResolutionException && $request->wantsJson()) {
-            return response()->json(['success' => false, 'response_code' => 500, 'error' => $exception->getMessage(), 'message' => 'Internal Server Error'], 500);
-        }
-        if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Entry for ' . str_replace('App\\', '', $exception->getModel()) . ' not found',
-                'response_code' => 404
-            ], 404);
-        }
+    {   if ($exception instanceof QueryException && $request->wantsJson()) {
+        return response()->json(['success'=>false,'response_code'=>500, 'error'=>$exception->getMessage(), 'message' =>'Internal Server Error'], 500);   
+    
+    } if ($exception instanceof BindingResolutionException && $request->wantsJson()) {
+        return response()->json(['success'=>false,'response_code'=>500, 'error'=>$exception->getMessage(), 'message' =>'Internal Server Error'], 500);   
+    
+    }
+    if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
+        return response()->json(['success'=>false,
+            'message' => 'Entry for '.str_replace('App\\', '', $exception->getModel()).' not found','response_code'=>404], 404);
+    }
 
         if ($exception instanceof NotFoundHttpException && $request->wantsJson()) {
             return response()->json(['success' => false, 'response_code' => 404, 'error' => $exception->getMessage(), 'message' => 'Resource not found'], 404);
