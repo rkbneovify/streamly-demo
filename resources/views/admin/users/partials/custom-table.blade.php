@@ -52,9 +52,12 @@
                              </td>
 
                              <td class="text-start">
-                                 <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
-                                     class="btn btn-sm btn-link mb-1 w-75">Live Subscription</a>
-                                 <br>
+                                 @if ($item->is_live_on_stripe != 1)
+                                     <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
+                                         class="btn btn-sm btn-link mb-1 w-75">Live Subscription</a>
+                                     <br>
+                                 @endif
+
                                  <a href="{{ route('admin.users.view', $item->id) }}"
                                      class="btn btn-sm btn-primary mb-1 w-75">View</a>
                                  <br>
