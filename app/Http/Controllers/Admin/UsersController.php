@@ -358,7 +358,7 @@ class UsersController extends Controller
             'state'=> 'nullable|string',
             'connected_device' => 'required|in:0,1',
 
-        ]);
+        ]); 
 
 
         $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state','address', 'zipcode', 'contact', 'connected_device');
