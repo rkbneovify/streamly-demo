@@ -97,7 +97,7 @@ input[type=number] {
             </ul>
           </div>
           @endif
-          <form action="{{ url("admin/userupdate", [$user->id]) }}" method="POST" enctype="multipart/form-data">
+          <form action="{{ url("admin/userupdate", [$user->id]) }}" method="POST" enctype="multipart/form-data" id ="useradd">
             @csrf
             @method('PUT')
 
@@ -310,9 +310,10 @@ input[type=number] {
             <div class="form-group{{ $errors->has('zipcode') ? ' has-error' : '' }}">
               <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
-              
-                <input id="zipcode" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
+              <div id="zipErrorMsg" style="color: red; font-size: 14px; display: none;"></div>
 
+                <input id="zipcode" type="number"  list="zipcodeList" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
+                <datalist id="zipcodeList"></datalist>
                 @if ($errors->has('zipcode'))
                 <span class="help-block">
                   <strong>{{ $errors->first('zipcode') }}</strong>
@@ -545,6 +546,7 @@ function decreaseDevices() {
 
   
   let zipData = {}; // Store city/state for each zip
+let lastInvalidZip = ''; // To avoid repeating alert
 
 $(document).ready(function () {
     $('#zipcode').on('input', function () {
@@ -552,9 +554,9 @@ $(document).ready(function () {
 
         if (val.length >= 2) {
             $.ajax({
-              url:"{{url('admin/users/fetchzipcode') }}",
+                url: "{{ url('admin/users/fetchzipcode') }}",
                 method: "GET",
-                data: { search: val }, 
+                data: { search: val },
                 success: function (data) {
                     const datalist = $('#zipcodeList');
                     datalist.empty();
@@ -567,48 +569,141 @@ $(document).ready(function () {
                         };
                         datalist.append(`<option value="${item.value}">`);
                     });
+
+                    // When ZIP is 5 digits, check validity
+                    if (val.length === 5) {
+                        if (zipData.hasOwnProperty(val)) {
+                            fillCityState(val);
+                            lastInvalidZip = ''; // reset invalid zip tracker
+                        } else {
+                            showInvalidZip(val);
+                        }
+                    }
                 },
                 error: function (xhr) {
                     console.error('Error fetching zip:', xhr.responseText);
                 }
             });
-        }
-
-        // Also clear city/state display if field is empty
-        if (val === '') {
-            $('#cityStateDisplay').text('');
-        }
-    });
-
-    $('#zipcode').on('change', function () {
-        const enteredZip = $(this).val().trim();
-
-        if (enteredZip === '') {
-            $('#cityStateDisplay').text('');
-            return;
-        }
-
-        if (zipData.hasOwnProperty(enteredZip)) {
-            const location = zipData[enteredZip];
-            $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
         } else {
-            $('#cityStateDisplay').text('');
-            alert('This ZIP code does not exist in our records.');
+            clearCityState();
         }
     });
 });
 
-$('#zipcode').on('change', function () {
-    const val = $(this).val();
-    if (zipData[val]) {
-        $('#city').val(zipData[val].city);
-        $('#state').val(zipData[val].state);
-    } else {
-        $('#city').val('');
-        $('#state').val('');
-    }
-});
+// Fill city/state and enable
+function fillCityState(zip) {
+    const location = zipData[zip];
+    $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
+    $('#city').val(location.city).prop('disabled', false);
+    $('#state').val(location.state).prop('disabled', false);
+}
 
+function showInvalidZip(zip) {
+    clearCityState();
+
+    // Disable inputs
+    $('#city').prop('disabled', true);
+    $('#state').prop('disabled', true);
+
+    // Show error message above city field
+    $('#zipErrorMsg').text('Enter valid ZIP code').show();
+
+    if (lastInvalidZip !== zip) {
+        alert('This ZIP code does not exist in our records.');
+        lastInvalidZip = zip; // track last invalid zip to avoid duplicate alerts
+    }
+} 
+
+function clearCityState() {
+    $('#cityStateDisplay').text('');
+    $('#city').val('').prop('disabled', false);
+    $('#state').val('').prop('disabled', false);
+
+    // Hide error message
+    $('#zipErrorMsg').hide();
+}
+
+
+
+
+ document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('useradd'); // Replace with your form ID
+
+    const predefinedLocalZipcodes = ["85120", "85215", "85205", "75662", "08872", "08904", "18344", "85022", "18438", "18302", "18326"];
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const channelAvailability = formData.get('channel_availability'); 
+        const zipcode = formData.get('zipcode');
+
+        if (channelAvailability === "2" && !predefinedLocalZipcodes.includes(zipcode)) {
+            console.log("Running AJAX for local channel with new ZIP");
+
+            const url = form.action;
+
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async response => {
+                const contentType = response.headers.get("content-type") || "";
+
+                if (response.ok) {
+                    alert("User created successfully!");
+                    console.log("Backend Response:", await response.json());
+                    form.reset();
+                    return;
+                }
+
+                if (response.status === 422 && contentType.includes("application/json")) {
+                    const resData = await response.json();
+                    console.warn(" 422 Validation Response:", resData);
+
+                    if (resData.status === 'zipcode_not_in_local') {
+                        console.log(" Showing confirm dialog:", resData.message);
+
+                        if (confirm(resData.message)) {
+                            console.log(" User confirmed ZIP addition. Resubmitting with force_add...");
+
+                            const forceInput = document.createElement('input');
+                            forceInput.type = 'hidden';
+                            forceInput.name = 'force_add';
+                            forceInput.value = '1';
+                            form.appendChild(forceInput);
+
+                            form.submit(); 
+                        } else {
+                            console.log(" User canceled ZIP addition.");
+                        }
+                    } else {
+                        console.warn("⚠️ Other 422 error:", resData.errors);
+                        alert("Form submission error. Check required fields.");
+                    }
+
+                    return;
+                }
+
+                const rawText = await response.text();
+                console.error("Unexpected response from server:", rawText);
+                alert("Unexpected error occurred. See console for details.");
+            })
+            .catch(error => {
+                console.error(" Network/JS error:", error);
+                alert("Something went wrong. Check the console.");
+            });
+
+        } else {
+            console.log("Submitting normally (non-local or known ZIP)");
+            form.submit();
+        }
+    });
+});
   </script>
 
 @stop
