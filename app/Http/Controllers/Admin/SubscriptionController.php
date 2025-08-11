@@ -745,7 +745,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         list($productId, $trialDays) = explode('|', $request->product);
 
         $plan = \Stripe\Plan::retrieve($productId);
-
+        DB::beginTransaction();
         try {
 
             $user = User::find($request->user_id);
@@ -793,7 +793,11 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 ->toDateTimeString();
 
             $userSubs = Subscription::where('user_id', $user->id)->first();
-            $trialDaysEndDate = Carbon::now()->addDays($trialDays)->toDateTimeString();
+            $trialDaysEndDate = null;
+            if (!empty($trialDays) && $trialDays != "") {
+                $trialDaysEndDate = Carbon::now()->addDays($trialDays)->toDateTimeString();
+            }
+
             if ($userSubs != null) {
                 $userSubs->stripe_id = $subscription->id;
                 $userSubs->stripe_plan = $plan->id;
@@ -802,15 +806,19 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 $userSubs->trial_ends_at = $trialDaysEndDate;
                 $userSubs->renews_at = $subsRenewalDate;
                 $userSubs->ends_at = $subsEndDate;
+                $userSubs->created_at = now();
                 $userSubs->save();
             }
             // User update on stripe flag
             $user->is_live_on_stripe = 1;
             $user->save();
+            DB::commit();
             Alert::success('Success', 'Subscription update on Stripe successfully !');
             return redirect()->route('admin.users.custom.list');
         } catch (\Throwable $th) {
-            Alert::error('Error', $th->getMessage());
+            DB::rollBack();
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', "Something went wrong. Please try again later.");
             return redirect()->back();
         }
     }
