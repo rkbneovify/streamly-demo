@@ -342,12 +342,14 @@ class UsersController extends Controller
             'plan_duration' => 'nullable|string',
             'channel_availability' => 'required',
             'zipcode'=> 'nullable|string',
+            'city'=> 'nullable|string',
+            'state'=> 'nullable|string',
             'connected_device' => 'required|in:0,1',
 
         ]);
 
 
-        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'country', 'address', 'zipcode', 'contact', 'connected_device');
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state','address', 'zipcode', 'contact', 'connected_device');
 
         $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
 
@@ -395,23 +397,23 @@ class UsersController extends Controller
         
         
         // 3. Add zip to local channels if needed
-        if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
-            foreach ($localChannelIds as $channelId) {
-                $channel = DB::table('channels')->where('id', $channelId)->first();
-                if ($channel) {
-                    $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
-                    if (!in_array($newZip, $existingZipcodes)) {
-                        $existingZipcodes[] = $newZip;
+        // if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+        //     foreach ($localChannelIds as $channelId) {
+        //         $channel = DB::table('channels')->where('id', $channelId)->first();
+        //         if ($channel) {
+        //             $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+        //             if (!in_array($newZip, $existingZipcodes)) {
+        //                 $existingZipcodes[] = $newZip;
         
-                        DB::table('channels')->where('id', $channelId)->update([
-                            'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
-                        ]);
+        //                 DB::table('channels')->where('id', $channelId)->update([
+        //                     'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+        //                 ]);
         
-                        Log::info("ZIP $newZip added to channel $channelId");
-                    }
-                }
-            }
-        }
+        //                 Log::info("ZIP $newZip added to channel $channelId");
+        //             }
+        //         }
+        //     }
+        // }
         
 
         
