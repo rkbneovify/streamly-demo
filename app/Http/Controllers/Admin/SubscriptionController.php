@@ -11,7 +11,6 @@ use App\User;
 use Carbon\Carbon;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
-use RealRashid\SweetAlert\Toaster;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Illuminate\Support\Facades\DB;
@@ -817,8 +816,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             return redirect()->route('admin.users.custom.list');
         } catch (\Throwable $th) {
             DB::rollBack();
-            // Alert::error('Error', $th->getMessage());
-            Alert::error('Error', "Something went wrong. Please try again later.");
+            Alert::error('Error', $th->getMessage());
+            // Alert::error('Error', "Something went wrong. Please try again later.");
             return redirect()->back();
         }
     }
