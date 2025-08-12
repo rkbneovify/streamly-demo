@@ -10,11 +10,14 @@ use App\Models\Zipcode;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use RealRashid\SweetAlert\Facades\Alert;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Illuminate\Support\Facades\DB;
 use Laravel\Cashier\Exceptions\IncompletePayment;
-
+use Stripe\PaymentMethod;
+use Stripe\Stripe;
+use Stripe\Subscription as StripeSubscription;
 
 /**
  * Description of SubscriptionController
@@ -29,7 +32,7 @@ class SubscriptionController extends Controller
     public function __construct()
     {
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
     }
     /**
      * Display a listing of the resource.
@@ -695,6 +698,123 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 return response()->json(['message' => 'Zipcode not allowed or invalid', 'city' => $data2->pluck('city')->first() ?? 'Invalid City', 'state' => $data2->pluck('state')->first() ?? 'Invalid State'], 404);
             }
             return response()->json(['message' => 'Congratulations!  Your zipcode is in our service area.<br> Proceed to the next step to subscribe', 'city' => $data->pluck('city')->first(), 'state' => $data->pluck('state')->first()], 200);
+        }
+    }
+
+    public function customUserView(Request $request, $id)
+    {
+        $plans = \Stripe\Plan::all([
+            'expand' => ['data.tiers'],
+            'active' => true,
+        ]);
+
+        $stripekey = DB::table('Stripe_keys')->where('status', 'active')->pluck('stripe_key')->first();
+
+        $user = User::findOrFail($id);
+        return view("admin.subscriptions.custom-user-create", compact("plans", "user", 'stripekey'));
+    }
+    /**
+     * Store a new user and subscribe them to a plan on Stripe.
+     */
+    public function storeUserAndSubscription(Request $request)
+    {
+
+
+        $request->validate([
+            'product' => "required|string|max:225",
+            'name' => "required|string|max:225",
+            'email' => "required|string|max:225",
+            'address_line1' => "required|string|max:225",
+            'address_city' => "required|string|max:225",
+            'address_state' => "required|string|max:225",
+            'address_country' => "required|string|max:225",
+            'card_holder_name' => "required|string|max:225",
+            'zip' => 'required|digits_between:5,8',
+            'payment_method' => "required|string|max:225",
+        ], [
+            'product.required' => 'Please select plan.',
+            'address_line1.required' => 'Address field is required.',
+            'address_city.required' => 'City field is required.',
+            'address_state.required' => 'State field is required.',
+            'address_country.required' => 'Country field is required.',
+            'zip.required'        => 'Please enter your ZIP code.',
+            'zip.digits_between'  => 'ZIP code must be between 5 and 8 digits.',
+            'payment_method.required' => 'Credit card info field is required.',
+        ]);
+        list($productId, $trialDays) = explode('|', $request->product);
+
+        $plan = \Stripe\Plan::retrieve($productId);
+        DB::beginTransaction();
+        try {
+
+            $user = User::find($request->user_id);
+            if ($user->is_custom_user == 0) {
+                alert()->error('Oops !', 'You can only update custom user on stripe.');
+                return redirect()->back();
+            }
+            if ($user->is_live_on_stripe == 1) {
+                alert()->error('Oops !', 'User already updated on stripe.');
+                return redirect()->back();
+            }
+
+            $customer = Customer::create([
+                'email' => $request->email,
+                'name'  => $request->name,
+                'metadata' => [
+                    'user_id' => $request->user_id ?? 'N/A',
+                ],
+            ]);
+            // update user Stripe customer id 
+            if ($user != null && $user->is_custom_user == 1) {
+                $user->update([
+                    'stripe_id' => $customer->id
+                ]);
+            }
+            PaymentMethod::retrieve($request->payment_method)
+                ->attach(['customer' => $customer->id]);
+            Customer::update($customer->id, [
+                'invoice_settings' => [
+                    'default_payment_method' => $request->payment_method
+                ]
+            ]);
+            $subscription = StripeSubscription::create([
+                'customer' => $customer->id,
+                'items' => [
+                    ['price' => $plan->id]
+                ],
+                'expand' => ['latest_invoice.payment_intent'], // To get payment status
+            ]);
+
+            // update subscription detail on db
+            $subsEndDate = Carbon::createFromTimestamp($subscription->current_period_end)->toDateTimeString();
+            $userSubs = Subscription::where('user_id', $user->id)->first();
+            $trialDaysEndDate = null;
+            if (!empty($trialDays) && $trialDays != "") {
+                $trialDaysEndDate = Carbon::now()->addDays($trialDays)->toDateTimeString();
+            }
+
+            if ($userSubs != null) {
+                $userSubs->stripe_id = $subscription->id;
+                $userSubs->stripe_plan = $plan->id;
+                $userSubs->stripe_status = $subscription->status;
+                $userSubs->quantity = $subscription->items->data[0]->quantity;
+                $userSubs->trial_ends_at = $trialDaysEndDate;
+                $userSubs->renews_at = $subsEndDate;
+                $userSubs->ends_at = $subsEndDate;
+                $userSubs->created_at = now();
+                $userSubs->save();
+            }
+            // User update on stripe flag
+            $user->is_live_on_stripe = 1;
+            $user->save();
+            DB::commit();
+            Alert::success('Success', 'Subscription update on Stripe successfully !');
+            return redirect()->route('admin.users.custom.list');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', "Something went wrong. Please try again later.");
+            return redirect()->back();
         }
     }
 }
