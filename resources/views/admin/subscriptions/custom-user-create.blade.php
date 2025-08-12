@@ -78,7 +78,8 @@
                                         <div class="col-md-6">
                                             <div class='form-group'>
                                                 <label class='control-label'>Name</label>
-                                                <input name="name" class="form-control" value="{{ $user->name }}" />
+                                                <input name="name" class="form-control" value="{{ $user->name }}"
+                                                    readonly />
                                                 @error('name')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -87,7 +88,8 @@
                                         <div class="col-md-6">
                                             <div class='form-group  required'>
                                                 <label class='control-label'>Email</label>
-                                                <input name="email" class="form-control" value="{{ $user->email }}" />
+                                                <input name="email" class="form-control" value="{{ $user->email }}"
+                                                    readonly />
                                                 @error('email')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -209,8 +211,7 @@
                         </button>
                     </div>
                     <div class="col-md-1">
-                        <a href="#" class="btn btn-secondary ms-3"
-                            onclick="event.preventDefault(); location.reload()">Cancel</a>
+                        <a href="{{ route('admin.users.custom.list') }}" class="btn btn-secondary ms-3">Cancel</a>
                     </div>
                 </div>
 

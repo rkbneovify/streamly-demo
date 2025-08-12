@@ -718,7 +718,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      */
     public function storeUserAndSubscription(Request $request)
     {
-
+        
 
         $request->validate([
             'product' => "required|string|max:225",
@@ -787,10 +787,6 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
             // update subscription detail on db
             $subsEndDate = Carbon::createFromTimestamp($subscription->current_period_end)->toDateTimeString();
-            $subsRenewalDate = Carbon::createFromTimestamp($subscription->current_period_end)
-                ->addDay()
-                ->toDateTimeString();
-
             $userSubs = Subscription::where('user_id', $user->id)->first();
             $trialDaysEndDate = null;
             if (!empty($trialDays) && $trialDays != "") {
@@ -803,7 +799,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 $userSubs->stripe_status = $subscription->status;
                 $userSubs->quantity = $subscription->items->data[0]->quantity;
                 $userSubs->trial_ends_at = $trialDaysEndDate;
-                $userSubs->renews_at = $subsRenewalDate;
+                $userSubs->renews_at = $subsEndDate;
                 $userSubs->ends_at = $subsEndDate;
                 $userSubs->created_at = now();
                 $userSubs->save();
