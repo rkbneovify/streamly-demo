@@ -35,15 +35,7 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+
 
                             <form id="subs-form" method="POST" enctype="multipart/form-data"
                                 action="{{ route('admin.subscriptions.custom.store') }}">
@@ -78,8 +70,7 @@
                                         <div class="col-md-6">
                                             <div class='form-group'>
                                                 <label class='control-label'>Name</label>
-                                                <input name="name" class="form-control" value="{{ $user->name }}"
-                                                    readonly />
+                                                <input name="name" class="form-control" value="{{ $user->name }}" />
                                                 @error('name')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
