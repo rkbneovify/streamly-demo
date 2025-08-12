@@ -718,7 +718,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      */
     public function storeUserAndSubscription(Request $request)
     {
-        
+
 
         $request->validate([
             'product' => "required|string|max:225",
@@ -812,8 +812,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             return redirect()->route('admin.users.custom.list');
         } catch (\Throwable $th) {
             DB::rollBack();
-            Alert::error('Error', $th->getMessage());
-            // Alert::error('Error', "Something went wrong. Please try again later.");
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', "Something went wrong. Please try again later.");
             return redirect()->back();
         }
     }
