@@ -586,6 +586,11 @@ class ReportController extends Controller
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         Stripe::setApiKey($STRIPE_SECRET);
 
+        // if provide user id in subscriptionId params
+        if (strpos($subscriptionId, 'sub_') === false) {
+            $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
+        }
+
         $subscription = \Stripe\Subscription::retrieve($subscriptionId);
         $customer = \Stripe\Customer::retrieve($subscription->customer);
         $user = User::where('email', $customer->email)->first();
