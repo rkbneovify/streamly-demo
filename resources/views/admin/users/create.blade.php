@@ -282,10 +282,11 @@ input[type=number] {
                       <div class="form-group{{ $errors->has('zipcode') ? ' has-error' : '' }}">
                     <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
-                    
+                    <div id="zipErrorMsg" style="color: red; font-size: 14px; display: none;"></div>
+
                       <!-- <input id="zipcode"  class="form-control" name="zipcode" autofocus type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" > -->
 
-                      <input id="zipcode" name="zipcode" class="form-control" list="zipcodeList" type="number" onKeyPress="if(this.value.length==5) return false;">
+                      <input id="zipcode" name="zipcode" class="form-control" list="zipcodeList" type="number">
 <datalist id="zipcodeList"></datalist>
                       @if ($errors->has('zipcode'))
                       <span class="help-block">
@@ -495,9 +496,10 @@ input[type=number] {
 
 
       </script>
-
+ 
 <script>
  let zipData = {}; // Store city/state for each zip
+let lastInvalidZip = ''; // To avoid repeating alert
 
 $(document).ready(function () {
     $('#zipcode').on('input', function () {
@@ -505,9 +507,9 @@ $(document).ready(function () {
 
         if (val.length >= 2) {
             $.ajax({
-              url:"{{url('admin/users/fetchzipcode') }}",
+                url: "{{ url('admin/users/fetchzipcode') }}",
                 method: "GET",
-                data: { search: val }, 
+                data: { search: val },
                 success: function (data) {
                     const datalist = $('#zipcodeList');
                     datalist.empty();
@@ -520,48 +522,60 @@ $(document).ready(function () {
                         };
                         datalist.append(`<option value="${item.value}">`);
                     });
+
+                    // When ZIP is 5 digits, check validity
+                    if (val.length === 5) {
+                        if (zipData.hasOwnProperty(val)) {
+                            fillCityState(val);
+                            lastInvalidZip = ''; // reset invalid zip tracker
+                        } else {
+                            showInvalidZip(val);
+                        }
+                    }
                 },
                 error: function (xhr) {
                     console.error('Error fetching zip:', xhr.responseText);
                 }
             });
-        }
-
-        // Also clear city/state display if field is empty
-        if (val === '') {
-            $('#cityStateDisplay').text('');
-        }
-    });
-
-    $('#zipcode').on('change', function () {
-        const enteredZip = $(this).val().trim();
-
-        if (enteredZip === '') {
-            $('#cityStateDisplay').text('');
-            return;
-        }
-
-        if (zipData.hasOwnProperty(enteredZip)) {
-            const location = zipData[enteredZip];
-            $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
         } else {
-            $('#cityStateDisplay').text('');
-            alert('This ZIP code does not exist in our records.');
+            clearCityState();
         }
     });
 });
- 
 
-$('#zipcode').on('change', function () {
-    const val = $(this).val();
-    if (zipData[val]) {
-        $('#city').val(zipData[val].city);
-        $('#state').val(zipData[val].state);
-    } else {
-        $('#city').val('');
-        $('#state').val('');
+// Fill city/state and enable
+function fillCityState(zip) {
+    const location = zipData[zip];
+    $('#cityStateDisplay').text(`${location.city}, ${location.state}`);
+    $('#city').val(location.city).prop('disabled', false);
+    $('#state').val(location.state).prop('disabled', false);
+}
+
+function showInvalidZip(zip) {
+    clearCityState();
+
+    // Disable inputs
+    $('#city').prop('disabled', true);
+    $('#state').prop('disabled', true);
+
+    // Show error message above city field
+    $('#zipErrorMsg').text('Enter valid ZIP code').show();
+
+    if (lastInvalidZip !== zip) {
+        alert('This ZIP code does not exist in our records.');
+        lastInvalidZip = zip; // track last invalid zip to avoid duplicate alerts
     }
-});
+} 
+
+function clearCityState() {
+    $('#cityStateDisplay').text('');
+    $('#city').val('').prop('disabled', false);
+    $('#state').val('').prop('disabled', false);
+
+    // Hide error message
+    $('#zipErrorMsg').hide();
+}
+
 
 
 </script>
@@ -643,8 +657,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-
 
 
 </script>

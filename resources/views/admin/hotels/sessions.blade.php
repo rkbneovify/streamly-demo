@@ -62,7 +62,23 @@
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
-                        <div class="col-md-2"></div>
+                        <div class="col-md-2">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="exportDropdown"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Export
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.hotel.user.room.export', ['type' => 'xlsx'] + request()->query()) }}">Export
+                                        to Excel</a>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.hotel.user.room.export', ['type' => 'csv'] + request()->query()) }}">Export
+                                        to CSV</a>
+
+                                </div>
+                            </div>
+                        </div>
 
 
                     </div>
