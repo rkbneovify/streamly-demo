@@ -12,7 +12,7 @@ use Validator;
 use DB;
 use Laravel\Cashier\Billable;
 use App\Models\Channel;
-
+use App\Models\Subscription;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -27,7 +27,26 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name','email','password','contact','gender','dob','email_verified_at','is_active','zipcode','forced_change','address','country','mode','state','city','stripe_id','card_brand','card_last_four','connected_device','user_type'
+        'name',
+        'email',
+        'password',
+        'contact',
+        'gender',
+        'dob',
+        'email_verified_at',
+        'is_active',
+        'zipcode',
+        'forced_change',
+        'address',
+        'country',
+        'mode',
+        'state',
+        'city',
+        'stripe_id',
+        'card_brand',
+        'card_last_four',
+        'connected_device',
+        'user_type'
     ];
 
     /** 
@@ -36,7 +55,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -47,7 +67,7 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -68,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'name' => $this->name,
-            'roles'=>$this->roles
+            'roles' => $this->roles
         ];
     }
 
@@ -79,11 +99,11 @@ class User extends Authenticatable implements JWTSubject
             'email' => 'required|unique:users',
             'password' => 'required|max:255',
             'zipcode' => 'required|regex:/^[0-9]{3,7}$/',
-            'zipcode'=>'required|exists:zipcodes,zipcode,status,1',
-            'dob'=>'date|date_format:Y-m-d',
-            'gender'=>'max:1',
-            
-        ],['zipcode.exists'=>'Unfortunately service is not yet available for the zip code you submitted.']);
+            'zipcode' => 'required|exists:zipcodes,zipcode,status,1',
+            'dob' => 'date|date_format:Y-m-d',
+            'gender' => 'max:1',
+
+        ], ['zipcode.exists' => 'Unfortunately service is not yet available for the zip code you submitted.']);
     }
 
     public static function updateValidator(Request $request)
@@ -91,12 +111,12 @@ class User extends Authenticatable implements JWTSubject
         return Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required',
-            'dob'=>'date|date_format:Y-m-d',
-            'gender'=>'max:1'
+            'dob' => 'date|date_format:Y-m-d',
+            'gender' => 'max:1'
         ]);
     }
 
-    
+
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role', 'role_user');
@@ -104,12 +124,14 @@ class User extends Authenticatable implements JWTSubject
 
     public function favorites()
     {
-        return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id','name',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'),'url','smooth_url','dash_url','image')->where('status','1')->withTimeStamps();
+        return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id', 'name', DB::raw('IFNULL(channels.callSign,channels.name) callSign'), DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'url', 'smooth_url', 'dash_url', 'image')->where('status', '1')->withTimeStamps();
     }
+
+    
 
     public function recentschannel()
     {
-        return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->where('status','1')->latest()->take(10)->distinct();
+        return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->where('status', '1')->latest()->take(10)->distinct();
     }
 
     // public function subscriptions()
@@ -118,12 +140,12 @@ class User extends Authenticatable implements JWTSubject
     // }
 
     /**
-    * outsideLocationPlays
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
+     * outsideLocationPlays
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function outsideLocationPlays()
     {
-        return $this->hasMany(OutsideLocationPlay::class,'users_id');
+        return $this->hasMany(OutsideLocationPlay::class, 'users_id');
     }
 }

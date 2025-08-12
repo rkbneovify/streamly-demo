@@ -10,7 +10,7 @@
                          <th>
                              Role
                          </th>
-                         <th> 
+                         <th>
                              Name
                          </th>
                          <th>
@@ -47,8 +47,8 @@
                                  {{ $user->user->email ?? '' }}
                              </td>
                              <td>
-                                {{ $user->mode_label ?? '' }}
-                            </td>
+                                 {{ $user->mode_label ?? '' }}
+                             </td>
 
 
                              <td>
@@ -99,6 +99,7 @@
                  </div>
              </div>
          </div>
+
      </div>
  @else
      {{-- <style>

@@ -184,12 +184,14 @@ class RokuEpgGuideApiController extends Controller
                 // $channel->program = collect($this->getProgramScheduleById($channel->prgSvcId, $day))
                 $channel->program = collect($this->getProgramScheduleById($channel->prgSvcId, $day))
                 ->map(function ($program) {
-                    if (isset($program['title']) && trim($program['title']) === 'TV Guide') {
+                    if (isset($program['title']) && strcasecmp(trim($program['title']), 'TV Guide') === 0) {
                         $program['title'] = 'FanDuel';
                         $program['image'] = env('APP_URL') . '/uploads/fanduel1.png';
                     }
                     return $program;
-                });
+                })
+                ->toArray(); // Convert collection back to plain array for JSON
+            
             
 
                 unset($channel->assets);
