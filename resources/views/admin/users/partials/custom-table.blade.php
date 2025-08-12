@@ -56,6 +56,10 @@
                                      <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
                                          class="btn btn-sm btn-link mb-1 w-75">Live Subscription</a>
                                      <br>
+                                 @else
+                                     <a href="{{ route('admin.report.subscription.detail', $item->id) }}"
+                                         class="btn btn-sm btn-link mb-1 w-75">View Subscription</a>
+                                     <br>
                                  @endif
 
                                  <a href="{{ route('admin.users.view', $item->id) }}"
