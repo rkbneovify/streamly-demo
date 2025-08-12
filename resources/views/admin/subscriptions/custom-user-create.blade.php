@@ -211,8 +211,7 @@
                         </button>
                     </div>
                     <div class="col-md-1">
-                        <a href="#" class="btn btn-secondary ms-3"
-                            onclick="event.preventDefault(); location.reload()">Cancel</a>
+                        <a href="{{ route('admin.users.custom.list') }}" class="btn btn-secondary ms-3">Cancel</a>
                     </div>
                 </div>
 
