@@ -22,7 +22,14 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @yield('stylesheets')
+
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -55,6 +62,20 @@
     @yield('scripts')
     @stack('scripts')
     @include('sweetalert::alert')
+    <script>
+        function showLoader(title = 'Please wait...', text = 'Processing your request') {
+            Swal.fire({
+                title: title,
+                text: text,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+        }
+    </script>
 </body>
 
 </html>
