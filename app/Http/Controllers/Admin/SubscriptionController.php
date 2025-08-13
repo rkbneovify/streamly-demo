@@ -842,11 +842,11 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     {
 
         $validator = Validator::make($request->all(), [
-            'users' => 'required|array|min:2',
+            'user_ids' => 'required|array|min:1',
         ], [
-            'users.required' => 'Please select at least two users.',
-            'users.array'    => 'Invalid data format for selected users.',
-            'users.min'      => 'You must select at least two users before proceeding.',
+            'user_ids.required' => 'Please select at least one user.',
+            'user_ids.array'    => 'Invalid data format for selected user.',
+            'user_ids.min'      => 'You must select at least one user before proceeding.',
         ]);
         if ($validator->fails()) {
             toast($validator->errors()->first(), "error")
@@ -856,7 +856,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
 
         try {
-            $users = User::whereIn('id', $request->users)->get();
+            $users = User::whereIn('id', $request->user_ids)->get();
             dispatch(new SendUpgradeMailJob($users));
             Alert::success("Success ", "Mail sent successfully !");
             return redirect()->back();
