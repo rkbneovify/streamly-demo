@@ -1847,3 +1847,15 @@ function convertTimeZoneAbbreviation($abbreviation, $zipCode)
 -user cancels the tiered plan
 -user boughts tiered plan 6 devices || 6 hotel rooms should be present
  */
+
+function getAvatarName($name)
+{
+    // Capitalize each word first
+    $name = ucwords(strtolower(trim($name)));
+    $nameArray = explode(' ', $name);
+
+    $firstLetter1 = isset($nameArray[0]) ? substr($nameArray[0], 0, 1) : '';
+    $firstLetter2 = isset($nameArray[1]) ? substr($nameArray[1], 0, 1) : '';
+
+    return strtoupper($firstLetter1 . $firstLetter2);
+}
