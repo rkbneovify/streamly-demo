@@ -65,6 +65,12 @@
 
                 <div class="card-header">
                     <div class="row">
+                        <div class="col-md-2">
+                            <select class="form-control" id="bulkAction">
+                                <option value="">Bulk Action</option>
+                                <option value="send-mail">Send Mail</option>
+                            </select>
+                        </div>
                         <div class="col-md-3">
                             <select class="form-control" name="role">
                                 <option selected value="">Select role</option>
@@ -161,6 +167,31 @@
             $('input[name="search"]').val('');
             fetchData();
             $('#btnClear').hide();
+
+        })
+    </script>
+    <script>
+        $('#bulkAction').change(function() {
+
+
+            if ($(this).val() != "") {
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Do you really want to send this mail?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, send it!",
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        showLoader();
+                        $('#tbl-form').submit();
+                    }
+                });
+
+            }
 
         })
     </script>

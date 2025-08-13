@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Jobs\SendUpgradeMailJob;
+use App\Mail\SubscriptionNotificationMail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\SubscriptionUpgradeMail;
 use App\Models\Subscription;
 use App\Models\SubscriptionPack;
 use App\Models\Zipcode;
@@ -11,12 +14,16 @@ use App\User;
 use Carbon\Carbon;
 use Exception;
 use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\Toaster;
 use Stripe\Coupon;
 use Stripe\Customer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Stripe\PaymentMethod;
 use Stripe\Stripe;
+use Stripe\StripeClient;
 use Stripe\Subscription as StripeSubscription;
 
 /**
@@ -816,5 +823,87 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             Alert::error('Error', "Something went wrong. Please try again later.");
             return redirect()->back();
         }
+    }
+
+    public function subscriptionUpgradeMail($id)
+    {
+        try {
+            $user = User::find($id);
+            Mail::to($user->email)->send(new SubscriptionUpgradeMail($user));
+            Alert::success("Success ", "Mail sent successfully !");
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Alert::error("Error !", $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function bulkSubscriptionUpgradeMail(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'users' => 'required|array|min:2',
+        ], [
+            'users.required' => 'Please select at least two users.',
+            'users.array'    => 'Invalid data format for selected users.',
+            'users.min'      => 'You must select at least two users before proceeding.',
+        ]);
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), "error")
+                ->timerProgressBar()
+                ->autoClose(5000);
+            return redirect()->back();
+        }
+
+        try {
+            $users = User::whereIn('id', $request->users)->get();
+            dispatch(new SendUpgradeMailJob($users));
+            Alert::success("Success ", "Mail sent successfully !");
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Alert::error("Error !", $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function paymentSuccess(Request $request)
+    {
+        // try {
+        //     $sessionId = $request->session_id;
+        //     $StripeSecretKey = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        //     $stripe = new StripeClient($StripeSecretKey);
+        //     $session = $stripe->checkout->sessions->retrieve($sessionId, []);
+
+        //     $subscriptionId = $session->subscription;
+        //     $customerId = $session->customer;
+        //     $userId = $session->metadata->user_id;
+        //     $
+        //     $userSubs = Subscription::where('user_id', $userId)->first();
+        //     $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+        //     $subsEndDate = Carbon::createFromTimestamp($subscription->current_period_end)->toDateTimeString();
+        //     $trialDaysEndDate = null;
+        //     if (!empty($trialDays) && $trialDays != "") {
+        //         $trialDaysEndDate = Carbon::now()->addDays($subscription->plan->trial_period_days)->toDateTimeString();
+        //     }
+
+        //     if ($userSubs != null) {
+        //         $userSubs->stripe_id = $subscription->id;
+        //         $userSubs->stripe_plan = $subscription->plan->id;
+        //         $userSubs->stripe_status = $subscription->status;
+        //         $userSubs->quantity = $subscription->quantity;
+        //         $userSubs->trial_ends_at = $trialDaysEndDate;
+        //         $userSubs->renews_at = $subsEndDate;
+        //         $userSubs->ends_at = $subsEndDate;
+        //         $userSubs->created_at = now();
+        //         $userSubs->save();
+        //     }
+        //     // User update on stripe flag
+        //     $user->is_live_on_stripe = 1;
+        //     $user->save();
+        //     return response()->json(["session" => $session, "subscription" => $subscription]);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     dd($th->getMessage());
+        // }
     }
 }
