@@ -41,7 +41,7 @@
                      <tbody>
                          @foreach ($users as $key => $item)
                              <tr data-entry-id="">
-                                 <td><input id="cbUserId" type="checkbox" name="users[]"
+                                 <td><input id="cbUserId" type="checkbox" name="user_ids[]"
                                          class="form-control row-checkbox" value="{{ $item->id }}">
                                  </td>
                                  <td>
