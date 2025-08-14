@@ -1114,7 +1114,7 @@ class UsersController extends Controller
                     ->whereColumn('user_id', 'users.id')
                     ->latest()
                     ->limit(1),
-                'asc'
+                'desc'
             );
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
