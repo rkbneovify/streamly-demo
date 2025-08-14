@@ -839,6 +839,37 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
     }
 
+    public function subscriptionCancelById($id)
+    {
+        try {
+            $user = User::find($id);
+            if ($user->is_live_on_stripe == 1) {
+                $userSubs = Subscription::where('user_id', $user->id)->first();
+                if ($userSubs == null) {
+                    Alert::error("Error !", "Subscription not found !.");
+                    return redirect()->back();
+                }
+                $subscription = \Stripe\Subscription::retrieve($userSubs->stripe_id);
+                $subscription->cancel();
+                $userSubs->stripe_status = $subscription->status;
+                $userSubs->save();
+            } else {
+                $userSubs = Subscription::where('user_id', $user->id)->first();
+                if ($userSubs == null) {
+                    Alert::error("Error !", "Subscription not found !.");
+                    return redirect()->back();
+                }
+                $userSubs->stripe_status = "canceled";
+                $userSubs->save();
+            }
+            Alert::success("Success ", "Subscription Canceled successfully !");
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Alert::error("Error !", $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
     public function bulkAction(Request $request)
     {
         // dd($request->all());
