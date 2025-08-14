@@ -1,6 +1,7 @@
  @if ($users->count() > 0)
-     <form id="tbl-form" method="POST" action="{{ route('admin.subscriptions.users.mail.upgrade.bulk') }}">
+     <form id="tbl-form" method="POST" action="{{ route('admin.subscriptions.users.bulk.action') }}">
          @csrf
+         <input type="hidden" name="action">
          <div class="container">
              <div class="table-responsive">
                  <table class="table table-striped projects">
@@ -79,7 +80,7 @@
                                      {{ ucfirst($item->customSubscription->stripe_status) }}
                                  </td>
                                  <td>
-                                     {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
+                                     {{ date('d/m/Y', strtotime($item->customSubscription->ends_at ?? $item->customSubscription->renews_at)) }}
                                  </td>
 
                                  <td class="text-start">
