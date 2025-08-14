@@ -10,6 +10,7 @@ use App\Models\PersonalDevice;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
 use App\User;
+use Illuminate\Support\Str;
 
 function checkLoginLimit($user_id, $token, $deviceDetails)
 {
@@ -1858,4 +1859,16 @@ function getAvatarName($name)
     $firstLetter2 = isset($nameArray[1]) ? substr($nameArray[1], 0, 1) : '';
 
     return strtoupper($firstLetter1 . $firstLetter2);
+}
+
+function limitEmailName($email, $limit = 15, $end = '...')
+{
+    if (strpos($email, '@') === false) {
+        return Str::limit($email, $limit, $end);
+    }
+
+    [$name, $domain] = explode('@', $email, 2);
+    $name = Str::limit($name, $limit, $end);
+
+    return $name . '@' . $domain;
 }

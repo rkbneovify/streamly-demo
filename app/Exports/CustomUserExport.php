@@ -45,7 +45,7 @@ class CustomUserExport implements FromCollection, WithHeadings
                 "Role" => $user->roles->first()->display_name,
                 "Subscription Type" => $user->is_live_on_stripe == 1 ? "Live" : "Custom",
                 "Status" => $user->customSubscription->stripe_status,
-                "Subscription Expires At" => $user->customSubscription->ends_at->format('d/m/Y'),
+                "Subscription Expires At" => $user->customSubscription->ends_at != null ? $user->customSubscription->ends_at->format('d/m/Y') : ($user->customSubscription->renews_at != null ? $user->customSubscription->renews_at->format('d/m/Y') : $user->customSubscription->trial_ends_at->format('d/m/Y')),
             ];
         });
     }

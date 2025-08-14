@@ -7,9 +7,9 @@
                  <table class="table table-striped projects">
                      <thead>
                          <tr>
-                             <th>
+                             {{-- <th>
                                  <input type="checkbox" class="form-control" id="selectAll">
-                             </th>
+                             </th> --}}
                              <th>
                                  #
                              </th>
@@ -42,9 +42,9 @@
                      <tbody>
                          @foreach ($users as $key => $item)
                              <tr data-entry-id="">
-                                 <td><input id="cbUserId" type="checkbox" name="user_ids[]"
+                                 {{-- <td><input id="cbUserId" type="checkbox" name="user_ids[]"
                                          class="form-control row-checkbox" value="{{ $item->id }}">
-                                 </td>
+                                 </td> --}}
                                  <td>
                                      {{ $key + $users->firstItem() }}
                                  </td>
@@ -53,17 +53,19 @@
                                      <a href="{{ route('admin.users.view', $item->id) }}">
                                          <div class="mb-2"
                                              style="width:40px; height:40px;
-           background:{{ $key % 2 == 0 ? '#3498db' : '#e67e22' }};
-           color:white; display:flex; align-items:center; justify-content:center;
-           border-radius:50%; font-weight:bold;">
+                                            background:{{ $key % 2 == 0 ? '#3498db' : '#e67e22' }};
+                                            color:white; display:flex; align-items:center; justify-content:center;
+                                            border-radius:50%; font-weight:bold;">
                                              {{ getAvatarName($item->name) }}
                                          </div>
 
-                                         {{ ucwords($item->name) ?? '' }}
+
+                                         {{ ucwords(Str::limit($item->name, 10, '...')) }}
                                      </a>
                                  </td>
                                  <td>
-                                     {{ $item->email ?? '' }}
+
+                                     {{ limitEmailName($item->email, 10, '...') }}
                                  </td>
 
 
@@ -82,7 +84,14 @@
                                      {{ ucfirst($item->customSubscription->stripe_status) }}
                                  </td>
                                  <td>
-                                     {{ date('d/m/Y', strtotime($item->customSubscription->ends_at ?? ($item->customSubscription->renews_at ?? $item->customSubscription->renews_at))) }}
+                                     @if (!is_null($item->customSubscription->renews_at))
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
+                                     @elseif (!is_null($item->customSubscription->ends_at))
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
+                                     @else
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
+                                     @endif
+
                                  </td>
 
                                  <td class="text-start">
@@ -103,24 +112,7 @@
                                              class="btn btn-sm btn-link mb-1 w-75">View Subscription</a>
                                          <br>
                                      @endif
-                                     {{-- 
-                                 <a href="{{ route('admin.users.view', $item->id) }}"
-                                     class="btn btn-sm btn-primary mb-1 w-75">View</a>
-                                 <br>
-                                 <a href="{{ route('admin.users.edit', $item->id) }}"
-                                     class="btn btn-sm btn-info mb-1 w-75">
 
-                                     Edit</a>
-                                 <br>
-                                 <form action="{{ route('admin.users.destroy', $item->id) }}" method="POST"
-                                     style="display:inline;"
-                                     onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                     @csrf
-                                     @method('DELETE')
-                                     <button type="submit" class="btn btn-sm btn-danger w-75">
-
-                                         Delete</button>
-                                 </form> --}}
 
 
 
