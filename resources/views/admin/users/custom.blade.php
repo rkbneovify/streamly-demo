@@ -65,13 +65,13 @@
 
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <select class="form-control" id="bulkAction">
                                 <option value="">Bulk Action</option>
                                 <option value="send-mail">Send Mail</option>
                                 <option value="subscription-cancel">Subscription Cancel</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-md-3">
                             <select class="form-control" name="role">
                                 <option selected value="">Select role</option>
