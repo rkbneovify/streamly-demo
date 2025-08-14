@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
 use App\Mail\SubscriptionNotificationMail;
 use Illuminate\Http\Request;
@@ -838,9 +839,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
     }
 
-    public function bulkSubscriptionUpgradeMail(Request $request)
+    public function bulkAction(Request $request)
     {
-
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'user_ids' => 'required|array|min:1',
         ], [
@@ -855,16 +856,37 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             return redirect()->back();
         }
 
-        try {
-            $users = User::whereIn('id', $request->user_ids)->get();
-            dispatch(new SendUpgradeMailJob($users));
-            Alert::success("Success ", "Mail sent successfully !");
-            return redirect()->back();
-        } catch (\Throwable $th) {
-            Alert::error("Error !", $th->getMessage());
-            return redirect()->back();
+
+        $users = User::whereIn('id', $request->user_ids)->get();
+        switch ($request->action) {
+            case 'send-mail':
+                try {
+                    dispatch(new SendUpgradeMailJob($users));
+                    Alert::success("Success ", "Mail sent successfully !");
+                    return redirect()->back();
+                } catch (\Throwable $th) {
+                    Alert::success("Error ", $th->getMessage());
+                    return redirect()->back();
+                }
+
+            case 'subscription-cancel':
+                try {
+                    dispatch(new CancelStripeSubscriptionJob($users));
+                    Alert::success("Success ", "Subscription cancel successfully !");
+                    return redirect()->back();
+                } catch (\Throwable $th) {
+                    Alert::success("Error ", $th->getMessage());
+                    return redirect()->back();
+                }
+
+            default:
+                Alert::error("Error ", "Please select any action");
+                redirect()->back();
+                break;
         }
     }
+
+
 
     public function paymentSuccess(Request $request)
     {
