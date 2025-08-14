@@ -88,13 +88,16 @@
                                          {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
                                      @elseif (!is_null($item->customSubscription->ends_at))
                                          {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
-                                     @else
+                                     @elseif (!is_null($item->customSubscription->trial_ends_at))
                                          {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
+                                     @else
+                                         N/A
                                      @endif
 
                                  </td>
 
-                                 <td class="text-start">
+                                 <td style="width: 150px;">
+
                                      @if ($item->is_live_on_stripe != 1)
                                          <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
                                              class="btn btn-sm btn-link mb-1 w-75">Update Subscription</a>
@@ -106,11 +109,29 @@
                                              <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
                                                  aria-hidden="true"></span>
                                          </a>
+                                     @elseif ($item->is_live_on_stripe == 1 && $item->customSubscription->stripe_status == 'canceled')
+                                         <a href="{{ route('admin.subscriptions.custom.view', $item->id) }}"
+                                             class="btn btn-sm btn-link mb-1 w-75">Update Subscription</a>
                                          <br>
+                                         <a href="{{ route('admin.subscriptions.user.mail.upgrade', $item->id) }}"
+                                             class="btn btn-sm btn-secondary mb-1 w-75 send-mail-btn"
+                                             data-url="{{ route('admin.subscriptions.user.mail.upgrade', $item->id) }}">
+                                             <span class="btn-text">Send Mail</span>
+                                             <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
+                                                 aria-hidden="true"></span>
+                                         </a>
                                      @else
-                                         <a href="{{ route('admin.report.subscription.detail', $item->id) }}"
-                                             class="btn btn-sm btn-link mb-1 w-75">View Subscription</a>
-                                         <br>
+                                         @if ($item->customSubscription->stripe_status == 'active')
+                                             <a href="{{ route('admin.report.subscription.detail', $item->id) }}"
+                                                 class="btn btn-sm btn-link w-75">View Subscription</a>
+                                             {{-- <a href="{{ route('admin.subscriptions.user.cancel', $item->id) }}"
+                                                 class="btn btn-sm btn-link  w-75 cancel-subscription-btn"
+                                                 data-url="{{ route('admin.subscriptions.user.cancel', $item->id) }}">
+                                                 <span class="btn-text">Cancel Subscription</span>
+                                                 <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                     role="status" aria-hidden="true"></span>
+                                             </a> --}}
+                                         @endif
                                      @endif
 
 
@@ -196,10 +217,40 @@
                  showLoader();
                  // Redirect to URL
                  window.location.href = url;
+             } else {
+                 location.reload();
              }
          });
      });
  </script>
+
+ <script>
+     $(document).on('click', '.cancel-subscription-btn', function(e) {
+         e.preventDefault();
+
+         let $btn = $(this); // store the clicked button
+         let url = $btn.data('url');
+
+         Swal.fire({
+             title: "Are you sure?",
+             text: "Do you really want to cancel this subscription?",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonText: "Yes, send it!",
+             cancelButtonText: "Cancel",
+         }).then((result) => {
+             if (result.isConfirmed) {
+
+                 showLoader();
+                 // Redirect to URL
+                 window.location.href = url;
+             } else {
+                 location.reload();
+             }
+         });
+     });
+ </script>
+
  <script>
      document.getElementById('selectAll').addEventListener('change', function() {
          const isChecked = this.checked;
