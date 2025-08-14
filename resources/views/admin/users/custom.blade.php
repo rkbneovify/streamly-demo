@@ -69,6 +69,7 @@
                             <select class="form-control" id="bulkAction">
                                 <option value="">Bulk Action</option>
                                 <option value="send-mail">Send Mail</option>
+                                <option value="subscription-cancel">Subscription Cancel</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -175,7 +176,7 @@
 
 
             if ($(this).val() != "") {
-
+                $('input[name="action"]').val($(this).val());
                 Swal.fire({
                     title: "Are you sure?",
                     text: "Do you really want to send this mail?",
