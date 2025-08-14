@@ -174,6 +174,24 @@
     <script>
         $('#bulkAction').change(function() {
 
+            let selectedIds = $('.row-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+            if (selectedIds.length == 0) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'Please select at least one user',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    location.reload(); // reload after toast timeout
+                });
+                return;
+            }
+
 
             if ($(this).val() != "") {
                 $('input[name="action"]').val($(this).val());
@@ -189,6 +207,8 @@
 
                         showLoader();
                         $('#tbl-form').submit();
+                    } else {
+                        location.reload()
                     }
                 });
 

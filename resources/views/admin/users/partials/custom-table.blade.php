@@ -50,15 +50,17 @@
                                  </td>
 
                                  <td>
-                                     <div class="mb-2"
-                                         style="width:40px; height:40px;
+                                     <a href="{{ route('admin.users.view', $item->id) }}">
+                                         <div class="mb-2"
+                                             style="width:40px; height:40px;
            background:{{ $key % 2 == 0 ? '#3498db' : '#e67e22' }};
            color:white; display:flex; align-items:center; justify-content:center;
            border-radius:50%; font-weight:bold;">
-                                         {{ getAvatarName($item->name) }}
-                                     </div>
+                                             {{ getAvatarName($item->name) }}
+                                         </div>
 
-                                     {{ ucfirst($item->name) ?? '' }}
+                                         {{ ucwords($item->name) ?? '' }}
+                                     </a>
                                  </td>
                                  <td>
                                      {{ $item->email ?? '' }}
@@ -80,7 +82,7 @@
                                      {{ ucfirst($item->customSubscription->stripe_status) }}
                                  </td>
                                  <td>
-                                     {{ date('d/m/Y', strtotime($item->customSubscription->ends_at ?? $item->customSubscription->renews_at)) }}
+                                     {{ date('d/m/Y', strtotime($item->customSubscription->ends_at ?? ($item->customSubscription->renews_at ?? $item->customSubscription->renews_at))) }}
                                  </td>
 
                                  <td class="text-start">
