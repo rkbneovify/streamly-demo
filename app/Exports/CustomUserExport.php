@@ -29,7 +29,7 @@ class CustomUserExport implements FromCollection, WithHeadings
                     ->whereColumn('user_id', 'users.id')
                     ->latest()
                     ->limit(1),
-                'asc'
+                'desc'
             );
         if (!empty($this->filters['role'])) {
             $query->whereHas('roles', function ($q) {
