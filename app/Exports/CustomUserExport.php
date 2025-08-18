@@ -25,7 +25,7 @@ class CustomUserExport implements FromCollection, WithHeadings
             ->with('roles', 'customSubscription')
             ->where('is_custom_user', 1)
             ->orderBy(
-                Subscription::select('created_at')
+                Subscription::select('updated_at')
                     ->whereColumn('user_id', 'users.id')
                     ->latest()
                     ->limit(1),
@@ -36,7 +36,7 @@ class CustomUserExport implements FromCollection, WithHeadings
                 $q->where('id', $this->filters['role']);
             });
         }
-        $query->orderByDesc("created_at");
+
         return $query->get()->map(function ($user, $key) {
             return [
                 'Sl.No.' => $key + 1,
@@ -44,14 +44,29 @@ class CustomUserExport implements FromCollection, WithHeadings
                 "Name" => $user->name,
                 "Role" => $user->roles->first()->display_name,
                 "Subscription Type" => $user->is_live_on_stripe == 1 ? "Live" : "Custom",
-                "Status" => $user->customSubscription->stripe_status,
-                "Subscription Expires At" => $user->customSubscription->ends_at != null ? $user->customSubscription->ends_at->format('d/m/Y') : ($user->customSubscription->renews_at != null ? $user->customSubscription->renews_at->format('d/m/Y') : $user->customSubscription->trial_ends_at->format('d/m/Y')),
+                "Status" =>  $user->customSubscription->stripe_status,
+                "Subscription Expires At" => $this->dateFormat($user) ?? "Never",
+                "Subscription At" => $user->customSubscription->updated_at,
             ];
         });
     }
 
+
+
+    public function dateFormat($user)
+    {
+        if ($user->customSubscription->ends_at != null) {
+            return $user->customSubscription->ends_at->format('d/m/Y');
+        } elseif ($user->customSubscription->renews_at != null) {
+            return $user->customSubscription->renews_at->format('d/m/Y');
+        } elseif ($user->customSubscription->trial_ends_at != null) {
+            return $user->customSubscription->trial_ends_at->format('d/m/Y');
+        }
+        return null;
+    }
+
     public function headings(): array
     {
-        return ['Sl.No.', 'Email', 'Name', 'Role', "Subscription Type", 'Status', "Subscription Expires At"];
+        return ['Sl.No.', 'Email', 'Name', 'Role', "Subscription Type", 'Status', "Subscription Expires At", "Subscription At"];
     }
 }

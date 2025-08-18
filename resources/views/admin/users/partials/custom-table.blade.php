@@ -35,6 +35,9 @@
                                  Subscription <br> Expires At
                              </th>
                              <th>
+                                 Subscription At
+                             </th>
+                             <th>
                                  Action
                              </th>
                          </tr>
@@ -84,18 +87,22 @@
                                      {{ ucfirst($item->customSubscription->stripe_status) }}
                                  </td>
                                  <td>
-                                     @if (!is_null($item->customSubscription->renews_at))
+                                     @if ($item->customSubscription->renews_at != null)
                                          {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
-                                     @elseif (!is_null($item->customSubscription->ends_at))
+                                     @elseif ($item->customSubscription->ends_at != null)
                                          {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
-                                     @elseif (!is_null($item->customSubscription->trial_ends_at))
+                                     @elseif ($item->customSubscription->trial_ends_at != null)
                                          {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
                                      @else
-                                         N/A
+                                         <span class="badge badge-success">
+                                             Never
+                                         </span>
                                      @endif
 
                                  </td>
-
+                                 <td>
+                                     {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
+                                 </td>
                                  <td style="width: 150px;">
 
                                      @if ($item->is_live_on_stripe != 1)
@@ -161,12 +168,11 @@
              <table class="table table-striped projects">
                  <thead>
                      <tr>
-
-                         <th style="width: 1%">
-                             #
-                         </th>
+                         {{-- <th>
+                                 <input type="checkbox" class="form-control" id="selectAll">
+                             </th> --}}
                          <th>
-                             Role
+                             #
                          </th>
                          <th>
                              Name
@@ -175,7 +181,19 @@
                              Email
                          </th>
                          <th>
-                             Created At
+                             Role
+                         </th>
+                         <th>
+                             Subscription <br> Type
+                         </th>
+                         <th>
+                             Status
+                         </th>
+                         <th>
+                             Subscription <br> Expires At
+                         </th>
+                         <th>
+                             Subscription At
                          </th>
                          <th>
                              Action
@@ -184,7 +202,7 @@
                  </thead>
                  <tbody>
                      <tr>
-                         <td style="height: 200px;" colspan="7" class="text-center">
+                         <td style="height: 200px;" colspan="9" class="text-center">
                              <h3>Data not found !</h3>
                          </td>
                      </tr>
