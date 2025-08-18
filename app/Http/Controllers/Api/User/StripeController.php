@@ -482,7 +482,7 @@ class StripeController extends Controller
                     }
                 } else {
                     $plan = null;
-                    $invoices = '';
+                    $invoices = [];
                     $renewaldatetime = '';
                 }
             }
