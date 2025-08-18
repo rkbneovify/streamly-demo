@@ -183,15 +183,22 @@ class UsersController extends Controller
                 'address' => $request->address ?? null,
                 'zipcode' => $request->zipcode,
                 'connected_device' => $request->connected_device,
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
                 'stripe_id' => 'sub_K6XMZT4knnWBOI',
                 'card_brand' => 'visa',
                 'card_last_four' => '4242',
-                'is_active' => 0,
+                'is_active' => 1,
                 'forced_change' => 1,
                 'mode' => 'Testing',
-                'user_type' => 'custom'
+                'user_type' => 'custom',
+                'is_custom_user' => 1
             ]);
+
+            // $user->is_custom_user = 1;
+            // $user->email_verified_at = now();
+            // $user->is_active = 1;
+            // $user->save();
+
 
             Log::info("User created: ID {$user->id}");
 
@@ -363,16 +370,13 @@ class UsersController extends Controller
                     ->subject(env('APP_NAME') . ': Login Details');
             });
 
-            $user->is_custom_user = 1;
-            $user->email_verified_at = now();
-            $user->is_active = 1;
-            $user->save();
 
             Log::info("Mail sent to: {$request->email}");
 
             return redirect('admin/users')->with('info', 'User Added Successfully');
-        } catch (\Exception $e) {
-            Log::error('Exception occurred while creating user: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+
+            // Log::error('Exception occurred while creating user: ' . $e->getMessage());
             return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
         }
     }
@@ -1134,9 +1138,16 @@ class UsersController extends Controller
     public function customUserList(Request $request)
     {
 
-        $query = User::query();
-        $query->with('roles')->where('is_custom_user', 1);
-
+        $query = User::query()
+            ->with('roles', 'customSubscription')
+            ->where('is_custom_user', 1)
+            ->orderBy(
+                Subscription::select('updated_at')
+                    ->whereColumn('user_id', 'users.id')
+                    ->latest()
+                    ->limit(1),
+                'desc'
+            );
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('id', $request->role);
@@ -1148,6 +1159,8 @@ class UsersController extends Controller
                     ->orWhere('name', 'like', '%' . $request->search . '%');
             });
         }
+        // $query->orderByDesc("updated_at");
+        $users =   $query->paginate(10);
 
         $users =   $query->paginate(10);
         // return response()->json($users);
