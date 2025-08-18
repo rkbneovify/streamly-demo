@@ -193,7 +193,7 @@
                              Subscription <br> Expires At
                          </th>
                          <th>
-                             Subscription At
+                             Subscribe At
                          </th>
                          <th>
                              Action

@@ -46,7 +46,7 @@ class CustomUserExport implements FromCollection, WithHeadings
                 "Subscription Type" => $user->is_live_on_stripe == 1 ? "Live" : "Custom",
                 "Status" =>  $user->customSubscription->stripe_status,
                 "Subscription Expires At" => $this->dateFormat($user) ?? "Never",
-                "Subscription At" => $user->customSubscription->updated_at,
+                "Subscribe At" => $user->customSubscription->updated_at,
             ];
         });
     }
@@ -67,6 +67,6 @@ class CustomUserExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['Sl.No.', 'Email', 'Name', 'Role', "Subscription Type", 'Status', "Subscription Expires At", "Subscription At"];
+        return ['Sl.No.', 'Email', 'Name', 'Role', "Subscription Type", 'Status', "Subscription Expires At", "Subscribe At"];
     }
 }
