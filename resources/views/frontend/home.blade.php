@@ -491,10 +491,10 @@ background-position: center;
             <p><strong>Streamly TV requires the use of a 4k streaming device to view<strong></p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
 	        <a class="btn btn-primary btn-xl js-scroll-trigger " onclick="openNavReg()" href="javascript:void(0);">START TODAY</a>
-	    </div>
+	    </div> 
 	</header>
 
-
+  
     @include('frontend.partials.sidenavRegisterAndLogin')
 
 {{--   
