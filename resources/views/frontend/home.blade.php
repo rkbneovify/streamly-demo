@@ -478,22 +478,23 @@ background-position: center;
     @endif --}}
 
     
-
+   
 	<!-- Masthead-->
 	<header class="masthead">
 	    <div class="container">
             <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
 	        <div class="masthead-heading">
                 <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
-                </div>
+                </div> 
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
+            <p><strong>Streamly TV requires the use of a 4k streaming device to view<strong></p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
 	        <a class="btn btn-primary btn-xl js-scroll-trigger " onclick="openNavReg()" href="javascript:void(0);">START TODAY</a>
-	    </div>
+	    </div> 
 	</header>
 
-
+  
     @include('frontend.partials.sidenavRegisterAndLogin')
 
 {{--   

@@ -485,10 +485,11 @@ background-position: center;
 	        <div class="masthead-heading">
                 <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
                 </div>
-	       
+	        
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
-	        <a class="btn btn-primary btn-xl js-scroll-trigger " href="#services">START TODAY</a>
+            <p><strong>Streamly TV requires the use of a 4k streaming device to view<strong></p>
+            <a class="btn btn-primary btn-xl js-scroll-trigger " href="#services">START TODAY</a>
 	    </div>
 	</header>
 

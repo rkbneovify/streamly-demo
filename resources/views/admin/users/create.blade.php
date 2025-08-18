@@ -295,6 +295,8 @@ input[type=number] {
                       @endif
                     
                   </div>
+
+
  
                 
 
@@ -447,7 +449,7 @@ input[type=number] {
   document.querySelectorAll('.channel-check').forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
       if (this.checked) {
-        document.querySelectorAll('.channel-check').forEach(function (other) {
+        document.querySelectorAll('.channel-check').forEach(function (other) {show_device
           if (other !== checkbox) {
             other.checked = false;
           }
@@ -659,6 +661,17 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+const localZipcodes = 81210;
+
+document.getElementById('all_channel').addEventListener('change', function() {
+    const zipInput = document.querySelector('[name="zipcode"]');
+    if (!zipInput) return;
+
+    const userZip = zipInput.value.trim();
+    if (this.checked && localZipcodes.includes(userZip)) {
+        document.getElementById('local_channel').checked = true;
+    }
+});
 </script>
 
 
