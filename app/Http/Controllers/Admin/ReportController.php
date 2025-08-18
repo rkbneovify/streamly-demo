@@ -602,7 +602,7 @@ class ReportController extends Controller
         $subscriptions = \Stripe\Subscription::all([
             'customer' => $subscription->customer,
             'status'   => 'all', // active, trialing, canceled, unpaid, or all
-            'limit'    => 10
+            'limit'    => 3
         ]);
 
 
