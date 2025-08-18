@@ -282,7 +282,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="isConnectedDeviceShow && !checkEmailExists(willEmail, userinfo.email)">
+  <ng-container *ngIf="isConnectedDeviceShow">
     <div
       class="account_details_container account_subscription_container"
       *ngIf="subscribed && cardDetails1?.card_last_four"

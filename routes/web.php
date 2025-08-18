@@ -18,6 +18,9 @@ use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
 
 
+
+
+
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::get('/botman', 'MainConversationController@handle');
@@ -60,7 +63,8 @@ Route::get('autocomplete', 'HomeTwoController@autocomplete')->name('autocomplete
 
 Route::get('/subscriptions/allcust', 'Admin\SubscriptionController@showAllcustomer');
 Route::get('/subscriptions/syncuser', 'Admin\SubscriptionController@syncStripeUser');
-
+Route::get('/subscription/success', 'Admin\SubscriptionController@paymentSuccess');
+Route::get('/subscription/cancel', 'Admin\SubscriptionController@paymentCancel');
 
 Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -69,6 +73,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     //subscription
     Route::resource('subscriptions', 'Admin\SubscriptionController');
     Route::get('subscriptions/custom/user/{id}', 'Admin\SubscriptionController@customUserView')->name('subscriptions.custom.view');
+    Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
+    Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
+    Route::post('subscriptions/users/bulk/action', 'Admin\SubscriptionController@bulkAction')->name('subscriptions.users.bulk.action');
+
+
     Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
     Route::get('/subscriptionsstripe', 'Admin\SubscriptionController@subscriptionstripe')->name('ss');
     Route::get('/pg', 'Admin\SubscriptionController@paginatewithscroll');

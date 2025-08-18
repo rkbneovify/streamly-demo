@@ -127,7 +127,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id', 'name', DB::raw('IFNULL(channels.callSign,channels.name) callSign'), DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'url', 'smooth_url', 'dash_url', 'image')->where('status', '1')->withTimeStamps();
     }
 
-    
+
 
     public function recentschannel()
     {
@@ -147,5 +147,10 @@ class User extends Authenticatable implements JWTSubject
     public function outsideLocationPlays()
     {
         return $this->hasMany(OutsideLocationPlay::class, 'users_id');
+    }
+
+    public function customSubscription()
+    {
+        return $this->hasOne(Subscription::class);
     }
 }

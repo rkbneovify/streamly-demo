@@ -35,15 +35,7 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+
 
                             <form id="subs-form" method="POST" enctype="multipart/form-data"
                                 action="{{ route('admin.subscriptions.custom.store') }}">
@@ -87,7 +79,8 @@
                                         <div class="col-md-6">
                                             <div class='form-group  required'>
                                                 <label class='control-label'>Email</label>
-                                                <input name="email" class="form-control" value="{{ $user->email }}" />
+                                                <input name="email" class="form-control" value="{{ $user->email }}"
+                                                    readonly />
                                                 @error('email')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -209,8 +202,7 @@
                         </button>
                     </div>
                     <div class="col-md-1">
-                        <a href="#" class="btn btn-secondary ms-3"
-                            onclick="event.preventDefault(); location.reload()">Cancel</a>
+                        <a href="{{ route('admin.users.custom.list') }}" class="btn btn-secondary ms-3">Cancel</a>
                     </div>
                 </div>
 
