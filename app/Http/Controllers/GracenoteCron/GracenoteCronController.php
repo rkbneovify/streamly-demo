@@ -226,7 +226,7 @@ class GracenoteCronController extends Controller
         }
         // return $dataArray;
     }
-
+  
     public function gracenoteScheduleProgramCron1(Request $request)
     {
         $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
