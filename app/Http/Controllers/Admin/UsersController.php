@@ -48,11 +48,24 @@ class UsersController extends Controller
     public function create()
     {
 
-        $predefinedLocalZipcodes = ['85120', '85215', '85205', '75662', '08872', '08904', '18344', '85022', '18438', '18302', '18326']; // or fetch from DB
+        // $predefinedLocalZipcodes = ['85120', '85215', '85205', '75662', '08872', '08904', '18344', '85022', '18438', '18302', '18326']; // or fetch from DB
+        $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
 
         $roles = Role::all()->pluck('name', 'id');
+     
+        // Fetch dynamic local zipcodes from channels 134–140
+        $localZipcodes = DB::table('channels')
+            ->whereBetween('id', [134, 140])
+            ->pluck('zip_code')
+            ->map(function ($zips) {
+                return json_decode($zips, true) ?? [];
+            })
+            ->flatten()
+            ->unique()
+            ->values()
+            ->toArray();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes','localZipcodes'));
     }
 
     public function store(Request $request)
@@ -99,21 +112,24 @@ class UsersController extends Controller
             }
     
             // 3️⃣ Predefined zipcodes
-            $predefinedLocalZipcodes = [
-                "85120",
-                "85215",
-                "85205",
-                "75662",
-                "08872",
-                "08904",
-                "18344",
-                "18438",
-                "18302",
-                "18326"
-            ];
-            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            // $predefinedLocalZipcodes = [
+            //     "85120",
+            //     "85215",
+            //     "85205",
+            //     "75662",
+            //     "08872",
+            //     "08904",
+            //     "18344",
+            //     "18438",
+            //     "18302",
+            //     "18326"
+            // ];
+            // $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            
             $newZip = $request->zipcode;
-    
+            $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
+            $localChannelIds = DB::table('channels')->whereBetween('id', [134, 140])->pluck('id')->toArray();
+
             // 4️⃣ Local channel but ZIP not predefined → ask for confirmation
             if (
                 $request->channel_availability == "2" &&
@@ -191,11 +207,30 @@ class UsersController extends Controller
             }
 
 
-            DB::table('user_zipcode_rules')->insert([
-                'zipcode' => $request->zipcode,
-                'email' => $request->email,
-                'validate' => $request->channel_availability,
-            ]);
+            $channelAvailability = $request->channel_availability ?? [];
+            if (!is_array($channelAvailability)) {
+                $channelAvailability = [$channelAvailability];
+            }
+
+            // Auto-add Local Channels if All Channels selected AND ZIP is local
+            if (in_array(1, $channelAvailability) && in_array($request->zipcode, $localZipcodes) && !in_array(2, $channelAvailability)) {
+                $channelAvailability[] = 2;
+            }
+
+            // Save rules
+            foreach ($channelAvailability as $availability) {
+                DB::table('user_zipcode_rules')->insert([
+                    'zipcode' => $request->zipcode,
+                    'email' => $request->email,
+                    'validate' => $availability,
+                ]);
+            }
+
+            // DB::table('user_zipcode_rules')->insert([
+            //     'zipcode' => $request->zipcode,
+            //     'email' => $request->email,
+            //     'validate' => $request->channel_availability,
+            // ]);
 
             $endsAt = null;
             switch ($request->plan_duration) {
@@ -375,12 +410,16 @@ class UsersController extends Controller
 
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
-        $predefinedLocalZipcodes = [
-            "85120", "85215", "85205", "75662", "08872",
-            "08904", "18344", "18438", "18302", "18326"
-        ];
+        // $predefinedLocalZipcodes = [
+        //     "85120", "85215", "85205", "75662", "08872",
+        //     "08904", "18344", "18438", "18302", "18326"
+        // ];
         
-        $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+        // $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+
+        $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
+        $localChannelIds = DB::table('channels')->whereBetween('id', [134, 140])->pluck('id')->toArray();
+
         $newZip = $request->zipcode;
         
         // 1. If not a valid zipcode
@@ -566,8 +605,6 @@ class UsersController extends Controller
             ->first();
 
         $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
-
-        $planDuration = '';
 
         $planDuration = '';
 
