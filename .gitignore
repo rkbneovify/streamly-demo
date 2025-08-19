@@ -3,7 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
-/vendor/
+/vendor
 .env
 .env.backup
 .phpunit.result.cache
@@ -17,3 +17,4 @@ yarn-error.log
 /public/uploads/channel_slider
 resources/frontend/angular/src/environments/environment.prod.ts
 resources/frontend/angular/src/environments/environment.ts
+ 
