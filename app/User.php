@@ -46,7 +46,8 @@ class User extends Authenticatable implements JWTSubject
         'card_brand',
         'card_last_four',
         'connected_device',
-        'user_type'
+        'user_type',
+        'is_custom_user'
     ];
 
     /** 
