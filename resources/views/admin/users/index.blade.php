@@ -33,40 +33,44 @@
                     <h3 class="card-title">Users</h3>
                     {{-- <button id="btn-delete">Delete First Row</button> --}}
                     <br>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><strong>Filter by User Role :</strong></label>
-                            <select name="roles" id="roles" class="form-control">
-                                <option value="">Choose user role</option>
-                                @foreach ($roles as $id => $pack)
-                                    <option value="{{ $pack }}">
-                                        {{ $pack }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+
 
                     <div class="row justify-content-end px-3">
-                        {{-- <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-              <i class="fas fa-minus"></i></button> --}}
-                        <a class="btn btn-primary mr-2" href="{{ url('admin/users/create') }} ">
-                            Add new user
-                        </a>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Filter by User Role :</strong></label>
+                                <select name="roles" id="roles" class="form-control">
+                                    <option value="">Choose user role</option>
+                                    @foreach ($roles as $id => $pack)
+                                        <option value="{{ $pack }}">
+                                            {{ $pack }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row justify-content-end mt-4 py-1">
+                                <a class="btn btn-primary btn-sm mr-2" href="{{ url('admin/users/create') }} ">
+                                    Add new user
+                                </a>
 
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="exportDropdown"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Export
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                                <a class="dropdown-item export-link"
-                                    href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}">Export
-                                    to Excel</a>
-                                <a class="dropdown-item export-link"
-                                    href="{{ route('admin.users.export', ['type' => 'csv'] + request()->query()) }}">Export
-                                    to CSV</a>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="exportDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        Export
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                                        <a class="dropdown-item export-link"
+                                            href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}">Export
+                                            to Excel</a>
+                                        <a class="dropdown-item export-link"
+                                            href="{{ route('admin.users.export', ['type' => 'csv'] + request()->query()) }}">Export
+                                            to CSV</a>
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
