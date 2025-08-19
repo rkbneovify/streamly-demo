@@ -27,6 +27,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\RoleUser;
+use App\Models\Subscription;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -52,7 +53,7 @@ class UsersController extends Controller
         $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
 
         $roles = Role::all()->pluck('name', 'id');
-     
+
         // Fetch dynamic local zipcodes from channels 134–140
         $localZipcodes = DB::table('channels')
             ->whereBetween('id', [134, 140])
@@ -65,7 +66,7 @@ class UsersController extends Controller
             ->values()
             ->toArray();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes'));
     }
 
     public function store(Request $request)
@@ -86,31 +87,31 @@ class UsersController extends Controller
 
             if ($validator->fails()) {
                 Log::error('Validation failed', $validator->errors()->toArray());
-    
+
                 if ($request->ajax()) {
                     return response()->json([
                         'errors' => $validator->errors()
                     ], 422);
                 }
-    
+
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-    
+
             // 2️⃣ Check ZIP exists in DB
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
             if (!$zipcodeExists) {
                 Log::warning("Invalid zipcode entered: " . $request->zipcode);
-    
+
                 if ($request->ajax()) {
                     return response()->json([
                         'status' => 'invalid_zip',
                         'message' => 'Invalid Zipcode. User not created'
                     ], 200);
                 }
-    
+
                 return redirect()->back()->with('errormsg', 'Invalid Zipcode. User not created');
             }
-    
+
             // 3️⃣ Predefined zipcodes
             $predefinedLocalZipcodes = [
                 "85120",
@@ -125,7 +126,7 @@ class UsersController extends Controller
                 "18326"
             ];
             $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-            
+
             $newZip = $request->zipcode;
             if (
                 $request->channel_availability == "2" &&
@@ -133,17 +134,17 @@ class UsersController extends Controller
                 (!$request->has('force_add') || $request->force_add != 1)
             ) {
                 Log::info("ZIP not in local and force_add not set: " . $newZip);
-    
+
                 if ($request->ajax()) {
                     return response()->json([
                         'status' => 'zipcode_not_in_local',
                         'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
                     ], 422);
                 }
-    
+
                 return redirect()->back()->with('errormsg', "This zipcode isn't available in your local channels.");
             }
-    
+
             // 5️⃣ Add ZIP to local channels if needed
             if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
                 foreach ($localChannelIds as $channelId) {
@@ -160,8 +161,8 @@ class UsersController extends Controller
                     }
                 }
             }
-    
-            
+
+
             // 4. Proceed with user creation (as you already do)
 
 
@@ -179,15 +180,22 @@ class UsersController extends Controller
                 'address' => $request->address ?? null,
                 'zipcode' => $request->zipcode,
                 'connected_device' => $request->connected_device,
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
                 'stripe_id' => 'sub_K6XMZT4knnWBOI',
                 'card_brand' => 'visa',
                 'card_last_four' => '4242',
-                'is_active' => 0,
+                'is_active' => 1,
                 'forced_change' => 1,
                 'mode' => 'Testing',
-                'user_type' => 'custom'
+                'user_type' => 'custom',
+                'is_custom_user' => 1
             ]);
+
+            // $user->is_custom_user = 1;
+            // $user->email_verified_at = now();
+            // $user->is_active = 1;
+            // $user->save();
+
 
             Log::info("User created: ID {$user->id}");
 
@@ -354,16 +362,13 @@ class UsersController extends Controller
                     ->subject(env('APP_NAME') . ': Login Details');
             });
 
-            $user->is_custom_user = 1;
-            $user->email_verified_at = now();
-            $user->is_active = 1;
-            $user->save();
 
             Log::info("Mail sent to: {$request->email}");
 
             return redirect('admin/users')->with('info', 'User Added Successfully');
-        } catch (\Exception $e) {
-            Log::error('Exception occurred while creating user: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+
+            // Log::error('Exception occurred while creating user: ' . $e->getMessage());
             return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
         }
     }
@@ -379,15 +384,15 @@ class UsersController extends Controller
             'number_of_devices' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
             'channel_availability' => 'required',
-            'zipcode'=> 'nullable|string',
-            'city'=> 'nullable|string',
-            'state'=> 'nullable|string',
+            'zipcode' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
             'connected_device' => 'required|in:0,1',
 
-        ]); 
+        ]);
 
 
-        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state','address', 'zipcode', 'contact', 'connected_device');
+        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
 
         $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
 
@@ -405,10 +410,11 @@ class UsersController extends Controller
             "85120", "85215", "85205", "75662", "08872",
             "08904", "18344", "18438", "18302", "18326"
         ];
-        
+
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-        $newZip = $request->zipcode;
         
+        $newZip = $request->zipcode;
+
         // 1. If not a valid zipcode
         if (!$zipcodeExists) {
             Log::warning("Invalid zipcode entered: " . $newZip);
@@ -417,7 +423,7 @@ class UsersController extends Controller
                 'message' => 'Invalid Zipcode. User not created'
             ], 421);
         }
-            
+
         // 2. If it's a local channel but ZIP not in predefined and force_add not present
         if (
             $request->channel_availability == "2" &&
@@ -425,36 +431,36 @@ class UsersController extends Controller
             (!$request->has('force_add') || $request->force_add != 1)
         ) {
             Log::info("ZIP not in local and force_add not set: " . $newZip);
-        
+
             // Force JSON response manually for AJAX call
             return response()->json([
                 'status' => 'zipcode_not_in_local',
                 'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
             ], 422);
         }
-        
-        
-        // 3. Add zip to local channels if needed
-        if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
-            foreach ($localChannelIds as $channelId) {
-                $channel = DB::table('channels')->where('id', $channelId)->first();
-                if ($channel) {
-                    $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
-                    if (!in_array($newZip, $existingZipcodes)) {
-                        $existingZipcodes[] = $newZip;
-        
-                        DB::table('channels')->where('id', $channelId)->update([
-                            'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
-                        ]);
-        
-                        Log::info("ZIP $newZip added to channel $channelId");
-                    }
-                }
-            }
-        }
-        
 
-        
+
+        // 3. Add zip to local channels if needed
+        // if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+        //     foreach ($localChannelIds as $channelId) {
+        //         $channel = DB::table('channels')->where('id', $channelId)->first();
+        //         if ($channel) {
+        //             $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+        //             if (!in_array($newZip, $existingZipcodes)) {
+        //                 $existingZipcodes[] = $newZip;
+
+        //                 DB::table('channels')->where('id', $channelId)->update([
+        //                     'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+        //                 ]);
+
+        //                 Log::info("ZIP $newZip added to channel $channelId");
+        //             }
+        //         }
+        //     }
+        // }
+
+
+
         $user = User::find($id);
 
         if ($request->has('connected_device')) {
@@ -1076,7 +1082,7 @@ class UsersController extends Controller
             "aaData" => $data_arr,
             "aaDatacount" => count($data_arr),
             //   "vardump"=> $searchroleValue
-  
+
         );
 
         echo json_encode($response);
@@ -1121,9 +1127,16 @@ class UsersController extends Controller
     public function customUserList(Request $request)
     {
 
-        $query = User::query();
-        $query->with('roles')->where('is_custom_user', 1);
-
+        $query = User::query()
+            ->with('roles', 'customSubscription')
+            ->where('is_custom_user', 1)
+            ->orderBy(
+                Subscription::select('updated_at')
+                    ->whereColumn('user_id', 'users.id')
+                    ->latest()
+                    ->limit(1),
+                'desc'
+            );
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('id', $request->role);
@@ -1135,6 +1148,8 @@ class UsersController extends Controller
                     ->orWhere('name', 'like', '%' . $request->search . '%');
             });
         }
+        // $query->orderByDesc("updated_at");
+        $users =   $query->paginate(10);
 
         $users =   $query->paginate(10);
         // return response()->json($users);
