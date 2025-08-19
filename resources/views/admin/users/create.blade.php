@@ -661,7 +661,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-const localZipcodes = 81210;
 
 document.getElementById('all_channel').addEventListener('change', function() {
     const zipInput = document.querySelector('[name="zipcode"]');
