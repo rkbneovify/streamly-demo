@@ -47,10 +47,10 @@
                         </div>
                     </div>
 
-                    <div class="row justify-content-between px-3">
+                    <div class="row justify-content-end px-3">
                         {{-- <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fas fa-minus"></i></button> --}}
-                        <a class="btn btn-primary" href="{{ url('admin/users/create') }} ">
+                        <a class="btn btn-primary mr-2" href="{{ url('admin/users/create') }} ">
                             Add new user
                         </a>
 
