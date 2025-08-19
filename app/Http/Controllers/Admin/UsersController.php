@@ -65,7 +65,7 @@ class UsersController extends Controller
             ->values()
             ->toArray();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes','localZipcodes'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes'));
     }
 
     public function store(Request $request)
@@ -112,25 +112,21 @@ class UsersController extends Controller
             }
     
             // 3️⃣ Predefined zipcodes
-            // $predefinedLocalZipcodes = [
-            //     "85120",
-            //     "85215",
-            //     "85205",
-            //     "75662",
-            //     "08872",
-            //     "08904",
-            //     "18344",
-            //     "18438",
-            //     "18302",
-            //     "18326"
-            // ];
-            // $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            $predefinedLocalZipcodes = [
+                "85120",
+                "85215",
+                "85205",
+                "75662",
+                "08872",
+                "08904",
+                "18344",
+                "18438",
+                "18302",
+                "18326"
+            ];
+            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
             
             $newZip = $request->zipcode;
-            $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
-            $localChannelIds = DB::table('channels')->whereBetween('id', [134, 140])->pluck('id')->toArray();
-
-            // 4️⃣ Local channel but ZIP not predefined → ask for confirmation
             if (
                 $request->channel_availability == "2" &&
                 !in_array($newZip, $predefinedLocalZipcodes) &&
@@ -213,9 +209,9 @@ class UsersController extends Controller
             }
 
             // Auto-add Local Channels if All Channels selected AND ZIP is local
-            if (in_array(1, $channelAvailability) && in_array($request->zipcode, $localZipcodes) && !in_array(2, $channelAvailability)) {
+            if (in_array(1, $channelAvailability) && in_array($request->zipcode, $predefinedLocalZipcodes) && !in_array(2, $channelAvailability)) {
                 $channelAvailability[] = 2;
-            }
+            } 
 
             // Save rules
             foreach ($channelAvailability as $availability) {
@@ -226,11 +222,6 @@ class UsersController extends Controller
                 ]);
             }
 
-            // DB::table('user_zipcode_rules')->insert([
-            //     'zipcode' => $request->zipcode,
-            //     'email' => $request->email,
-            //     'validate' => $request->channel_availability,
-            // ]);
 
             $endsAt = null;
             switch ($request->plan_duration) {
@@ -410,16 +401,12 @@ class UsersController extends Controller
 
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
-        // $predefinedLocalZipcodes = [
-        //     "85120", "85215", "85205", "75662", "08872",
-        //     "08904", "18344", "18438", "18302", "18326"
-        // ];
+        $predefinedLocalZipcodes = [
+            "85120", "85215", "85205", "75662", "08872",
+            "08904", "18344", "18438", "18302", "18326"
+        ];
         
-        // $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-
-        $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
-        $localChannelIds = DB::table('channels')->whereBetween('id', [134, 140])->pluck('id')->toArray();
-
+        $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
         $newZip = $request->zipcode;
         
         // 1. If not a valid zipcode
@@ -430,7 +417,7 @@ class UsersController extends Controller
                 'message' => 'Invalid Zipcode. User not created'
             ], 421);
         }
-        
+            
         // 2. If it's a local channel but ZIP not in predefined and force_add not present
         if (
             $request->channel_availability == "2" &&
@@ -448,23 +435,23 @@ class UsersController extends Controller
         
         
         // 3. Add zip to local channels if needed
-        // if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
-        //     foreach ($localChannelIds as $channelId) {
-        //         $channel = DB::table('channels')->where('id', $channelId)->first();
-        //         if ($channel) {
-        //             $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
-        //             if (!in_array($newZip, $existingZipcodes)) {
-        //                 $existingZipcodes[] = $newZip;
+        if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+            foreach ($localChannelIds as $channelId) {
+                $channel = DB::table('channels')->where('id', $channelId)->first();
+                if ($channel) {
+                    $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                    if (!in_array($newZip, $existingZipcodes)) {
+                        $existingZipcodes[] = $newZip;
         
-        //                 DB::table('channels')->where('id', $channelId)->update([
-        //                     'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
-        //                 ]);
+                        DB::table('channels')->where('id', $channelId)->update([
+                            'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                        ]);
         
-        //                 Log::info("ZIP $newZip added to channel $channelId");
-        //             }
-        //         }
-        //     }
-        // }
+                        Log::info("ZIP $newZip added to channel $channelId");
+                    }
+                }
+            }
+        }
         
 
         
@@ -583,7 +570,7 @@ class UsersController extends Controller
         return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
 
-
+ 
 
 
 

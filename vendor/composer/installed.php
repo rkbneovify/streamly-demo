@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'a9aa8df683285ea46053fd7b87078acf17bc62eb',
+        'reference' => '803d22fc4ba6f72d07eb9d815c11b497dd31ad9c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -74,9 +74,9 @@
             'dev_requirement' => true,
         ),
         'botman/botman' => array(
-            'pretty_version' => 'v2.8.9',
-            'version' => '2.8.9.0',
-            'reference' => '8b80eab11eb016a2e864eb73bb34460bd529c03c',
+            'pretty_version' => 'v2.8.10',
+            'version' => '2.8.10.0',
+            'reference' => '6abc4d6fece4ee3395f35cc4b2a534898607bc76',
             'type' => 'library',
             'install_path' => __DIR__ . '/../botman/botman',
             'aliases' => array(),
@@ -592,7 +592,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a9aa8df683285ea46053fd7b87078acf17bc62eb',
+            'reference' => '803d22fc4ba6f72d07eb9d815c11b497dd31ad9c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -842,9 +842,9 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v5.6.0',
-            'version' => '5.6.0.0',
-            'reference' => '221b0d0fdf1369c71047ad1d18bb5880017bbc56',
+            'pretty_version' => 'v5.6.1',
+            'version' => '5.6.1.0',
+            'reference' => 'f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
             'aliases' => array(),
@@ -1105,8 +1105,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0.0 || 2.0.0 || 3.0.0',
-                1 => '1.0|2.0',
+                0 => '1.0|2.0',
+                1 => '1.0.0 || 2.0.0 || 3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
