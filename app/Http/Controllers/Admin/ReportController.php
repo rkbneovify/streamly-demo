@@ -22,6 +22,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Stripe\Stripe;
@@ -975,5 +976,40 @@ class ReportController extends Controller
         $filters = $request->only(['status']);
         $filename = 'subscription_report_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new SubscriptionReportExport($filters), $filename);
+    }
+
+    public function invoiceListByUser(Request $request, $id)
+    {
+
+        try {
+
+            $user = User::find($id);
+
+            $limit = 10;
+            $params = [
+                'customer' => $user->stripe_id, // pass customer_id in query or from auth
+                'status'   => 'all',
+                'limit'    => $limit,
+            ];
+
+            if ($request->has('starting_after')) {
+                $params['starting_after'] = $request->starting_after;
+            }
+            if ($request->has('ending_before')) {
+                $params['ending_before'] = $request->ending_before;
+            }
+
+            $subscriptions = \Stripe\Subscription::all($params);
+
+            // return response()->json($subscriptions);
+            return view('admin.reports.subscription-invoices', [
+                'subscriptions' => $subscriptions,
+                'page' => $request->get('page', 1),
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th->getMessage());
+            Log::info($th->getMessage());
+        }
     }
 }
