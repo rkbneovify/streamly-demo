@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8
+class ComposerStaticInit84f39205295cfda48d6ed83218718871
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -967,8 +967,12 @@ class ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8
         'App\\Http\\Requests\\BugReporting\\Store' => __DIR__ . '/../..' . '/app/Http/Requests/BugReporting/Store.php',
         'App\\Http\\Requests\\BugReporting\\Update' => __DIR__ . '/../..' . '/app/Http/Requests/BugReporting/Update.php',
         'App\\Http\\Requests\\ContactFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ContactFormRequest.php',
+        'App\\Jobs\\CancelStripeSubscriptionJob' => __DIR__ . '/../..' . '/app/Jobs/CancelStripeSubscriptionJob.php',
+        'App\\Jobs\\SendUpgradeMailJob' => __DIR__ . '/../..' . '/app/Jobs/SendUpgradeMailJob.php',
         'App\\Listeners\\LoginSuccessful' => __DIR__ . '/../..' . '/app/Listeners/LoginSuccessful.php',
         'App\\Mail\\OtpEmail' => __DIR__ . '/../..' . '/app/Mail/OtpEmail.php',
+        'App\\Mail\\SubscriptionNotificationMail' => __DIR__ . '/../..' . '/app/Mail/SubscriptionNotificationMail.php',
+        'App\\Mail\\SubscriptionUpgradeMail' => __DIR__ . '/../..' . '/app/Mail/SubscriptionUpgradeMail.php',
         'App\\Models\\AddressesCheckAvailability' => __DIR__ . '/../..' . '/app/Models/AddressesCheckAvailability.php',
         'App\\Models\\BugReporting' => __DIR__ . '/../..' . '/app/Models/BugReporting.php',
         'App\\Models\\Channel' => __DIR__ . '/../..' . '/app/Models/Channel.php',
@@ -9286,10 +9290,10 @@ class ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitba4354d05f2495fb48ca85a8500cf4f8::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit84f39205295cfda48d6ed83218718871::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit84f39205295cfda48d6ed83218718871::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit84f39205295cfda48d6ed83218718871::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit84f39205295cfda48d6ed83218718871::$classMap;
 
         }, null, ClassLoader::class);
     }

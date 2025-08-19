@@ -336,20 +336,20 @@
         },
         {
             "name": "botman/botman",
-            "version": "v2.8.9",
+            "version": "v2.8.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/botman/botman.git",
-                "reference": "8b80eab11eb016a2e864eb73bb34460bd529c03c"
+                "reference": "6abc4d6fece4ee3395f35cc4b2a534898607bc76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/botman/botman/zipball/8b80eab11eb016a2e864eb73bb34460bd529c03c",
-                "reference": "8b80eab11eb016a2e864eb73bb34460bd529c03c",
+                "url": "https://api.github.com/repos/botman/botman/zipball/6abc4d6fece4ee3395f35cc4b2a534898607bc76",
+                "reference": "6abc4d6fece4ee3395f35cc4b2a534898607bc76",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+                "illuminate/support": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
                 "laravel/serializable-closure": "^1.0 || ^2.0",
                 "mpociot/pipeline": "^1.0.2",
                 "php": ">=7.1",
@@ -361,12 +361,12 @@
             "require-dev": {
                 "codeigniter/framework": "~3.0",
                 "dms/phpunit-arraysubset-asserts": "^0.4.0",
-                "doctrine/cache": "^1.6",
+                "doctrine/cache": "^1.6 || ^2.2",
                 "ext-curl": "*",
                 "mockery/mockery": "^1.1",
-                "orchestra/testbench": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
-                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
-                "symfony/cache": "^3.4.35 || ^4.3.7 || ^5.0"
+                "orchestra/testbench": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
+                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.5.3",
+                "symfony/cache": "^3.4.35 || ^4.3.7 || ^5.0 || ^7.2"
             },
             "suggest": {
                 "doctrine/cache": "Use any Doctrine cache driver for cache",
@@ -410,9 +410,9 @@
             ],
             "support": {
                 "issues": "https://github.com/botman/botman/issues",
-                "source": "https://github.com/botman/botman/tree/v2.8.9"
+                "source": "https://github.com/botman/botman/tree/v2.8.10"
             },
-            "time": "2025-08-04T14:14:47+00:00"
+            "time": "2025-08-12T16:27:17+00:00"
         },
         {
             "name": "botman/driver-web",
@@ -4418,16 +4418,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.6.0",
+            "version": "v5.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                "reference": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
-                "reference": "221b0d0fdf1369c71047ad1d18bb5880017bbc56",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2",
+                "reference": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2",
                 "shasum": ""
             },
             "require": {
@@ -4446,7 +4446,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
@@ -4470,9 +4470,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.1"
             },
-            "time": "2025-07-27T20:03:57+00:00"
+            "time": "2025-08-13T20:13:15+00:00"
         },
         {
             "name": "opis/closure",
