@@ -84,24 +84,29 @@
 
                                  </td>
                                  <td>
-                                     {{ ucfirst($item->customSubscription->stripe_status) }}
+                                     {{ ucfirst($item->customSubscription->stripe_status ?? '') }}
                                  </td>
                                  <td>
-                                     @if ($item->customSubscription->renews_at != null)
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
-                                     @elseif ($item->customSubscription->ends_at != null)
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
-                                     @elseif ($item->customSubscription->trial_ends_at != null)
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
-                                     @else
-                                         <span class="badge badge-success">
-                                             Never
-                                         </span>
+                                     @if ($item->customSubscription != null)
+                                         @if ($item->customSubscription->renews_at != null)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
+                                         @elseif ($item->customSubscription->ends_at != null)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
+                                         @elseif ($item->customSubscription->trial_ends_at != null)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
+                                         @else
+                                             <span class="badge badge-success">
+                                                 Never
+                                             </span>
+                                         @endif
                                      @endif
+
 
                                  </td>
                                  <td>
-                                     {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
+                                     @if ($item->customSubscription != null)
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
+                                     @endif
                                  </td>
                                  <td style="width: 150px;">
 
