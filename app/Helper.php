@@ -967,12 +967,11 @@ function fetchHomeTimezoneUsingZip($zipCode)
             $offSet = "-06:00";
             $timezone = "Central Standard Time";
         } 
-        else if($zipCode == '18834')
-        {
-            $offSet = "-04:00";
-            $timezone = "Eastern daylight Time";
-        }
-        else {
+        else if ($zipCode == '18834') {
+            $offSet = "-05:00";
+            $timezone = "Eastern Standard Time";
+        } 
+        else { 
             $offSet = "+05:30";
             $timezone = "Eastern Standard Time";
         } 
