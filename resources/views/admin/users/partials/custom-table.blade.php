@@ -32,11 +32,12 @@
                                  Status
                              </th>
                              <th>
-                                 Subscription <br> Expires At
-                             </th>
-                             <th>
                                  Subscribe At
                              </th>
+                             <th>
+                                 Subscription <br> Expires At
+                             </th>
+
                              <th>
                                  Action
                              </th>
@@ -88,11 +89,16 @@
                                  </td>
                                  <td>
                                      @if ($item->customSubscription != null)
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
+                                     @endif
+                                 </td>
+                                 <td>
+                                     @if ($item->customSubscription != null)
                                          @if ($item->customSubscription->renews_at != null)
                                              {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
                                          @elseif ($item->customSubscription->ends_at != null)
                                              {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
-                                         @elseif ($item->customSubscription->trial_ends_at != null)
+                                         @elseif ($item->customSubscription->trial_ends_at != null && $item->is_custom_user != 1)
                                              {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
                                          @else
                                              <span class="badge badge-success">
@@ -103,11 +109,7 @@
 
 
                                  </td>
-                                 <td>
-                                     @if ($item->customSubscription != null)
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
-                                     @endif
-                                 </td>
+
                                  <td style="width: 150px;">
 
                                      @if ($item->is_live_on_stripe != 1)
