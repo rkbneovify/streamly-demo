@@ -31,11 +31,13 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Stripe\Stripe;
 
 class UsersController extends Controller
 {
     public function __construct()
     {
+        Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
     }
 
@@ -219,7 +221,7 @@ class UsersController extends Controller
             // Auto-add Local Channels if All Channels selected AND ZIP is local
             if (in_array(1, $channelAvailability) && in_array($request->zipcode, $predefinedLocalZipcodes) && !in_array(2, $channelAvailability)) {
                 $channelAvailability[] = 2;
-            } 
+            }
 
             // Save rules
             foreach ($channelAvailability as $availability) {
@@ -407,12 +409,20 @@ class UsersController extends Controller
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
         $predefinedLocalZipcodes = [
-            "85120", "85215", "85205", "75662", "08872",
-            "08904", "18344", "18438", "18302", "18326"
+            "85120",
+            "85215",
+            "85205",
+            "75662",
+            "08872",
+            "08904",
+            "18344",
+            "18438",
+            "18302",
+            "18326"
         ];
 
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-        
+
         $newZip = $request->zipcode;
 
         // 1. If not a valid zipcode
@@ -576,7 +586,7 @@ class UsersController extends Controller
         return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
 
- 
+
 
 
 
@@ -663,7 +673,52 @@ class UsersController extends Controller
 
         //return the view with the role info and its permissions
         // return view('roles.show',compact('role','permissions'));
-        return view('admin.users.show', compact('user'));
+        $subscription = DB::table('subscriptions')
+            ->where('user_id', $id)
+            ->latest('created_at')
+            ->first();
+        // dd($subscription);
+        $channelRule = DB::table('user_zipcode_rules')
+            ->where('email', $user->email)
+            ->first();
+
+        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
+        $planDuration = '';
+
+        if (empty($subscription->renews_at)) {
+            $planDuration = 'Never';
+        } else {
+            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+            $now = Carbon::now()->startOfDay();
+
+            if ($endsAt->eq($now->copy()->addMonth())) {
+                $planDuration = '1 Month';
+            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
+                $planDuration = '3 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
+                $planDuration = '6 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
+                $planDuration = '12 Months';
+            } else {
+                $planDuration = '';
+            }
+        }
+        if ($subscription != null) {
+            $plan = \Stripe\Plan::retrieve($subscription->stripe_plan);
+        } else {
+            $plan = null;
+        }
+
+
+        return view('admin.users.show', compact(
+            'user',
+            'channelRule',
+            'planDuration',
+            'currentDeviceCount',
+            'subscription',
+            'plan'
+        ));
     }
 
     // public function destroy($id)
