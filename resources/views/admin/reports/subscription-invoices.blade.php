@@ -13,16 +13,16 @@ use Laravel\Cashier\Cashier;
                         <h1>Customer Invoices</h1> {{ session()->get('info') }}
                     </div>
                     <!-- <div class="form-group">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label><strong>Filter by Userrole :</strong></label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <select name="roles" id="roles" class="form-control">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <option>choose user role</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <option value=>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      active
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </select>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <label><strong>Filter by Userrole :</strong></label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <select name="roles" id="roles" class="form-control">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <option>choose user role</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <option value=>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              active
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </select>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -38,96 +38,74 @@ use Laravel\Cashier\Cashier;
 
             <div class="container">
 
-
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped align-middle">
-                        <thead>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Invoice ID</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($invoices as $index => $invoice)
                             <tr>
-                                <th>#</th>
-                                <th>Subscription Id</th>
-                                <th>Status</th>
-                                <th>Plan</th>
-                                <th>Amount</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Invoice</th>
+                                {{-- Row number with pagination offset --}}
+                                <td>{{ ($invoices->currentPage() - 1) * $invoices->perPage() + $index + 1 }}</td>
+
+                                <td>{{ $invoice->id }}</td>
+
+                                <td>
+                                    <span
+                                        class="badge 
+                            @if ($invoice->status == 'paid') bg-success
+                            @elseif($invoice->status == 'open') bg-primary
+                            @elseif($invoice->status == 'draft') bg-secondary
+                            @elseif($invoice->status == 'void') bg-dark
+                            @elseif($invoice->status == 'uncollectible') bg-danger @endif">
+                                        {{ ucfirst($invoice->status) }}
+                                    </span>
+                                </td>
+
+                                <td>{{ number_format($invoice->amount_due / 100, 2) }}</td>
+
+                                <td>{{ strtoupper($invoice->currency) }}</td>
+
+                                <td>{{ \Carbon\Carbon::createFromTimestamp($invoice->created)->format('d/m/Y H:i') }}</td>
+
+                                <td>
+                                    {{-- View invoice (hosted URL) --}}
+                                    @if (!empty($invoice->hosted_invoice_url))
+                                        <a href="{{ $invoice->hosted_invoice_url }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    @endif
+
+
+
+                                    @if (empty($invoice->hosted_invoice_url))
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($subscriptions->data as $index => $sub)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $sub->id }}</td>
-                                    <td>
-                                        <span
-                                            class="badge 
-                                @if ($sub->status === 'active') bg-success 
-                                @elseif($sub->status === 'canceled') bg-danger 
-                                @else bg-secondary @endif">
-                                            {{ ucfirst($sub->status) }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $sub->items->data[0]->plan->nickname ?? 'N/A' }}</td>
-                                    <td>
-                                        ${{ number_format($sub->items->data[0]->plan->amount / 100, 2) }}
-                                        / {{ $sub->items->data[0]->plan->interval }}
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::createFromTimestamp($sub->start_date)->format('d/m/Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::createFromTimestamp($sub->current_period_end)->format('d/m/Y') }}
-                                    </td>
-                                    <td>
-                                        @if (!empty($sub->latest_invoice))
-                                            @php
-                                                $invoice = \Stripe\Invoice::retrieve($sub->latest_invoice);
-                                            @endphp
-                                            <a href="{{ $invoice->hosted_invoice_url }}" class="btn btn-sm btn-link"
-                                                target="_blank">
-                                                View Invoice
-                                            </a>
-                                        @else
-                                            <span class="text-muted">No invoice</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center text-muted">No subscriptions found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No invoices found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+                {{-- Pagination links --}}
+                <div class="row justify-content-end">
+                    <div class="d-flex justify-content-center">
+                        {{ $invoices->links() }}
+                    </div>
                 </div>
-
-                <!-- Pagination Controls -->
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        @if (!empty($subscriptions->data) && request('page', 1) > 1)
-                            <li class="page-item">
-                                <a class="page-link"
-                                    href="{{ route('admin.report.subscription.invoices', [
-                                        'page' => request('page', 1) - 1,
-                                        'ending_before' => $subscriptions->data[0]->id,
-                                        'id' => $id,
-                                    ]) }}">
-                                    Previous
-                                </a>
-                            </li>
-                        @endif
-
-                        @if ($subscriptions->has_more)
-                            <li class="page-item">
-                                <a class="page-link"
-                                    href="{{ route('admin.report.subscription.invoices', [
-                                        'page' => request('page', 1) + 1,
-                                        'starting_after' => end($subscriptions->data)->id,
-                                        'id' => $id,
-                                    ]) }}">
-                                    Next
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
             </div>
 
 
