@@ -956,7 +956,7 @@ function fetchHomeTimezoneUsingZip($zipCode)
         // Get the abbreviation using the 'T' format specifier
         $formattedDate = $dateTime->format('T');
         $timezone = convertTimeZoneAbbreviation($formattedDate, $zipCode);
-    } catch (Exception $e) {
+    } catch (Exception $e) { 
         if ($zipCode == "86336" || $zipCode == "85023" || $zipCode == "85022") {
             $offSet = "-07:00";
             $timezone = "Mountain Standard Time";
@@ -966,10 +966,16 @@ function fetchHomeTimezoneUsingZip($zipCode)
         } else if ($zipCode == "75662") {
             $offSet = "-06:00";
             $timezone = "Central Standard Time";
-        } else {
+        } 
+        else if($zipCode == '18834')
+        {
+            $offSet = "-04:00";
+            $timezone = "Eastern daylight Time";
+        }
+        else {
             $offSet = "+05:30";
             $timezone = "Eastern Standard Time";
-        }
+        } 
     }
 
     return [$timezone, $offSet];
