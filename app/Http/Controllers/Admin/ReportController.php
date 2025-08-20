@@ -22,6 +22,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\Subscription;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Stripe\Stripe;
@@ -602,7 +604,7 @@ class ReportController extends Controller
         $subscriptions = \Stripe\Subscription::all([
             'customer' => $subscription->customer,
             'status'   => 'all', // active, trialing, canceled, unpaid, or all
-            'limit'    => 10
+            'limit'    => 3
         ]);
 
 
@@ -975,5 +977,55 @@ class ReportController extends Controller
         $filters = $request->only(['status']);
         $filename = 'subscription_report_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new SubscriptionReportExport($filters), $filename);
+    }
+
+    public function invoiceListByUser(Request $request, $id)
+    {
+
+        try {
+
+
+
+            $user = User::find($id);
+
+            $statuses = ['draft', 'open', 'paid', 'void', 'uncollectible'];
+
+            $allInvoices = collect();
+
+            foreach ($statuses as $status) {
+                $invoices = \Stripe\Invoice::all([
+                    'customer' => $user->stripe_id,
+                    'status'   => $status,
+                    'limit'    => 100, // get more from Stripe so we can paginate locally
+                ]);
+
+                $allInvoices = $allInvoices->merge($invoices->data);
+            }
+
+            // Sort newest first
+            $allInvoices = $allInvoices->sortByDesc('created')->values();
+
+            // Laravel pagination setup
+            $page     = $request->get('page', 1);
+            $perPage  = 10; //  limit 10 per page
+            $offset   = ($page - 1) * $perPage;
+
+            $paginatedInvoices = new LengthAwarePaginator(
+                $allInvoices->slice($offset, $perPage)->values(),
+                $allInvoices->count(),
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+            return view('admin.reports.subscription-invoices', [
+                'invoices' => $paginatedInvoices,
+
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th->getMessage());
+            Log::info($th->getMessage());
+        }
     }
 }
