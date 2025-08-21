@@ -614,7 +614,7 @@ class ReportController extends Controller
             // return response()->json($subscriptions);
             return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
         } catch (\Throwable $th) {
-            Alert::error('Oops!', $th->getMessage());
+            Alert::error('Oops!', "Something went wrong. Please try again late.");
             return redirect()->back();
         }
     }
