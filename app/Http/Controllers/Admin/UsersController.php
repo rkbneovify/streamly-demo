@@ -222,14 +222,12 @@ class UsersController extends Controller
             } 
 
             // Save rules
-            foreach ($channelAvailability as $availability) {
                 DB::table('user_zipcode_rules')->insert([
                     'zipcode' => $request->zipcode,
                     'email' => $request->email,
-                    'validate' => $availability,
+                    'validate' => $request->channel_availability,
                 ]);
-            }
-
+           
 
             $endsAt = null;
             switch ($request->plan_duration) {
