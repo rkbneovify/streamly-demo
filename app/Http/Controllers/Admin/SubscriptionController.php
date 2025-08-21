@@ -132,7 +132,7 @@ class SubscriptionController extends Controller
         });
 
         if ($request->ajax()) {
-            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes'));
+            return view('admin.subscriptions.partials.table', compact('subscriptions', 'plankey', 'statusTypes'));
         }
 
         return view('admin.subscriptions.tierindex', compact('subscriptions',  'plankey', 'statusTypes'));
