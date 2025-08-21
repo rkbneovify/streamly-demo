@@ -11,10 +11,17 @@
                  <th style="width: 20%">
                      Email
                  </th>
-
-
+                 <th style="width: 20%">
+                     Subscription
+                     <br>
+                     Type
+                 </th>
+                 <th style="width: 10%">
+                     Status
+                 </th>
                  <th style="width: 20%">
                      Subscribe At
+
                      <a href="{{ request()->fullUrlWithQuery([
                          'sort_subscribe_at' => request()->get('sort_subscribe_at', 'desc') === 'desc' ? 'asc' : 'desc',
                      ]) }}"
@@ -26,9 +33,7 @@
                      Expire At
                  </th>
 
-                 <th style="width: 10%">
-                     Status
-                 </th>
+
                  <th style="width: 20%">
                      Action
                  </th>
@@ -61,19 +66,53 @@
                          {{ limitEmailName($subscription->user->email, 10, '...') }}
                      </td>
 
-
-
-
-
-                     <td>{{ date('d/m/Y', strtotime($subscription->created_at)) }}</td>
-                     <td>{{ date('d/m/Y', strtotime($subscription->renews_at)) }}</td>
+                     <td>
+                         @php
+                             if (strpos($subscription->stripe_id, 'sub_custom_') === 0) {
+                                 echo 'Custom';
+                             } elseif ($subscription->user->user_type == 'custom') {
+                                 echo 'Custom';
+                             } else {
+                                 echo 'XCustom';
+                             }
+                         @endphp
+                         {{-- @if (($subscription->user->user_type == 'custom' || $subscription->user->user_type) && $subscription->user->is_live_on_stripe == 1)
+                             Live
+                         @elseif (
+                             ($subscription->user->user_type == 'custom' || $subscription->user->user_type) &&
+                                 $subscription->user->is_live_on_stripe != 1)
+                             Custom
+                         @else
+                             Live
+                         @endif --}}
+                     </td>
                      <td>
                          {{ Str::ucfirst($subscription->stripe_status ?? '') }}
                      </td>
+
+
+                     <td>{{ date('d/m/Y', strtotime($subscription->updated_at)) }}
+                     </td>
                      <td>
 
-                         <a class="btn btn-xs btn-primary mb-1  w-100"
-                             href="{{ url('admin/subscriptions/view', $subscription->id) }}">
+                         @if ($subscription->renews_at != null)
+                             {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
+                         @elseif ($subscription->ends_at != null)
+                             {{ date('d/m/Y', strtotime($subscription->ends_at)) }}
+                         @elseif ($subscription->trial_ends_at != null && $subscription->user->is_custom_user != 1)
+                             {{ date('d/m/Y', strtotime($subscription->trial_ends_at)) }}
+                         @else
+                             <span class="badge badge-success">
+                                 Never
+                             </span>
+                         @endif
+
+                     </td>
+
+                     <td>
+
+                         <a class="btn btn-xs btn-outline-primary mb-1  w-100"
+                             href="{{ route('admin.report.subscription.detail', $subscription->user->id) }}">
                              {{ trans('View') }}
                          </a>
 

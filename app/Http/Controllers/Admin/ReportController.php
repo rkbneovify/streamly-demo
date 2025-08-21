@@ -26,6 +26,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
+use Stripe\Exception\OAuth\InvalidRequestException;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -585,31 +587,36 @@ class ReportController extends Controller
 
     public function subscriptionDetailView($subscriptionId)
     {
-        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-        Stripe::setApiKey($STRIPE_SECRET);
+        try {
+            $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+            Stripe::setApiKey($STRIPE_SECRET);
 
-        // if provide user id in subscriptionId params
-        if (strpos($subscriptionId, 'sub_') === false) {
-            $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
+            // if provide user id in subscriptionId params
+            if (strpos($subscriptionId, 'sub_') === false) {
+                $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
+            }
+
+            $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+            $customer = \Stripe\Customer::retrieve($subscription->customer);
+            $user = User::where('email', $customer->email)->first();
+            $invoices = \Stripe\Invoice::all([
+                'customer' => $subscription->customer,
+                'limit' => 3
+            ]);
+
+            $subscriptions = \Stripe\Subscription::all([
+                'customer' => $subscription->customer,
+                'status'   => 'all', // active, trialing, canceled, unpaid, or all
+                'limit'    => 3
+            ]);
+
+
+            // return response()->json($subscriptions);
+            return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
+        } catch (\Throwable $th) {
+            Alert::error('Oops!', $th->getMessage());
+            return redirect()->back();
         }
-
-        $subscription = \Stripe\Subscription::retrieve($subscriptionId);
-        $customer = \Stripe\Customer::retrieve($subscription->customer);
-        $user = User::where('email', $customer->email)->first();
-        $invoices = \Stripe\Invoice::all([
-            'customer' => $subscription->customer,
-            'limit' => 3
-        ]);
-
-        $subscriptions = \Stripe\Subscription::all([
-            'customer' => $subscription->customer,
-            'status'   => 'all', // active, trialing, canceled, unpaid, or all
-            'limit'    => 3
-        ]);
-
-
-        // return response()->json($subscriptions);
-        return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
     }
 
     function getAllStripeCustomers($secretKey)
