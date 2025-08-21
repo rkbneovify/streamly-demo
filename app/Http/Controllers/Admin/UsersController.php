@@ -84,8 +84,12 @@ class UsersController extends Controller
                 'plan_duration' => 'required|string',
                 'number_of_devices' => 'nullable|integer|min:1',
                 'connected_device' => 'required|in:0,1',
+                'channel_availability' => 'required',
 
             ]);
+
+            $channel_availability=$request->channel_availability;
+            // dd($channel_availability);
 
             if ($validator->fails()) {
                 Log::error('Validation failed', $validator->errors()->toArray());
@@ -219,18 +223,18 @@ class UsersController extends Controller
             }
 
             // Auto-add Local Channels if All Channels selected AND ZIP is local
-            if (in_array(1, $channelAvailability) && in_array($request->zipcode, $predefinedLocalZipcodes) && !in_array(2, $channelAvailability)) {
-                $channelAvailability[] = 2;
-            }
+            // if (in_array(1, $channelAvailability) && in_array($request->zipcode, $predefinedLocalZipcodes) && !in_array(2, $channelAvailability)) {
+            //     $channelAvailability[] = 2;
+            // } 
 
             // Save rules
-            foreach ($channelAvailability as $availability) {
-                DB::table('user_zipcode_rules')->insert([
+                $zipcode=DB::table('user_zipcode_rules')->insert([
                     'zipcode' => $request->zipcode,
                     'email' => $request->email,
-                    'validate' => $availability,
+                    'validate' => $request->channel_availability
                 ]);
-            }
+           
+
 
 
             $endsAt = null;
