@@ -188,6 +188,8 @@ class AuthController extends Controller
             exit;
         }
 
+        
+
         $this->authenticated($request, $user, $token);
         return $this->respondWithToken($token);
     }
