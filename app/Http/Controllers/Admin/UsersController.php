@@ -31,11 +31,13 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Stripe\Stripe;
 
 class UsersController extends Controller
 {
     public function __construct()
     {
+        Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
     }
 
@@ -411,12 +413,20 @@ class UsersController extends Controller
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
         $predefinedLocalZipcodes = [
-            "85120", "85215", "85205", "75662", "08872",
-            "08904", "18344", "18438", "18302", "18326"
+            "85120",
+            "85215",
+            "85205",
+            "75662",
+            "08872",
+            "08904",
+            "18344",
+            "18438",
+            "18302",
+            "18326"
         ];
 
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-        
+
         $newZip = $request->zipcode;
 
         // 1. If not a valid zipcode
@@ -580,7 +590,7 @@ class UsersController extends Controller
         return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
 
- 
+
 
 
 
@@ -667,7 +677,52 @@ class UsersController extends Controller
 
         //return the view with the role info and its permissions
         // return view('roles.show',compact('role','permissions'));
-        return view('admin.users.show', compact('user'));
+        $subscription = DB::table('subscriptions')
+            ->where('user_id', $id)
+            ->latest('created_at')
+            ->first();
+        // dd($subscription);
+        $channelRule = DB::table('user_zipcode_rules')
+            ->where('email', $user->email)
+            ->first();
+
+        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
+        $planDuration = '';
+
+        if (empty($subscription->renews_at)) {
+            $planDuration = 'Never';
+        } else {
+            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+            $now = Carbon::now()->startOfDay();
+
+            if ($endsAt->eq($now->copy()->addMonth())) {
+                $planDuration = '1 Month';
+            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
+                $planDuration = '3 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
+                $planDuration = '6 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
+                $planDuration = '12 Months';
+            } else {
+                $planDuration = '';
+            }
+        }
+        if ($subscription != null) {
+            $plan = \Stripe\Plan::retrieve($subscription->stripe_plan);
+        } else {
+            $plan = null;
+        }
+
+
+        return view('admin.users.show', compact(
+            'user',
+            'channelRule',
+            'planDuration',
+            'currentDeviceCount',
+            'subscription',
+            'plan'
+        ));
     }
 
     // public function destroy($id)
@@ -863,7 +918,9 @@ class UsersController extends Controller
         $roles = Role::get(); //get all roles
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
-        $allSession = SessionTable::with('user', 'hotel', 'pdInfo')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+        $allSession = SessionTable::with(['user', 'hotel', 'pdInfo' => function ($query) use ($id) {
+            return $query->where('user_id', $id);
+        }])->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
             ->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
@@ -1133,14 +1190,25 @@ class UsersController extends Controller
 
         $query = User::query()
             ->with('roles', 'customSubscription')
-            ->where('is_custom_user', 1)
-            ->orderBy(
+            ->where('is_custom_user', 1);
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->orderBy(
                 Subscription::select('updated_at')
                     ->whereColumn('user_id', 'users.id')
                     ->latest()
                     ->limit(1),
                 'desc'
             );
+        } else {
+            $query->orderBy(
+                Subscription::select('updated_at')
+                    ->whereColumn('user_id', 'users.id')
+                    ->latest()
+                    ->limit(1),
+                'asc'
+            );
+        }
+
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('id', $request->role);
@@ -1153,9 +1221,9 @@ class UsersController extends Controller
             });
         }
         // $query->orderByDesc("updated_at");
-        $users =   $query->paginate(10);
+        $users =   $query->paginate(10)->appends($request->query());
 
-        $users =   $query->paginate(10);
+        // $users =   $query->paginate(10);
         // return response()->json($users);
         $roles = Role::all();
         if ($request->ajax()) {
