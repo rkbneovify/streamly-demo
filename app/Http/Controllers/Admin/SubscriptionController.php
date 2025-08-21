@@ -58,6 +58,7 @@ class SubscriptionController extends Controller
         $plankey = $stripePlanData->keys();
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
             $query->where('mode', $mode);
@@ -96,9 +97,10 @@ class SubscriptionController extends Controller
 
         $query  = Subscription::query()->with('user')
             ->whereHas('user', function ($query) use ($mode) {
-                $query->where('mode', $mode);
-            })
-            ->whereIn('stripe_plan', $planIds);
+                $query->whereNull('user_type')->where('mode', $mode);
+            });
+
+        // return response()->json($query);
         if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
             $query->orderByDesc('updated_at');
         } else {
@@ -843,6 +845,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function subscriptionCancelById($id)
     {
+        // for custom users
         try {
             $user = User::find($id);
             if ($user->is_live_on_stripe == 1) {
@@ -851,8 +854,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                     Alert::error("Error !", "Subscription not found !.");
                     return redirect()->back();
                 }
+                $user->subscription('main')->skipTrial()->cancelNow();
                 $subscription = \Stripe\Subscription::retrieve($userSubs->stripe_id);
-                $subscription->cancel();
                 $userSubs->stripe_status = $subscription->status;
                 $userSubs->save();
             } else {
