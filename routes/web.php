@@ -136,6 +136,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode'); //for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph'); //for user session piyush
     Route::get('/report/subscription/detail/{id}', 'Admin\ReportController@subscriptionDetailView')->name('report.subscription.detail');
+    Route::get('/report/subscription/invoices/{id}', 'Admin\ReportController@invoiceListByUser')->name('report.subscription.invoices');
     Route::get('/slide/view', 'LoginGuideController@slideview'); //slider piyush
     Route::get('/banner/view', 'HomescreenBannerController@bannerview'); //slider piyush
     Route::get('/slide/create', 'LoginGuideController@slidecreate'); //slider piyush
