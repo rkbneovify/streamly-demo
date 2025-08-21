@@ -312,7 +312,7 @@ input[type=number] {
 
               <div id="zipErrorMsg" style="color: red; font-size: 14px; display: none;"></div>
 
-                <input id="zipcode" type="number"  list="zipcodeList" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
+                <input id="zipcode" type="number"  list="zipcodeList" pattern="/^-?\d+\.?\d*$/" class="form-control" name="zipcode" value="{{$user->zipcode}}" >
                 <datalist id="zipcodeList"></datalist>
                 @if ($errors->has('zipcode'))
                 <span class="help-block">
