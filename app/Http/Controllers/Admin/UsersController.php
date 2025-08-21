@@ -102,7 +102,7 @@ class UsersController extends Controller
 
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-
+   
             // 2️⃣ Check ZIP exists in DB
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
             if (!$zipcodeExists) {
@@ -228,14 +228,12 @@ class UsersController extends Controller
             // } 
 
             // Save rules
-                $zipcode=DB::table('user_zipcode_rules')->insert([
+                DB::table('user_zipcode_rules')->insert([
                     'zipcode' => $request->zipcode,
                     'email' => $request->email,
-                    'validate' => $request->channel_availability
+                    'validate' => $request->channel_availability,
                 ]);
            
-
-
 
             $endsAt = null;
             switch ($request->plan_duration) {
