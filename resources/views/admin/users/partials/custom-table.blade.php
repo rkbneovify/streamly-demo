@@ -33,6 +33,11 @@
                              </th>
                              <th>
                                  Subscribe At
+                                 <a href="{{ request()->fullUrlWithQuery([
+                                     'sort_subscribe_at' => request()->get('sort_subscribe_at', 'desc') === 'desc' ? 'asc' : 'desc',
+                                 ]) }}"
+                                     class="text-primary ms-1">↑↓</a>
+
                              </th>
                              <th>
                                  Subscription <br> Expires At
@@ -136,15 +141,25 @@
                                          </a>
                                      @else
                                          @if ($item->customSubscription->stripe_status == 'active')
-                                             <a href="{{ route('admin.report.subscription.detail', $item->id) }}"
-                                                 class="btn btn-sm btn-link w-75">View Subscription</a>
-                                             {{-- <a href="{{ route('admin.subscriptions.user.cancel', $item->id) }}"
-                                                 class="btn btn-sm btn-link  w-75 cancel-subscription-btn"
-                                                 data-url="{{ route('admin.subscriptions.user.cancel', $item->id) }}">
-                                                 <span class="btn-text">Cancel Subscription</span>
-                                                 <span class="spinner-border spinner-border-sm ms-2 d-none"
-                                                     role="status" aria-hidden="true"></span>
-                                             </a> --}}
+                                             <div class="btn-group w-75">
+                                                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle"
+                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                     Subscription
+                                                 </button>
+                                                 <div class="dropdown-menu">
+                                                     <a class="dropdown-item"
+                                                         href="{{ route('admin.report.subscription.detail', $item->id) }}">
+                                                         View
+                                                     </a>
+                                                     <a class="dropdown-item cancel-subscription-btn"
+                                                         href="{{ route('admin.subscriptions.user.cancel', $item->id) }}"
+                                                         data-url="{{ route('admin.subscriptions.user.cancel', $item->id) }}">
+                                                         <span class="btn-text">Cancel</span>
+                                                         <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                             role="status" aria-hidden="true"></span>
+                                                     </a>
+                                                 </div>
+                                             </div>
                                          @endif
                                      @endif
 
