@@ -88,7 +88,7 @@
 
                     <div id="user-data">
 
-                        @include('admin.subscriptions.partials.table')
+                        @include('admin.subscriptions.partials.table-new')
                     </div>
 
 
