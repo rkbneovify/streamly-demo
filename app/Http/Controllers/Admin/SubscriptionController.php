@@ -99,6 +99,11 @@ class SubscriptionController extends Controller
                 $query->where('mode', $mode);
             })
             ->whereIn('stripe_plan', $planIds);
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->orderByDesc('updated_at');
+        } else {
+            $query->orderBy('updated_at');
+        }
         // Filter by status if provided
         if (!empty($request->status)) {
 
@@ -125,7 +130,7 @@ class SubscriptionController extends Controller
         });
 
         if ($request->ajax()) {
-            return view('admin.subscriptions.partials.table', compact('subscriptions', 'plankey', 'statusTypes'));
+            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes'));
         }
 
         return view('admin.subscriptions.tierindex', compact('subscriptions',  'plankey', 'statusTypes'));
@@ -568,12 +573,13 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+
         $product = $request['stripe_plan'];
         //dd($product);
         $planname = $request['name'];
         $userid = $request['user_id'];
         $user = User::find($userid);
+
         try {
             $user->subscription('main')->skipTrial()->swap($product);
             return redirect('admin/subscriptions')->with('info', 'Subscription updated Successfully');
@@ -756,12 +762,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
 
             $user = User::find($request->user_id);
-            if ($user->is_custom_user == 0) {
+            if ($user->is_custom_user == 0 || $user->user_type != "custom") {
                 alert()->error('Oops !', 'You can only update custom user on stripe.');
-                return redirect()->back();
-            }
-            if ($user->is_live_on_stripe == 1) {
-                alert()->error('Oops !', 'User already updated on stripe.');
                 return redirect()->back();
             }
 
