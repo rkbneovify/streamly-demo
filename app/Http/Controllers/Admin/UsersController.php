@@ -96,7 +96,7 @@ class UsersController extends Controller
 
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-
+   
             // 2️⃣ Check ZIP exists in DB
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
             if (!$zipcodeExists) {
