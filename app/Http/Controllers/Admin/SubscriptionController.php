@@ -756,12 +756,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
 
             $user = User::find($request->user_id);
-            if ($user->is_custom_user == 0) {
+            if ($user->is_custom_user == 0 || $user->user_type != "custom") {
                 alert()->error('Oops !', 'You can only update custom user on stripe.');
-                return redirect()->back();
-            }
-            if ($user->is_live_on_stripe == 1) {
-                alert()->error('Oops !', 'User already updated on stripe.');
                 return redirect()->back();
             }
 
