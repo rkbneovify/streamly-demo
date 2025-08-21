@@ -598,7 +598,7 @@ class ReportController extends Controller
         $user = User::where('email', $customer->email)->first();
         $invoices = \Stripe\Invoice::all([
             'customer' => $subscription->customer,
-            'limit' => 100
+            'limit' => 3
         ]);
 
         $subscriptions = \Stripe\Subscription::all([
