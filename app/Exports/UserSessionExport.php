@@ -39,9 +39,9 @@ class UserSessionExport implements FromCollection, WithHeadings
 
             return [
                 'Sl.No.' => $key + 1,
-                'Role' => $item->user->roles->first()->name ?? '',
                 'Name' => $item->user->name ?? '',
                 'Email' => $item->user->email ?? '',
+                'Role' => $item->user->roles->first()->name ?? '',
                 'Active Devices' => $item->activesession ?? '',
 
                 'Mode' => $item->user->mode === 'Testing' && $item->user->user_type === 'custom'
@@ -60,6 +60,6 @@ class UserSessionExport implements FromCollection, WithHeadings
     }
     public function headings(): array
     {
-        return ['Sl.No.', 'Role', 'Name', 'Email', "Active Devices", 'Mode', 'Created At'];
+        return ['Sl.No.', 'Name', 'Email', 'Role', "Active Devices", 'Mode', 'Created At'];
     }
 }
