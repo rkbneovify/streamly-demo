@@ -1184,14 +1184,25 @@ class UsersController extends Controller
 
         $query = User::query()
             ->with('roles', 'customSubscription')
-            ->where('is_custom_user', 1)
-            ->orderBy(
+            ->where('is_custom_user', 1);
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->orderBy(
                 Subscription::select('updated_at')
                     ->whereColumn('user_id', 'users.id')
                     ->latest()
                     ->limit(1),
                 'desc'
             );
+        } else {
+            $query->orderBy(
+                Subscription::select('updated_at')
+                    ->whereColumn('user_id', 'users.id')
+                    ->latest()
+                    ->limit(1),
+                'asc'
+            );
+        }
+
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('id', $request->role);
@@ -1204,9 +1215,9 @@ class UsersController extends Controller
             });
         }
         // $query->orderByDesc("updated_at");
-        $users =   $query->paginate(10);
+        $users =   $query->paginate(10)->appends($request->query());
 
-        $users =   $query->paginate(10);
+        // $users =   $query->paginate(10);
         // return response()->json($users);
         $roles = Role::all();
         if ($request->ajax()) {
