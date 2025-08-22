@@ -666,6 +666,7 @@ class UsersController extends Controller
     {
 
         $user = User::find($id); //Find the requested role
+        
 
         //Get the permissions linked to the role
         // $permissions =
@@ -677,7 +678,7 @@ class UsersController extends Controller
         // return view('roles.show',compact('role','permissions'));
         $subscription = DB::table('subscriptions')
             ->where('user_id', $id)
-            ->latest('created_at')
+            ->latest('updated_at')
             ->first();
         // dd($subscription);
         $channelRule = DB::table('user_zipcode_rules')
