@@ -67,24 +67,12 @@
                      </td>
 
                      <td>
-                         @php
-                             if (strpos($subscription->stripe_id, 'sub_custom_') === 0) {
-                                 echo 'Custom';
-                             } elseif ($subscription->user->user_type == 'custom') {
-                                 echo 'Custom';
-                             } else {
-                                 echo 'XCustom';
-                             }
-                         @endphp
-                         {{-- @if (($subscription->user->user_type == 'custom' || $subscription->user->user_type) && $subscription->user->is_live_on_stripe == 1)
-                             Live
-                         @elseif (
-                             ($subscription->user->user_type == 'custom' || $subscription->user->user_type) &&
-                                 $subscription->user->is_live_on_stripe != 1)
+                         @if ($mode == 'Testing' || $mode == 'Test')
                              Custom
                          @else
                              Live
-                         @endif --}}
+                         @endif
+
                      </td>
                      <td>
                          {{ Str::ucfirst($subscription->stripe_status ?? '') }}
