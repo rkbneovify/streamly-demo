@@ -32,8 +32,17 @@
                                  Status
                              </th>
                              <th>
+                                 Subscribe At
+                                 <a href="{{ request()->fullUrlWithQuery([
+                                     'sort_subscribe_at' => request()->get('sort_subscribe_at', 'desc') === 'desc' ? 'asc' : 'desc',
+                                 ]) }}"
+                                     class="text-primary ms-1">↑↓</a>
+
+                             </th>
+                             <th>
                                  Subscription <br> Expires At
                              </th>
+
                              <th>
                                  Action
                              </th>
@@ -81,18 +90,28 @@
 
                                  </td>
                                  <td>
-                                     {{ ucfirst($item->customSubscription->stripe_status) }}
+                                     {{ ucfirst($item->customSubscription->stripe_status ?? '') }}
                                  </td>
                                  <td>
-                                     @if (!is_null($item->customSubscription->renews_at))
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
-                                     @elseif (!is_null($item->customSubscription->ends_at))
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
-                                     @elseif (!is_null($item->customSubscription->trial_ends_at))
-                                         {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
-                                     @else
-                                         N/A
+                                     @if ($item->customSubscription != null)
+                                         {{ date('d/m/Y', strtotime($item->customSubscription->updated_at)) }}
                                      @endif
+                                 </td>
+                                 <td>
+                                     @if ($item->customSubscription != null)
+                                         @if ($item->customSubscription->renews_at != null)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->renews_at)) }}
+                                         @elseif ($item->customSubscription->ends_at != null)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->ends_at)) }}
+                                         @elseif ($item->customSubscription->trial_ends_at != null && $item->is_custom_user != 1)
+                                             {{ date('d/m/Y', strtotime($item->customSubscription->trial_ends_at)) }}
+                                         @else
+                                             <span class="badge badge-success">
+                                                 Never
+                                             </span>
+                                         @endif
+                                     @endif
+
 
                                  </td>
 
@@ -122,15 +141,25 @@
                                          </a>
                                      @else
                                          @if ($item->customSubscription->stripe_status == 'active')
-                                             <a href="{{ route('admin.report.subscription.detail', $item->id) }}"
-                                                 class="btn btn-sm btn-link w-75">View Subscription</a>
-                                             {{-- <a href="{{ route('admin.subscriptions.user.cancel', $item->id) }}"
-                                                 class="btn btn-sm btn-link  w-75 cancel-subscription-btn"
-                                                 data-url="{{ route('admin.subscriptions.user.cancel', $item->id) }}">
-                                                 <span class="btn-text">Cancel Subscription</span>
-                                                 <span class="spinner-border spinner-border-sm ms-2 d-none"
-                                                     role="status" aria-hidden="true"></span>
-                                             </a> --}}
+                                             <div class="btn-group w-75">
+                                                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle"
+                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                     Subscription
+                                                 </button>
+                                                 <div class="dropdown-menu">
+                                                     <a class="dropdown-item"
+                                                         href="{{ route('admin.report.subscription.detail', $item->id) }}">
+                                                         View
+                                                     </a>
+                                                     <a class="dropdown-item cancel-subscription-btn"
+                                                         href="{{ route('admin.subscriptions.user.cancel', $item->id) }}"
+                                                         data-url="{{ route('admin.subscriptions.user.cancel', $item->id) }}">
+                                                         <span class="btn-text">Cancel</span>
+                                                         <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                             role="status" aria-hidden="true"></span>
+                                                     </a>
+                                                 </div>
+                                             </div>
                                          @endif
                                      @endif
 
@@ -161,12 +190,11 @@
              <table class="table table-striped projects">
                  <thead>
                      <tr>
-
-                         <th style="width: 1%">
-                             #
-                         </th>
+                         {{-- <th>
+                                 <input type="checkbox" class="form-control" id="selectAll">
+                             </th> --}}
                          <th>
-                             Role
+                             #
                          </th>
                          <th>
                              Name
@@ -175,7 +203,19 @@
                              Email
                          </th>
                          <th>
-                             Created At
+                             Role
+                         </th>
+                         <th>
+                             Subscription <br> Type
+                         </th>
+                         <th>
+                             Status
+                         </th>
+                         <th>
+                             Subscription <br> Expires At
+                         </th>
+                         <th>
+                             Subscribe At
                          </th>
                          <th>
                              Action
@@ -184,7 +224,7 @@
                  </thead>
                  <tbody>
                      <tr>
-                         <td style="height: 200px;" colspan="7" class="text-center">
+                         <td style="height: 200px;" colspan="9" class="text-center">
                              <h3>Data not found !</h3>
                          </td>
                      </tr>
