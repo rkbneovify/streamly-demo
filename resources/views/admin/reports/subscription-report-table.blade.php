@@ -43,7 +43,7 @@
                   <tr>
                       <td>{{ $key + $transaction->firstItem() }}</td>
                       <td>
-                          <a href="{{ route('admin.report.subscription.detail', $item->stripe_id) }}">
+                          <a href="{{ route('admin.report.subscription.detail', $item->user->id) }}">
                               {{ $item->stripe_id }}
                           </a>
                       </td>

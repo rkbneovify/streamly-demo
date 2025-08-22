@@ -49,7 +49,7 @@ class ReportController extends Controller
             ->pluck('id')
             ->toArray();
 
-        $query  = SessionTable::query()->with('user')
+        $query = SessionTable::query()->with('user')
             ->selectRaw("users_id , count(id) activesession")
             ->where("status", '1')
             ->whereIn('users_id', $userIds);
@@ -521,7 +521,8 @@ class ReportController extends Controller
             // dd($arry);
             // die();
             array_push($array, $arry);
-        };
+        }
+        ;
 
         $resultCount = [
             'newuser' => $arrayRes1,
@@ -565,7 +566,7 @@ class ReportController extends Controller
             });
         }
 
-        $transaction =   $query->paginate(10)->appends($request->query());
+        $transaction = $query->paginate(10)->appends($request->query());
 
         $transaction->getCollection()->transform(function ($item) {
             $plan = \Stripe\Plan::retrieve($item->stripe_plan);
@@ -585,20 +586,24 @@ class ReportController extends Controller
         //return $resultCount;
     }
 
-    public function subscriptionDetailView($subscriptionId)
+    public function subscriptionDetailView($id)
     {
         try {
-            $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-            Stripe::setApiKey($STRIPE_SECRET);
+            // dd($subscriptionId);
+            // $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+            // Stripe::setApiKey($STRIPE_SECRET);
 
-            // if provide user id in subscriptionId params
-            if (strpos($subscriptionId, 'sub_') === false) {
-                $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
-            }
 
+
+            // // if provide user id in subscriptionId params
+            // if (strpos($subscriptionId, 'sub_custom_') === false) {
+            //     $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
+            // }
+            $user = User::where('id', $id)->first();
+            $subscriptionId = Subscription::where('user_id', $id)->first()->stripe_id;
             $subscription = \Stripe\Subscription::retrieve($subscriptionId);
             $customer = \Stripe\Customer::retrieve($subscription->customer);
-            $user = User::where('email', $customer->email)->first();
+
             $invoices = \Stripe\Invoice::all([
                 'customer' => $subscription->customer,
                 'limit' => 3
@@ -606,15 +611,17 @@ class ReportController extends Controller
 
             $subscriptions = \Stripe\Subscription::all([
                 'customer' => $subscription->customer,
-                'status'   => 'all', // active, trialing, canceled, unpaid, or all
-                'limit'    => 3
+                'status' => 'all', // active, trialing, canceled, unpaid, or all
+                'limit' => 3
             ]);
 
 
             // return response()->json($subscriptions);
             return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
         } catch (\Throwable $th) {
-            Alert::error('Oops!', "Something went wrong. Please try again late.");
+            Alert::error('Oops!', "Subscription details not found !");
+
+            // Alert::error('Oops!', $th->getMessage());
             return redirect()->back();
         }
     }
@@ -779,7 +786,8 @@ class ReportController extends Controller
             // dd($arry);
             // die();
             array_push($array, $arry);
-        };
+        }
+        ;
 
         $resultCount = [
             'newuser' => $arrayRes1,
@@ -846,7 +854,8 @@ class ReportController extends Controller
                 'userCount' => $Activecount
             ];
             array_push($arrayactive, $arryactive);
-        };
+        }
+        ;
 
         $array = [];
         foreach ($zipCode as $data) {
@@ -870,7 +879,8 @@ class ReportController extends Controller
                 'userCount' => $count
             ];
             array_push($array, $arry);
-        };
+        }
+        ;
 
         $key_values = array_column($array, 'userCount');
         array_multisort($key_values, SORT_DESC, $array);
@@ -904,12 +914,15 @@ class ReportController extends Controller
 
         // $allSession = SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();
 
-        $allSession = SessionTable::with(['hotel', 'pdname' => function ($q) {
-            // Query the name field in status table
-            $q->select('id', 'personal_devicename', 'device_id', 'user_id');
-        }])->where([
-            ['status', '=', '1'],
-        ])->orderBy('connected_devices', 'asc')->get();
+        $allSession = SessionTable::with([
+            'hotel',
+            'pdname' => function ($q) {
+                // Query the name field in status table
+                $q->select('id', 'personal_devicename', 'device_id', 'user_id');
+            }
+        ])->where([
+                    ['status', '=', '1'],
+                ])->orderBy('connected_devices', 'asc')->get();
 
         $device1 = [];
         $device2 = [];
@@ -1002,8 +1015,8 @@ class ReportController extends Controller
             foreach ($statuses as $status) {
                 $invoices = \Stripe\Invoice::all([
                     'customer' => $user->stripe_id,
-                    'status'   => $status,
-                    'limit'    => 100, // get more from Stripe so we can paginate locally
+                    'status' => $status,
+                    'limit' => 100, // get more from Stripe so we can paginate locally
                 ]);
 
                 $allInvoices = $allInvoices->merge($invoices->data);
@@ -1013,9 +1026,9 @@ class ReportController extends Controller
             $allInvoices = $allInvoices->sortByDesc('created')->values();
 
             // Laravel pagination setup
-            $page     = $request->get('page', 1);
-            $perPage  = 10; //  limit 10 per page
-            $offset   = ($page - 1) * $perPage;
+            $page = $request->get('page', 1);
+            $perPage = 10; //  limit 10 per page
+            $offset = ($page - 1) * $perPage;
 
             $paginatedInvoices = new LengthAwarePaginator(
                 $allInvoices->slice($offset, $perPage)->values(),
