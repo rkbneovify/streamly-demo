@@ -7,14 +7,15 @@
                          <th style="width: 1%">
                              #
                          </th>
-                         <th>
-                             Role
-                         </th>
+
                          <th>
                              Name
                          </th>
                          <th>
                              Email
+                         </th>
+                         <th>
+                             Role
                          </th>
                          <th>
                              Mode
@@ -37,14 +38,15 @@
                              <td>
                                  {{ $key + $allSession->firstItem() }}
                              </td>
-                             <td>
-                                 {{ $user->user->roles->first()->display_name ?? '' }}
-                             </td>
+
                              <td>
                                  {{ $user->user->name ?? '' }}
                              </td>
                              <td>
                                  {{ $user->user->email ?? '' }}
+                             </td>
+                             <td>
+                                 {{ $user->user->roles->first()->display_name ?? '' }}
                              </td>
                              <td>
                                  {{ $user->mode_label ?? '' }}
