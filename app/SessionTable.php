@@ -61,7 +61,7 @@ class SessionTable extends Model
     }
     public function pdInfo()
     {
-        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id');
+        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')->latest();
     }
     /**
     protected static function boot()
