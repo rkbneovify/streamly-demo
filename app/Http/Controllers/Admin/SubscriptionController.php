@@ -797,7 +797,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $plan = \Stripe\Plan::retrieve($productId);
         DB::beginTransaction();
         try {
-
+            $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
             $user = User::find($request->user_id);
             if ($user->is_custom_user == 0 || $user->user_type != "custom") {
                 alert()->error('Oops !', 'You can only update custom user on stripe.');
@@ -853,6 +853,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             }
             // User update on stripe flag
             $user->is_live_on_stripe = 1;
+            $user->mode = $mode == "Live" ? "Live" : "Testing";
             $user->save();
             DB::commit();
             Alert::success('Success', 'Subscription update on Stripe successfully !');
