@@ -74,7 +74,7 @@
 
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="input-container ">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control" placeholder="Search by name, email">
