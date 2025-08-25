@@ -76,6 +76,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
     Route::post('subscriptions/users/bulk/action', 'Admin\SubscriptionController@bulkAction')->name('subscriptions.users.bulk.action');
+    Route::get('subscriptions/users/export/{type}', 'Admin\SubscriptionController@exportUsersSubscription')->name('subscriptions.users.export');
 
 
     Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
@@ -270,7 +271,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::post('/faq/update/{id}', 'Admin\FaqChatboatController@update')->name('faq.update');
     Route::get('/faq/destroy/{id}', 'Admin\FaqChatboatController@destroy')->name('faq.destroy');
 
-    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');;
+    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');
+    ;
 
     Route::post('/ajax-sendmail', 'Admin\SendMailController@handleRequest')->name('admin.sendmail');
 
@@ -382,7 +384,8 @@ Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
-Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
+Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');
+;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
