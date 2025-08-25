@@ -18,16 +18,17 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use JWTAuth;
 use Exception;
+use Stripe\Exception\InvalidRequestException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\Subscription;
+use App\Services\StripeService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
-use Stripe\Exception\OAuth\InvalidRequestException;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -35,8 +36,10 @@ class ReportController extends Controller
 {
     public function __construct()
     {
+
         $this->middleware('auth');
         Stripe::setApiKey(config('services.stripe.secret'));
+
     }
 
     public function userdetails(Request $request)
@@ -586,20 +589,17 @@ class ReportController extends Controller
         //return $resultCount;
     }
 
-    public function subscriptionDetailView($id)
+    public function subscriptionDetailView($id, StripeService $stripeService)
     {
+
+
+
         try {
-            // dd($subscriptionId);
-            // $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-            // Stripe::setApiKey($STRIPE_SECRET);
 
-
-
-            // // if provide user id in subscriptionId params
-            // if (strpos($subscriptionId, 'sub_custom_') === false) {
-            //     $subscriptionId = Subscription::where('user_id', $subscriptionId)->first()->stripe_id;
-            // }
             $user = User::where('id', $id)->first();
+
+
+
             $subscriptionId = Subscription::where('user_id', $id)->first()->stripe_id;
             $subscription = \Stripe\Subscription::retrieve($subscriptionId);
             $customer = \Stripe\Customer::retrieve($subscription->customer);
@@ -618,10 +618,13 @@ class ReportController extends Controller
 
             // return response()->json($subscriptions);
             return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
+        } catch (InvalidRequestException $th) {
+            Alert::error('Oops !', "Subscription not found !");
+            return redirect()->back();
         } catch (\Throwable $th) {
-            Alert::error('Oops!', "Subscription details not found !");
+            // Alert::error('Oops!', "Subscription details not found !");
 
-            // Alert::error('Oops!', $th->getMessage());
+            Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
     }

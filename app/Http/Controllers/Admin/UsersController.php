@@ -28,16 +28,21 @@ use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\RoleUser;
 use App\Models\Subscription;
+use App\Services\StripeService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 
 class UsersController extends Controller
 {
-    public function __construct()
+    protected $stripeService;
+    public function __construct(StripeService $stripeService)
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $this->stripeService = $stripeService;
+        // Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
     }
 
@@ -88,7 +93,7 @@ class UsersController extends Controller
 
             ]);
 
-            $channel_availability=$request->channel_availability;
+            $channel_availability = $request->channel_availability;
             // dd($channel_availability);
 
             if ($validator->fails()) {
@@ -102,7 +107,7 @@ class UsersController extends Controller
 
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-   
+
             // 2️⃣ Check ZIP exists in DB
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
             if (!$zipcodeExists) {
@@ -210,7 +215,7 @@ class UsersController extends Controller
             $roleId = $request->roles;
             $roleType = null;
 
-            if ((int)$roleId === 5) {
+            if ((int) $roleId === 5) {
                 $roleType = 'tieruser';
             } else {
                 $roleType = 'user';
@@ -228,12 +233,12 @@ class UsersController extends Controller
             // } 
 
             // Save rules
-                DB::table('user_zipcode_rules')->insert([
-                    'zipcode' => $request->zipcode,
-                    'email' => $request->email,
-                    'validate' => $request->channel_availability,
-                ]);
-           
+            DB::table('user_zipcode_rules')->insert([
+                'zipcode' => $request->zipcode,
+                'email' => $request->email,
+                'validate' => $request->channel_availability,
+            ]);
+
 
             $endsAt = null;
             switch ($request->plan_duration) {
@@ -290,7 +295,7 @@ class UsersController extends Controller
 
             if (env('APP_URL') === 'https://streamlytv.com') {
 
-                if ((int)$roleId === $tieruserId) {
+                if ((int) $roleId === $tieruserId) {
                     $stripePlanId = 'lLqM2zp3oUMO';
                     $roleType = 'tieruser';
                 } else {
@@ -299,7 +304,7 @@ class UsersController extends Controller
                 }
             } else {
 
-                if ((int)$roleId === $tieruserId) {
+                if ((int) $roleId === $tieruserId) {
                     $stripePlanId = 'bIDgJlA2fLmS';
                     $roleType = 'tieruser';
                 } else {
@@ -325,7 +330,7 @@ class UsersController extends Controller
 
 
             $tieruserId = 5;
-            if ((int)$request->roles === $tieruserId) {
+            if ((int) $request->roles === $tieruserId) {
                 $quantity = $request->number_of_devices ?? 1;
                 for ($i = 0; $i < $quantity; $i++) {
                     DB::table('hotel_rooms')->insert([
@@ -496,7 +501,7 @@ class UsersController extends Controller
         }
 
         // Step 3: Device & hotel room handling
-        $newDeviceCount = $request->filled('number_of_devices') ? (int)$request->number_of_devices : 0;
+        $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
 
         if (in_array($tieruserId, $request->input('roles'))) {
             $existingRooms = DB::table('hotel_rooms')->where('user_id', $user->id)->orderBy('id')->get();
@@ -665,8 +670,14 @@ class UsersController extends Controller
     public function show($id)
     {
 
+
+
+
+
+
+
         $user = User::find($id); //Find the requested role
-        
+
 
         //Get the permissions linked to the role
         // $permissions =
@@ -681,6 +692,8 @@ class UsersController extends Controller
             ->latest('updated_at')
             ->first();
         // dd($subscription);
+
+
         $channelRule = DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->first();
@@ -689,39 +702,54 @@ class UsersController extends Controller
 
         $planDuration = '';
 
-        if (empty($subscription->renews_at)) {
+        if (empty($subscription->renews_at) && empty($subscription->ends_at)) {
             $planDuration = 'Never';
         } else {
-            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
-            $now = Carbon::now()->startOfDay();
 
-            if ($endsAt->eq($now->copy()->addMonth())) {
-                $planDuration = '1 Month';
-            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
-                $planDuration = '3 Months';
-            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
-                $planDuration = '6 Months';
-            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
-                $planDuration = '12 Months';
-            } else {
-                $planDuration = '';
+            $renewsAt = Carbon::parse($subscription->trial_ends_at ?? $subscription->renews_at ?? $subscription->ends_at);
+            $updatedAt = Carbon::parse($subscription->updated_at);
+
+            // Calculate difference in days
+            $days = $renewsAt->diffInDays($updatedAt);
+
+            if ($days === 0) {
+                $planDuration = "1 Day";
+            } elseif ($days < 30) {
+                $planDuration = $days . ' Days';
+            } elseif ($days >= 30) {
+
+                $months = $renewsAt->diffInMonths($updatedAt);
+                $planDuration = $months == 0 ? 1 . ' Month' : $months . ' Month' . ($months > 1 ? 's' : '');
             }
+
+
         }
-        if ($subscription != null) {
-            $plan = \Stripe\Plan::retrieve($subscription->stripe_plan);
-        } else {
+
+        try {
             $plan = null;
+            if ($subscription != null) {
+                $plans = $this->stripeService->getAllPlans();
+                $plan = $plans->where('id', $subscription->stripe_plan)->first();
+            } else {
+                $plan = null;
+            }
+
+            return view('admin.users.show', compact(
+                'user',
+                'channelRule',
+                'planDuration',
+                'currentDeviceCount',
+                'subscription',
+                'plan'
+            ));
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Oops !', "Something went wrong. Please try again later.");
+            return redirect()->back();
         }
 
 
-        return view('admin.users.show', compact(
-            'user',
-            'channelRule',
-            'planDuration',
-            'currentDeviceCount',
-            'subscription',
-            'plan'
-        ));
+
     }
 
     // public function destroy($id)
@@ -917,9 +945,13 @@ class UsersController extends Controller
         $roles = Role::get(); //get all roles
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
-        $allSession = SessionTable::with(['user', 'hotel', 'pdInfo' => function ($query) use ($id) {
-            return $query->where('user_id', $id);
-        }])->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+        $allSession = SessionTable::with([
+            'user',
+            'hotel',
+            'pdInfo' => function ($query) use ($id) {
+                return $query->where('user_id', $id);
+            }
+        ])->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
             ->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
@@ -1018,7 +1050,7 @@ class UsersController extends Controller
     {
         $this->validate($request, [
             'id' => 'required|array',
-            "id.*"  => "required|numeric|distinct",
+            "id.*" => "required|numeric|distinct",
 
         ]);
         $ids = $request->id;
@@ -1087,16 +1119,16 @@ class UsersController extends Controller
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Total records
         $totalRecords = User::whereHas('roles', function ($query) use ($searchroleValue) {
-            $query->where('roles.name', 'like',  '%' . $searchroleValue . '%');
+            $query->where('roles.name', 'like', '%' . $searchroleValue . '%');
         })->select('count(*) as allcount')->where('email', 'like', '%' . $searchValue . '%')->count();
         $totalRecordswithFilter = User::whereHas('roles', function ($query) use ($searchroleValue) {
-            $query->where('roles.name', 'like',  '%' . $searchroleValue . '%');
+            $query->where('roles.name', 'like', '%' . $searchroleValue . '%');
         })->select('count(*) as allcount')
             ->where('email', 'like', '%' . $searchValue . '%')->count();
 
         // Fetch records
         $records = User::whereHas('roles', function ($query) use ($searchroleValue) {
-            $query->where('roles.name', 'like',  '%' . $searchroleValue . '%');
+            $query->where('roles.name', 'like', '%' . $searchroleValue . '%');
         })->where('email', 'like', '%' . $searchValue . '%')
             ->orderBy($columnName, $columnSortOrder)
 
@@ -1168,7 +1200,7 @@ class UsersController extends Controller
     {
         $this->validate($request, [
             'id' => 'required|array',
-            "id.*"  => "required|numeric|distinct",
+            "id.*" => "required|numeric|distinct",
             'status' => 'required|numeric|min:0|max:1',
 
         ]);
@@ -1220,7 +1252,7 @@ class UsersController extends Controller
             });
         }
         // $query->orderByDesc("updated_at");
-        $users =   $query->paginate(10)->appends($request->query());
+        $users = $query->paginate(10)->appends($request->query());
 
         // $users =   $query->paginate(10);
         // return response()->json($users);
