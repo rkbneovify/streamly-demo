@@ -24,9 +24,31 @@ class StripeService
         return collect(array_merge($testPlans, $livePlans));
     }
 
+    protected function findCustomers(string $email, string $mode = 'Live')
+    {
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
+
+
+        // Stripe API supports filtering customers by email
+        $customers = $stripe->customers->all([
+            'email' => $email,
+            'limit' => 1, // Stripe may return multiple
+        ]);
+
+        return collect($customers->data);
+    }
+
+    public function findByEmail(string $email)
+    {
+        $testCustomers = $this->findCustomers($email, 'Testing') ?? [];
+        $liveCustomers = $this->findCustomers($email, 'Live') ?? [];
+
+        return $testCustomers->merge($liveCustomers);
+    }
+
 
 
 }
 
 
-?>
