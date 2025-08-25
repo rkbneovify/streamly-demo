@@ -54,7 +54,7 @@
 
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <select class="form-control" name="plan">
                                 <option value="">Select Plan</option>
                                 @foreach ($plankey as $plan)
@@ -62,7 +62,7 @@
                                         {{ ucfirst($plan) }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-md-3">
                             <select class="form-control" name="status">
                                 <option value="">Select Status</option>
@@ -74,15 +74,29 @@
 
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="input-container ">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control" placeholder="Search by name, email">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
-                        <div class="col-md-1">
-                            <button class="btn btn-light" id="btnReset">Reset</button>
+                        <div class="col-md-2">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="exportDropdown"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Export
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.subscriptions.users.export', ['type' => 'xlsx'] + request()->query()) }}">Export
+                                        to Excel</a>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.subscriptions.users.export', ['type' => 'csv'] + request()->query()) }}">Export
+                                        to CSV</a>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
 
