@@ -223,6 +223,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('zipcode/updateall', 'Admin\ZipcodeController@UpdateAll');
 
     Route::get('zipcode/allowedzipdata', 'Admin\ZipcodeController@allowedZipdata');
+    Route::get('zipcode/localzipdata', 'Admin\ZipcodeController@localzipdata');
+    Route::post('zipcode/toggle-status', 'Admin\ZipcodeController@toggleZipcodeStatus');
+    
     Route::get('zipcode/map', 'Admin\ZipcodeController@map');
     Route::get('zipcode/checkfenceweb', 'Admin\ZipcodeController@webfenceturf');
 

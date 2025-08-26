@@ -1,6 +1,7 @@
 @extends('master')
 @section('stylesheets')
 <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+
     @stop
 
     @section('content')
@@ -32,7 +33,7 @@
           <div class="card-header">
             <h3 class="card-title">zipcode</h3>
   
-            <div class="card-tools">
+            <div class="card-tools">  
             
                 <a class="btn btn-xs btn-primary" href="{{  url('admin/zipcode/map') }} ">
                   See on map
@@ -40,20 +41,24 @@
                       </div>
           </div>
           <div class="card-body p-0">
-            <table id="" class="table table-striped projects">
-                <thead>
+            <table id="empTable" class="table table-striped projects">
+                <thead> 
                     <tr>
-                        <th style="width: 1%">
+                    <th style="width: 1%">
                             #
+                        </th>
+                        <th style="width: 20%">
+                        city
                         </th>
                         <th style="width: 20%">
                         zipcode
                         </th>
+                        <th style="width: 20%">
+                        state
                         </th><th style="width: 20%">
-                        status
+                        status 
                         </th>
                         <th>Action</th>
-                        <!-- <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="1" value='Activate selected' ><input type="button" class='update_record' id="0" value='InActivate selected' ></th> -->
     
                     </tr>
                 </thead>
@@ -80,7 +85,7 @@
         // pageLength: 100,
          processing: true,
          serverSide: true,
-         ajax: "",
+         ajax: "{{ url('admin/zipcode/localzipdata') }}", 
          columns: [
             { data: 'id' },
             { data: 'city' },
@@ -88,7 +93,6 @@
             { data: 'state' },
             { data: 'status' },
         { data: 'action', orderable: false, searchable: false },
-        { data: 'action2' , orderable: false, searchable: false},
             
          ],
         columnDefs: [
@@ -107,13 +111,28 @@
         }
         ]
       });
-
-
-       
-
-
-
     });
+
+
+    $(document).on('click', '.toggleStatus', function () {
+    var id = $(this).data('id');
+    $.ajax({
+        url: '/admin/zipcode/toggle-status',
+        type: 'POST',
+        data: {
+            id: id,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (res) { 
+            if (res.success) {
+                $('#empTable').DataTable().ajax.reload(null, false); // refresh table without reset
+            } else {
+                alert(res.message);
+            }
+        }
+    });
+});
+
   </script>
     @stop
  
