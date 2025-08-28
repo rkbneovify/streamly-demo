@@ -193,9 +193,20 @@
                                 <label for="smooth_url" class="col-md-4 control-label">zipcodes for channel</label>
 
 
-                                <input id="zip_code" type="text" id="zip_codes" class="form-control"
+                                <!-- <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
-                                    placeholder="e.g., 12345, 67890" autofocus>
+                                    placeholder="e.g., 12345, 67890" autofocus> -->
+                                    <input id="zip_codes" type="text"
+                                class="form-control"
+                                name="zip_codes"
+                                value="{{ implode(', ', $channel->zip_code) }}"
+                                placeholder="e.g., 12345, 678901"
+                                pattern="^(\d{5,6})(,\s*\d{5,6})*$"
+                                title="Enter 5 or 6-digit zip codes separated by commas"
+                                maxlength="255"
+                                autofocus>
+
+
 
                                 @if ($errors->has('zip_code'))
                                     <span class="help-block">
@@ -204,6 +215,8 @@
                                 @endif
 
                             </div>
+
+
 
                             <div class="form-group">
                                 <label for="exampleInputFile">File input</label>
@@ -269,5 +282,17 @@
                 zipCodesInput.value = formattedValue;
             });
         });
+
+
+        document.getElementById('zip_codes').addEventListener('input', function(e) {
+    let value = e.target.value;
+
+    let parts = value.split(',')
+        .map(p => p.trim().replace(/\D/g, ''))   // keep only digits
+        .map(p => p.slice(0, 6))                 // max 6 digits per zip
+        .filter(p => p.length >= 5);             // keep only if 5 or 6 digits
+
+    e.target.value = parts.join(', ');
+});
     </script>
 @stop
