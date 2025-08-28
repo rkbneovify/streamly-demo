@@ -216,7 +216,7 @@ class ChannelController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        
         $request->validate([
             'name' => 'required',
             'url' => 'required',
