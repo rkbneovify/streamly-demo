@@ -28,21 +28,17 @@ use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\RoleUser;
 use App\Models\Subscription;
-use App\Services\StripeService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
-use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 
 class UsersController extends Controller
 {
-    protected $stripeService;
-    public function __construct(StripeService $stripeService)
+    public function __construct()
     {
-        $this->stripeService = $stripeService;
-        // Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
     }
 
@@ -51,6 +47,23 @@ class UsersController extends Controller
         $roles = Role::all()->pluck('name', 'id');
 
         return view('admin.users.index', compact('roles'));
+    }
+    public function index2(Request $request)
+    {
+        $roles = Role::all()->pluck('name', 'id');
+        $query = User::query();
+        $query->with('roles');
+        $query->withCount('sessions');
+        $query->withCount('rooms');
+        if ($request->sort_date == null || $request->sort_date == 'desc') {
+            $query->latest();
+        } else {
+            $query->orderBy('created_at', 'asc');
+
+        }
+        $users = $query->paginate(10);
+        // return response()->json($users);
+        return view('admin.users.index2', compact('users', 'roles'));
     }
 
     public function create()
@@ -233,11 +246,13 @@ class UsersController extends Controller
             // } 
 
             // Save rules
-            DB::table('user_zipcode_rules')->insert([
+            $zipcode = DB::table('user_zipcode_rules')->insert([
                 'zipcode' => $request->zipcode,
                 'email' => $request->email,
-                'validate' => $request->channel_availability,
+                'validate' => $request->channel_availability
             ]);
+
+
 
 
             $endsAt = null;
@@ -670,14 +685,7 @@ class UsersController extends Controller
     public function show($id)
     {
 
-
-
-
-
-
-
         $user = User::find($id); //Find the requested role
-
 
         //Get the permissions linked to the role
         // $permissions =
@@ -689,11 +697,9 @@ class UsersController extends Controller
         // return view('roles.show',compact('role','permissions'));
         $subscription = DB::table('subscriptions')
             ->where('user_id', $id)
-            ->latest('updated_at')
+            ->latest('created_at')
             ->first();
         // dd($subscription);
-
-
         $channelRule = DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->first();
@@ -702,54 +708,39 @@ class UsersController extends Controller
 
         $planDuration = '';
 
-        if (empty($subscription->renews_at) && empty($subscription->ends_at)) {
+        if (empty($subscription->renews_at)) {
             $planDuration = 'Never';
         } else {
+            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+            $now = Carbon::now()->startOfDay();
 
-            $renewsAt = Carbon::parse($subscription->trial_ends_at ?? $subscription->renews_at ?? $subscription->ends_at);
-            $updatedAt = Carbon::parse($subscription->updated_at);
-
-            // Calculate difference in days
-            $days = $renewsAt->diffInDays($updatedAt);
-
-            if ($days === 0) {
-                $planDuration = "1 Day";
-            } elseif ($days < 30) {
-                $planDuration = $days . ' Days';
-            } elseif ($days >= 30) {
-
-                $months = $renewsAt->diffInMonths($updatedAt);
-                $planDuration = $months == 0 ? 1 . ' Month' : $months . ' Month' . ($months > 1 ? 's' : '');
-            }
-
-
-        }
-
-        try {
-            $plan = null;
-            if ($subscription != null) {
-                $plans = $this->stripeService->getAllPlans();
-                $plan = $plans->where('id', $subscription->stripe_plan)->first();
+            if ($endsAt->eq($now->copy()->addMonth())) {
+                $planDuration = '1 Month';
+            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
+                $planDuration = '3 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
+                $planDuration = '6 Months';
+            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
+                $planDuration = '12 Months';
             } else {
-                $plan = null;
+                $planDuration = '';
             }
-
-            return view('admin.users.show', compact(
-                'user',
-                'channelRule',
-                'planDuration',
-                'currentDeviceCount',
-                'subscription',
-                'plan'
-            ));
-        } catch (\Throwable $th) {
-            //throw $th;
-            Alert::error('Oops !', "Something went wrong. Please try again later.");
-            return redirect()->back();
+        }
+        if ($subscription != null) {
+            $plan = \Stripe\Plan::retrieve($subscription->stripe_plan);
+        } else {
+            $plan = null;
         }
 
 
-
+        return view('admin.users.show', compact(
+            'user',
+            'channelRule',
+            'planDuration',
+            'currentDeviceCount',
+            'subscription',
+            'plan'
+        ));
     }
 
     // public function destroy($id)
@@ -1216,6 +1207,73 @@ class UsersController extends Controller
         }
     }
 
+    public function changeStatus($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            if ($user == null) {
+
+                toast("user not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            if ($user->is_active == 1) {
+                $user->is_active = 0;
+
+            } else {
+                $user->is_active = 1;
+            }
+            $user->save();
+            DB::commit();
+            toast("User status changed successfully", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
+
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
+
+        }
+    }
+
+    public function destroyById($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            if ($user == null) {
+                toast("user not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
+
+            DB::table('session_table')->where('users_id', $user->id)->delete();
+            DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
+
+            $user->delete();
+            DB::commit();
+            toast("user deleted successfully !", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
+
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
     public function customUserList(Request $request)
     {
 
@@ -1261,6 +1319,92 @@ class UsersController extends Controller
             return view('admin.users.partials.custom-table', compact('users', 'roles'));
         }
         return view('admin.users.custom', compact('users', 'roles'));
+    }
+
+    public function bulkAction(Request $request)
+    {
+        // dd($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'user_ids' => 'required|array|min:1',
+        ], [
+            'user_ids.required' => 'Please select at least one userx.',
+            'user_ids.array' => 'Invalid data format for selected user.',
+            'user_ids.min' => 'You must select at least one user before proceeding.',
+        ]);
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), "error")
+                ->timerProgressBar()
+                ->autoClose(5000);
+            return redirect()->back();
+        }
+
+        DB::beginTransaction();
+        switch ($request->action) {
+            case 'activate':
+
+                try {
+                    User::whereIn('id', $request->user_ids)->update(['is_active' => 1]);
+                    DB::commit();
+
+                    toast("User(s) activated successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+            case 'inactivate':
+                try {
+                    User::whereIn('id', $request->user_ids)->update(['is_active' => 0]);
+                    DB::commit();
+                    toast("User(s) inactivate successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+            case "delete":
+                try {
+                    $users = User::whereIn('id', $request->user_ids)->get();
+                    foreach ($users as $user) {
+                        DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
+                        DB::table('session_table')->where('users_id', $user->id)->delete();
+                        DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
+                        $user->delete();
+                    }
+                    DB::commit();
+                    toast("User(s) deleted successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+
+            default:
+
+                toast("Please select any action", "error")
+                    ->timerProgressBar()
+                    ->autoClose(5000);
+                return redirect()->back();
+
+        }
+
+
     }
 
     public function exportUser(Request $request, $type)
