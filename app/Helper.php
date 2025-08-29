@@ -1897,3 +1897,14 @@ if (!function_exists('formatDaterange')) {
             : '';
     }
 }
+
+function formatActiveDevices($user)
+{
+    if ($user->rooms_count > 0) {
+        return $user->sessions_count ?? 0 . "/" . $user->rooms_count ?? 0;
+    }
+
+    return $user->sessions_count ?? 0 . "/" . 5;
+}
+
+
