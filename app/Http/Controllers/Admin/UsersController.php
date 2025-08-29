@@ -107,6 +107,9 @@ class UsersController extends Controller
 
         $users = $query->paginate(10);
         // return response()->json($users);
+        if ($request->ajax()) {
+            return view('admin.users.partials.new-table', compact('users', 'roles'));
+        }
         return view('admin.users.index2', compact('users', 'roles'));
     }
 
