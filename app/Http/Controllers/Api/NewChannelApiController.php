@@ -327,7 +327,7 @@ class NewChannelApiController extends Controller
     // }
 
 
-
+ 
     public function epgGuide(Request $request)
     {
         $validator = Validator::make($request->all(), [
