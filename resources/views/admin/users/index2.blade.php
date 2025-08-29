@@ -93,7 +93,7 @@
                                         <option value="delete">Delete</option>
                                     </select>
                                 </div>
-                                {{-- <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
 
                                         <select name="roles" id="sel_roles" class="form-control">
@@ -116,9 +116,9 @@
                                         </option>
 
                                     </select>
-                                </div> --}}
+                                </div>
                             </div>
-                            {{-- <div class="row mb-3">
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <select name="status" id="sel_status" class="form-control">
                                         <option value="">Select Status</option>
@@ -140,7 +140,7 @@
                                 </div>
 
 
-                            </div> --}}
+                            </div>
                         </div>
 
                         <div class="col-md-3 text-center text-lg-right">
@@ -311,13 +311,14 @@
                                                 {{ $user->created_at->format('d/m/Y') }}
                                             </td>
                                             <td>
-                                                <a class="btn btn-secondary btn-sm"
+                                                <a class="btn btn-secondary btn-sm" title="Edit User"
                                                     href="{{ route('admin.users.edit', $user->id) }}">
                                                     <i class="fas fa-pencil-alt">
                                                     </i>
 
                                                 </a>
                                                 <a href="{{ route('admin.users.delete', $user->id) }}"
+                                                    title="Delete User"
                                                     data-url="{{ route('admin.users.delete', $user->id) }}"
                                                     class="btn btn-danger btn-sm btn-user-delete">
                                                     <i class="fas fa-trash">
@@ -544,9 +545,28 @@
             });
 
             $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate
-                    .format('DD/MM/YYYY'));
-                console.log("apply clicked");
+                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate
+                    .format('DD-MM-YYYY'));
+
+                //console.log("apply clicked");
+                const dateRange = picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate
+                    .format('YYYY-MM-DD');
+                let url = new URL(window.location.href);
+                let params = url.searchParams;
+                let page = parseInt(params.get("page")) || 1;
+
+
+                if (page > 1) {
+                    // reset URL (remove params except page)
+                    url.search = "";
+                    url.searchParams.delete("page");
+                    url.searchParams.set("daterange", dateRange);
+                } else {
+                    // just add role param
+                    url.searchParams.set("daterange", dateRange);
+                }
+
+                window.location.href = url.toString();
 
 
             });
