@@ -28,6 +28,7 @@ use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\Models\RoleUser;
 use App\Models\Subscription;
+use App\Services\StripeService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -682,10 +683,17 @@ class UsersController extends Controller
 
 
 
-    public function show($id)
+    public function show($id, StripeService $stripeService)
     {
 
+
+
+
+
+
+
         $user = User::find($id); //Find the requested role
+
 
         //Get the permissions linked to the role
         // $permissions =
@@ -697,9 +705,11 @@ class UsersController extends Controller
         // return view('roles.show',compact('role','permissions'));
         $subscription = DB::table('subscriptions')
             ->where('user_id', $id)
-            ->latest('created_at')
+            ->latest('updated_at')
             ->first();
         // dd($subscription);
+
+
         $channelRule = DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->first();
@@ -708,39 +718,54 @@ class UsersController extends Controller
 
         $planDuration = '';
 
-        if (empty($subscription->renews_at)) {
+        if (empty($subscription->renews_at) && empty($subscription->ends_at)) {
             $planDuration = 'Never';
         } else {
-            $endsAt = Carbon::parse($subscription->renews_at)->startOfDay();
-            $now = Carbon::now()->startOfDay();
 
-            if ($endsAt->eq($now->copy()->addMonth())) {
-                $planDuration = '1 Month';
-            } elseif ($endsAt->eq($now->copy()->addMonths(3))) {
-                $planDuration = '3 Months';
-            } elseif ($endsAt->eq($now->copy()->addMonths(6))) {
-                $planDuration = '6 Months';
-            } elseif ($endsAt->eq($now->copy()->addMonths(12))) {
-                $planDuration = '12 Months';
-            } else {
-                $planDuration = '';
+            $renewsAt = Carbon::parse($subscription->trial_ends_at ?? $subscription->renews_at ?? $subscription->ends_at);
+            $updatedAt = Carbon::parse($subscription->updated_at);
+
+            // Calculate difference in days
+            $days = $renewsAt->diffInDays($updatedAt);
+
+            if ($days === 0) {
+                $planDuration = "1 Day";
+            } elseif ($days < 30) {
+                $planDuration = $days . ' Days';
+            } elseif ($days >= 30) {
+
+                $months = $renewsAt->diffInMonths($updatedAt);
+                $planDuration = $months == 0 ? 1 . ' Month' : $months . ' Month' . ($months > 1 ? 's' : '');
             }
+
+
         }
-        if ($subscription != null) {
-            $plan = \Stripe\Plan::retrieve($subscription->stripe_plan);
-        } else {
+
+        try {
             $plan = null;
+            if ($subscription != null) {
+                $plans = $stripeService->getAllPlans();
+                $plan = $plans->where('id', $subscription->stripe_plan)->first();
+            } else {
+                $plan = null;
+            }
+
+            return view('admin.users.show', compact(
+                'user',
+                'channelRule',
+                'planDuration',
+                'currentDeviceCount',
+                'subscription',
+                'plan'
+            ));
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Oops !', "Something went wrong. Please try again later.");
+            return redirect()->back();
         }
 
 
-        return view('admin.users.show', compact(
-            'user',
-            'channelRule',
-            'planDuration',
-            'currentDeviceCount',
-            'subscription',
-            'plan'
-        ));
+
     }
 
     // public function destroy($id)
