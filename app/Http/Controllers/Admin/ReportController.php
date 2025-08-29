@@ -589,7 +589,7 @@ class ReportController extends Controller
         //return $resultCount;
     }
 
-    public function subscriptionDetailView($id, StripeService $stripeService)
+    public function subscriptionDetailView($id)
     {
 
 
