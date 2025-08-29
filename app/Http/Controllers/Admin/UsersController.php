@@ -33,16 +33,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
-use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 
 class UsersController extends Controller
 {
-    protected $stripeService;
-    public function __construct(StripeService $stripeService)
+    public function __construct()
     {
-        $this->stripeService = $stripeService;
-        // Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
     }
 
@@ -51,6 +48,69 @@ class UsersController extends Controller
         $roles = Role::all()->pluck('name', 'id');
 
         return view('admin.users.index', compact('roles'));
+    }
+    public function index2(Request $request)
+    {
+        $roles = Role::all()->pluck('name', 'id');
+        $query = User::query();
+        $query->with('roles');
+        $query->withCount('sessions');
+        $query->withCount('rooms');
+        if ($request->sort_date == 'asc') {
+
+            $query->orderBy('created_at', 'asc');
+        } elseif (empty($request->sort_date) && !empty($request->daterange)) {
+            $query->orderBy('created_at', 'asc');
+            $request->merge(['sort_date' => 'asc']);
+        } else {
+
+            $query->latest();
+        }
+
+        if ($request->has('role')) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        if ($request->has('mode')) {
+            $query->where('mode', $request->mode);
+        }
+        if ($request->has('status')) {
+            $status = null;
+            if ($request->status == 'active') {
+                $status = 1;
+            } elseif ($request->status == 'inactive') {
+                $status = 0;
+            }
+            $query->where('is_active', $status);
+        }
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            });
+        }
+
+        if ($request->has("daterange")) {
+            $query->where(function ($q) use ($request) {
+                $dates = explode(" - ", $request->daterange);
+                $start = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
+                $end = Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
+                $q->whereBetween('created_at', [$start, $end]);
+            });
+
+
+
+        }
+
+        $users = $query->paginate(10);
+        // return response()->json($users);
+        if ($request->ajax()) {
+            return view('admin.users.partials.new-table', compact('users', 'roles'));
+        }
+        return view('admin.users.index2', compact('users', 'roles'));
     }
 
     public function create()
@@ -233,11 +293,13 @@ class UsersController extends Controller
             // } 
 
             // Save rules
-            DB::table('user_zipcode_rules')->insert([
+            $zipcode = DB::table('user_zipcode_rules')->insert([
                 'zipcode' => $request->zipcode,
                 'email' => $request->email,
-                'validate' => $request->channel_availability,
+                'validate' => $request->channel_availability
             ]);
+
+
 
 
             $endsAt = null;
@@ -667,7 +729,7 @@ class UsersController extends Controller
 
 
 
-    public function show($id)
+    public function show($id, StripeService $stripeService)
     {
 
 
@@ -728,7 +790,7 @@ class UsersController extends Controller
         try {
             $plan = null;
             if ($subscription != null) {
-                $plans = $this->stripeService->getAllPlans();
+                $plans = $stripeService->getAllPlans();
                 $plan = $plans->where('id', $subscription->stripe_plan)->first();
             } else {
                 $plan = null;
@@ -1216,6 +1278,73 @@ class UsersController extends Controller
         }
     }
 
+    public function changeStatus($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            if ($user == null) {
+
+                toast("user not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            if ($user->is_active == 1) {
+                $user->is_active = 0;
+
+            } else {
+                $user->is_active = 1;
+            }
+            $user->save();
+            DB::commit();
+            toast("User status changed successfully", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
+
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
+
+        }
+    }
+
+    public function destroyById($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            if ($user == null) {
+                toast("user not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
+
+            DB::table('session_table')->where('users_id', $user->id)->delete();
+            DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
+
+            $user->delete();
+            DB::commit();
+            toast("user deleted successfully !", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
+
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
     public function customUserList(Request $request)
     {
 
@@ -1263,10 +1392,96 @@ class UsersController extends Controller
         return view('admin.users.custom', compact('users', 'roles'));
     }
 
+    public function bulkAction(Request $request)
+    {
+        // dd($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'user_ids' => 'required|array|min:1',
+        ], [
+            'user_ids.required' => 'Please select at least one userx.',
+            'user_ids.array' => 'Invalid data format for selected user.',
+            'user_ids.min' => 'You must select at least one user before proceeding.',
+        ]);
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), "error")
+                ->timerProgressBar()
+                ->autoClose(5000);
+            return redirect()->back();
+        }
+
+        DB::beginTransaction();
+        switch ($request->action) {
+            case 'activate':
+
+                try {
+                    User::whereIn('id', $request->user_ids)->update(['is_active' => 1]);
+                    DB::commit();
+
+                    toast("User(s) activated successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+            case 'inactivate':
+                try {
+                    User::whereIn('id', $request->user_ids)->update(['is_active' => 0]);
+                    DB::commit();
+                    toast("User(s) inactivate successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+            case "delete":
+                try {
+                    $users = User::whereIn('id', $request->user_ids)->get();
+                    foreach ($users as $user) {
+                        DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
+                        DB::table('session_table')->where('users_id', $user->id)->delete();
+                        DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
+                        $user->delete();
+                    }
+                    DB::commit();
+                    toast("User(s) deleted successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back();
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+
+            default:
+
+                toast("Please select any action", "error")
+                    ->timerProgressBar()
+                    ->autoClose(5000);
+                return redirect()->back();
+
+        }
+
+
+    }
+
     public function exportUser(Request $request, $type)
     {
 
-        $filters = $request->only(['role']);
+        $filters = $request->all();
         // dd($filters);
         $filename = 'users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new UserExport($filters), $filename);
