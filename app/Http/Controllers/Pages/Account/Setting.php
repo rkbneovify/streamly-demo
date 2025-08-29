@@ -373,7 +373,7 @@ class Setting extends Controller
     {
         $validator = Validator::make($request->all(), [
             'devicename' => 'required|string|max:20',
-            'device_type' => 'required|string|max:20'
+            'device_type' => 'required|string|max:20'  
         ]);
         if ($validator->fails()) {
             return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
