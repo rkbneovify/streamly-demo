@@ -58,6 +58,7 @@ class SubscriptionController extends Controller
         $plankey = $stripePlanData->keys();
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
             $query->where('mode', $mode);
@@ -94,11 +95,28 @@ class SubscriptionController extends Controller
 
 
 
-        $query  = Subscription::query()->with('user')
-            ->whereHas('user', function ($query) use ($mode) {
-                $query->where('mode', $mode);
-            })
-            ->whereIn('stripe_plan', $planIds);
+        $query = Subscription::query()->groupBy('user_id')->latest('updated_at')->with('user');
+
+        $query = Subscription::whereIn('id', function ($query) {
+            $query->selectRaw('MAX(id)')
+                ->from('subscriptions')
+                ->groupBy('user_id');
+        });
+        if ($mode == 'Testing' || $mode == 'Test') {
+            $query->whereNotIn("stripe_plan", ['lLqM2zp3oUMO', 'price_1MqxXZGbCi8tAySGisSrhf0S']);
+        }
+        $query->whereHas('user', function ($query) use ($mode) {
+
+            $query->whereNull("user_type")->where('mode', $mode);
+        });
+
+        // return response()->json($query);
+
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->latest('updated_at');
+        } else {
+            $query->orderBy('updated_at');
+        }
         // Filter by status if provided
         if (!empty($request->status)) {
 
@@ -125,10 +143,10 @@ class SubscriptionController extends Controller
         });
 
         if ($request->ajax()) {
-            return view('admin.subscriptions.partials.table', compact('subscriptions', 'plankey', 'statusTypes'));
+            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
         }
 
-        return view('admin.subscriptions.tierindex', compact('subscriptions',  'plankey', 'statusTypes'));
+        return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
     public function showAllcustomer()
@@ -157,7 +175,7 @@ class SubscriptionController extends Controller
             $arrayStripeEmailCust->subscriptioncreated = date("m-d-y", $subscription->created);
             array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
 
-            echo ($key + 1) . ")." . $subscription->id . " created " . date("m-d-y", $subscription->created) . " stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity . " plan " .  $subscription->plan->id . " Email " .  $subscription->customer->email . "items" . $subscription->items->data[0]->id . "<br>";
+            echo ($key + 1) . ")." . $subscription->id . " created " . date("m-d-y", $subscription->created) . " stripe_status " . $subscription->status . " quantity " . $subscription->quantity . " plan " . $subscription->plan->id . " Email " . $subscription->customer->email . "items" . $subscription->items->data[0]->id . "<br>";
             dump($subscription->items->data[0]->id);
         }
         // echo "subscriptions".count($subscriptions->data);
@@ -165,7 +183,7 @@ class SubscriptionController extends Controller
             $startsubscriptioncount = count($subscriptions->data);
             // Add the `starting_after` parameter to reflect the last customer ID
             $subscriptions = \Stripe\Subscription::all(array("limit" => 100, "starting_after" => $subscription->id, 'expand' => ['data.plan', 'data.customer', 'data.items']));
-            foreach ($subscriptions->data  as $key => $subscription) {
+            foreach ($subscriptions->data as $key => $subscription) {
                 //push emails in seperate array
                 array_push($arrayStripeEmail, $subscription->customer->email);
                 $arrayStripeEmailCust = new \stdClass;
@@ -182,7 +200,7 @@ class SubscriptionController extends Controller
                 $arrayStripeEmailCust->subscriptionitem = $subscription->items->data[0]->id;
                 $arrayStripeEmailCust->subscriptioncreated = date("m-d-y", $subscription->created);
                 array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
-                echo ($key + $startsubscriptioncount + 1) . ")." . $subscription->id . " created " . date("m-d-y", $subscription->created) . " stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity . " plan " .  $subscription->plan->id . " Email " .  $subscription->customer->email . "items" . $subscription->items->data[0]->id . "<br>";
+                echo ($key + $startsubscriptioncount + 1) . ")." . $subscription->id . " created " . date("m-d-y", $subscription->created) . " stripe_status " . $subscription->status . " quantity " . $subscription->quantity . " plan " . $subscription->plan->id . " Email " . $subscription->customer->email . "items" . $subscription->items->data[0]->id . "<br>";
                 dump($subscription->items->data[0]->id);
             }
         }
@@ -222,7 +240,7 @@ class SubscriptionController extends Controller
         echo "<br>";
         dump($customers->data);
         foreach ($customers->data as $key2 => $customer) {
-            echo ($key2 + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email . "<br>";
+            echo ($key2 + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " . $customer->email . "<br>";
         }
         // While we have more results, iterate through them
         while ($customers->has_more) {
@@ -230,7 +248,7 @@ class SubscriptionController extends Controller
             // Add the `starting_after` parameter to reflect the last customer ID
             $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id));
             foreach ($customers->data as $key2 => $customer) {
-                ($key2 + $startcuscount + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email . "<br>";
+                ($key2 + $startcuscount + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " . $customer->email . "<br>";
             }
         }
 
@@ -254,7 +272,7 @@ class SubscriptionController extends Controller
         echo "<br>";
         dump($customers->data);
         foreach ($customers->data as $key2 => $customer) {
-            echo ($key2 + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email;
+            echo ($key2 + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " . $customer->email;
             // echo "sub".$customer->subscriptions->data. "<br>";
             dump($customer->subscriptions->data);
             array_push($arrayStripeEmail, $customer->email);
@@ -270,7 +288,7 @@ class SubscriptionController extends Controller
             // Add the `starting_after` parameter to reflect the last customer ID
             $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id, 'expand' => ['data.subscriptions']));
             foreach ($customers->data as $key2 => $customer) {
-                ($key2 + $startcuscount + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email;
+                ($key2 + $startcuscount + 1) . ")." . $customer->id . " created " . date("m-d-y", $customer->created) . " email " . $customer->email;
                 // echo "sub".$customer->subscriptions->data['id']. "<br>";
                 dump($customer->subscriptions->data);
                 array_push($arrayStripeEmail, $customer->email);
@@ -427,7 +445,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
         try {
             // check already subscribed and if already subscribed with picked plan
-            if ($user->subscribed('main') && ! $user->subscribedToPlan($product, 'main')) {
+            if ($user->subscribed('main') && !$user->subscribedToPlan($product, 'main')) {
 
                 // swap if different plan attempt
                 $user->subscription('main')->swap($product);
@@ -566,22 +584,45 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      * @param  Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
+    // public function update(Request $request, $id)
+    // {
+
+    //     $product = $request['stripe_plan'];
+    //     //dd($product);
+    //     $planname = $request['name'];
+    //     $userid = $request['user_id'];
+    //     $user = User::find($userid);
+
+    //     try {
+    //         $user->subscription('main')->skipTrial()->swap($product);
+    //         return redirect('admin/subscriptions')->with('info', 'Subscription updated Successfully');
+    //     } catch (Exception $e) {
+    //         return redirect('admin/subscriptions')->with('info', 'Subscription Error' . json_encode($e->getMessage(), true));
+    //     }
+    //     // $user->subscription('default')->swap('provider-plan-id');
+    // }
+
     public function update(Request $request, $id)
     {
-        // dd($request);
-        $product = $request['stripe_plan'];
-        //dd($product);
-        $planname = $request['name'];
-        $userid = $request['user_id'];
-        $user = User::find($userid);
-        try {
-            $user->subscription('main')->skipTrial()->swap($product);
-            return redirect('admin/subscriptions')->with('info', 'Subscription updated Successfully');
-        } catch (Exception $e) {
-            return redirect('admin/subscriptions')->with('info', 'Subscription Error' . json_encode($e->getMessage(), true));
+        $product = $request->input('stripe_plan');
+        $planname = $request->input('name');
+        $userid = $request->input('user_id');
+
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect('admin/subscriptions')->with('info', 'User not found');
         }
-        // $user->subscription('default')->swap('provider-plan-id');
+
+        try {
+            $status = $user->subscription('main');
+            dd($status);
+            return redirect('admin/subscriptions')->with('info', 'Subscription updated successfully');
+        } catch (\Exception $e) {
+            return redirect('admin/subscriptions')->with('info', 'Subscription Error: ' . $e->getMessage());
+        }
     }
+
 
     // public function update(Request $request, $id)
     // {
@@ -678,7 +719,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             try {
                 $status = Coupon::retrieve($request->input('coupon'));
                 if ($status->amount_off) {
-                    $price =  $status->currency . ' ' . $status->amount_off / 100 . ' Off ' . $status->duration;
+                    $price = $status->currency . ' ' . $status->amount_off / 100 . ' Off ' . $status->duration;
                 } else {
                     if ($status->duration == 'repeating') {
                         $duration = '(' . $status->duration_in_months . ' months)';
@@ -745,8 +786,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             'address_city.required' => 'City field is required.',
             'address_state.required' => 'State field is required.',
             'address_country.required' => 'Country field is required.',
-            'zip.required'        => 'Please enter your ZIP code.',
-            'zip.digits_between'  => 'ZIP code must be between 5 and 8 digits.',
+            'zip.required' => 'Please enter your ZIP code.',
+            'zip.digits_between' => 'ZIP code must be between 5 and 8 digits.',
             'payment_method.required' => 'Credit card info field is required.',
         ]);
         list($productId, $trialDays) = explode('|', $request->product);
@@ -756,18 +797,14 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
 
             $user = User::find($request->user_id);
-            if ($user->is_custom_user == 0) {
+            if ($user->is_custom_user == 0 || $user->user_type != "custom") {
                 alert()->error('Oops !', 'You can only update custom user on stripe.');
-                return redirect()->back();
-            }
-            if ($user->is_live_on_stripe == 1) {
-                alert()->error('Oops !', 'User already updated on stripe.');
                 return redirect()->back();
             }
 
             $customer = Customer::create([
                 'email' => $request->email,
-                'name'  => $request->name,
+                'name' => $request->name,
                 'metadata' => [
                     'user_id' => $request->user_id ?? 'N/A',
                 ],
@@ -841,6 +878,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function subscriptionCancelById($id)
     {
+        // for custom users
         try {
             $user = User::find($id);
             if ($user->is_live_on_stripe == 1) {
@@ -849,8 +887,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                     Alert::error("Error !", "Subscription not found !.");
                     return redirect()->back();
                 }
+                $user->subscription('main')->skipTrial()->cancelNow();
                 $subscription = \Stripe\Subscription::retrieve($userSubs->stripe_id);
-                $subscription->cancel();
                 $userSubs->stripe_status = $subscription->status;
                 $userSubs->save();
             } else {
@@ -877,8 +915,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             'user_ids' => 'required|array|min:1',
         ], [
             'user_ids.required' => 'Please select at least one user.',
-            'user_ids.array'    => 'Invalid data format for selected user.',
-            'user_ids.min'      => 'You must select at least one user before proceeding.',
+            'user_ids.array' => 'Invalid data format for selected user.',
+            'user_ids.min' => 'You must select at least one user before proceeding.',
         ]);
         if ($validator->fails()) {
             toast($validator->errors()->first(), "error")

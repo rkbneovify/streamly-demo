@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit {
       } else {
         this.storeUserData(res);
         this.toastr.success(res.message);
-        this.router.navigateByUrl('/user');
+        this.router.navigateByUrl('/user/playlistschedule');
       }
     }
   }
