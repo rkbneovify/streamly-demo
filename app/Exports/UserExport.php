@@ -31,13 +31,14 @@ class UserExport implements FromCollection, WithHeadings
         }
         return $query->get()->map(function ($user) {
             return [
-                "Id" => $user->id,
-                "Role" => $user->roles->first() != null ? $user->roles->first()->display_name : "N/A",
                 "Name" => $user->name,
                 "Email" => $user->email,
-                "Contact No." => $user->contact,
+                "Role" => $user->roles->first() != null ? $user->roles->first()->display_name : "N/A",
+                "User Type" => $user->mode == 'Live' ? 'Live' : 'Testing',
                 "Status" => $user->is_active == 1 ? 'Active' : 'Inactive',
+                "Active Devices" => ($user->sessions_count ?? 0) . ' / ' . ($user->rooms_count > 0 ? $user->rooms_count : 5),
                 "Created At" => $user->created_at->format('d/m/Y'),
+
             ];
         });
     }

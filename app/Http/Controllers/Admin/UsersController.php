@@ -56,12 +56,55 @@ class UsersController extends Controller
         $query->with('roles');
         $query->withCount('sessions');
         $query->withCount('rooms');
-        if ($request->sort_date == null || $request->sort_date == 'desc') {
-            $query->latest();
-        } else {
+        if ($request->sort_date == 'asc') {
+
             $query->orderBy('created_at', 'asc');
+        } elseif (empty($request->sort_date) && !empty($request->daterange)) {
+            $query->orderBy('created_at', 'asc');
+            $request->merge(['sort_date' => 'asc']);
+        } else {
+
+            $query->latest();
+        }
+
+        if ($request->has('role')) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        if ($request->has('mode')) {
+            $query->where('mode', $request->mode);
+        }
+        if ($request->has('status')) {
+            $status = null;
+            if ($request->status == 'active') {
+                $status = 1;
+            } elseif ($request->status == 'inactive') {
+                $status = 0;
+            }
+            $query->where('is_active', $status);
+        }
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            });
+        }
+
+        if ($request->has("daterange")) {
+            $query->where(function ($q) use ($request) {
+                $dates = explode(" - ", $request->daterange);
+                $start = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
+                $end = Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
+                $q->whereBetween('created_at', [$start, $end]);
+            });
+
+
 
         }
+
         $users = $query->paginate(10);
         // return response()->json($users);
         return view('admin.users.index2', compact('users', 'roles'));
@@ -1435,7 +1478,7 @@ class UsersController extends Controller
     public function exportUser(Request $request, $type)
     {
 
-        $filters = $request->only(['role']);
+        $filters = $request->all();
         // dd($filters);
         $filename = 'users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new UserExport($filters), $filename);
