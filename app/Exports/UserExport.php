@@ -32,7 +32,7 @@ class UserExport implements FromCollection, WithHeadings
         return $query->get()->map(function ($user) {
             return [
                 "Id" => $user->id,
-                "Role" => $user->roles->first()->display_name,
+                "Role" => $user->roles->first() != null ? $user->roles->first()->display_name : "N/A",
                 "Name" => $user->name,
                 "Email" => $user->email,
                 "Contact No." => $user->contact,
