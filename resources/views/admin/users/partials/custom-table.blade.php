@@ -1,7 +1,7 @@
  @if ($users->count() > 0)
      <form id="tbl-form" method="POST" action="{{ route('admin.subscriptions.users.bulk.action') }}">
          @csrf
-         <input type="hidden" name="action">
+         <input hidden type="text" name="action">
          <div class="container">
              <div class="table-responsive">
                  <table class="table table-striped projects">

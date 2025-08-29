@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 function checkLoginLimit($user_id, $token, $deviceDetails)
 {
-    $login_limit =  GetLimitForUser($user_id);
+    $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
         ['status', '=', '1'],
@@ -60,16 +60,19 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         //$user = JWTAuth::user();//all the user info
         // $uid=  $user['id'];
         //and get the number of last connected device
-        $userRole =  $user->roles->first()->name;
+        $userRole = $user->roles->first()->name;
         // $user = JWTAuth::user();//all the user info
         // $uid=  $user['id'];
         // //and get the number of last connected device
         // $userRole=  $user->roles->first()->name;
         if ($userRole == 'tieruser') {
-            $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'hotel:id,hotel_room,session_id',
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                }
+            ])
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device, user_ip, logintime")
                 ->where([
                     ['status', '=', '1'],
@@ -97,11 +100,13 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     return $address;
                 });
         } else {
-            $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                        ->where('user_id', '=', $uid);
+                }
+            ])
                 ->where([
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
@@ -144,14 +149,14 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             'timezone' => $timezone,
             'loggedindeviceinfolist' => $response,
         ], 479)->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-        ])->send();
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
     }
 }
 
 function checkLoginLimit2($user_id, $token, $deviceDetails)
 {
-    $login_limit =  GetLimitForUser($user_id);
+    $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
         ['status', '=', '1'],
@@ -197,16 +202,19 @@ function checkLoginLimit2($user_id, $token, $deviceDetails)
         //$user = JWTAuth::user();//all the user info
         // $uid=  $user['id'];
         //and get the number of last connected device
-        $userRole =  $user->roles->first()->name;
+        $userRole = $user->roles->first()->name;
         // $user = JWTAuth::user();//all the user info
         // $uid=  $user['id'];
         // //and get the number of last connected device
         // $userRole=  $user->roles->first()->name;
         if ($userRole == 'tieruser') {
-            $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'hotel:id,hotel_room,session_id',
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                }
+            ])
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
                 ->where([
                     ['status', '=', '1'],
@@ -234,11 +242,13 @@ function checkLoginLimit2($user_id, $token, $deviceDetails)
                     return $address;
                 });
         } else {
-            $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                        ->where('user_id', '=', $uid);
+                }
+            ])
                 ->where([
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
@@ -296,7 +306,7 @@ function checkLoginLimit2($user_id, $token, $deviceDetails)
 
 function checkHoteluserLoginLimit($user_id, $token, $deviceDetails)
 {
-    $login_limit =  GetLimitForUser($user_id);
+    $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
         ['status', '=', '1'],
@@ -330,13 +340,16 @@ function checkHoteluserLoginLimit($user_id, $token, $deviceDetails)
         $user = User::find($uid);
 
         //and get the number of last connected device
-        $userRole =  $user->roles->first()->name;
+        $userRole = $user->roles->first()->name;
 
         if ($userRole == 'tieruser') {
-            $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'hotel:id,hotel_room,session_id',
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                }
+            ])
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
                 ->where([
                     ['status', '=', '1'],
@@ -364,11 +377,13 @@ function checkHoteluserLoginLimit($user_id, $token, $deviceDetails)
                     return $address;
                 });
         } else {
-            $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                        ->where('user_id', '=', $uid);
+                }
+            ])
                 ->where([
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
@@ -431,8 +446,8 @@ function hotelusersessionTable($user_id, $token, $deviceDetails, $connected_devi
             // 'personaldevicename_popup'=>$personal_device_data['show_popup'],
             'passcode' => $passcode,
         ], 200)->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-        ])->send();
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
     }
 }
 
@@ -471,7 +486,7 @@ function automaticLogoutWithInterval($user_id)
             //   echo $logintime;
             //   echo "\r\n datetimeTwominutes ago:";
             //   echo $dateTimeMinutesAgo;
-            if ($logintime <  $dateTimeMinutesAgo) {
+            if ($logintime < $dateTimeMinutesAgo) {
                 //  echo "true";
 
                 array_push($myarr, $fieldnam->id);
@@ -702,9 +717,9 @@ function isDeviceAppleRokuOthers($ua)
     $samsung_smart_tv = (stripos($ua, "SMART-TV") !== false);
     $smart_tv = (stripos($ua, "SmartTV") !== false);
     $Tizen = (stripos($ua, "Tizen") !== false);
-    $iPod    = (stripos($ua, "iPod") !== false);
-    $iPhone  = (stripos($ua, "iPhone") !== false);
-    $iPad    = (stripos($ua, "iPad") !== false);
+    $iPod = (stripos($ua, "iPod") !== false);
+    $iPhone = (stripos($ua, "iPhone") !== false);
+    $iPad = (stripos($ua, "iPad") !== false);
     $iPadOS = (stripos($ua, "Macintosh") !== false);
     $appletv = (stripos($ua, "appletv") !== false);
     $Android = (stripos($ua, "Android") !== false);
@@ -770,8 +785,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             ['users_id', '=', $user_id],
         ])->get()->count();
         $rooms = getActiveHotelRooms($user_id);
-        $subscriptionStatus =  GetSubscriptionStatusOfUser($user_id);
-        $kindlysubscribemsg =  $subscriptionStatus ? null : KindlySubscribeMsg();
+        $subscriptionStatus = GetSubscriptionStatusOfUser($user_id);
+        $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
         return response()->json([
 
             'success' => true,
@@ -800,8 +815,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
 
 
         ], 200)->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-        ])->send();
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
     }
 }
 
@@ -855,8 +870,8 @@ function sessionTable2($user_id, $token, $deviceDetails, $connected_devices)
             ['users_id', '=', $user_id],
         ])->get()->count();
         $rooms = getActiveHotelRooms($user_id);
-        $subscriptionStatus =  GetSubscriptionStatusOfUser($user_id);
-        $kindlysubscribemsg =  $subscriptionStatus ? null : KindlySubscribeMsg();
+        $subscriptionStatus = GetSubscriptionStatusOfUser($user_id);
+        $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
         return response()->json([
 
             'success' => true,
@@ -884,8 +899,8 @@ function sessionTable2($user_id, $token, $deviceDetails, $connected_devices)
 
 
         ], 200)->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-        ])->send();
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
     }
 }
 
@@ -908,8 +923,8 @@ function duplicateDeviceId($user_id, $deviceDetails)
             'access_token' => $checkDeviceDetails->get('access_token')[0]->access_token
             //'loggedindeviceinfointheseId'=>$myarr,
         ], 429)->withHeaders([
-            'Access-Control-Allow-Origin' => '*',
-        ])->send();
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
         // exists
     } else {
         return false;
@@ -937,7 +952,7 @@ function fetchHomeTimezoneUsingZip($zipCode)
         $response = curl_exec($curl);
 
         curl_close($curl);
-        $dataArr =  json_decode($response, true);
+        $dataArr = json_decode($response, true);
         $dateTimezone = new DateTimeZone($dataArr['timezoneId']);
         $dateTime = new DateTime('now', $dateTimezone);
 
@@ -956,7 +971,7 @@ function fetchHomeTimezoneUsingZip($zipCode)
         // Get the abbreviation using the 'T' format specifier
         $formattedDate = $dateTime->format('T');
         $timezone = convertTimeZoneAbbreviation($formattedDate, $zipCode);
-    } catch (Exception $e) { 
+    } catch (Exception $e) {
         if ($zipCode == "86336" || $zipCode == "85023" || $zipCode == "85022") {
             $offSet = "-07:00";
             $timezone = "Mountain Standard Time";
@@ -966,15 +981,10 @@ function fetchHomeTimezoneUsingZip($zipCode)
         } else if ($zipCode == "75662") {
             $offSet = "-06:00";
             $timezone = "Central Standard Time";
-        } 
-        else if ($zipCode == '18834') {
-            $offSet = "-05:00";
-            $timezone = "Eastern Standard Time";
-        } 
-        else { 
+        } else {
             $offSet = "+05:30";
             $timezone = "Eastern Standard Time";
-        } 
+        }
     }
 
     return [$timezone, $offSet];
@@ -1016,7 +1026,7 @@ function hoteluserduplicateDeviceId($user_id, $deviceDetails)
 function is_coordinate($lat, $long)
 {
 
-    $lat_pattern  = '/\A[+-]?(?:90(?:\.0{1,18})?|\d(?(?<=9)|\d?)\.\d{1,18})\z/x';
+    $lat_pattern = '/\A[+-]?(?:90(?:\.0{1,18})?|\d(?(?<=9)|\d?)\.\d{1,18})\z/x';
     $long_pattern = '/\A[+-]?(?:180(?:\.0{1,18})?|(?:1[0-7]\d|\d{1,2})\.\d{1,18})\z/x';
 
     if (preg_match($lat_pattern, $lat) && preg_match($long_pattern, $long)) {
@@ -1052,7 +1062,7 @@ function sessionTableForWeb($user_id, $token, $deviceDetails, $connected_devices
 
 function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
 {
-    $ua =  request()->header('User-Agent');
+    $ua = request()->header('User-Agent');
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
     if ($isTV !== false) {
@@ -1092,7 +1102,7 @@ function getDeviceIdforWeb()
         $ua = $agent->browser() . " in " . $agent->platform();
         //if agent browser and platform not obtained, then we check the agent technology
         if ($agent == ' in ') {
-            $ua =  request()->header('User-Agent');
+            $ua = request()->header('User-Agent');
         }
     }
 
@@ -1113,7 +1123,7 @@ function getDeviceIdforAPI($request)
         $ua = $agent->browser() . " in " . $agent->platform();
         //if agent browser and platform not obtained, then we check the agent technology
         if ($agent == ' in ') {
-            $ua =  request()->header('User-Agent');
+            $ua = request()->header('User-Agent');
         }
     }
 
@@ -1877,3 +1887,24 @@ function limitEmailName($email, $limit = 15, $end = '...')
 
     return $name . '@' . $domain;
 }
+
+if (!function_exists('formatDaterange')) {
+    function formatDaterange(?string $daterange): string
+    {
+        $dates = explode(' - ', $daterange ?? '');
+        return count($dates) === 2
+            ? implode(' - ', array_map(fn($d) => Carbon::parse($d)->format('d/m/Y'), $dates))
+            : '';
+    }
+}
+
+function formatActiveDevices($user)
+{
+    if ($user->rooms_count > 0) {
+        return $user->sessions_count ?? 0 . "/" . $user->rooms_count ?? 0;
+    }
+
+    return $user->sessions_count ?? 0 . "/" . 5;
+}
+
+

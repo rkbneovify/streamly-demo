@@ -76,7 +76,6 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
     Route::post('subscriptions/users/bulk/action', 'Admin\SubscriptionController@bulkAction')->name('subscriptions.users.bulk.action');
-    Route::get('subscriptions/users/export/{type}', 'Admin\SubscriptionController@exportUsersSubscription')->name('subscriptions.users.export');
 
 
     Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
@@ -107,6 +106,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    Route::get('/users/new', 'Admin\UsersController@index2');
+    Route::get('/users/status/{id}', 'Admin\UsersController@changeStatus')->name('users.status');
+    Route::get('/users/delete/{id}', 'Admin\UsersController@destroyById')->name('users.delete');
+    Route::post('/users/bulk/action', 'Admin\UsersController@bulkAction')->name('users.bulk.action');
     // Route::get('/fetchzipcode', 'Admin\UsersController@getZip');
     Route::get('users/fetchzipcode', 'Admin\UsersController@getZip');
 
@@ -162,7 +165,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
-    Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice'); //connected devices
+    Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice')->name('users.connected.devices'); //connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser', 'Admin\UsersController@store')->name('insertuser');
     Route::get('/users/view/{id}', 'Admin\UsersController@show')->name('users.view');
