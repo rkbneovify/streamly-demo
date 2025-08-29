@@ -179,9 +179,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\StripeServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        
+
         // Zizaco\Entrust\EntrustServiceProvider::class,
         // Barryvdh\Cors\ServiceProvider::class,
 
@@ -191,6 +191,7 @@ return [
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
 
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+
 
     ],
 
@@ -244,7 +245,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // 'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
-        'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
