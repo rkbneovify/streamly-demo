@@ -106,6 +106,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    Route::get('/users/new', 'Admin\UsersController@index2');
+    Route::get('/users/status/{id}', 'Admin\UsersController@changeStatus')->name('users.status');
+    Route::get('/users/delete/{id}', 'Admin\UsersController@destroyById')->name('users.delete');
+    Route::post('/users/bulk/action', 'Admin\UsersController@bulkAction')->name('users.bulk.action');
     // Route::get('/fetchzipcode', 'Admin\UsersController@getZip');
     Route::get('users/fetchzipcode', 'Admin\UsersController@getZip');
 
@@ -161,7 +165,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
-    Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice'); //connected devices
+    Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice')->name('users.connected.devices'); //connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser', 'Admin\UsersController@store')->name('insertuser');
     Route::get('/users/view/{id}', 'Admin\UsersController@show')->name('users.view');
@@ -273,7 +277,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::post('/faq/update/{id}', 'Admin\FaqChatboatController@update')->name('faq.update');
     Route::get('/faq/destroy/{id}', 'Admin\FaqChatboatController@destroy')->name('faq.destroy');
 
-    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');;
+    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');
+    ;
 
     Route::post('/ajax-sendmail', 'Admin\SendMailController@handleRequest')->name('admin.sendmail');
 
@@ -385,7 +390,8 @@ Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
-Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
+Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');
+;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 

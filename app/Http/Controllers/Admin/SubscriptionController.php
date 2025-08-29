@@ -58,7 +58,6 @@ class SubscriptionController extends Controller
         $plankey = $stripePlanData->keys();
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
-
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
             $query->where('mode', $mode);
@@ -95,25 +94,13 @@ class SubscriptionController extends Controller
 
 
 
-        $query = Subscription::query()->groupBy('user_id')->latest('updated_at')->with('user');
-
-        $query = Subscription::whereIn('id', function ($query) {
-            $query->selectRaw('MAX(id)')
-                ->from('subscriptions')
-                ->groupBy('user_id');
-        });
-        if ($mode == 'Testing' || $mode == 'Test') {
-            $query->whereNotIn("stripe_plan", ['lLqM2zp3oUMO', 'price_1MqxXZGbCi8tAySGisSrhf0S']);
-        }
-        $query->whereHas('user', function ($query) use ($mode) {
-
-            $query->whereNull("user_type")->where('mode', $mode);
-        });
-
-        // return response()->json($query);
-
+        $query = Subscription::query()->with('user')
+            ->whereHas('user', function ($query) use ($mode) {
+                $query->where('mode', $mode);
+            })
+            ->whereIn('stripe_plan', $planIds);
         if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-            $query->latest('updated_at');
+            $query->orderByDesc('updated_at');
         } else {
             $query->orderBy('updated_at');
         }
@@ -143,10 +130,10 @@ class SubscriptionController extends Controller
         });
 
         if ($request->ajax()) {
-            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes'));
         }
 
-        return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+        return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes'));
     }
 
     public function showAllcustomer()
@@ -584,45 +571,23 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      * @param  Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, $id)
-    // {
-
-    //     $product = $request['stripe_plan'];
-    //     //dd($product);
-    //     $planname = $request['name'];
-    //     $userid = $request['user_id'];
-    //     $user = User::find($userid);
-
-    //     try {
-    //         $user->subscription('main')->skipTrial()->swap($product);
-    //         return redirect('admin/subscriptions')->with('info', 'Subscription updated Successfully');
-    //     } catch (Exception $e) {
-    //         return redirect('admin/subscriptions')->with('info', 'Subscription Error' . json_encode($e->getMessage(), true));
-    //     }
-    //     // $user->subscription('default')->swap('provider-plan-id');
-    // }
-
     public function update(Request $request, $id)
     {
-        $product = $request->input('stripe_plan');
-        $planname = $request->input('name');
-        $userid = $request->input('user_id');
 
-        $user = User::find($id);
-
-        if (!$user) {
-            return redirect('admin/subscriptions')->with('info', 'User not found');
-        }
+        $product = $request['stripe_plan'];
+        //dd($product);
+        $planname = $request['name'];
+        $userid = $request['user_id'];
+        $user = User::find($userid);
 
         try {
-            $status = $user->subscription('main');
-            dd($status);
-            return redirect('admin/subscriptions')->with('info', 'Subscription updated successfully');
-        } catch (\Exception $e) {
-            return redirect('admin/subscriptions')->with('info', 'Subscription Error: ' . $e->getMessage());
+            $user->subscription('main')->skipTrial()->swap($product);
+            return redirect('admin/subscriptions')->with('info', 'Subscription updated Successfully');
+        } catch (Exception $e) {
+            return redirect('admin/subscriptions')->with('info', 'Subscription Error' . json_encode($e->getMessage(), true));
         }
+        // $user->subscription('default')->swap('provider-plan-id');
     }
-
 
     // public function update(Request $request, $id)
     // {
@@ -878,7 +843,6 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function subscriptionCancelById($id)
     {
-        // for custom users
         try {
             $user = User::find($id);
             if ($user->is_live_on_stripe == 1) {
@@ -887,8 +851,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                     Alert::error("Error !", "Subscription not found !.");
                     return redirect()->back();
                 }
-                $user->subscription('main')->skipTrial()->cancelNow();
                 $subscription = \Stripe\Subscription::retrieve($userSubs->stripe_id);
+                $subscription->cancel();
                 $userSubs->stripe_status = $subscription->status;
                 $userSubs->save();
             } else {
@@ -911,6 +875,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     public function bulkAction(Request $request)
     {
         // dd($request->all());
+
         $validator = Validator::make($request->all(), [
             'user_ids' => 'required|array|min:1',
         ], [
