@@ -1063,6 +1063,11 @@ function sessionTableForWeb($user_id, $token, $deviceDetails, $connected_devices
 function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
 {
     $ua = request()->header('User-Agent');
+    $device_id = explode("#~", $deviceDetails)[1];
+    if ($ua === 'okhttp/4.11.0') {
+
+        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+    }
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
     if ($isTV !== false) {
@@ -1077,7 +1082,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->access_token = $token;
     $session_tab->user_ip = getUserIpAddr();
     $session_tab->mac_address = $deviceDetails;
-    $session_tab->device_id = explode("#~", $deviceDetails)[1];
+    $session_tab->device_id = trim($device_id);
     $session_tab->connected_devices = $connected_devices;
     $session_tab->device = $deviceInfoClasses;
     $session_tab->logintime = Carbon::now();
@@ -1636,6 +1641,12 @@ function getActiveHotelRooms($userid)
 function personaldeviceTableStore($user_id, $deviceDetails)
 {
     $deviceid = explode("#~", $deviceDetails)[1];
+    $ua = request()->header('User-Agent');
+
+    if ($ua === 'okhttp/4.11.0') {
+
+        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+    }
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
         ['device_id', '=', $deviceid],
@@ -1643,7 +1654,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
     if (count($device_count) == 0) {
         $personalDevice = new PersonalDevice();
         $personalDevice->user_id = $user_id;
-        $personalDevice->device_id = $deviceid;
+        $personalDevice->device_id = trim($deviceid);
         $result = $personalDevice->save();
         $LastInsertId = $personalDevice->id;
         $show_popup = true;

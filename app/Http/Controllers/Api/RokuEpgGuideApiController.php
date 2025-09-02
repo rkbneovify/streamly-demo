@@ -88,7 +88,7 @@ class RokuEpgGuideApiController extends Controller
                 $uri = $uri_4_3;
             } elseif ($uri_16_9) {
                 $uri = $uri_16_9;
-            }
+            } 
         }
         return $uri;
     }
