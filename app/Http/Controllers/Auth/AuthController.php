@@ -179,7 +179,7 @@ class AuthController extends Controller
 
                 ], 402);
             }
-        }
+        } 
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
@@ -187,12 +187,18 @@ class AuthController extends Controller
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
-
+   
         
+        $zipcodeRule = DB::table('user_zipcode_rules')
+        ->where('email', $user->email)
+        ->first();
 
-        $this->authenticated($request, $user, $token);
-        return $this->respondWithToken($token);
+        $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
+
+        $this->authenticated($request, $user, $token , $validateFlag );
+        return $this->respondWithToken($token,$validateFlag);
     }
+
 
     public function hoteladminlogin(Request $request)
     {
@@ -817,7 +823,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $validateFlag = null)
     {
         $user = JWTAuth::user();
         $uRole = $user->roles->pluck('name');
@@ -828,10 +834,10 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => $user_data,
-
+            'validate' => $validateFlag 
         ]);
     }
-
+ 
 
     protected function authenticated($request, $user, $token)
     {
