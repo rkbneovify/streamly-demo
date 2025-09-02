@@ -1066,7 +1066,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $device_id = explode("#~", $deviceDetails)[1];
     if ($ua === 'okhttp/4.11.0') {
 
-        $device_id = base64_encode($user_id . "/" . getUserIpAddr());
+        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
     }
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
@@ -1645,7 +1645,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
 
     if ($ua === 'okhttp/4.11.0') {
 
-        $deviceid = base64_encode($user_id . "/" . getUserIpAddr());
+        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
     }
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
