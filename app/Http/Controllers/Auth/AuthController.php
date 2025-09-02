@@ -196,7 +196,7 @@ class AuthController extends Controller
         $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
 
         $this->authenticated($request, $user, $token , $validateFlag );
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token,$validateFlag);
     }
 
 
@@ -823,7 +823,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $validateFlag = null)
     {
         $user = JWTAuth::user();
         $uRole = $user->roles->pluck('name');
@@ -834,10 +834,10 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => $user_data,
-
+            'validate' => $validateFlag 
         ]);
     }
-
+ 
 
     protected function authenticated($request, $user, $token)
     {
