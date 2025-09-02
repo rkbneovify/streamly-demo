@@ -196,7 +196,8 @@
                                 <!-- <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
                                     placeholder="e.g., 12345, 67890" autofocus> -->
-                                    <input id="zip_codes" type="text"
+
+                                <input id="zip_codes" type="text"
                                 class="form-control"
                                 name="zip_codes"
                                 value="{{ implode(', ', $channel->zip_code) }}"
@@ -271,8 +272,7 @@
         $('.select2').select2();
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const zipCodesInput = document.getElementById("zip_code");
+    const zipInput = document.getElementById('zip_codes');
 
             zipCodesInput.addEventListener("input", function() {
                 const inputValue = zipCodesInput.value.replace(/[^0-9,]/g,

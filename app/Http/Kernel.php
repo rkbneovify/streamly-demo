@@ -22,9 +22,9 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
         // \Barryvdh\Cors\HandleCors::class,
 
-        \Fruitcake\Cors\HandleCors::class,
- 
-    ];
+        \Fruitcake\Cors\HandleCors::class,   // ✅ add this line here
+
+    ]; 
 
     /**
      * The application's route middleware groups.
