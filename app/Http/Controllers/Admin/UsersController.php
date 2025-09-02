@@ -1018,15 +1018,24 @@ class UsersController extends Controller
         $allSession = SessionTable::with([
             'user',
             'hotel',
-            'pdInfo' => function ($query) use ($id) {
-                return $query->where('user_id', $id);
-            }
-        ])->selectRaw("id,users_id , connected_devices,access_token, device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+            'pdInfo' => fn($query) => $query->where('user_id', $id),
+        ])
+            ->selectRaw("id, users_id, connected_devices, access_token, device_id,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+        created_on,
+        JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
+            ->where('status', 1)
+            ->where('users_id', $id)
+            ->whereIn('id', function ($query) use ($id) {
+                $query->selectRaw('MAX(id)')
+                    ->from('session_table')
+                    ->where('users_id', $id)
+                    ->where('status', 1)
+                    ->groupBy('device_id');
+            })
+            ->orderBy('connected_devices', 'asc')
+            ->get();
 
-            ->where([
-                ['status', '=', '1'],
-                ['users_id', '=', $id],
-            ])->orderBy('connected_devices', 'asc')->get();
         // return response()->json(['success' => true, "datalist" => $allSession]);
         return view('admin.users.connected', compact('allSession'));
     }
