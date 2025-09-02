@@ -187,7 +187,7 @@ class AuthController extends Controller
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
-
+   
         
         $zipcodeRule = DB::table('user_zipcode_rules')
         ->where('email', $user->email)
@@ -199,7 +199,7 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    
+
     public function hoteladminlogin(Request $request)
     {
         $deviceDetails    = getDeviceIdforAPI($request);
