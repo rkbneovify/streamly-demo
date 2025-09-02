@@ -408,6 +408,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("role", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("role");
             } else {
                 // just add role param
                 url.searchParams.set("role", $(this).val());
@@ -427,6 +429,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("mode", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("mode");
             } else {
                 // just add role param
                 url.searchParams.set("mode", $(this).val());
@@ -446,6 +450,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("status", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("status");
             } else {
                 // just add role param
                 url.searchParams.set("status", $(this).val());
