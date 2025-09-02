@@ -179,7 +179,7 @@ class AuthController extends Controller
 
                 ], 402);
             }
-        }
+        } 
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
@@ -189,11 +189,17 @@ class AuthController extends Controller
         }
 
         
+        $zipcodeRule = DB::table('user_zipcode_rules')
+        ->where('email', $user->email)
+        ->first();
 
-        $this->authenticated($request, $user, $token);
+        $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
+
+        $this->authenticated($request, $user, $token , $validateFlag );
         return $this->respondWithToken($token);
     }
 
+    
     public function hoteladminlogin(Request $request)
     {
         $deviceDetails    = getDeviceIdforAPI($request);
