@@ -185,8 +185,17 @@ class UsersController extends Controller
 
             // 3️⃣ Predefined zipcodes
             $predefinedLocalZipcodes = [
-              "85120", "85215", "85205", "75662", "08872", "08904",
-        "18344", "85022", "18438", "18302", "18326"
+                "85120",
+                "85215",
+                "85205",
+                "75662",
+                "08872",
+                "08904",
+                "18344",
+                "85022",
+                "18438",
+                "18302",
+                "18326"
             ];
             $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
 
@@ -286,8 +295,8 @@ class UsersController extends Controller
 
             foreach ($channelAvailability as $availability) {
                 DB::table('user_zipcode_rules')->insert([
-                    'zipcode'  => $request->zipcode,
-                    'email'    => $request->email,
+                    'zipcode' => $request->zipcode,
+                    'email' => $request->email,
                     'validate' => $availability,
                 ]);
             }
@@ -298,7 +307,7 @@ class UsersController extends Controller
             //         'email'   => $request->email,
             //         'validate'=> $request->channel_availability
             //     ]);
-         
+
 
 
             $endsAt = null;
@@ -1012,7 +1021,8 @@ class UsersController extends Controller
             'pdInfo' => function ($query) use ($id) {
                 return $query->where('user_id', $id);
             }
-        ])->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+        ])->selectRaw("id,users_id , connected_devices,access_token, device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+
             ->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
@@ -1029,6 +1039,7 @@ class UsersController extends Controller
         array_push($myarr, $id);
         // print_r($myarr);
         $user = SessionTable::whereIn('id', $myarr)->update(['status' => 0, 'modified_on' => Carbon::now()]);
+
         SessionTable::where([
             ['users_id', '=', $id],
             ['status', '=', '1'],

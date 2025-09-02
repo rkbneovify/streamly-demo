@@ -37,8 +37,7 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
                 $q->where('name', $this->filters['role']);
             });
         }
-        if ($this->filters['sort_date'] == 'asc') {
-
+        if (!empty($this->filters['sort_date']) && $this->filters['sort_date'] == 'asc') {
             $query->orderBy('created_at', 'asc');
         } elseif (empty($this->filters->sort_date) && !empty($this->filters->daterange)) {
             $query->orderBy('created_at', 'asc');
