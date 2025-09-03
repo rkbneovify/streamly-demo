@@ -53,6 +53,7 @@
         .input-container {
             position: relative;
 
+
         }
 
         .btn-clear {
@@ -69,6 +70,99 @@
 
         .btn-clear:hover {
             color: #000;
+        }
+
+        .input-custom {
+
+            padding: 20px 12px;
+        }
+    </style>
+    <style>
+        .select-wrapper {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .select-wrapper:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .select-wrapper img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .select-custom {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .select-custom:focus {
+            border-color: none;
+            box-shadow: none;
+        }
+
+        .btn-add-user {
+            text-decoration: none;
+            color: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-daterange {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
         }
     </style>
 @endsection
@@ -104,16 +198,18 @@
 
 
 
-                    <div class="row justify-content-between mt-3 mb-0 mb-3">
+                    {{-- <div class="row justify-content-between mt-3 mb-0 mb-3">
                         <div class="col-md-9">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <select name="bulk_action" id="sel_bulk_action" class="form-control">
                                         <option value="">Bulk Action</option>
                                         <option value="activate">Activate</option>
                                         <option value="inactivate">Inactivate</option>
                                         <option value="delete">Delete</option>
                                     </select>
+
+
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -194,27 +290,121 @@
                         </div>
 
 
-                    </div>
+                    </div> --}}
 
 
+                    <div class="row  mt-3 mb-0 mb-3">
 
-                    <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
-                        @csrf
-
-                        <input hidden type="text" name="action">
-                        <div id="user-data">
-
-                            @include('admin.users.partials.new-table')
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
+                                <select name="bulk_action" id="sel_bulk_action" class="select-custom">
+                                    <option value="">Bulk Action</option>
+                                    <option value="activate">Activate</option>
+                                    <option value="inactivate">Inactivate</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-role.png') }}" alt="role icon">
+                                <select name="roles" id="sel_roles" class="select-custom">
+                                    <option value="">Select Role</option>
+                                    @foreach ($roles as $id => $pack)
+                                        <option value="{{ $pack }}"
+                                            {{ request('role') == $pack ? 'selected' : '' }}>
+                                            {{ ucfirst($pack) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
-                    </form>
-                    {{-- table end --}}
-                    <div class="row justify-content-end mt-3">
-                        {{ $users->withQueryString()->links() }}
+                        <div class="col-md-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="mode icon">
+                                <select name="mode" id="sel_mode" class="select-custom">
+                                    <option value="">Select Mode</option>
+                                    <option value="Live" {{ request('mode') == 'Live' ? 'selected' : '' }}>Live
+                                    </option>
+                                    <option value="Testing" {{ request('mode') == 'Testing' ? 'selected' : '' }}>Testing
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_status" class="select-custom">
+                                    <option value="">Select Status</option>
+                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active
+                                    </option>
+                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                                        Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/add-user.png') }}" alt="status icon">
+                                <a href="{{ url('admin/users/create') }} " class="btn-add-user">Add New User</a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/export.png') }}" alt="status icon">
+                                <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                    class="btn-add-user">Export</a>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/calendar.png') }}" alt="status icon">
+                                <input type="text" class="input-daterange" name="daterange"
+                                    value="{{ formatDaterange(request('daterange')) }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control input-custom" placeholder="Search by name, email">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-4">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control" placeholder="Search by name, email">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div> --}}
+
                     </div>
-                    <!-- /.card-body -->
+
+
                 </div>
-                <!-- /.card -->
+                {{-- row end --}}
+
+
+                <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
+                    @csrf
+
+                    <input hidden type="text" name="action">
+                    <div id="user-data">
+
+                        @include('admin.users.partials.new-table')
+                    </div>
+
+                </form>
+                {{-- table end --}}
+                <div class="row justify-content-end mt-3">
+                    {{ $users->withQueryString()->links() }}
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
 
         </section>
         <!-- /.content -->
@@ -408,6 +598,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("role", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("role");
             } else {
                 // just add role param
                 url.searchParams.set("role", $(this).val());
@@ -427,6 +619,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("mode", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("mode");
             } else {
                 // just add role param
                 url.searchParams.set("mode", $(this).val());
@@ -446,6 +640,8 @@
                 url.search = "";
                 url.searchParams.delete("page");
                 url.searchParams.set("status", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("status");
             } else {
                 // just add role param
                 url.searchParams.set("status", $(this).val());
