@@ -67,16 +67,16 @@ class UsersController extends Controller
             $query->latest();
         }
 
-        if ($request->has('role')) {
+        if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('name', $request->role);
             });
         }
 
-        if ($request->has('mode')) {
+        if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
         }
-        if ($request->has('status')) {
+        if (!empty($request->status)) {
             $status = null;
             if ($request->status == 'active') {
                 $status = 1;
@@ -85,7 +85,7 @@ class UsersController extends Controller
             }
             $query->where('is_active', $status);
         }
-        if ($request->has('search')) {
+        if (!empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
@@ -93,7 +93,7 @@ class UsersController extends Controller
             });
         }
 
-        if ($request->has("daterange")) {
+        if (!empty($request->daterange)) {
             $query->where(function ($q) use ($request) {
                 $dates = explode(" - ", $request->daterange);
                 $start = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
