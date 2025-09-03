@@ -24,6 +24,10 @@
         background-color: #ffebf0;
     }
 
+    .table thead {
+        background-color: #fafafa;
+    }
+
     .table thead tr th {
         font-size: 14px;
         color: #7d7d7d;
