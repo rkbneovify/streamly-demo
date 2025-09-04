@@ -76,7 +76,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
     Route::post('subscriptions/users/bulk/action', 'Admin\SubscriptionController@bulkAction')->name('subscriptions.users.bulk.action');
-
+    Route::get('subscriptions/users/export/{type}', 'Admin\SubscriptionController@exportUsersSubscription')->name('subscriptions.users.export');
 
     Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
     Route::get('/subscriptionsstripe', 'Admin\SubscriptionController@subscriptionstripe')->name('ss');
@@ -229,7 +229,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('zipcode/allowedzipdata', 'Admin\ZipcodeController@allowedZipdata');
     Route::get('zipcode/localzipdata', 'Admin\ZipcodeController@localzipdata');
     Route::post('zipcode/toggle-status', 'Admin\ZipcodeController@toggleZipcodeStatus');
-    
+
     Route::get('zipcode/map', 'Admin\ZipcodeController@map');
     Route::get('zipcode/checkfenceweb', 'Admin\ZipcodeController@webfenceturf');
 

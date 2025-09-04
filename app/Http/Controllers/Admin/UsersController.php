@@ -1016,7 +1016,7 @@ class UsersController extends Controller
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
         $allSession = SessionTable::with([
-            'user',
+            'user.roles',
             'hotel',
             'pdInfo' => fn($query) => $query->where('user_id', $id),
         ])

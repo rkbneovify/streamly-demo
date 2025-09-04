@@ -24,6 +24,10 @@
         background-color: #ffebf0;
     }
 
+    .table thead {
+        background-color: #fafafa;
+    }
+
     .table thead tr th {
         font-size: 14px;
         color: #7d7d7d;
@@ -85,7 +89,7 @@
             <tbody>
                 @foreach ($users as $key => $user)
                     <tr>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             <input type="checkbox" class="row-checkbox custom-checkbox" name="user_ids[]"
                                 value="{{ $user->id }}">
                         </td>
@@ -103,14 +107,14 @@
                                 <span> {{ ucwords(Str::limit($user->name, 10, '...')) }}</span>
                             </a>
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
 
                             {{ limitEmailName($user->email, 10, '...') }}
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             {{ $user->roles->pluck('name')->join(', ') }}
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             @if ($user->mode == 'Live')
                                 Live
                             @else
@@ -118,7 +122,7 @@
                             @endif
 
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             @if ($user->is_active)
                                 {{-- <label class="custom-switch">
                                     <input type="checkbox" checked>
@@ -134,7 +138,7 @@
                             @endif
 
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             <a href="{{ route('admin.users.connected.devices', $user->id) }}">
                                 @if ($user->rooms_count > 0)
                                     {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
@@ -144,10 +148,10 @@
                             </a>
 
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             {{ $user->created_at->format('d/m/Y') }}
                         </td>
-                        <td style="vertical-align: middle; text-align: center;">
+                        <td style="vertical-align: middle;">
                             <a class="badge badge-light" title="Edit User"
                                 href="{{ route('admin.users.edit', $user->id) }}">
                                 <span class="text-black"> Edit</span>
