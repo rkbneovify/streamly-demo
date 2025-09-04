@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\UsersSubscriptionExport;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
 use App\Mail\SubscriptionNotificationMail;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
+use Maatwebsite\Excel\Facades\Excel;
 use Stripe\PaymentMethod;
 use Stripe\Stripe;
 use Stripe\StripeClient;
@@ -130,10 +132,10 @@ class SubscriptionController extends Controller
         });
 
         if ($request->ajax()) {
-            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes'));
+            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
         }
 
-        return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes'));
+        return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
     public function showAllcustomer()
@@ -920,6 +922,18 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
     }
 
+    public function exportUsersSubscription(Request $request, $type)
+    {
+        try {
+            $filters = $request->only(['sort_subscribe_at', 'status']);
+            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+            return Excel::download(new UsersSubscriptionExport($filters), $filename);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Oops !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
 
 
     public function paymentSuccess(Request $request)
