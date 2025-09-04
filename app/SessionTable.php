@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\HotelRoomTable;
 use App\Models\PersonalDevice;
+use DeviceDetector\DeviceDetector;
 
 class SessionTable extends Model
 {
@@ -171,6 +172,28 @@ class SessionTable extends Model
     }
     public function getDeviceTypeAttribute($size = null)
     {
+
+
+
+        $ua = strtolower($this->useragent);
+
+        // Rule 1: Smart TVs → non-web
+        if (preg_match('/smart-tv|hbbtv|tizen|netcast|appletv|googletv|tv safari/', $ua)) {
+            return 'non-web';
+        }
+
+        // Rule 2: Common web browsers
+        if (
+            strpos($ua, 'mozilla/5.0') !== false &&
+            preg_match('/(chrome|safari|firefox|edge|opr|samsungbrowser)/', $ua) &&
+            preg_match('/(applewebkit|gecko|trident|blink)/', $ua)
+        ) {
+            return 'web';
+        }
+
+        // Rule 3: Everything else → non-web
+        return 'non-web';
+
         // return [
         //     "data-browser='1'"=>'web',
         //     "data-browser='2'"=>'web',
