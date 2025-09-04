@@ -26,8 +26,9 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">User: {{ $allSession[0]->user->name ?? '' }}</h3><br>
-                    <h3 class="card-title">Email: {{ $allSession[0]->user->email ?? '' }}</h3>
+                    <h3 class="card-title">Name : {{ $allSession[0]->user->name ?? '' }}</h3><br>
+                    <h3 class="card-title">Email : {{ $allSession[0]->user->email ?? '' }}</h3> <br>
+                    <h3 class="card-title">Role : {{ $allSession->first()->user->roles->first()->name }}</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
@@ -53,12 +54,14 @@
                                 </th>
 
 
+                                @if ($allSession->first()->user->roles->first()->id == 5)
+                                    <th style="width: 20%">
+                                        Hotel room
+                                    </th>
+                                @endif
 
                                 <th style="width: 20%">
-                                    Hotel room
-                                </th>
-                                <th style="width: 20%">
-                                    User agent
+                                    Device Type
                                 </th>
                                 <th style="width: 20%">
                                     Created on
@@ -89,16 +92,27 @@
 
 
                                     <td>
-                                        {{ $user->pdInfo->personal_devicename ?? '' }}
-                                       
+                                        @if ($user->device_type === 'web')
+                                            Web
+                                        @else
+                                            {{ $user->pdInfo->personal_devicename ?? '' }}
+                                        @endif
+
+
+
+
                                     </td>
 
-                                    <td> @isset($user->hotel)
-                                            {{ $user->hotel->hotel_room ?? '' }}
-                                        @endisset
-                                    </td>
+                                    @if ($allSession->first()->user->roles->first()->id == 5)
+                                        <td> @isset($user->hotel)
+                                                {{ $user->hotel->hotel_room ?? '' }}
+                                            @endisset
+                                        </td>
+                                    @endif
+
                                     <td>
-                                        {{ $user->useragent ?? '' }}
+
+                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
                                     </td>
                                     <td>
                                         {{ $user->created_on ?? '' }}
