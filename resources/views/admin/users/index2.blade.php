@@ -382,7 +382,7 @@
                         </div> --}}
 
                     </div>
-
+                    <h3 class="card-title">Total : {{ $users->total() }}</h3>
 
                 </div>
                 {{-- row end --}}
