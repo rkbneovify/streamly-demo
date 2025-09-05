@@ -67,16 +67,16 @@ class UsersController extends Controller
             $query->latest();
         }
 
-        if ($request->has('role')) {
+        if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('name', $request->role);
             });
         }
 
-        if ($request->has('mode')) {
+        if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
         }
-        if ($request->has('status')) {
+        if (!empty($request->status)) {
             $status = null;
             if ($request->status == 'active') {
                 $status = 1;
@@ -85,7 +85,7 @@ class UsersController extends Controller
             }
             $query->where('is_active', $status);
         }
-        if ($request->has('search')) {
+        if (!empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
@@ -93,7 +93,7 @@ class UsersController extends Controller
             });
         }
 
-        if ($request->has("daterange")) {
+        if (!empty($request->daterange)) {
             $query->where(function ($q) use ($request) {
                 $dates = explode(" - ", $request->daterange);
                 $start = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
@@ -1016,17 +1016,26 @@ class UsersController extends Controller
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
         $allSession = SessionTable::with([
-            'user',
+            'user.roles',
             'hotel',
-            'pdInfo' => function ($query) use ($id) {
-                return $query->where('user_id', $id);
-            }
-        ])->selectRaw("id,users_id , connected_devices,access_token, device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
+            'pdInfo' => fn($query) => $query->where('user_id', $id),
+        ])
+            ->selectRaw("id, users_id, connected_devices, access_token, device_id,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+        created_on,
+        JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
+            ->where('status', 1)
+            ->where('users_id', $id)
+            ->whereIn('id', function ($query) use ($id) {
+                $query->selectRaw('MAX(id)')
+                    ->from('session_table')
+                    ->where('users_id', $id)
+                    ->where('status', 1)
+                    ->groupBy('device_id');
+            })
+            ->orderBy('connected_devices', 'asc')
+            ->get();
 
-            ->where([
-                ['status', '=', '1'],
-                ['users_id', '=', $id],
-            ])->orderBy('connected_devices', 'asc')->get();
         // return response()->json(['success' => true, "datalist" => $allSession]);
         return view('admin.users.connected', compact('allSession'));
     }
