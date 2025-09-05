@@ -371,8 +371,9 @@ class APIController extends Controller
     
                 // ✅ Fix logintime format (remove microseconds)
                 if (!empty($address['logintime'])) {
-                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->format('Y-m-d\TH:i:s\Z');
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
                 }
+                
     
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
                 return $address;  
@@ -399,9 +400,9 @@ class APIController extends Controller
     
                 // ✅ Fix logintime format (remove microseconds)
                 if (!empty($address['logintime'])) {
-                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->format('Y-m-d\TH:i:s\Z');
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
                 } 
-    
+                
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
             });
