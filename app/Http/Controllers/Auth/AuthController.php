@@ -25,6 +25,8 @@ use DB;
 use App\Models\Zipcode;
 use App\Models\DeclineZipInquiry;
 use App\Models\EmailOtp;
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -138,7 +140,8 @@ class AuthController extends Controller
     {
 
 
-        $deviceDetails    = getDeviceIdforAPI($request);
+
+        $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
         if (empty(request('email')) || empty(request('password'))) {
@@ -150,7 +153,7 @@ class AuthController extends Controller
         $expirationInMinutes = 259200; //one month in minutes
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
         }
 
@@ -168,7 +171,7 @@ class AuthController extends Controller
         }
         if ($user->is_custom_user == 1) {
 
-            $deviceLimit =  GetLimitForUser($user->id);
+            $deviceLimit = GetLimitForUser($user->id);
 
             $userActiveDeviceCount = SessionTable::where("users_id", $user->id)->where("status", 1)->count();
             if ($userActiveDeviceCount >= $deviceLimit) {
@@ -179,30 +182,30 @@ class AuthController extends Controller
 
                 ], 402);
             }
-        } 
+        }
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
-            $uid =  $user['id'];
+            $uid = $user['id'];
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
-   
-        
+
+
         $zipcodeRule = DB::table('user_zipcode_rules')
-        ->where('email', $user->email)
-        ->first();
+            ->where('email', $user->email)
+            ->first();
 
         $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
 
-        $this->authenticated($request, $user, $token , $validateFlag );
-        return $this->respondWithToken($token,$validateFlag);
+        $this->authenticated($request, $user, $token, $validateFlag);
+        return $this->respondWithToken($token, $validateFlag);
     }
 
 
     public function hoteladminlogin(Request $request)
     {
-        $deviceDetails    = getDeviceIdforAPI($request);
+        $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
         if (empty(request('email')) || empty(request('password'))) {
@@ -214,10 +217,10 @@ class AuthController extends Controller
         $expirationInMinutes = 43800; //one month in minutes
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
         }
-  
+
         $user = JWTAuth::user();
 
         if ($user->email_verified_at == null) {
@@ -229,17 +232,17 @@ class AuthController extends Controller
         }
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
-            $uid =  $user['id'];
+            $uid = $user['id'];
             checkHoteluserLoginLimit($uid, $token, $deviceDetails);
             exit;
-        }  
+        }
         $this->authenticated($request, $user, $token);
         return $this->respondWithToken($token);
     }
 
     public function logincheck(Request $request)
     {
-        $deviceDetails    = getDeviceIdforAPI($request);
+        $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
         if (empty(request('email')) || empty(request('password'))) {
@@ -251,7 +254,7 @@ class AuthController extends Controller
         $expirationInMinutes = 43800; //one month in minutes
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
         }
 
@@ -266,7 +269,7 @@ class AuthController extends Controller
         }
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
-            $uid =  $user['id'];
+            $uid = $user['id'];
             checkLoginLimit2($uid, $token, $deviceDetails);
             exit;
         }
@@ -276,7 +279,7 @@ class AuthController extends Controller
 
     public function loginWithPasscode(Request $request)
     {
-        $deviceDetails    = getDeviceIdforAPI($request);
+        $deviceDetails = getDeviceIdforAPI($request);
         $passcode = $request->only('passcode');
         $uid = UnHashUserID($passcode['passcode']);
         if (!$uid) {
@@ -332,7 +335,8 @@ class AuthController extends Controller
 
         if ($user) {
 
-            if ($user->is_active) $alreadyVerify = 1;
+            if ($user->is_active)
+                $alreadyVerify = 1;
             else {
                 $alreadyVerify = 0;
                 $user->email_verified_at = $email_verified_at;
@@ -559,7 +563,7 @@ class AuthController extends Controller
                     ['status', '=', '1'],
                     ['access_token', '=', $token],
                 ])->get()->toArray();
-                $uid =  $user['id'];
+                $uid = $user['id'];
 
                 $acctokenExists = SessionTable::where([
                     ['status', '=', '0'],
@@ -585,7 +589,7 @@ class AuthController extends Controller
                     return response()->json($response, 404);
                 } else {
 
-                    $id =  $acctoken[0]['id'];
+                    $id = $acctoken[0]['id'];
                     LogoutandDecrementDevice($id);
                     exit;
                 }
@@ -598,7 +602,7 @@ class AuthController extends Controller
             }
         } catch (Exception $ex) { // Anything that went wrong
             return response()->json([
-                'error'   => true,
+                'error' => true,
                 'message' => 'Something went wrong'
 
             ], 500);
@@ -650,7 +654,7 @@ class AuthController extends Controller
             SessionTable::where('status', 1)->where('connected_devices', '!=', 1)
                 ->update(['connected_devices' => DB::raw('`connected_devices` - 1')]);
 
-            $accesstoken =  $session->get('access_token')[0]->access_token;
+            $accesstoken = $session->get('access_token')[0]->access_token;
             // dd($accesstoken);
             $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
             $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
@@ -718,7 +722,7 @@ class AuthController extends Controller
         ]);
         if ($checkDeviceDetails->exists()) {
             //   dump($checkDeviceDetails->get());
-            $accesstoken =  $checkDeviceDetails->get('access_token')[0]->access_token;
+            $accesstoken = $checkDeviceDetails->get('access_token')[0]->access_token;
             // dd($accesstoken);
             $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
             $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
@@ -774,7 +778,7 @@ class AuthController extends Controller
                     ['status', '=', '1'],
                     ['access_token', '=', $token],
                 ])->get()->toArray();
-                $uid =  $user['id'];
+                $uid = $user['id'];
                 if ((count($acctoken) == 0)) {
                     $response = [
 
@@ -786,7 +790,7 @@ class AuthController extends Controller
                     return response()->json($response, 404);
                 } else {
 
-                    $id =  $acctoken[0]['id'];
+                    $id = $acctoken[0]['id'];
                     LogoutandDecrementDevice($id);
                     exit;
                 }
@@ -799,7 +803,7 @@ class AuthController extends Controller
             }
         } catch (Exception $ex) { // Anything that went wrong
             return response()->json([
-                'error'   => true,
+                'error' => true,
                 'message' => 'Something went wrong'
 
             ], 500);
@@ -834,10 +838,10 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => $user_data,
-            'validate' => $validateFlag 
+            'validate' => $validateFlag
         ]);
     }
- 
+
 
     protected function authenticated($request, $user, $token)
     {
@@ -852,7 +856,8 @@ class AuthController extends Controller
         $jwtToken = new JwtToken();
         $jwtToken->user_id = $user->id;
         $jwtToken->token = $token;
-        $jwtToken->browser = $agent->browser();;
+        $jwtToken->browser = $agent->browser();
+        ;
         $jwtToken->platform = $agent->platform();
         $jwtToken->device = $agent->device();
         $mobileHeader = $request->header('x_platform');
@@ -943,7 +948,7 @@ class AuthController extends Controller
             'zip' => 'required|max:255',
             'city' => 'required|max:255',
             'state' => 'required|max:255',
-        ]);  
+        ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -951,9 +956,9 @@ class AuthController extends Controller
 
         DeclineZipInquiry::updateOrCreate(
             [
-                'email' =>  $request->input('email'),
+                'email' => $request->input('email'),
                 'zip' => $request->input('zip'),
-                'city' =>  $request->input('city'),
+                'city' => $request->input('city'),
                 'state' => $request->input('state'),
             ],
             ['frequency' => \DB::raw('frequency + 1')]
