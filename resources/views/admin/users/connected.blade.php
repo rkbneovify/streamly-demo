@@ -142,8 +142,13 @@
                                         @endif
 
                                         <td>
+                                            @if (!empty($user->display_name))
+                                                {{ $user->display_name }}
+                                            @else
+                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endif
 
-                                            {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+
                                         </td>
                                         <td>
                                             {{ $user->created_on ?? '' }}
