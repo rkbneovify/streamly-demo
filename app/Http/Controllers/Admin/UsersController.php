@@ -1035,9 +1035,9 @@ class UsersController extends Controller
             })
             ->orderBy('connected_devices', 'asc')
             ->get();
-
+        $totalRooms = HotelRoomTable::where('user_id', $id)->count();
         // return response()->json(['success' => true, "datalist" => $allSession]);
-        return view('admin.users.connected', compact('allSession'));
+        return view('admin.users.connected', compact('allSession', 'totalRooms'));
     }
 
     public function sessiondestroy($id, Request $request)
