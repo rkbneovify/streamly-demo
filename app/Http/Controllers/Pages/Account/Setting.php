@@ -369,6 +369,7 @@ class Setting extends Controller
             return redirect()->back()->with('message', 'Password Updated Successfully');
         }
     }
+    
     public function updatePersonalDeviceName(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
