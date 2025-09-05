@@ -1021,7 +1021,7 @@ class UsersController extends Controller
             'pdInfo' => fn($query) => $query->where('user_id', $id),
         ])
             ->selectRaw("id, users_id, connected_devices, access_token, device_id,
-        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,display_name,
         created_on,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
             ->where('status', 1)
