@@ -56,7 +56,7 @@
                         <div class="col-md-3 px-4">
                             <span for="">Total Devices</span>
                             <br>
-                            <label>{{ $allSession->count() . '/' . $totalRooms }}</label>
+                            <label>{{ $allSession->count() . '/' . $totalRooms ?? 5 }}</label>
                         </div>
                     </div>
 
