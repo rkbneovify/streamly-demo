@@ -340,14 +340,13 @@ class APIController extends Controller
 
     public function newconnecteddevice()
     {
-
         $user = JWTAuth::user(); // All the user info
         $uid = $user->id;
         $userRole = $user->roles->first()->name;
-
+    
         // Fetch `connected_device` from users table
-        $userConnectedDevice = $user->connected_device; // This is the new value you want
-
+        $userConnectedDevice = $user->connected_device;
+    
         if ($userRole == 'tieruser') {
             $prevConnectDevicecount = SessionTable::with([
                 'hotel:id,hotel_room,session_id',
@@ -363,13 +362,18 @@ class APIController extends Controller
                     ['users_id', '=', $uid],
                 ])
                 ->orderBy('connected_devices', 'asc');
-
+    
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-
+    
+                // ✅ Fix logintime format (remove microseconds)
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->format('Y-m-d\TH:i:s\Z');
+                }
+    
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
                 return $address;
             });
@@ -387,19 +391,24 @@ class APIController extends Controller
                 ->select('user_ip', 'logintime')
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
                 ->orderBy('connected_devices', 'asc');
-
+    
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-
+    
+                // ✅ Fix logintime format (remove microseconds)
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->format('Y-m-d\TH:i:s\Z');
+                }
+    
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
             });
         }
-
+    
         $numofdevice = $prevConnectDevicecount->count();
-
+    
         // Final response
         $response = [
             'success' => true,
@@ -410,9 +419,10 @@ class APIController extends Controller
             'message' => 'Connected device found successfully',
             'data' => $s,
         ];
-
+    
         return response()->json($response, 200);
     }
+    
 
 
 
