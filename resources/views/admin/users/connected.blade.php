@@ -7,10 +7,6 @@
             font-size: 14px;
 
         }
-
-        .border-right {
-            border-right: 1px solid #ddd;
-        }
     </style>
 @endsection
 @section('content')
@@ -142,8 +138,10 @@
                                         @endif
 
                                         <td>
-                                            @if (!empty($user->display_name))
-                                                {{ $user->display_name }}
+                                            @if (!empty($user->device_title))
+                                                {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
+
+                                                ({{ $user->build_version ?? '' }})
                                             @else
                                                 {{ detectDeviceByUserAgent($user->useragent ?? '') }}
                                             @endif
@@ -205,20 +203,48 @@
 @section('scripts')
     <script>
         $(function() {
+            $('.update_record').prop('disabled', true);
             // Check all 
             $('#checkall').click(function() {
                 if ($(this).is(':checked')) {
                     $('.update_check').prop('checked', true);
+                    $('.update_record').prop('disabled', false);
                 } else {
                     $('.update_check').prop('checked', false);
+                    $('.update_record').prop('disabled', true);
                 }
             });
 
+            const checkboxes = document.querySelectorAll(".update_check");
 
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    const checkedCount = document.querySelectorAll(".update_check:checked").length;
+                    const uncheckedCount = document.querySelectorAll(".update_check:not(:checked)")
+                        .length;
+                    if (checkboxes.length <= checkedCount) {
+                        $('#checkall').prop('checked', true);
+                    } else if (checkboxes.length >= uncheckedCount) {
+                        $('#checkall').prop('checked', false);
+                    }
+
+
+                    if (checkedCount > 0) {
+                        $('.update_record').prop('disabled', false);
+                    } else {
+                        $('.update_record').prop('disabled', true);
+                    }
+
+                });
+            });
 
             $(document).on('click', '.update_record', function() {
+
                 var id = [];
                 var status;
+
+
 
                 if (confirm("Are you sure you want to Update this data?")) {
                     $('.update_check:checked').each(function() {
