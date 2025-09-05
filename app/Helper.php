@@ -1066,7 +1066,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $device_id = explode("#~", $deviceDetails)[1];
     if ($ua === 'okhttp/4.11.0') {
 
-        $device_id = base64_encode($user_id . "/" . getUserIpAddr());
+        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
     }
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
@@ -1645,7 +1645,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
 
     if ($ua === 'okhttp/4.11.0') {
 
-        $deviceid = base64_encode($user_id . "/" . getUserIpAddr());
+        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
     }
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
@@ -1916,6 +1916,61 @@ function formatActiveDevices($user)
     }
 
     return $user->sessions_count ?? 0 . "/" . 5;
+}
+
+function detectDeviceByUserAgent(string $userAgent): string
+{
+    $ua = strtolower($userAgent);
+
+    // Smart TV: Samsung (Tizen)
+    if (strpos($ua, 'tizen') !== false) {
+        return 'tizen-tv';
+    }
+
+    // Smart TV: Apple TV
+    if (preg_match('/apple tv|cpu tv os/i', $userAgent)) {
+        return 'apple-tv';
+    }
+
+    if (strpos($ua, 'okhttp') !== false) {
+        return 'firetv';
+    }
+    if (strpos($ua, 'tizen') !== false) {
+        return 'tizen-tv';
+    }
+    // Android devices
+    if (preg_match('/android/i', $userAgent)) {
+        return 'android';
+    }
+
+    // iOS devices
+    if (preg_match('/iphone/i', $userAgent)) {
+        return 'iphone';
+    }
+    if (preg_match('/ipad/i', $userAgent)) {
+        return 'ipad';
+    }
+    if (preg_match('/ipod/i', $userAgent)) {
+        return 'ipod';
+    }
+
+    // Windows desktop
+    if (preg_match('/windows nt/i', $userAgent)) {
+        return 'windows-pc';
+    }
+
+    // Mac desktop
+    if (preg_match('/macintosh|mac os x/i', $userAgent)) {
+        return 'mac-pc';
+    }
+
+    // Linux desktop (not Android)
+    if ((strpos($ua, 'linux') !== false) && (strpos($ua, 'android') === false)) {
+        return 'linux-pc';
+    }
+
+    // Default fallback
+    return 'unknown';
 }
 
 
