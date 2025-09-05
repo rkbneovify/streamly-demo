@@ -375,8 +375,8 @@ class APIController extends Controller
                 }
     
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
-                return $address;
-            });
+                return $address;  
+            });  
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
@@ -400,7 +400,7 @@ class APIController extends Controller
                 // ✅ Fix logintime format (remove microseconds)
                 if (!empty($address['logintime'])) {
                     $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->format('Y-m-d\TH:i:s\Z');
-                }
+                } 
     
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
