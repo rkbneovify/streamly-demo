@@ -140,11 +140,16 @@
                         </td>
                         <td style="vertical-align: middle;">
                             <a href="{{ route('admin.users.connected.devices', $user->id) }}">
-                                @if ($user->rooms_count > 0)
-                                    {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                @if ($user->is_active)
+                                    @if ($user->roles->first()->id == 5)
+                                        {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                    @else
+                                        {{ $user->sessions_count ?? 0 }} / 5
+                                    @endif
                                 @else
-                                    {{ $user->sessions_count ?? 0 }} / 5
+                                    0
                                 @endif
+
                             </a>
 
                         </td>
