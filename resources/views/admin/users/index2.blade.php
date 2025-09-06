@@ -295,7 +295,7 @@
 
                     <div class="row  mt-3 mb-0 mb-3">
 
-                        <div class="col-md-2 mb-3">
+                        <div class="col-md-2 mb-2">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
@@ -306,7 +306,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-role.png') }}" alt="role icon">
                                 <select name="roles" id="sel_roles" class="select-custom">
@@ -321,7 +321,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-mode.png') }}" alt="mode icon">
                                 <select name="mode" id="sel_mode" class="select-custom">
@@ -333,7 +333,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_status" class="select-custom">
@@ -345,20 +345,20 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/add-user.png') }}" alt="status icon">
                                 <a href="{{ url('admin/users/create') }} " class="btn-add-user">Add New User</a>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/export.png') }}" alt="status icon">
                                 <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
                                     class="btn-add-user">Export</a>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/calendar.png') }}" alt="status icon">
                                 <input type="text" class="input-daterange" name="daterange"
@@ -366,7 +366,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control input-custom" placeholder="Search by name, email">
@@ -399,7 +399,7 @@
 
                 </form>
                 {{-- table end --}}
-                <div class="row justify-content-end mt-3">
+                <div class="d-flex justify-content-end mt-5 mr-1">
                     {{ $users->withQueryString()->links() }}
                 </div>
                 <!-- /.card-body -->
