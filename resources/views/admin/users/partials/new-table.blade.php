@@ -172,6 +172,7 @@
                     </tr>
                 @endforeach
         </table>
+        
     </div>
 @else
     <div class="table-responsive">
