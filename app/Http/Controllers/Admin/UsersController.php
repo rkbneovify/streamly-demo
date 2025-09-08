@@ -1021,7 +1021,8 @@ class UsersController extends Controller
             'pdInfo' => fn($query) => $query->where('user_id', $id),
         ])
             ->selectRaw("id, users_id, connected_devices, access_token, device_id,
-        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
+        build_version,
         created_on,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
             ->where('status', 1)
@@ -1035,9 +1036,9 @@ class UsersController extends Controller
             })
             ->orderBy('connected_devices', 'asc')
             ->get();
-
+        $totalRooms = HotelRoomTable::where('user_id', $id)->count();
         // return response()->json(['success' => true, "datalist" => $allSession]);
-        return view('admin.users.connected', compact('allSession'));
+        return view('admin.users.connected', compact('allSession', 'totalRooms'));
     }
 
     public function sessiondestroy($id, Request $request)
