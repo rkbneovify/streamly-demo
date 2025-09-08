@@ -1088,6 +1088,8 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->device_title = request()->device_title ?? null;
     $session_tab->device_model = request()->device_model ?? null;
     $session_tab->build_version = request()->build_version ?? null;
+    $session_tab->device_os_version = request()->device_os_version ?? null;
+    $session_tab->zipcode = request()->zipcode ?? null;
     $session_tab->logintime = Carbon::now();
     $session_tab->status = 1;
     $session_tab->created_on = $date;
