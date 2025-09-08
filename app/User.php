@@ -157,8 +157,8 @@ class User extends Authenticatable implements JWTSubject
     public function sessions()
     {
         return $this->hasMany(SessionTable::class, 'users_id', 'id')
-            ->where('status', 1)
-            ->latest('id');
+            ->where('status', 1);
+
     }
 
     public function rooms()
