@@ -193,19 +193,19 @@
                                 <label for="smooth_url" class="col-md-4 control-label">zipcodes for channel</label>
 
 
-                                <!-- <input id="zip_code" type="text" id="zip_codes" class="form-control"
+                                <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
-                                    placeholder="e.g., 12345, 67890" autofocus> -->
+                                    placeholder="e.g., 12345, 67890" autofocus>
 
-
-                                    <input id="zip_codes" type="text"
+ 
+                                    <!-- <input id="zip_codes" type="text"
                                 class="form-control"
                                 name="zip_codes"
                                 value="{{ implode(', ', $channel->zip_code) }}"
                                 placeholder="e.g., 12345, 678901"
                                 pattern="^(\d{5,6})(,\s*\d{5,6})*$"
                                 title="Enter 5 or 6-digit zip codes separated by commas"
-                                autofocus>
+                                autofocus> -->
 
                                 @if ($errors->has('zip_code'))
                                     <span class="help-block">
@@ -268,30 +268,29 @@
         $('.select2').select2();
     </script>
     <script>
-    const zipInput = document.getElementById('zip_codes');
 
-    // Allow typing only digits and commas
-    zipInput.addEventListener('input', function(e) {
-    let value = e.target.value;
+    //  const zipInput = document.getElementById('zip_codes');
 
-    // Allow digits + comma only
-    value = value.replace(/[^0-9,]/g, '');
+//             zipCodesInput.addEventListener("input", function() {
+//                 const inputValue = zipCodesInput.value.replace(/[^0-9,]/g,
+//                 ""); 
+//                 const formattedValue = inputValue.replace(/(\d{5})(?=\d)/g,
+//                 "$1,"); 
+//                 zipCodesInput.value = formattedValue;
+//             });
+//         });
 
-    // Prevent multiple commas in a row (e.g., ",,,")
-    value = value.replace(/,+/g, ',');
 
-    e.target.value = value;
-    });
+//         document.getElementById('zip_codes').addEventListener('input', function(e) {
+//     let value = e.target.value;
 
-    // Final cleanup when user leaves the field
-    zipInput.addEventListener('blur', function(e) {
-    let parts = e.target.value.split(',')
-        .map(p => p.trim())
-        .filter(p => p.length === 5 || p.length === 6); // only valid zipcodes
+//     let parts = value.split(',')
+//         .map(p => p.trim().replace(/\D/g, ''))   
+//         .map(p => p.slice(0, 6))                 
+//         .filter(p => p.length >= 5);            
 
-    // Join with ", " so nice formatting is applied only on blur
-    e.target.value = parts.join(', ');
-    });
+//     e.target.value = parts.join(', ');
+// });
 
  
 
