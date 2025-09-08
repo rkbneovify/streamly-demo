@@ -95,6 +95,12 @@
                                         Device Type
                                     </th>
                                     <th style="width: 20%">
+                                        OS
+                                    </th>
+                                    <th style="width: 20%">
+                                        Zipcode
+                                    </th>
+                                    <th style="width: 20%">
                                         Created on
                                     </th>
                                     {{-- <th style="width: 30%">
@@ -152,6 +158,12 @@
                                             @endif
 
 
+                                        </td>
+                                        <td>
+                                            {{ $user->device_os_version ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->zipcode ?? '' }}
                                         </td>
                                         <td>
                                             {{ $user->created_on ?? '' }}

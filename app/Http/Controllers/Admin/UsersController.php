@@ -1028,7 +1028,7 @@ class UsersController extends Controller
             ])
                 ->selectRaw("id, users_id, connected_devices, access_token, device_id,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
-        build_version,
+        build_version,device_os_version,zipcode,
         created_on,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('status', 1)
