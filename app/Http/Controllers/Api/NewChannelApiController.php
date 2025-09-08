@@ -618,7 +618,7 @@ class NewChannelApiController extends Controller
                     $channel->name = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fanduel1.png';
-                }
+                } 
             
 
                 unset($channel->assets);
