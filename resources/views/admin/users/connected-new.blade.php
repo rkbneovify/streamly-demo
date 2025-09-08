@@ -153,6 +153,14 @@
             height: 25px;
         }
 
+        .img-delete:hover {
+            border: 1px solid red;
+            border-radius: 50%;
+            padding: 4px;
+            width: 30px;
+            height: 30px;
+        }
+
 
 
         .vertical-align {
@@ -244,8 +252,7 @@
                                 <div class="col-md-4 mb-3">
                                     <div class="btn-wrapper btn-danger">
                                         <img src="{{ asset('images/trash-red.png') }}" alt="status icon">
-                                        <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
-                                            class="btn text-danger">Delete All</a>
+                                        <a href="#" id="btnDeleteAll" class="btn text-danger">Delete All</a>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +265,7 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <input type="checkbox" name="" id="cbAll">
+                                        <input type="checkbox" name="" id="selectAll">
                                     </th>
 
                                     <th>
@@ -291,7 +298,7 @@
                                 @foreach ($allSession as $key => $user)
                                     <tr>
                                         <td style="vertical-align: middle;">
-                                            <input type="checkbox" name="" id="cbAll">
+                                            <input type="checkbox" name="" class="row-checkbox">
                                         </td>
 
 
@@ -367,101 +374,13 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-    <script>
-        $(function() {
-            $('.update_record').prop('disabled', true);
-            // Check all 
-            $('#checkall').click(function() {
-                if ($(this).is(':checked')) {
-                    $('.update_check').prop('checked', true);
-                    $('.update_record').prop('disabled', false);
-                } else {
-                    $('.update_check').prop('checked', false);
-                    $('.update_record').prop('disabled', true);
-                }
-            });
-
-            const checkboxes = document.querySelectorAll(".update_check");
-
-
-            checkboxes.forEach((checkbox) => {
-                checkbox.addEventListener("change", () => {
-                    const checkedCount = document.querySelectorAll(".update_check:checked").length;
-                    const uncheckedCount = document.querySelectorAll(".update_check:not(:checked)")
-                        .length;
-                    if (checkboxes.length <= checkedCount) {
-                        $('#checkall').prop('checked', true);
-                    } else if (checkboxes.length >= uncheckedCount) {
-                        $('#checkall').prop('checked', false);
-                    }
-
-
-                    if (checkedCount > 0) {
-                        $('.update_record').prop('disabled', false);
-                    } else {
-                        $('.update_record').prop('disabled', true);
-                    }
-
-                });
-            });
-
-            $(document).on('click', '.update_record', function() {
-
-                var id = [];
-                var status;
-
-
-
-                if (confirm("Are you sure you want to Update this data?")) {
-                    $('.update_check:checked').each(function() {
-                        id.push($(this).val());
-                    });
-                    console.log("id", id);
-                    if (id.length > 0) {
-
-                        status = this.id;
-                        $.ajax({
-                            url: "{{ url('admin/multisessiondestroy') }}",
-                            headers: {
-                                'x-csrf-token': '{{ csrf_token() }}'
-                            },
-                            method: "post",
-                            data: {
-                                id: id,
-                                status: status
-                            },
-                            success: function(data) {
-                                console.log(data);
-                                alert(data.message);
-                                // console.log(data.message);
-                                // console.log('data',data);
-                                $.each(id, function(index, value) {
-                                    // alert( index + ": " + value );
-                                    $('#' + value + '').fadeTo(400, 0, function() {
-                                        $(this).remove();
-                                    });
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                alert(xhr.responseJSON.message);
-                                console.log(xhr.responseJSON);
-                                //   $.each(xhr.responseJSON.errors, function (key, item) 
-                                // {
-                                //   $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
-                                // });
-                            }
-                        });
-                    } else {
-                        alert("Please select atleast one checkbox");
-                    }
-                }
-            });
-        });
-    </script>
 
     <script>
         const txtSearch = document.getElementById("txtSearch");
         const btnClear = document.getElementById("btnClear");
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const btnDeleteAll = document.getElementById('btnDeleteAll');
+        const userCheckboxes = document.querySelectorAll('.row-checkbox');
         txtSearch.addEventListener("input", () => {
             btnClear.style.display = txtSearch.value ? "block" : "none";
         });
@@ -471,5 +390,18 @@
             btnClear.style.display = "none";
             txtSearch.focus();
         });
+        selectAllCheckbox.addEventListener('change', function() {
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        btnDeleteAll.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+
+
+        })
     </script>
 @stop
