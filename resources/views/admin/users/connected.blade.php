@@ -56,7 +56,12 @@
                         <div class="col-md-3 px-4">
                             <span for="">Total Devices</span>
                             <br>
-                            <label>{{ $allSession->count() . '/' . $totalRooms }}</label>
+                            @if ($allSession->first()->user->roles->first()->id == 5)
+                                <label>{{ $allSession->count() . '/' . $totalRooms }}</label>
+                            @else
+                                <label>{{ $allSession->count() . '/5' }}</label>
+                            @endif
+
                         </div>
                     </div>
 
@@ -88,6 +93,12 @@
 
                                     <th style="width: 20%">
                                         Device Type
+                                    </th>
+                                    <th style="width: 20%">
+                                        OS
+                                    </th>
+                                    <th style="width: 20%">
+                                        Zipcode
                                     </th>
                                     <th style="width: 20%">
                                         Created on
@@ -147,6 +158,12 @@
                                             @endif
 
 
+                                        </td>
+                                        <td>
+                                            {{ $user->device_os_version ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->zipcode ?? '' }}
                                         </td>
                                         <td>
                                             {{ $user->created_on ?? '' }}

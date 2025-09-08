@@ -166,6 +166,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice')->name('users.connected.devices'); //connected devices
+    Route::get('/users/connected-new/{id}', 'Admin\UsersController@connectedDeviceNew')->name('users.connected.devices.new'); //connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser', 'Admin\UsersController@store')->name('insertuser');
     Route::get('/users/view/{id}', 'Admin\UsersController@show')->name('users.view');
