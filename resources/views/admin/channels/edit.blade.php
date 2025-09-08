@@ -196,7 +196,7 @@
                                 <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
                                     placeholder="e.g., 12345, 67890" autofocus>
-                                    
+
 <!-- 
                                 <input id="zip_codes" type="text"
                                 class="form-control"
@@ -271,7 +271,7 @@
     <script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>
     <script>
         $('.select2').select2();
-    </script>
+    </script>  
     <script>
 //     const zipInput = document.getElementById('zip_codes');
 
