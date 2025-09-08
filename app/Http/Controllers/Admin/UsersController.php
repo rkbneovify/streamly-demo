@@ -54,7 +54,12 @@ class UsersController extends Controller
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
-        $query->withCount('sessions');
+        $query->withCount([
+            'sessions' => function ($q) {
+                $q->select(DB::raw('count(distinct device_id)'))
+                    ->where('status', 1);
+            }
+        ]);
         $query->withCount('rooms');
         if ($request->sort_date == 'asc') {
 
@@ -1046,6 +1051,52 @@ class UsersController extends Controller
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
             // return response()->json(['success' => true, "datalist" => $allSession]);
             return view('admin.users.connected', compact('allSession', 'totalRooms'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            toast('Something went wrong ! try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
+    }
+
+    public function connectedDeviceNew($id)
+    {
+        try {
+            $user = User::find($id);
+            $roles = Role::get(); //get all roles
+            $userRoles = $user->roles->pluck('id')->toArray();
+            //dd($roles);
+            $allSession = SessionTable::with([
+                'user.roles',
+                'hotel',
+                'pdInfo' => fn($query) => $query->where('user_id', $id),
+            ])
+                ->selectRaw("id, users_id, connected_devices, access_token, device_id,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
+        build_version,
+        created_on,
+        JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
+                ->where('status', 1)
+                ->where('users_id', $id)
+                ->whereIn('id', function ($query) use ($id) {
+                    $query->selectRaw('MAX(id)')
+                        ->from('session_table')
+                        ->where('users_id', $id)
+                        ->where('status', 1)
+                        ->groupBy('device_id');
+                })
+                ->orderBy('connected_devices', 'asc')
+                ->get();
+            if ($allSession->count() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+            // return response()->json(['success' => true, "datalist" => $allSession]);
+            return view('admin.users.connected-new', compact('allSession', 'totalRooms'));
         } catch (\Throwable $th) {
             //throw $th;
             toast('Something went wrong ! try again later.', 'error')
