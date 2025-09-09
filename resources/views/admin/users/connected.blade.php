@@ -164,7 +164,13 @@
                                             {{ $user->device_id ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $user->device_model ?? '' }}
+
+                                            @if (detectDeviceByUserAgent($user->useragent ?? '') == 'android')
+                                                {{ $user->device_title ?? '' }}
+                                            @else
+                                                {{ $user->device_model ?? '' }}
+                                            @endif
+
                                         </td>
                                         <td>
                                             {{ $user->build_version ?? '' }}
