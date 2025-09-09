@@ -1650,7 +1650,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
 
     if ($ua === 'okhttp/4.11.0') {
 
-        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
