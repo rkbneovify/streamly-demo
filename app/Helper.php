@@ -1938,7 +1938,7 @@ function detectDeviceByUserAgent(string $userAgent): string
     }
 
     if (strpos($ua, 'okhttp') !== false) {
-        return 'firetv';
+        return 'okhttp';
     }
     if (strpos($ua, 'tizen') !== false) {
         return 'tizen-tv';
