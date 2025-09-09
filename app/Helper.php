@@ -1066,7 +1066,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $device_id = explode("#~", $deviceDetails)[1];
     if ($ua === 'okhttp/4.11.0') {
 
-        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
