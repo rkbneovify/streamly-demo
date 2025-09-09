@@ -90,6 +90,9 @@
                                         Device Id
                                     </th>
                                     <th style="width: 20%">
+                                        Device Model
+                                    </th>
+                                    <th style="width: 20%">
                                         Build Version
                                     </th>
                                     <th style="width: 20%">
@@ -144,11 +147,7 @@
                                             @if ($user->device_type === 'web')
                                                 Web
                                             @else
-                                                @if (!empty($user->pdInfo->personal_devicename))
-                                                    {{ $user->pdInfo->personal_devicename ?? '' }}
-                                                @else
-                                                    {{ $user->device_title ?? '' }}
-                                                @endif
+                                                {{ $user->pdInfo->personal_devicename ?? '' }}
                                             @endif
 
 
@@ -163,6 +162,9 @@
                                         </td>
                                         <td>
                                             {{ $user->device_id ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->device_model ?? '' }}
                                         </td>
                                         <td>
                                             {{ $user->build_version ?? '' }}
