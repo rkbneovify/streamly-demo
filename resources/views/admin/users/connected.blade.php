@@ -154,7 +154,12 @@
                                         </td>
 
                                         <td>
-                                            {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @if (detectDeviceByUserAgent($user->useragent ?? '') == 'okhttp')
+                                                {{ $user->device_title ?? '' }}
+                                            @else
+                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endif
+
 
 
 
