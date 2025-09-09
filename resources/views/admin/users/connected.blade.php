@@ -77,32 +77,44 @@
                                     <th style="width: 1%">
                                         #
                                     </th>
-                                    <th style="width: 20%">
+                                    {{-- <th style="width: 20%">
                                         Device id
-                                    </th>
+                                    </th> --}}
                                     <th style="width: 20%">
                                         Device Name
                                     </th>
+                                    <th style="width: 20%">
+                                        Platform
+                                    </th>
+                                    <th style="width: 20%">
+                                        Device Id
+                                    </th>
+                                    <th style="width: 20%">
+                                        Build Version
+                                    </th>
+                                    <th style="width: 20%">
+                                        OS Version
+                                    </th>
 
+
+
+                                    {{-- <th style="width: 20%">
+                                        Device Type
+                                    </th> --}}
+
+
+                                    <th style="width: 20%">
+                                        Date added
+                                    </th>
+                                    <th style="width: 20%">
+                                        Zipcode
+                                    </th>
 
                                     @if ($allSession->first()->user->roles->first()->id == 5)
                                         <th style="width: 20%">
                                             Hotel room
                                         </th>
                                     @endif
-
-                                    <th style="width: 20%">
-                                        Device Type
-                                    </th>
-                                    <th style="width: 20%">
-                                        OS
-                                    </th>
-                                    <th style="width: 20%">
-                                        Zipcode
-                                    </th>
-                                    <th style="width: 20%">
-                                        Created on
-                                    </th>
                                     {{-- <th style="width: 30%">
                           Email
                       </th> --}}
@@ -115,6 +127,7 @@
                                     </th>
 
                                     <th style="width: 20%">
+
                                     </th>
                                 </tr>
                             </thead>
@@ -124,50 +137,65 @@
                                         <td>
                                             #
                                         </td>
-                                        <td>
-                                            {{ $user->device_id ?? '' }}
-                                        </td>
+
 
 
                                         <td>
                                             @if ($user->device_type === 'web')
                                                 Web
                                             @else
-                                                {{ $user->pdInfo->personal_devicename ?? '' }}
+                                                @if (!empty($user->pdInfo->personal_devicename))
+                                                    {{ $user->pdInfo->personal_devicename ?? '' }}
+                                                @else
+                                                    {{ $user->device_title ?? '' }}
+                                                @endif
                                             @endif
+
+
+                                        </td>
+
+                                        <td>
+                                            {{ detectDeviceByUserAgent($user->useragent ?? '') }}
 
 
 
 
                                         </td>
+                                        <td>
+                                            {{ $user->device_id ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->build_version ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->device_os_version ?? '' }}
+                                        </td>
 
+
+
+                                        {{-- <td>
+                                            @if (!empty($user->device_title))
+                                                {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
+                                            @else
+                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endif
+
+
+                                        </td> --}}
+
+
+                                        <td>
+                                            {{ $user->created_on ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->zipcode ?? '' }}
+                                        </td>
                                         @if ($allSession->first()->user->roles->first()->id == 5)
                                             <td> @isset($user->hotel)
                                                     {{ $user->hotel->hotel_room ?? '' }}
                                                 @endisset
                                             </td>
                                         @endif
-
-                                        <td>
-                                            @if (!empty($user->device_title))
-                                                {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
-
-                                                ({{ $user->build_version ?? '' }})
-                                            @else
-                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                            @endif
-
-
-                                        </td>
-                                        <td>
-                                            {{ $user->device_os_version ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $user->zipcode ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $user->created_on ?? '' }}
-                                        </td>
                                         {{-- <td class="project-state">
                             @if ($user->is_active === 1)
                             <span class="badge badge-success">Active</span>
