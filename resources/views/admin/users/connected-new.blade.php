@@ -67,7 +67,7 @@
             padding: 6px 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            background-color: #fff;
+            /* background-color: #fff; */
             cursor: pointer;
             font-size: 14px;
         }
@@ -154,11 +154,13 @@
         }
 
         .img-delete:hover {
+            content: url("{{ asset('images/trash-red.png') }}");
             border: 1px solid red;
             border-radius: 50%;
             padding: 4px;
             width: 30px;
             height: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
 
@@ -350,7 +352,7 @@
                                             {{ $user->created_on ?? '' }}
                                         </td>
                                         <td style="vertical-align: middle;">
-                                            <a href="#">
+                                            <a class="btn-delete" href="#">
                                                 <img class="img-delete" src="{{ asset('images/trash.png') }}"
                                                     alt="Delete Icon">
                                             </a>
@@ -390,18 +392,38 @@
             btnClear.style.display = "none";
             txtSearch.focus();
         });
-        selectAllCheckbox.addEventListener('change', function() {
-            userCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-        });
 
-        btnDeleteAll.addEventListener('click', (e) => {
-            e.preventDefault();
+        $(document).on('click', '.btn-user-delete', function(e) {
 
-            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+                    selectAllCheckbox.addEventListener('change', function() {
+                        userCheckboxes.forEach(checkbox => {
+                            checkbox.checked = selectAllCheckbox.checked;
+                        });
+                    });
+
+                    btnDeleteAll.addEventListener('click', (e) => {
+                        e.preventDefault();
+
+                        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+                        if (checkedBoxes.length == 0) {
+                            Swal.fire({
+                                toast: true,
+                                icon: 'error',
+                                title: 'Please select at least one',
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                location.reload(); // reload after toast timeout
+                            });
+
+                        } else {
+
+                        }
 
 
-        })
+
+                    })
     </script>
 @stop
