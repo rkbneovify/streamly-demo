@@ -174,6 +174,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::put('userupdate/{id}', 'Admin\UsersController@update')->name('userupdate');
     Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy')->name('users.destroy');
     Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
+    Route::get('users/session/destroy/{id}', 'Admin\UsersController@userSessionDestroy')->name('users.session.destroy');
 
 
     Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
