@@ -1241,6 +1241,25 @@ class UsersController extends Controller
         }
     }
 
+    public function destroyUserSession($id)
+    {
+        if (is_array($id)) {
+            // $session = SessionTable::whereIn("users_id", $id)->first();
+        } else {
+            try {
+                $session = SessionTable::where("id", $id)->first();
+                JWTAuth::setToken($session->access_token)->invalidate();
+                toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
+                return redirect()->back();
+            } catch (\Throwable $th) {
+                //throw $th;
+                toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+                return redirect()->back();
+            }
+        }
+
+    }
+
     public function UserAjaxData(Request $request)
     {   ## Read value
         $draw = $request->get('draw');
