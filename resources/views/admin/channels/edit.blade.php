@@ -191,7 +191,7 @@
 
                             <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
                                 <label for="smooth_url" class="col-md-4 control-label">zipcodes for channel</label>
-
+ 
 
                                 <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
@@ -206,6 +206,8 @@
                                 pattern="^(\d{5,6})(,\s*\d{5,6})*$"
                                 title="Enter 5 or 6-digit zip codes separated by commas"
                                 autofocus> -->
+
+
 
                                 @if ($errors->has('zip_code'))
                                     <span class="help-block">
