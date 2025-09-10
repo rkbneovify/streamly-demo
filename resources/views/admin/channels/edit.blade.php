@@ -197,18 +197,15 @@
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
                                     placeholder="e.g., 12345, 67890" autofocus>
 
-<!-- 
-                                <input id="zip_codes" type="text"
+ 
+                                    <!-- <input id="zip_codes" type="text"
                                 class="form-control"
                                 name="zip_codes"
                                 value="{{ implode(', ', $channel->zip_code) }}"
                                 placeholder="e.g., 12345, 678901"
                                 pattern="^(\d{5,6})(,\s*\d{5,6})*$"
                                 title="Enter 5 or 6-digit zip codes separated by commas"
-                                maxlength="255"
                                 autofocus> -->
-
-
 
                                 @if ($errors->has('zip_code'))
                                     <span class="help-block">
@@ -273,7 +270,8 @@
         $('.select2').select2();
     </script>  
     <script>
-//     const zipInput = document.getElementById('zip_codes');
+
+    //  const zipInput = document.getElementById('zip_codes');
 
 //             zipCodesInput.addEventListener("input", function() {
 //                 const inputValue = zipCodesInput.value.replace(/[^0-9,]/g,
@@ -295,5 +293,8 @@
 
 //     e.target.value = parts.join(', ');
 // });
+
+ 
+
     </script>
 @stop
