@@ -106,7 +106,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
-    Route::get('/users/new', 'Admin\UsersController@index2');
+    Route::get('/users/new', 'Admin\UsersController@index2')->name('users.new.index');
     Route::get('/users/status/{id}', 'Admin\UsersController@changeStatus')->name('users.status');
     Route::get('/users/delete/{id}', 'Admin\UsersController@destroyById')->name('users.delete');
     Route::post('/users/bulk/action', 'Admin\UsersController@bulkAction')->name('users.bulk.action');
@@ -166,6 +166,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice')->name('users.connected.devices'); //connected devices
+    Route::get('/users/connected-new/{id}', 'Admin\UsersController@connectedDeviceNew')->name('users.connected.devices.new'); //connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser', 'Admin\UsersController@store')->name('insertuser');
     Route::get('/users/view/{id}', 'Admin\UsersController@show')->name('users.view');
@@ -173,6 +174,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::put('userupdate/{id}', 'Admin\UsersController@update')->name('userupdate');
     Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy')->name('users.destroy');
     Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
+    Route::get('users/session/destroy/{id}', 'Admin\UsersController@destroyUserSessionById')->name('users.session.destroy');
 
 
     Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
