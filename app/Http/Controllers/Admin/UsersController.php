@@ -1014,7 +1014,7 @@ class UsersController extends Controller
 
 
 
-    public function connecteddevice($id)
+   public function connecteddevice($id)
     {
         try {
             $user = User::find($id);
