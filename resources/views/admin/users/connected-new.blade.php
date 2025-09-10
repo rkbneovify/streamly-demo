@@ -262,109 +262,116 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" name="" id="selectAll">
-                                    </th>
-
-                                    <th>
-                                        Device Name
-                                    </th>
-
-
-                                    @if ($allSession->first()->user->roles->first()->id == 5)
-                                        <th>
-                                            Hotel room
-                                        </th>
-                                    @endif
-
-                                    <th>
-                                        Device Type
-                                    </th>
-                                    <th>
-                                        Created At
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-
-
-
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($allSession as $key => $user)
+                    <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
+                        @csrf
+                        <input hidden type="text" name="action" value="session">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td style="vertical-align: middle;">
-                                            <input type="checkbox" name="" class="row-checkbox">
-                                        </td>
+                                        <th>
+                                            <input type="checkbox" name="" id="selectAll">
+                                        </th>
 
+                                        <th>
+                                            Device Name
+                                        </th>
 
-
-                                        <td>
-
-                                            <div class="flex">
-                                                <div class="device-box">
-                                                    <img class="device-icon" src="{{ asset('images/desktop.png') }}"
-                                                        alt="device icon">
-
-                                                </div>
-                                                <div class="device-name">
-                                                    @if ($user->device_type === 'web')
-                                                        <b> Web</b>
-                                                    @else
-                                                        <b> {{ $user->pdInfo->personal_devicename ?? '' }}</b>
-                                                    @endif
-                                                    <span>
-                                                        ID : {{ $user->device_id ?? '' }}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-
-
-
-                                        </td>
 
                                         @if ($allSession->first()->user->roles->first()->id == 5)
-                                            <td style="vertical-align: middle;"> @isset($user->hotel)
-                                                    {{ $user->hotel->hotel_room ?? '' }}
-                                                @endisset
-                                            </td>
+                                            <th>
+                                                Hotel room
+                                            </th>
                                         @endif
 
-                                        <td style="vertical-align: middle;">
-                                            @if (!empty($user->device_title))
-                                                {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
+                                        <th>
+                                            Device Type
+                                        </th>
+                                        <th>
+                                            Created At
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
 
-                                                ({{ $user->build_version ?? '' }})
-                                            @else
-                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                            @endif
-
-
-                                        </td>
-                                        <td style="vertical-align: middle;">
-                                            {{ $user->created_on ?? '' }}
-                                        </td>
-                                        <td style="vertical-align: middle;">
-                                            <a class="btn-delete" href="#">
-                                                <img class="img-delete" src="{{ asset('images/trash.png') }}"
-                                                    alt="Delete Icon">
-                                            </a>
-                                        </td>
 
 
 
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    @foreach ($allSession as $key => $user)
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                <input type="checkbox" name="user_ids[]" class="row-checkbox"
+                                                    value="{{ $user->id }}">
+                                            </td>
+
+
+
+                                            <td>
+
+                                                <div class="flex">
+                                                    <div class="device-box">
+                                                        <img class="device-icon" src="{{ asset('images/desktop.png') }}"
+                                                            alt="device icon">
+
+                                                    </div>
+                                                    <div class="device-name">
+                                                        @if ($user->device_type === 'web')
+                                                            <b> Web</b>
+                                                        @else
+                                                            <b> {{ $user->pdInfo->personal_devicename ?? '' }}</b>
+                                                        @endif
+                                                        <span>
+                                                            ID : {{ $user->device_id ?? '' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            </td>
+
+                                            @if ($allSession->first()->user->roles->first()->id == 5)
+                                                <td style="vertical-align: middle;"> @isset($user->hotel)
+                                                        {{ $user->hotel->hotel_room ?? '' }}
+                                                    @endisset
+                                                </td>
+                                            @endif
+
+                                            <td style="vertical-align: middle;">
+                                                @if (!empty($user->device_title))
+                                                    {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
+
+                                                    ({{ $user->build_version ?? '' }})
+                                                @else
+                                                    {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                                @endif
+
+
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                {{ $user->created_on ?? '' }}
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <a class="btn-delete"
+                                                    href="{{ route('admin.users.session.destroy', $user->id) }}"
+                                                    data-url="{{ route('admin.users.session.destroy', $user->id) }}">
+                                                    <img class="img-delete" src="{{ asset('images/trash.png') }}"
+                                                        alt="Delete Icon">
+                                                </a>
+                                            </td>
+
+
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -393,37 +400,73 @@
             txtSearch.focus();
         });
 
-        $(document).on('click', '.btn-user-delete', function(e) {
+        selectAllCheckbox.addEventListener('change', function() {
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
 
-                    selectAllCheckbox.addEventListener('change', function() {
-                        userCheckboxes.forEach(checkbox => {
-                            checkbox.checked = selectAllCheckbox.checked;
-                        });
-                    });
+        btnDeleteAll.addEventListener('click', (e) => {
+            e.preventDefault();
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+            if (checkedBoxes.length == 0) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'Please select at least one',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    location.reload(); // reload after toast timeout
+                });
 
-                    btnDeleteAll.addEventListener('click', (e) => {
-                        e.preventDefault();
-
-                        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-                        if (checkedBoxes.length == 0) {
-                            Swal.fire({
-                                toast: true,
-                                icon: 'error',
-                                title: 'Please select at least one',
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true
-                            }).then(() => {
-                                location.reload(); // reload after toast timeout
-                            });
-
-                        } else {
-
-                        }
+            } else {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `Do you really want to sessions?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: `Yes`,
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#tbl-form').submit();
+                        showLoader();
+                    } else {
+                        location.reload();
+                    }
+                });
+            }
 
 
 
-                    })
+        })
+
+        document.querySelectorAll('.btn-delete').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const url = btn.getAttribute('data-url');
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `Do you really want to sessions?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: `Yes`,
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        showLoader();
+                        window.location.href = url;
+                    } else {
+                        location.reload();
+                    }
+                });
+            });
+        });
     </script>
 @stop

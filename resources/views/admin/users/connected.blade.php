@@ -165,8 +165,11 @@
 
 
                                         </td>
-                                        <td>
-                                            {{ $user->device_id ?? '' }}
+                                        <td style="cursor: pointer;">
+                                            <span class="short-id" onclick="toggleDeviceId(this)"
+                                                data-full="{{ $user->device_id }}">
+                                                {{ \Illuminate\Support\Str::limit($user->device_id, 10, '...') }}
+                                            </span>
                                         </td>
                                         <td>
 
@@ -260,6 +263,16 @@
 @endsection
 @section('scripts')
     <script>
+        function toggleDeviceId(element) {
+            const fullId = element.getAttribute('data-full');
+            const shortId = fullId.substring(0, 10) + '...';
+
+            if (element.innerText === shortId) {
+                element.innerText = fullId;
+            } else {
+                element.innerText = shortId;
+            }
+        }
         $(function() {
             $('.update_record').prop('disabled', true);
             // Check all 

@@ -1241,24 +1241,29 @@ class UsersController extends Controller
         }
     }
 
-    public function destroyUserSession($id)
+    public function destroyUserSessionById($id)
     {
         if (is_array($id)) {
-            // $session = SessionTable::whereIn("users_id", $id)->first();
+            return response()->json($id);
         } else {
             try {
                 $session = SessionTable::where("id", $id)->first();
                 JWTAuth::setToken($session->access_token)->invalidate();
+                $session->delete();
                 toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
                 return redirect()->back();
             } catch (\Throwable $th) {
-                //throw $th;
+
                 toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
                 return redirect()->back();
             }
         }
 
+
+
     }
+
+
 
     public function UserAjaxData(Request $request)
     {   ## Read value
@@ -1569,7 +1574,24 @@ class UsersController extends Controller
                     return redirect()->back();
                 }
 
+            case "session":
 
+
+                try {
+
+                    foreach ($request->user_ids as $id) {
+                        $session = SessionTable::where("id", $id)->first();
+                        JWTAuth::setToken($session->access_token)->invalidate();
+                        $session->delete();
+                    }
+                    DB::commit();
+                    toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
+                    return redirect()->route("admin.users.new.index");
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+                    return redirect()->back();
+                }
             default:
 
                 toast("Please select any action", "error")
