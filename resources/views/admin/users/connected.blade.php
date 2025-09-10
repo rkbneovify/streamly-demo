@@ -154,11 +154,23 @@
                                         </td>
 
                                         <td>
-                                            @if (detectDeviceByUserAgent($user->useragent ?? '') == 'okhttp')
-                                                {{ $user->device_title ?? '' }}
-                                            @else
-                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                            @endif
+                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                @case('android')
+                                                    @if ($user->device_title == 'RokuTv')
+                                                        {{ $user->device_title }}
+                                                    @else
+                                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                                    @endif
+                                                @break
+
+                                                @case('okhttp')
+                                                    {{ $user->device_title }}
+                                                @break
+
+                                                @default
+                                                    {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endswitch
+
 
 
 
@@ -173,11 +185,18 @@
                                         </td>
                                         <td>
 
-                                            @if (detectDeviceByUserAgent($user->useragent ?? '') == 'android')
-                                                {{ $user->device_title ?? '' }}
-                                            @else
-                                                {{ $user->device_model ?? '' }}
-                                            @endif
+                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                @case('android')
+                                                    @if ($user->device_title == 'RokuTv')
+                                                        {{ $user->device_model }}
+                                                    @else
+                                                        {{ $user->device_title ?? '' }}
+                                                    @endif
+                                                @break
+
+                                                @default
+                                                    {{ $user->device_model }}
+                                            @endswitch
 
                                         </td>
                                         <td>
