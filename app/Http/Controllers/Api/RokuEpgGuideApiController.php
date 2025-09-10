@@ -186,7 +186,7 @@ class RokuEpgGuideApiController extends Controller
                 ->map(function ($program) {
                     if (isset($program['title']) && strcasecmp(trim($program['title']), 'TV Guide') === 0) {
                         $program['title'] = 'FanDuel';
-                        $program['image'] = env('APP_URL') . '/uploads/fanduel1.png';
+                        $program['image'] = env('APP_URL') . '/uploads/fand.png';
                     }
                     return $program;
                 })
@@ -214,7 +214,7 @@ class RokuEpgGuideApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
                 }
 
-            
+             
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
@@ -223,8 +223,8 @@ class RokuEpgGuideApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fanduel1.png';
-                    $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fand.png';
+                    $channel->image = env('APP_URL') . '/uploads/fand.png';
                 }
 
                 unset($channel->db_image);
