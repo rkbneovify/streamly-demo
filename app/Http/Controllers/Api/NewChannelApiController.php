@@ -612,7 +612,7 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
-                }
+                }   
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
