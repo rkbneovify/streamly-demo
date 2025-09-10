@@ -443,7 +443,7 @@ class NewChannelApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) { 
                     $channel->stationName = 'FanDuel'; 
-                    $channel->image = env('APP_URL') . '/uploads/download1.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
                 
                 unset($channel->db_image);
@@ -612,13 +612,13 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
-                }
+                }   
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fanduel1.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fanduel1.png';
-                } 
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                }
             
 
                 unset($channel->assets);
