@@ -95,6 +95,7 @@ class RokuEpgGuideApiController extends Controller
 
     public function epgGuide(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
             'day' => 'nullable',
