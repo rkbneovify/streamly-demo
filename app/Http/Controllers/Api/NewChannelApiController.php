@@ -756,7 +756,7 @@ class NewChannelApiController extends Controller
                 trim($programs[0]->title ?? '') === 'TV Guide'
             ) {
                 $stationName = 'FanDuel';
-                $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+                $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
                 $programs[0]->title = 'FanDuel'; // Replace title also
             }
             
