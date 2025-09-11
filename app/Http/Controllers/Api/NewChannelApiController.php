@@ -25,37 +25,55 @@ class NewChannelApiController extends Controller
 {
     private $exculdedUsers = ["jmheil@gmail.com", "llipschultz@neovix.com", "brian_marlin@yahoo.com", "qajalaj@yopmail.com", "pm13426@gmail.com", "nathan@neovix.com", "willis@neovix.com", "davea@neovix.com", "willthiswork2023@outlook.com"];
 
-    private function getURIFromAsset($assets)
-    {
-        $uri = NULL;
-        // Initialize URI variables
-        $uri_16_9 = null;
-        $uri_4_3 = null;
-        // Decode JSON to associative array
-        $data = json_decode($assets, true);
-        if (!empty($data)) {
 
-            // Iterate through the assets
-            foreach ($data['asset'] as $asset) {
-                if (($asset['category'] === 'Parent Source Logo - dark' || $asset['category'] === 'Source Logo - dark' || $asset['category'] === 'Iconic')) {
-                    if ($asset['ratio'] === '16:9') {
-                        $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'];
-                        break; // Found the preferred ratio, no need to continue
-                    } elseif ($asset['ratio'] === '4:3') {
-                        $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'];
-                    }
+    private function getURIFromAsset($assets)
+{
+    $uri = null;
+    $ratio_used = null; // track which ratio is selected
+
+    // Initialize URI variables
+    $uri_16_9 = null;
+    $uri_4_3 = null;
+
+    // Decode JSON to associative array
+    $data = json_decode($assets, true);
+    if (!empty($data) && isset($data['asset'])) {
+
+        // Iterate through the assets
+        foreach ($data['asset'] as $asset) {
+            if (
+                ($asset['category'] === 'Parent Source Logo - dark' ||
+                $asset['category'] === 'Source Logo - dark' ||
+                $asset['category'] === 'Iconic')
+            ) {
+                if ($asset['ratio'] === '16:9') {
+                    $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'];
+                    $ratio_used = '16:9';
+                    break; // Found the preferred ratio, no need to continue
+                } elseif ($asset['ratio'] === '4:3') {
+                    $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'];
+                    $ratio_used = '4:3';
                 }
             }
-
-            // Output the URI
-            if ($uri_16_9) {
-                $uri = $uri_16_9;
-            } elseif ($uri_4_3) {
-                $uri = $uri_4_3;
-            }
         }
-        return $uri;
+
+        // Output the URI
+        if ($uri_16_9) {
+            $uri = $uri_16_9;
+            $ratio_used = '16:9';
+        } elseif ($uri_4_3) {
+            $uri = $uri_4_3;
+            $ratio_used = '4:3';
+        }
     }
+
+    // return both URI and ratio to check in response
+    return [
+        'uri' => $uri,
+        'ratio' => $ratio_used
+    ];
+}
+
 
     private function getURIFromAssetForProgram($data)
     {
@@ -326,7 +344,7 @@ class NewChannelApiController extends Controller
     //     }
     // }
 
-
+    
  
     public function epgGuide(Request $request)
     {
@@ -415,10 +433,18 @@ class NewChannelApiController extends Controller
                 $query->orderBy('channels.id', 'asc'); 
             }
             $record = $query->get()->map(function ($channel) use ($day) {
-                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
+                    ->where('user_id', JWTAuth::user()->id)
+                    ->exists();
+            
+                $assetData = $this->getURIFromAsset($channel->assets);
+            
+                $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->ratio = $assetData['ratio'] ?? 'NA';
+            
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
+            
                 if ($channel->stationName == null) {
                     $channel->stationName = "NA";
                 }
@@ -437,18 +463,19 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
-
+            
                 if (
-                    trim($channel->stationName) === 'TV Guide' || 
+                    trim($channel->stationName) === 'TV Guide' ||
                     trim($channel->callSign) === 'TVGN'
-                ) { 
-                    $channel->stationName = 'FanDuel'; 
+                ) {
+                    $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
-                
+            
                 unset($channel->db_image);
                 return $channel;
             });
+            
 
             $response = [];
             $response['success'] = true;
