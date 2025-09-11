@@ -27,53 +27,47 @@ class NewChannelApiController extends Controller
 
 
     private function getURIFromAsset($assets)
-{
-    $uri = null;
-    $ratio_used = null; // track which ratio is selected
-
-    // Initialize URI variables
-    $uri_16_9 = null;
-    $uri_4_3 = null;
-
-    // Decode JSON to associative array
-    $data = json_decode($assets, true);
-    if (!empty($data) && isset($data['asset'])) {
-
-        // Iterate through the assets
-        foreach ($data['asset'] as $asset) {
-            if (
-                ($asset['category'] === 'Parent Source Logo - dark' ||
-                $asset['category'] === 'Source Logo - dark' ||
-                $asset['category'] === 'Iconic')
-            ) {
-                if ($asset['ratio'] === '16:9') {
-                    $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'];
-                    $ratio_used = '16:9';
-                    break; // Found the preferred ratio, no need to continue
-                } elseif ($asset['ratio'] === '4:3') {
-                    $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'];
-                    $ratio_used = '4:3';
+    {
+        $uri = null;
+        $ratio_used = null;
+    
+        $uri_16_9 = null;
+        $uri_4_3 = null;
+    
+        $data = json_decode($assets, true);
+        if (!empty($data) && isset($data['asset'])) {
+            foreach ($data['asset'] as $asset) {
+                if (
+                    ($asset['category'] === 'Parent Source Logo - dark' ||
+                     $asset['category'] === 'Source Logo - dark' ||
+                     $asset['category'] === 'Iconic')
+                ) {
+                    if ($asset['ratio'] === '16:9') {
+                        $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
+                        $ratio_used = '16:9';
+                        break;
+                    } elseif ($asset['ratio'] === '4:3') {
+                        $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
+                        $ratio_used = '4:3';
+                    }
                 }
             }
+    
+            if ($uri_16_9) {
+                $uri = $uri_16_9;
+                $ratio_used = '16:9';
+            } elseif ($uri_4_3) {
+                $uri = $uri_4_3;
+                $ratio_used = '4:3';
+            }
         }
-
-        // Output the URI
-        if ($uri_16_9) {
-            $uri = $uri_16_9;
-            $ratio_used = '16:9';
-        } elseif ($uri_4_3) {
-            $uri = $uri_4_3;
-            $ratio_used = '4:3';
-        }
+    
+        return [
+            'uri' => $uri,
+            'ratio' => $ratio_used
+        ];
     }
-
-    // return both URI and ratio to check in response
-    return [
-        'uri' => $uri,
-        'ratio' => $ratio_used
-    ];
-}
-
+    
 
     private function getURIFromAssetForProgram($data)
     {
@@ -344,7 +338,7 @@ class NewChannelApiController extends Controller
     //     }
     // }
 
-    
+
  
     public function epgGuide(Request $request)
     {
