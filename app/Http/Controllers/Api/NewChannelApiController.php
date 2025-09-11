@@ -439,7 +439,7 @@ class NewChannelApiController extends Controller
                 }
 
                 if (
-                    trim($channel->stationName) === 'TV Guide' ||
+                    trim($channel->stationName) === 'TV Guide' || 
                     trim($channel->callSign) === 'TVGN'
                 ) { 
                     $channel->stationName = 'FanDuel'; 
