@@ -443,7 +443,7 @@ class NewChannelApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fand.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
                 
                 unset($channel->db_image);
@@ -616,8 +616,8 @@ class NewChannelApiController extends Controller
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fand.png'; 
-                    $channel->roku_image = env('APP_URL') . '/uploads/fand.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; 
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png'; 
                 } 
             
 

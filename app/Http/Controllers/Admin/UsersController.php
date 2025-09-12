@@ -54,7 +54,12 @@ class UsersController extends Controller
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
-        $query->withCount('sessions');
+        $query->withCount([
+            'sessions' => function ($q) {
+                $q->select(DB::raw('count(distinct device_id)'))
+                    ->where('status', 1);
+            }
+        ]);
         $query->withCount('rooms');
         if ($request->sort_date == 'asc') {
 
@@ -1009,35 +1014,96 @@ class UsersController extends Controller
 
 
 
-    public function connecteddevice($id)
+   public function connecteddevice($id)
     {
-        $user = User::find($id);
-        $roles = Role::get(); //get all roles
-        $userRoles = $user->roles->pluck('id')->toArray();
-        //dd($roles);
-        $allSession = SessionTable::with([
-            'user.roles',
-            'hotel',
-            'pdInfo' => fn($query) => $query->where('user_id', $id),
-        ])
-            ->selectRaw("id, users_id, connected_devices, access_token, device_id,
-        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+        try {
+            $user = User::find($id);
+            $roles = Role::get(); //get all roles
+            $userRoles = $user->roles->pluck('id')->toArray();
+            //dd($roles);
+            $allSession = SessionTable::with([
+                'user.roles',
+                'hotel',
+                'pdInfo' => fn($query) => $query->where('user_id', $id),
+            ])
+                ->selectRaw("id, users_id, connected_devices, access_token, device_id,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
+        build_version,device_os_version,zipcode,
         created_on,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
-            ->where('status', 1)
-            ->where('users_id', $id)
-            ->whereIn('id', function ($query) use ($id) {
-                $query->selectRaw('MAX(id)')
-                    ->from('session_table')
-                    ->where('users_id', $id)
-                    ->where('status', 1)
-                    ->groupBy('device_id');
-            })
-            ->orderBy('connected_devices', 'asc')
-            ->get();
+                ->where('status', 1)
+                ->where('users_id', $id)
+                ->whereIn('id', function ($query) use ($id) {
+                    $query->selectRaw('MAX(id)')
+                        ->from('session_table')
+                        ->where('users_id', $id)
+                        ->where('status', 1)
+                        ->groupBy('device_id');
+                })
+                ->orderBy('connected_devices', 'asc')
+                ->get();
+            if ($allSession->count() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+            // return response()->json(['success' => true, "datalist" => $allSession]);
+            return view('admin.users.connected', compact('allSession', 'totalRooms'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            toast('Something went wrong ! try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
+    }
 
-        // return response()->json(['success' => true, "datalist" => $allSession]);
-        return view('admin.users.connected', compact('allSession'));
+    public function connectedDeviceNew($id)
+    {
+        try {
+            $user = User::find($id);
+            $roles = Role::get(); //get all roles
+            $userRoles = $user->roles->pluck('id')->toArray();
+            //dd($roles);
+            $allSession = SessionTable::with([
+                'user.roles',
+                'hotel',
+                'pdInfo' => fn($query) => $query->where('user_id', $id),
+            ])
+                ->selectRaw("id, users_id, connected_devices, access_token, device_id,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
+        build_version,
+        created_on,
+        JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
+                ->where('status', 1)
+                ->where('users_id', $id)
+                ->whereIn('id', function ($query) use ($id) {
+                    $query->selectRaw('MAX(id)')
+                        ->from('session_table')
+                        ->where('users_id', $id)
+                        ->where('status', 1)
+                        ->groupBy('device_id');
+                })
+                ->orderBy('connected_devices', 'asc')
+                ->get();
+            if ($allSession->count() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+            // return response()->json(['success' => true, "datalist" => $allSession]);
+            return view('admin.users.connected-new', compact('allSession', 'totalRooms'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            toast('Something went wrong ! try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
     }
 
     public function sessiondestroy($id, Request $request)
@@ -1174,6 +1240,30 @@ class UsersController extends Controller
             return response()->json(['message' => "User Session Not found"], 400);
         }
     }
+
+    public function destroyUserSessionById($id)
+    {
+        if (is_array($id)) {
+            return response()->json($id);
+        } else {
+            try {
+                $session = SessionTable::where("id", $id)->first();
+                JWTAuth::setToken($session->access_token)->invalidate();
+                $session->delete();
+                toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
+                return redirect()->back();
+            } catch (\Throwable $th) {
+
+                toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+                return redirect()->back();
+            }
+        }
+
+
+
+    }
+
+
 
     public function UserAjaxData(Request $request)
     {   ## Read value
@@ -1484,7 +1574,24 @@ class UsersController extends Controller
                     return redirect()->back();
                 }
 
+            case "session":
 
+
+                try {
+
+                    foreach ($request->user_ids as $id) {
+                        $session = SessionTable::where("id", $id)->first();
+                        JWTAuth::setToken($session->access_token)->invalidate();
+                        $session->delete();
+                    }
+                    DB::commit();
+                    toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
+                    return redirect()->route("admin.users.new.index");
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+                    return redirect()->back();
+                }
             default:
 
                 toast("Please select any action", "error")

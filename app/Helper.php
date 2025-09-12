@@ -1066,7 +1066,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $device_id = explode("#~", $deviceDetails)[1];
     if ($ua === 'okhttp/4.11.0') {
 
-        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+        $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
@@ -1085,6 +1085,11 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->device_id = trim($device_id);
     $session_tab->connected_devices = $connected_devices;
     $session_tab->device = $deviceInfoClasses;
+    $session_tab->device_title = request()->device_title ?? null;
+    $session_tab->device_model = request()->device_model ?? null;
+    $session_tab->build_version = request()->build_version ?? null;
+    $session_tab->device_os_version = request()->device_os_version ?? null;
+    $session_tab->zipcode = request()->zipcode ?? null;
     $session_tab->logintime = Carbon::now();
     $session_tab->status = 1;
     $session_tab->created_on = $date;
@@ -1645,7 +1650,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
 
     if ($ua === 'okhttp/4.11.0') {
 
-        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua);
+        $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
@@ -1933,7 +1938,7 @@ function detectDeviceByUserAgent(string $userAgent): string
     }
 
     if (strpos($ua, 'okhttp') !== false) {
-        return 'firetv';
+        return 'okhttp';
     }
     if (strpos($ua, 'tizen') !== false) {
         return 'tizen-tv';
