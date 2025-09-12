@@ -270,7 +270,7 @@
     <script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>
     <script>
         $('.select2').select2();
-    </script>
+    </script>  
     <script>
 
     //  const zipInput = document.getElementById('zip_codes');

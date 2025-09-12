@@ -1,4 +1,14 @@
 @extends('master')
+@section('stylesheets')
+    <style>
+        .card-header span {
+            color: #555;
+            font-weight: 400;
+            font-size: 14px;
+
+        }
+    </style>
+@endsection
 @section('content')
 
     <!-- Content Wrapper. Contains page content -->
@@ -26,98 +36,202 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Name : {{ $allSession[0]->user->name ?? '' }}</h3><br>
-                    <h3 class="card-title">Email : {{ $allSession[0]->user->email ?? '' }}</h3> <br>
-                    <h3 class="card-title">Role : {{ $allSession->first()->user->roles->first()->name }}</h3>
+                    <div class="row">
+                        <div class="col-md-3 px-3 border-right">
+                            <span>Name</span>
+                            <br>
+                            <label for="">{{ $allSession[0]->user->name ?? '' }}</label>
+                        </div>
+                        <div class="col-md-3 px-4 border-right">
+                            <span for="">Email</span>
+                            <br>
+                            <label>{{ $allSession[0]->user->email ?? '' }}</label>
+                        </div>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                            title="Collapse">
-                            <i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip"
-                            title="Remove">
-                            <i class="fas fa-times"></i></button>
+                        <div class="col-md-3 px-4 border-right">
+                            <span for="">Role</span>
+                            <br>
+                            <label>{{ $allSession->first()->user->roles->first()->name }}</label>
+                        </div>
+                        <div class="col-md-3 px-4">
+                            <span for="">Total Devices</span>
+                            <br>
+                            @if ($allSession->first()->user->roles->first()->id == 5)
+                                <label>{{ $allSession->count() . '/' . $totalRooms }}</label>
+                            @else
+                                <label>{{ $allSession->count() . '/5' }}</label>
+                            @endif
+
+                        </div>
                     </div>
+
+
+
+
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped projects">
-                        <thead>
-                            <tr>
-                                <th style="width: 1%">
-                                    #
-                                </th>
-                                <th style="width: 20%">
-                                    Device id
-                                </th>
-                                <th style="width: 20%">
-                                    Device Name
-                                </th>
-
-
-                                @if ($allSession->first()->user->roles->first()->id == 5)
-                                    <th style="width: 20%">
-                                        Hotel room
+                    <div class="table-responsive">
+                        <table class="table table-striped projects">
+                            <thead>
+                                <tr>
+                                    <th style="width: 1%">
+                                        #
                                     </th>
-                                @endif
+                                    {{-- <th style="width: 20%">
+                                        Device id
+                                    </th> --}}
+                                    <th style="width: 20%">
+                                        Device Name
+                                    </th>
+                                    <th style="width: 20%">
+                                        Platform
+                                    </th>
+                                    <th style="width: 20%">
+                                        Device Id
+                                    </th>
+                                    <th style="width: 20%">
+                                        Device Model
+                                    </th>
+                                    <th style="width: 20%">
+                                        Build Version
+                                    </th>
+                                    <th style="width: 20%">
+                                        OS Version
+                                    </th>
 
-                                <th style="width: 20%">
-                                    Device Type
-                                </th>
-                                <th style="width: 20%">
-                                    Created on
-                                </th>
-                                {{-- <th style="width: 30%">
+
+
+                                    {{-- <th style="width: 20%">
+                                        Device Type
+                                    </th> --}}
+
+
+                                    <th style="width: 20%">
+                                        Date added
+                                    </th>
+                                    <th style="width: 20%">
+                                        Zipcode
+                                    </th>
+
+                                    @if ($allSession->first()->user->roles->first()->id == 5)
+                                        <th style="width: 20%">
+                                            Hotel room
+                                        </th>
+                                    @endif
+                                    {{-- <th style="width: 30%">
                           Email
                       </th> --}}
 
-                                {{-- <th style="width: 8%" class="text-center">
+                                    {{-- <th style="width: 8%" class="text-center">
                           Status
                       </th> --}}
-                                <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button"
-                                        class='update_record' id="0" value='InActivate selected'></th>
+                                    <th>Check All <input type="checkbox" class='checkall' id='checkall'><input
+                                            type="button" class='update_record' id="0" value='InActivate selected'>
+                                    </th>
 
-                                <th style="width: 20%">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($allSession as $key => $user)
-                                <tr id='{{ $user->id }}' data-entry-id="">
-                                    <td>
-                                        #
-                                    </td>
-                                    <td>
-                                        {{ $user->device_id ?? '' }}
-                                    </td>
+                                    <th style="width: 20%">
 
-
-                                    <td>
-                                        @if ($user->device_type === 'web')
-                                            Web
-                                        @else
-                                            {{ $user->pdInfo->personal_devicename ?? '' }}
-                                        @endif
-
-
-
-
-                                    </td>
-
-                                    @if ($allSession->first()->user->roles->first()->id == 5)
-                                        <td> @isset($user->hotel)
-                                                {{ $user->hotel->hotel_room ?? '' }}
-                                            @endisset
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($allSession as $key => $user)
+                                    <tr id='{{ $user->id }}' data-entry-id="">
+                                        <td>
+                                            #
                                         </td>
-                                    @endif
 
-                                    <td>
 
-                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                    </td>
-                                    <td>
-                                        {{ $user->created_on ?? '' }}
-                                    </td>
-                                    {{-- <td class="project-state">
+
+                                        <td>
+                                            @if ($user->device_type === 'web')
+                                                Web
+                                            @else
+                                                {{ $user->pdInfo->personal_devicename ?? '' }}
+                                            @endif
+
+
+                                        </td>
+
+                                        <td>
+                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                @case('android')
+                                                    @if ($user->device_title == 'RokuTv')
+                                                        {{ $user->device_title }}
+                                                    @else
+                                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                                    @endif
+                                                @break
+
+                                                @case('okhttp')
+                                                    {{ $user->device_title }}
+                                                @break
+
+                                                @default
+                                                    {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endswitch
+
+
+
+
+
+
+                                        </td>
+                                        <td style="cursor: pointer;">
+                                            <span class="short-id" onclick="toggleDeviceId(this)"
+                                                data-full="{{ $user->device_id }}">
+                                                {{ \Illuminate\Support\Str::limit($user->device_id, 10, '...') }}
+                                            </span>
+                                        </td>
+                                        <td>
+
+                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                @case('android')
+                                                    @if ($user->device_title == 'RokuTv')
+                                                        {{ $user->device_model }}
+                                                    @else
+                                                        {{ $user->device_title ?? '' }}
+                                                    @endif
+                                                @break
+
+                                                @default
+                                                    {{ $user->device_model }}
+                                            @endswitch
+
+                                        </td>
+                                        <td>
+                                            {{ $user->build_version ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->device_os_version ?? '' }}
+                                        </td>
+
+
+
+                                        {{-- <td>
+                                            @if (!empty($user->device_title))
+                                                {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
+                                            @else
+                                                {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                            @endif
+
+
+                                        </td> --}}
+
+
+                                        <td>
+                                            {{ $user->created_on ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->zipcode ?? '' }}
+                                        </td>
+                                        @if ($allSession->first()->user->roles->first()->id == 5)
+                                            <td> @isset($user->hotel)
+                                                    {{ $user->hotel->hotel_room ?? '' }}
+                                                @endisset
+                                            </td>
+                                        @endif
+                                        {{-- <td class="project-state">
                             @if ($user->is_active === 1)
                             <span class="badge badge-success">Active</span>
 @elseif ($user->is_active===0)
@@ -129,31 +243,33 @@
                             
                           
                       </td> --}}
-                                    <td><input type='checkbox' class='update_check' id='delcheck_{{ $user->id }}'
-                                            value='{{ $user->id }}'></td>
-                                    <td class="project-actions text-right">
+                                        <td><input type='checkbox' class='update_check' id='delcheck_{{ $user->id }}'
+                                                value='{{ $user->id }}'></td>
+                                        <td class="project-actions text-right">
 
-                                        {{-- <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
+                                            {{-- <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
                           <a class="btn btn-xs btn-info" href="{{ url('admin/users/connected', $user->users_id) }}">Edit</a> --}}
 
-                                        <form action="{{ url('admin/users/sessiondestroy', $user->id) }}" method="POST"
-                                            onsubmit="return confirm('{{ trans('Are You Sure') }}');"
-                                            style="display: inline-block;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="access_token" value="{{ $user->access_token }}">
-                                            <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                        </form>
+                                            <form action="{{ url('admin/users/sessiondestroy', $user->id) }}"
+                                                method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');"
+                                                style="display: inline-block;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="access_token"
+                                                    value="{{ $user->access_token }}">
+                                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                            </form>
 
 
 
 
-                                    </td>
+                                        </td>
 
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -166,21 +282,59 @@
 @endsection
 @section('scripts')
     <script>
+        function toggleDeviceId(element) {
+            const fullId = element.getAttribute('data-full');
+            const shortId = fullId.substring(0, 10) + '...';
+
+            if (element.innerText === shortId) {
+                element.innerText = fullId;
+            } else {
+                element.innerText = shortId;
+            }
+        }
         $(function() {
+            $('.update_record').prop('disabled', true);
             // Check all 
             $('#checkall').click(function() {
                 if ($(this).is(':checked')) {
                     $('.update_check').prop('checked', true);
+                    $('.update_record').prop('disabled', false);
                 } else {
                     $('.update_check').prop('checked', false);
+                    $('.update_record').prop('disabled', true);
                 }
             });
 
+            const checkboxes = document.querySelectorAll(".update_check");
 
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    const checkedCount = document.querySelectorAll(".update_check:checked").length;
+                    const uncheckedCount = document.querySelectorAll(".update_check:not(:checked)")
+                        .length;
+                    if (checkboxes.length <= checkedCount) {
+                        $('#checkall').prop('checked', true);
+                    } else if (checkboxes.length >= uncheckedCount) {
+                        $('#checkall').prop('checked', false);
+                    }
+
+
+                    if (checkedCount > 0) {
+                        $('.update_record').prop('disabled', false);
+                    } else {
+                        $('.update_record').prop('disabled', true);
+                    }
+
+                });
+            });
 
             $(document).on('click', '.update_record', function() {
+
                 var id = [];
                 var status;
+
+
 
                 if (confirm("Are you sure you want to Update this data?")) {
                     $('.update_check:checked').each(function() {
