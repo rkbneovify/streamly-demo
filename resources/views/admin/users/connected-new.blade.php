@@ -276,20 +276,30 @@
                                         <th>
                                             Device Name
                                         </th>
-
-
+                                        <th>
+                                            Platform
+                                        </th>
+                                        <th>
+                                            Device Model
+                                        </th>
+                                        <th>
+                                            Build Version
+                                        </th>
+                                        <th>
+                                            OS Version
+                                        </th>
+                                        <th>
+                                            Zipcode
+                                        </th>
                                         @if ($allSession->first()->user->roles->first()->id == 5)
                                             <th>
                                                 Hotel room
                                             </th>
                                         @endif
+                                        <th>
+                                            Date added
+                                        </th>
 
-                                        <th>
-                                            Device Type
-                                        </th>
-                                        <th>
-                                            Created At
-                                        </th>
                                         <th>
                                             Action
                                         </th>
@@ -313,8 +323,22 @@
 
                                                 <div class="flex">
                                                     <div class="device-box">
-                                                        <img class="device-icon" src="{{ asset('images/desktop.png') }}"
-                                                            alt="device icon">
+                                                        @php
+                                                            $device = detectDeviceByUserAgent($user->useragent ?? '');
+                                                        @endphp
+
+                                                        @if (preg_match('/pc|tv/i', $device))
+                                                            <img class="device-icon"
+                                                                src="{{ asset('images/desktop.png') }}" alt="device icon">
+                                                        @elseif (preg_match('/pc|tv/i', $user->device_title))
+                                                            <img class="device-icon"
+                                                                src="{{ asset('images/desktop.png') }}" alt="device icon">
+                                                        @else
+                                                            <img class="device-icon" src="{{ asset('images/mobile.png') }}"
+                                                                alt="device icon">
+                                                        @endif
+
+
 
                                                     </div>
                                                     <div class="device-name">
@@ -333,28 +357,69 @@
 
 
                                             </td>
+                                            <td style="vertical-align: middle;">
+                                                @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                    @case('android')
+                                                        @if ($user->device_title == 'RokuTv')
+                                                            {{ $user->device_title }}
+                                                        @else
+                                                            {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                                        @endif
+                                                    @break
 
+                                                    @case('okhttp')
+                                                        {{ $user->device_title }}
+                                                    @break
+
+                                                    @default
+                                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
+                                                @endswitch
+
+
+
+
+
+
+                                            </td>
+
+
+
+                                            <td style="vertical-align: middle;">
+                                                @switch(detectDeviceByUserAgent($user->useragent ?? ''))
+                                                    @case('android')
+                                                        @if ($user->device_title == 'RokuTv')
+                                                            {{ $user->device_model }}
+                                                        @else
+                                                            {{ $user->device_title ?? '' }}
+                                                        @endif
+                                                    @break
+
+                                                    @default
+                                                        {{ $user->device_model }}
+                                                @endswitch
+
+
+                                            </td>
+
+                                            <td style="vertical-align: middle;">
+                                                {{ $user->build_version ?? '' }}
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                {{ $user->device_os_version ?? '' }}
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                {{ $user->zipcode ?? '' }}
+                                            </td>
                                             @if ($allSession->first()->user->roles->first()->id == 5)
                                                 <td style="vertical-align: middle;"> @isset($user->hotel)
                                                         {{ $user->hotel->hotel_room ?? '' }}
                                                     @endisset
                                                 </td>
                                             @endif
-
-                                            <td style="vertical-align: middle;">
-                                                @if (!empty($user->device_title))
-                                                    {{ $user->device_title ?? '' }} - {{ $user->device_model ?? '' }}
-
-                                                    ({{ $user->build_version ?? '' }})
-                                                @else
-                                                    {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                                @endif
-
-
-                                            </td>
                                             <td style="vertical-align: middle;">
                                                 {{ $user->created_on ?? '' }}
                                             </td>
+
                                             <td style="vertical-align: middle;">
                                                 <a class="btn-delete"
                                                     href="{{ route('admin.users.session.destroy', $user->id) }}"
