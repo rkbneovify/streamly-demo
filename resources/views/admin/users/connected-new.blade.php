@@ -237,7 +237,7 @@
                                 <span class="search-icon">
                                     <i class="fas fa-search"></i>
                                 </span>
-                                <input type="text" id="txtSearch" placeholder="Search by device name, type">
+                                <input type="text" id="txtSearch" placeholder="Search by device name, platform, zipcode">
                                 <span class="clear-icon" id="btnClear">✖</span>
                             </div>
 
@@ -348,7 +348,13 @@
                                                             <b> {{ $user->pdInfo->personal_devicename ?? '' }}</b>
                                                         @endif
                                                         <span>
-                                                            ID : {{ $user->device_id ?? '' }}
+                                                            ID :
+                                                            <span style="cursor: pointer" class="short-id"
+                                                                onclick="toggleDeviceId(this)"
+                                                                data-full="{{ $user->device_id }}">
+
+                                                                {{ \Illuminate\Support\Str::limit($user->device_id, 10, '...') }}
+                                                            </span>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -533,5 +539,18 @@
                 });
             });
         });
+
+        function toggleDeviceId(element) {
+            const fullId = element.getAttribute('data-full');
+            const shortId = fullId.substring(0, 10) + '...';
+            console.log(element.innerText);
+
+
+            if (element.innerText === shortId) {
+                element.innerText = fullId;
+            } else {
+                element.innerText = shortId;
+            }
+        }
     </script>
 @stop
