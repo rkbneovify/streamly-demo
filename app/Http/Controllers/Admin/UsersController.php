@@ -52,6 +52,7 @@ class UsersController extends Controller
     }
     public function index2(Request $request)
     {
+
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
@@ -62,6 +63,7 @@ class UsersController extends Controller
             }
         ]);
         $query->withCount('rooms');
+
         if ($request->sort_date == 'asc') {
 
             $query->orderBy('created_at', 'asc');
@@ -81,6 +83,8 @@ class UsersController extends Controller
 
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
+        } elseif (env('APP_ENV') == 'local' && empty($request->mode)) {
+            $query->where('mode', "Live");
         }
         if (!empty($request->status)) {
             $status = null;
