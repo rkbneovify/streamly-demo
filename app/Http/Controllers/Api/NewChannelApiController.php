@@ -30,17 +30,17 @@ class NewChannelApiController extends Controller
     {
         $uri = null;
         $ratio_used = null;
-    
+
         $uri_16_9 = null;
         $uri_4_3 = null;
-    
+
         $data = json_decode($assets, true);
         if (!empty($data) && isset($data['asset'])) {
             foreach ($data['asset'] as $asset) {
                 if (
                     ($asset['category'] === 'Parent Source Logo - dark' ||
-                     $asset['category'] === 'Source Logo - dark' ||
-                     $asset['category'] === 'Iconic')
+                        $asset['category'] === 'Source Logo - dark' ||
+                        $asset['category'] === 'Iconic')
                 ) {
                     if ($asset['ratio'] === '16:9') {
                         $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
@@ -50,9 +50,9 @@ class NewChannelApiController extends Controller
                         $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
                         $ratio_used = '4:3';
                     }
-                } 
+                }
             }
-    
+
             if ($uri_16_9) {
                 $uri = $uri_16_9;
                 $ratio_used = '16:9';
@@ -61,13 +61,14 @@ class NewChannelApiController extends Controller
                 $ratio_used = '4:3';
             }
         }
-    
-        return [
-            'uri' => $uri,
-            'ratio' => $ratio_used
-        ];
+
+        return $uri;
+        // return [
+        //     'uri' => $uri,
+        //     'ratio' => $ratio_used
+        // ];
     }
-    
+
 
 
     private function getURIFromAssetForProgram($data)
@@ -129,7 +130,7 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id',  'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets', 'channels.zip_code')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets', 'channels.zip_code')
                 ->rightJoin('recent_channel', 'channels.id', '=', 'recent_channel.channels_id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
@@ -339,8 +340,8 @@ class NewChannelApiController extends Controller
     //     }
     // }
 
-    
- 
+
+
     public function epgGuide(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -425,21 +426,21 @@ class NewChannelApiController extends Controller
             if ($user->email == "streamlymtairy@gmail.com") {
                 $query->orderBy('channels.id', 'desc');
             } else {
-                $query->orderBy('channels.id', 'asc'); 
+                $query->orderBy('channels.id', 'asc');
             }
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
                     ->where('user_id', JWTAuth::user()->id)
                     ->exists();
-            
+
                 $assetData = $this->getURIFromAsset($channel->assets);
-            
+
                 $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->ratio = $assetData['ratio'] ?? 'NA';
-            
+
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
-            
+
                 if ($channel->stationName == null) {
                     $channel->stationName = "NA";
                 }
@@ -458,7 +459,7 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
-            
+
                 if (
                     trim($channel->stationName) === 'TV Guide' ||
                     trim($channel->callSign) === 'TVGN'
@@ -466,11 +467,11 @@ class NewChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
-            
+
                 unset($channel->db_image);
                 return $channel;
             });
-            
+
 
             $response = [];
             $response['success'] = true;
@@ -508,9 +509,9 @@ class NewChannelApiController extends Controller
         $programs->map(function ($program) {
             $program->image = $this->getURIFromAssetForProgram($program->assets);
 
-        if (strcasecmp($program->title, 'TV Guide') === 0) {
-            $program->title = 'FanDuel';
-        } 
+            if (strcasecmp($program->title, 'TV Guide') === 0) {
+                $program->title = 'FanDuel';
+            }
 
             unset($program->assets);
         });
@@ -599,7 +600,8 @@ class NewChannelApiController extends Controller
                     // Sort so the one with play_icon = true comes first
                     return $group->sortByDesc('play_icon')->first();
                 })
-                ->values();;
+                ->values();
+            ;
             // Sorting in ascending order by 'price'
             $sortedPrograms = $filteredPrograms->sortByDesc('play_icon');
 
@@ -607,7 +609,7 @@ class NewChannelApiController extends Controller
             $sortedPrograms = $sortedPrograms->values();
             // Fetch channels matching the search query
 
-            $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
+            $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
             if ($validate == 1) {
@@ -634,14 +636,14 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
-                }   
+                }
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; 
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png'; 
-                } 
-            
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                }
+
 
                 unset($channel->assets);
                 $channel->type = 'channel';
@@ -763,25 +765,25 @@ class NewChannelApiController extends Controller
                     ->orderBy('start')
                     ->get();
 
-                    $stationName = $programs[0]->stationName;
-                    $image = $this->getURIFromAssetForProgram($program->assets);
+                $stationName = $programs[0]->stationName;
+                $image = $this->getURIFromAssetForProgram($program->assets);
 
-            // Replace logic for TV Guide / TVGN
-            // if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
-            //     $stationName = 'FanDuel';
-            //     $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
-            // }
+                // Replace logic for TV Guide / TVGN
+                // if (trim($stationName) === 'TV Guide' || trim($programs[0]->callSign ?? '') === 'TVGN') {
+                //     $stationName = 'FanDuel';
+                //     $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+                // }
 
-            if (
-                trim($stationName) === 'TV Guide' ||
-                trim($programs[0]->callSign ?? '') === 'TVGN' ||
-                trim($programs[0]->title ?? '') === 'TV Guide'
-            ) {
-                $stationName = 'FanDuel';
-                $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
-                $programs[0]->title = 'FanDuel'; // Replace title also
-            }
-            
+                if (
+                    trim($stationName) === 'TV Guide' ||
+                    trim($programs[0]->callSign ?? '') === 'TVGN' ||
+                    trim($programs[0]->title ?? '') === 'TV Guide'
+                ) {
+                    $stationName = 'FanDuel';
+                    $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+                    $programs[0]->title = 'FanDuel'; // Replace title also
+                }
+
 
                 $data = [
                     'channel_id' => $programs[0]->channel_id,
@@ -795,7 +797,7 @@ class NewChannelApiController extends Controller
                     "description" => $programs[0]->description,
                     "duration" => $programs[0]->duration,
                     "quals" => $programs[0]->quals,
-                    "genre" =>  json_decode($programs[0]->genre),
+                    "genre" => json_decode($programs[0]->genre),
                     "image" => $image,
                     // "image" => $this->getURIFromAssetForProgram($program->assets),
                     "schedule" => $program_details
@@ -919,7 +921,7 @@ class NewChannelApiController extends Controller
                     "description" => $program->description,
                     "duration" => $program->duration,
                     "quals" => $program->quals,
-                    "genre" =>  json_decode($program->genre),
+                    "genre" => json_decode($program->genre),
                     "image" => $this->getURIFromAssetForProgram($program->assets),
                     "up_next" => $up_next
                 ];
@@ -937,7 +939,7 @@ class NewChannelApiController extends Controller
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
-                } 
+                }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
                     $all_channel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
@@ -948,7 +950,7 @@ class NewChannelApiController extends Controller
             $all = $all_channel_query->first();
 
             $nextChannel = $PrevNext;
- 
+
             if ($PrevNext == 1) {
                 $PrevNext = 2;
                 $nextChannel = 1;
@@ -973,7 +975,7 @@ class NewChannelApiController extends Controller
                 }
             }
             $prev = $prevChannel_query->max('id');
-            $prevChannel = DB::table('channels')->where('id', $prev)->where('status', '1')->select('id', 'name',  'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
+            $prevChannel = DB::table('channels')->where('id', $prev)->where('status', '1')->select('id', 'name', 'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
             $nextChannel_query = DB::table('channels')
                 ->where('id', '>', $nextChannel)
                 ->where('status', '1');
@@ -1061,7 +1063,7 @@ class NewChannelApiController extends Controller
                     "description" => $program->description,
                     "duration" => $program->duration,
                     "quals" => $program->quals,
-                    "genre" =>  json_decode($program->genre),
+                    "genre" => json_decode($program->genre),
                     "image" => $this->getURIFromAssetForProgram($program->assets),
                 ];
             } else {
