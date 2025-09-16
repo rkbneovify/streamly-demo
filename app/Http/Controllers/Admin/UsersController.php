@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\CustomUserExport;
 use App\Exports\UserExport;
+use App\Exports\UserSessionDeviceExport;
 use App\Exports\UserSessionExport;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
@@ -51,6 +52,7 @@ class UsersController extends Controller
     }
     public function index2(Request $request)
     {
+
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
@@ -61,6 +63,7 @@ class UsersController extends Controller
             }
         ]);
         $query->withCount('rooms');
+
         if ($request->sort_date == 'asc') {
 
             $query->orderBy('created_at', 'asc');
@@ -80,6 +83,8 @@ class UsersController extends Controller
 
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
+        } elseif (env('APP_ENV') == 'production' && !empty($request->mode)) {
+            $query->where('mode', "Live");
         }
         if (!empty($request->status)) {
             $status = null;
@@ -1014,7 +1019,7 @@ class UsersController extends Controller
 
 
 
-   public function connecteddevice($id)
+    public function connecteddevice($id)
     {
         try {
             $user = User::find($id);
@@ -1060,21 +1065,21 @@ class UsersController extends Controller
         }
     }
 
-    public function connectedDeviceNew($id)
+    public function connectedDeviceNew($id, Request $request)
     {
         try {
             $user = User::find($id);
             $roles = Role::get(); //get all roles
             $userRoles = $user->roles->pluck('id')->toArray();
-            //dd($roles);
-            $allSession = SessionTable::with([
+            $query = SessionTable::query();
+            $query->with([
                 'user.roles',
                 'hotel',
                 'pdInfo' => fn($query) => $query->where('user_id', $id),
             ])
                 ->selectRaw("id, users_id, connected_devices, access_token, device_id,
-        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,
-        build_version,
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,platform,
+        build_version,device_os_version,zipcode,
         created_on,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('status', 1)
@@ -1086,22 +1091,43 @@ class UsersController extends Controller
                         ->where('status', 1)
                         ->groupBy('device_id');
                 })
-                ->orderBy('connected_devices', 'asc')
-                ->get();
-            if ($allSession->count() <= 0) {
+                ->orderBy('connected_devices', 'asc');
+            if (!empty($request->search)) {
+                $query->whereHas('pdInfo', function ($query) use ($request) {
+                    $query->where('personal_devicename', 'like', '%' . $request->search . '%')
+                        ->orWhere('platform', 'like', '%' . $request->search . '%')
+                        ->orWhere('device_model', 'like', '%' . $request->search . '%')
+                        ->orWhere('build_version', 'like', '%' . $request->search . '%')
+                        ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+                });
+
+
+            }
+
+            $allSession = $query->paginate(10);
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+
+
+            if ($request->ajax()) {
+                return view('admin.users.partials.connected-table', compact('allSession', 'totalRooms'));
+            }
+
+
+            if ($allSession->total() <= 0) {
                 toast('No active device.', 'error')
                     ->timerProgressBar()
                     ->autoClose(3000);
                 return redirect()->back();
             }
-            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+
             // return response()->json(['success' => true, "datalist" => $allSession]);
             return view('admin.users.connected-new', compact('allSession', 'totalRooms'));
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             toast('Something went wrong ! try again later.', 'error')
                 ->timerProgressBar()
                 ->autoClose(3000);
+            // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
     }
@@ -1621,6 +1647,16 @@ class UsersController extends Controller
         // dd($filters);
         $filename = 'users-sessions_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new UserSessionExport($filters), $filename);
+    }
+
+    public function exportUserSessionDevice($id, $type, Request $request)
+    {
+
+
+        $filters = $request->only(['role']);
+        // dd($filters);
+        $filename = 'users-sessions-device_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new UserSessionDeviceExport($id), $filename);
     }
 
     public function exportCustomUser(Request $request, $type)
