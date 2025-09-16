@@ -88,7 +88,7 @@ class RokuEpgGuideApiController extends Controller
                 $uri = $uri_4_3;
             } elseif ($uri_16_9) {
                 $uri = $uri_16_9;
-            } 
+            }
         }
         return $uri;
     }
@@ -215,15 +215,15 @@ class RokuEpgGuideApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
                 }
 
-             
+            
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
                 if (
                     trim($channel->stationName) === 'TV Guide' ||
                     trim($channel->callSign) === 'TVGN'
-                ) { 
-                    $channel->stationName = 'FanDuel';
+                ) {
+                    $channel->stationName = 'FanDuel'; 
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }

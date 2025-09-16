@@ -638,9 +638,9 @@ class NewChannelApiController extends Controller
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
-                }
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; 
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png'; 
+                } 
             
 
                 unset($channel->assets);
