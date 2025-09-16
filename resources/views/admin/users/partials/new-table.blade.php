@@ -139,7 +139,7 @@
 
                         </td>
                         <td style="vertical-align: middle;">
-                            <a href="{{ route('admin.users.connected.devices', $user->id) }}">
+                            <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
                                 @if ($user->is_active)
                                     @if (optional($user->roles->first())->id == 5)
                                         {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
