@@ -139,7 +139,8 @@ class NewChannelApiController extends Controller
             $query->orderBy('stationName', 'asc');
             $record = $query->distinct()->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $assetData = $this->getURIFromAsset($channel->assets);
+                $channel->image = $assetData['uri'];
                 $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
@@ -629,7 +630,8 @@ class NewChannelApiController extends Controller
 
             // Process each channel to add image URI and type, and remove assets
             $channels->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
+                $assetData = $this->getURIFromAsset(json_encode($channel->assets));
+                $channel->image = $assetData['uri'];
                 $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
