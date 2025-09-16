@@ -25,37 +25,50 @@ class NewChannelApiController extends Controller
 {
     private $exculdedUsers = ["jmheil@gmail.com", "llipschultz@neovix.com", "brian_marlin@yahoo.com", "qajalaj@yopmail.com", "pm13426@gmail.com", "nathan@neovix.com", "willis@neovix.com", "davea@neovix.com", "willthiswork2023@outlook.com"];
 
+
     private function getURIFromAsset($assets)
     {
-        $uri = NULL;
-        // Initialize URI variables
+        $uri = null;
+        $ratio_used = null;
+    
         $uri_16_9 = null;
         $uri_4_3 = null;
-        // Decode JSON to associative array
+    
         $data = json_decode($assets, true);
-        if (!empty($data)) {
-
-            // Iterate through the assets
+        if (!empty($data) && isset($data['asset'])) {
             foreach ($data['asset'] as $asset) {
-                if (($asset['category'] === 'Parent Source Logo - dark' || $asset['category'] === 'Source Logo - dark' || $asset['category'] === 'Iconic')) {
+                if (
+                    ($asset['category'] === 'Parent Source Logo - dark' ||
+                     $asset['category'] === 'Source Logo - dark' ||
+                     $asset['category'] === 'Iconic')
+                ) {
                     if ($asset['ratio'] === '16:9') {
-                        $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'];
-                        break; // Found the preferred ratio, no need to continue
+                        $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
+                        $ratio_used = '16:9';
+                        break;
                     } elseif ($asset['ratio'] === '4:3') {
-                        $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'];
+                        $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'] . "?w=3840&h=2160";
+                        $ratio_used = '4:3';
                     }
-                }
+                } 
             }
-
-            // Output the URI
+    
             if ($uri_16_9) {
                 $uri = $uri_16_9;
+                $ratio_used = '16:9';
             } elseif ($uri_4_3) {
                 $uri = $uri_4_3;
+                $ratio_used = '4:3';
             }
         }
-        return $uri;
+    
+        return [
+            'uri' => $uri,
+            'ratio' => $ratio_used
+        ];
     }
+    
+
 
     private function getURIFromAssetForProgram($data)
     {
@@ -326,7 +339,7 @@ class NewChannelApiController extends Controller
     //     }
     // }
 
-
+    
  
     public function epgGuide(Request $request)
     {
@@ -415,10 +428,18 @@ class NewChannelApiController extends Controller
                 $query->orderBy('channels.id', 'asc'); 
             }
             $record = $query->get()->map(function ($channel) use ($day) {
-                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
+                    ->where('user_id', JWTAuth::user()->id)
+                    ->exists();
+            
+                $assetData = $this->getURIFromAsset($channel->assets);
+            
+                $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->ratio = $assetData['ratio'] ?? 'NA';
+            
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
+            
                 if ($channel->stationName == null) {
                     $channel->stationName = "NA";
                 }
@@ -437,7 +458,7 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
-
+            
                 if (
                     trim($channel->stationName) === 'TV Guide' ||
                     trim($channel->callSign) === 'TVGN'
@@ -445,10 +466,11 @@ class NewChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
-                
+            
                 unset($channel->db_image);
                 return $channel;
             });
+            
 
             $response = [];
             $response['success'] = true;
@@ -612,7 +634,7 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
-                }
+                }   
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
@@ -756,7 +778,7 @@ class NewChannelApiController extends Controller
                 trim($programs[0]->title ?? '') === 'TV Guide'
             ) {
                 $stationName = 'FanDuel';
-                $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
+                $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
                 $programs[0]->title = 'FanDuel'; // Replace title also
             }
             
