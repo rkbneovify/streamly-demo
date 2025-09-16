@@ -62,11 +62,11 @@ class NewChannelApiController extends Controller
             }
         }
 
-        return $uri;
-        // return [
-        //     'uri' => $uri,
-        //     'ratio' => $ratio_used
-        // ];
+
+        return [
+            'uri' => $uri,
+            'ratio' => $ratio_used
+        ];
     }
 
 
