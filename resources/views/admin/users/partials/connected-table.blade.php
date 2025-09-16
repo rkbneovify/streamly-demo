@@ -110,24 +110,38 @@
 
 
                              <td style="vertical-align: middle;">
+                                 @if ($user->device_type === 'web')
+                                     N/A
+                                 @endif
                                  {{ getDeviceModel($user->useragent, $user->device_title, $user->device_model) }}
 
 
                              </td>
 
                              <td style="vertical-align: middle;">
+                                 @if ($user->device_type === 'web')
+                                     N/A
+                                 @endif
                                  {{ $user->build_version ?? '' }}
                              </td>
                              <td style="vertical-align: middle;">
+                                 @if ($user->device_type === 'web')
+                                     N/A
+                                 @endif
                                  {{ $user->device_os_version ?? '' }}
                              </td>
                              <td style="vertical-align: middle;">
                                  {{ $user->zipcode ?? '' }}
                              </td>
                              @if ($allSession->first()->user->roles->first()->id == 5)
-                                 <td style="vertical-align: middle;"> @isset($user->hotel)
+                                 <td style="vertical-align: middle;">
+                                     @if ($user->device_type === 'web')
+                                         N/A
+                                     @endif
+                                     @if ($user->hotel != null)
                                          {{ $user->hotel->hotel_room ?? '' }}
-                                     @endisset
+                                     @endif
+
                                  </td>
                              @endif
                              <td style="vertical-align: middle;">
