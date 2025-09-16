@@ -2024,7 +2024,7 @@ function getDeviceModel($ua, $deviceTitle, $deviceModel)
             break;
 
         default:
-            $model = $device;
+            $model = $deviceModel;
             break;
     }
 
