@@ -882,14 +882,14 @@ class NewChannelApiController extends Controller
             }
             $query1->groupBy('channels.id');
             $recommended_channels = $query1->get()->unique()->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->image = $assetData['uri'];
                 unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
             $record->map(function ($channel) {
-                $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
-                $channel->image = $assetData['uri'];
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->genre_ids = json_decode($channel->genre_ids);
                 unset($channel->db_image);
                 unset($channel->assets);
