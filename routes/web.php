@@ -126,6 +126,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('user/data', 'Admin\UsersController@UserAjaxData');
     Route::get('users/export/{type}', 'Admin\UsersController@exportUser')->name('users.export');
     Route::get('users/session/export/{type}', 'Admin\UsersController@exportUserSession')->name('users.session.export');
+    Route::get('users/session/{id}/export/{type}', 'Admin\UsersController@exportUserSessionDevice')->name('users.session.device.export');
     Route::get('/users/session', 'Admin\UsersController@activeSession')->name('user.session'); //for user session
     Route::get('/users/custom', 'Admin\UsersController@customUserList')->name('users.custom.list');
     Route::get('/users/custom/export/{type}', 'Admin\UsersController@exportCustomUser')->name('users.custom.export');
