@@ -1085,6 +1085,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->device_id = trim($device_id);
     $session_tab->connected_devices = $connected_devices;
     $session_tab->device = $deviceInfoClasses;
+    $session_tab->platform = getPlatform($ua, request()->device_title);
     $session_tab->device_title = request()->device_title ?? null;
     $session_tab->device_model = request()->device_model ?? null;
     $session_tab->build_version = request()->build_version ?? null;
@@ -1933,7 +1934,7 @@ function detectDeviceByUserAgent(string $userAgent): string
     }
 
     // Smart TV: Apple TV
-    if (preg_match('/apple tv|cpu tv os/i', $userAgent)) {
+    if (preg_match('/apple tv|cpu tv os/i', $ua)) {
         return 'apple-tv';
     }
 
@@ -1944,28 +1945,28 @@ function detectDeviceByUserAgent(string $userAgent): string
         return 'tizen-tv';
     }
     // Android devices
-    if (preg_match('/android/i', $userAgent)) {
+    if (preg_match('/android/i', $ua)) {
         return 'android';
     }
 
     // iOS devices
-    if (preg_match('/iphone/i', $userAgent)) {
+    if (preg_match('/iphone/i', $ua)) {
         return 'iphone';
     }
-    if (preg_match('/ipad/i', $userAgent)) {
+    if (preg_match('/ipad/i', $ua)) {
         return 'ipad';
     }
-    if (preg_match('/ipod/i', $userAgent)) {
+    if (preg_match('/ipod/i', $ua)) {
         return 'ipod';
     }
 
     // Windows desktop
-    if (preg_match('/windows nt/i', $userAgent)) {
+    if (preg_match('/windows nt/i', $ua)) {
         return 'windows-pc';
     }
 
     // Mac desktop
-    if (preg_match('/macintosh|mac os x/i', $userAgent)) {
+    if (preg_match('/macintosh|mac os x/i', $ua)) {
         return 'mac-pc';
     }
 
@@ -1976,6 +1977,58 @@ function detectDeviceByUserAgent(string $userAgent): string
 
     // Default fallback
     return 'unknown';
+}
+
+function getPlatform($ua, $deviceTitle)
+{
+    $platform = null;
+    $device = strtolower(detectDeviceByUserAgent($ua));
+    switch ($device) {
+        case 'android':
+            if ($deviceTitle == 'rokutv') {
+                $platform = $deviceTitle;
+            } else {
+                $platform = $device;
+            }
+            break;
+        case 'okhttp':
+            $platform = $deviceTitle;
+            break;
+
+        default:
+            $platform = $device;
+            break;
+    }
+
+    return $platform;
+}
+
+function getDeviceModel($ua, $deviceTitle, $deviceModel)
+{
+    $model = null;
+    $device = strtolower(detectDeviceByUserAgent($ua));
+    switch ($device) {
+        case 'okhttp':
+            if (strtolower($deviceTitle) == 'firetv') {
+                $model = $deviceModel;
+            } else {
+                $model = $deviceModel;
+            }
+            break;
+        case 'android':
+            if (strtolower($deviceTitle) == 'rokutv') {
+                $model = $deviceModel;
+            } else {
+                $model = $deviceTitle;
+            }
+            break;
+
+        default:
+            $model = $deviceModel;
+            break;
+    }
+
+    return $model;
 }
 
 
