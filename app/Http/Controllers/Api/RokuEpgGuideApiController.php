@@ -95,6 +95,7 @@ class RokuEpgGuideApiController extends Controller
 
     public function epgGuide(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
             'day' => 'nullable',
@@ -186,7 +187,7 @@ class RokuEpgGuideApiController extends Controller
                 ->map(function ($program) {
                     if (isset($program['title']) && strcasecmp(trim($program['title']), 'TV Guide') === 0) {
                         $program['title'] = 'FanDuel';
-                        $program['image'] = env('APP_URL') . '/uploads/fand.png';
+                        $program['image'] = env('APP_URL') . '/uploads/fandue.png';
                     }
                     return $program;
                 })
@@ -221,10 +222,10 @@ class RokuEpgGuideApiController extends Controller
                 if (
                     trim($channel->stationName) === 'TV Guide' ||
                     trim($channel->callSign) === 'TVGN'
-                ) {
+                ) { 
                     $channel->stationName = 'FanDuel';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fand.png';
-                    $channel->image = env('APP_URL') . '/uploads/fand.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
 
                 unset($channel->db_image);
