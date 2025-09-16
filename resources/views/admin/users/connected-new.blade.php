@@ -131,6 +131,7 @@
             justify-content: center;
             align-items: center;
             border-radius: 5px;
+            /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); */
         }
 
         .device-icon {
@@ -237,7 +238,8 @@
                                 <span class="search-icon">
                                     <i class="fas fa-search"></i>
                                 </span>
-                                <input type="text" id="txtSearch" placeholder="Search by device name, platform, zipcode">
+                                <input type="text" name="search" id="txtSearch"
+                                    placeholder="Search by device name, platform, zipcode">
                                 <span class="clear-icon" id="btnClear">✖</span>
                             </div>
 
@@ -247,7 +249,7 @@
                                 <div class="col-md-4 mb-3">
                                     <div class="btn-wrapper">
                                         <img src="{{ asset('images/export.png') }}" alt="status icon">
-                                        <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                        <a href="{{ route('admin.users.session.device.export', ['id' => $allSession[0]->user->id, 'type' => 'xlsx'] + request()->query()) }}"
                                             class="btn">Export</a>
                                     </div>
                                 </div>
@@ -262,187 +264,10 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
-                        @csrf
-                        <input hidden type="text" name="action" value="session">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" name="" id="selectAll">
-                                        </th>
+                    <div id="user-data">
 
-                                        <th>
-                                            Device Name
-                                        </th>
-                                        <th>
-                                            Platform
-                                        </th>
-                                        <th>
-                                            Device Model
-                                        </th>
-                                        <th>
-                                            Build Version
-                                        </th>
-                                        <th>
-                                            OS Version
-                                        </th>
-                                        <th>
-                                            Zipcode
-                                        </th>
-                                        @if ($allSession->first()->user->roles->first()->id == 5)
-                                            <th>
-                                                Hotel room
-                                            </th>
-                                        @endif
-                                        <th>
-                                            Date added
-                                        </th>
-
-                                        <th>
-                                            Action
-                                        </th>
-
-
-
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($allSession as $key => $user)
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                <input type="checkbox" name="user_ids[]" class="row-checkbox"
-                                                    value="{{ $user->id }}">
-                                            </td>
-
-
-
-                                            <td>
-
-                                                <div class="flex">
-                                                    <div class="device-box">
-                                                        @php
-                                                            $device = detectDeviceByUserAgent($user->useragent ?? '');
-                                                        @endphp
-
-                                                        @if (preg_match('/pc|tv/i', $device))
-                                                            <img class="device-icon"
-                                                                src="{{ asset('images/desktop.png') }}" alt="device icon">
-                                                        @elseif (preg_match('/pc|tv/i', $user->device_title))
-                                                            <img class="device-icon"
-                                                                src="{{ asset('images/desktop.png') }}" alt="device icon">
-                                                        @else
-                                                            <img class="device-icon" src="{{ asset('images/mobile.png') }}"
-                                                                alt="device icon">
-                                                        @endif
-
-
-
-                                                    </div>
-                                                    <div class="device-name">
-                                                        @if ($user->device_type === 'web')
-                                                            <b> Web</b>
-                                                        @else
-                                                            <b> {{ $user->pdInfo->personal_devicename ?? '' }}</b>
-                                                        @endif
-                                                        <span>
-                                                            ID :
-                                                            <span style="cursor: pointer" class="short-id"
-                                                                onclick="toggleDeviceId(this)"
-                                                                data-full="{{ $user->device_id }}">
-
-                                                                {{ \Illuminate\Support\Str::limit($user->device_id, 10, '...') }}
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-
-
-
-                                            </td>
-                                            <td style="vertical-align: middle;">
-                                                @switch(detectDeviceByUserAgent($user->useragent ?? ''))
-                                                    @case('android')
-                                                        @if ($user->device_title == 'RokuTv')
-                                                            {{ $user->device_title }}
-                                                        @else
-                                                            {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                                        @endif
-                                                    @break
-
-                                                    @case('okhttp')
-                                                        {{ $user->device_title }}
-                                                    @break
-
-                                                    @default
-                                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                                @endswitch
-
-
-
-
-
-
-                                            </td>
-
-
-
-                                            <td style="vertical-align: middle;">
-                                                @switch(detectDeviceByUserAgent($user->useragent ?? ''))
-                                                    @case('android')
-                                                        @if ($user->device_title == 'RokuTv')
-                                                            {{ $user->device_model }}
-                                                        @else
-                                                            {{ $user->device_title ?? '' }}
-                                                        @endif
-                                                    @break
-
-                                                    @default
-                                                        {{ $user->device_model }}
-                                                @endswitch
-
-
-                                            </td>
-
-                                            <td style="vertical-align: middle;">
-                                                {{ $user->build_version ?? '' }}
-                                            </td>
-                                            <td style="vertical-align: middle;">
-                                                {{ $user->device_os_version ?? '' }}
-                                            </td>
-                                            <td style="vertical-align: middle;">
-                                                {{ $user->zipcode ?? '' }}
-                                            </td>
-                                            @if ($allSession->first()->user->roles->first()->id == 5)
-                                                <td style="vertical-align: middle;"> @isset($user->hotel)
-                                                        {{ $user->hotel->hotel_room ?? '' }}
-                                                    @endisset
-                                                </td>
-                                            @endif
-                                            <td style="vertical-align: middle;">
-                                                {{ $user->created_on ?? '' }}
-                                            </td>
-
-                                            <td style="vertical-align: middle;">
-                                                <a class="btn-delete"
-                                                    href="{{ route('admin.users.session.destroy', $user->id) }}"
-                                                    data-url="{{ route('admin.users.session.destroy', $user->id) }}">
-                                                    <img class="img-delete" src="{{ asset('images/trash.png') }}"
-                                                        alt="Delete Icon">
-                                                </a>
-                                            </td>
-
-
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </form>
+                        @include('admin.users.partials.connected-table')
+                    </div>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -469,6 +294,7 @@
             txtSearch.value = "";
             btnClear.style.display = "none";
             txtSearch.focus();
+            fetchData();
         });
 
         selectAllCheckbox.addEventListener('change', function() {
@@ -552,5 +378,28 @@
                 element.innerText = shortId;
             }
         }
+
+        function fetchData(page = 1) {
+
+            let search = $('input[name="search"]').val();
+
+
+            $.ajax({
+                url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
+                success: function(data) {
+                    $('#user-data').html(data);
+                }
+            });
+        }
+
+
+
+        $(document).on('keyup', 'input[name="search"]', function() {
+            let search = $('input[name="search"]').val();
+            if (search.length > 0) {
+                $('#btnClear').show();
+            }
+            fetchData();
+        });
     </script>
 @stop

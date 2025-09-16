@@ -1085,6 +1085,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->device_id = trim($device_id);
     $session_tab->connected_devices = $connected_devices;
     $session_tab->device = $deviceInfoClasses;
+    $session_tab->platform = getPlatform($ua, request()->device_title);
     $session_tab->device_title = request()->device_title ?? null;
     $session_tab->device_model = request()->device_model ?? null;
     $session_tab->build_version = request()->build_version ?? null;
@@ -1976,6 +1977,58 @@ function detectDeviceByUserAgent(string $userAgent): string
 
     // Default fallback
     return 'unknown';
+}
+
+function getPlatform($ua, $deviceTitle)
+{
+    $platform = null;
+    $device = strtolower(detectDeviceByUserAgent($ua));
+    switch ($device) {
+        case 'android':
+            if ($deviceTitle == 'rokutv') {
+                $platform = $deviceTitle;
+            } else {
+                $platform = $device;
+            }
+            break;
+        case 'okhttp':
+            $platform = $deviceTitle;
+            break;
+
+        default:
+            $platform = $device;
+            break;
+    }
+
+    return $platform;
+}
+
+function getDeviceModel($ua, $deviceTitle, $deviceModel)
+{
+    $model = null;
+    $device = strtolower(detectDeviceByUserAgent($ua));
+    switch ($device) {
+        case 'okhttp':
+            if (strtolower($deviceTitle) == 'firetv') {
+                $model = $deviceModel;
+            } else {
+                $model = $deviceModel;
+            }
+            break;
+        case 'android':
+            if (strtolower($deviceTitle) == 'rokutv') {
+                $model = $deviceModel;
+            } else {
+                $model = $deviceTitle;
+            }
+            break;
+
+        default:
+            $model = $device;
+            break;
+    }
+
+    return $model;
 }
 
 
