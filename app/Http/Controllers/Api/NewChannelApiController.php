@@ -888,7 +888,8 @@ class NewChannelApiController extends Controller
                 return $channel;
             });
             $record->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->image = $assetData['uri'];
                 $channel->genre_ids = json_decode($channel->genre_ids);
                 unset($channel->db_image);
                 unset($channel->assets);
