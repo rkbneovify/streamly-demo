@@ -133,7 +133,7 @@
                              <td style="vertical-align: middle;">
                                  📅 {{ date('d/m/Y', strtotime($user->created_on)) }}
                                  <br>
-                                 🕒 {{ date('h:i:s', strtotime($user->created_on)) }}
+                                 🕒 {{ date('h:i:s A', strtotime($user->created_on)) }}
                              </td>
 
                              <td style="vertical-align: middle;">
