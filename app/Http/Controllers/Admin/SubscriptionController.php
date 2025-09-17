@@ -138,6 +138,102 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
+    public function index2(Request $request)
+    {
+
+        $query = Subscription::query()
+            ->whereHas('user')   // only subscriptions with a related user
+            ->with('user');      // still eager load user data
+        $query->latest();
+
+        $subscriptions = $query->paginate(10)->appends($request->query());
+
+
+
+        $stripePlans = \Stripe\Plan::all();
+        $stripePlanData = collect($stripePlans->data)
+            ->groupBy('billing_scheme');
+        $plankey = $stripePlanData->keys();
+
+        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+        // Extracting subscription status types
+        $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
+            $query->where('mode', $mode);
+        })->pluck('stripe_status')->unique()->values();
+
+
+        // $plans = collect($stripePlans->data)->map(function ($plan) {
+        //     return [
+        //         'id' => $plan->id,
+        //         'billing_scheme' => $plan->billing_scheme,
+        //     ];
+        // });
+        // $planIds = $plans->pluck('id');
+
+        // if (!empty($request->plan)) {
+        //     //   Plans id according to billing scheme from stripe
+        //     $plansFilteredByBillingScheme = collect($stripePlans->data)
+        //         ->where('billing_scheme', $request->plan)->values();
+        //     $plans = collect($plansFilteredByBillingScheme)->map(function ($plan) {
+        //         return [
+        //             'id' => $plan->id,
+        //             'billing_scheme' => $plan->billing_scheme,
+        //         ];
+        //     });
+
+        //     $planIds = $plans->pluck('id');
+        // }
+
+
+
+
+
+
+
+
+
+        // $query = Subscription::query()->with('user')
+        //     ->whereHas('user', function ($query) use ($mode) {
+        //         $query->where('mode', $mode);
+        //     })
+        //     ->whereIn('stripe_plan', $planIds);
+        // if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+        //     $query->orderByDesc('updated_at');
+        // } else {
+        //     $query->orderBy('updated_at');
+        // }
+        // // Filter by status if provided
+        // if (!empty($request->status)) {
+
+        //     $query->where('stripe_status', $request->status);
+        // }
+
+        // // Apply search filter if provided
+        // if (!empty($request->search)) {
+
+        //     $search = $request->search;
+        //     $query->whereHas('user', function ($q) use ($search) {
+        //         $q->where('name', 'like', '%' . $search . '%')
+        //             ->orWhere('email', 'like', '%' . $search . '%');
+        //     });
+        // }
+
+        // $subscriptions = $query->paginate(10)->appends($request->query());
+
+        // // Add billing_scheme to each subscription in the paginated collection
+        // $subscriptions->getCollection()->transform(function ($subscription) use ($plans) {
+        //     $plan = $plans->firstWhere('id', $subscription->stripe_plan);
+        //     $subscription->billing_scheme = $plan ? $plan['billing_scheme'] : 'Unknown Plan';
+        //     return $subscription;
+        // });
+
+        if ($request->ajax()) {
+            return view('admin.subscriptions.partials.table-new2', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+        }
+
+        return view('admin.subscriptions.index-new', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+    }
+
     public function showAllcustomer()
     {
         $arrayStripeEmail = array();
