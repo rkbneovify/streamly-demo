@@ -72,6 +72,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     //subscription
     Route::resource('subscriptions', 'Admin\SubscriptionController');
+    Route::get('subscriptions-new', 'Admin\SubscriptionController@index2');
     Route::get('subscriptions/custom/user/{id}', 'Admin\SubscriptionController@customUserView')->name('subscriptions.custom.view');
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
