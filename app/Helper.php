@@ -2031,4 +2031,36 @@ function getDeviceModel($ua, $deviceTitle, $deviceModel)
     return $model;
 }
 
+function getUserType($user)
+{
+    $userType = null;
+
+    if ($user->is_custom_user == 1 || $user->user_type == 'custom') {
+        if ($user->card_last_four == '4242' || empty($user->card_last_four)) {
+            $userType = 'Custom Test';
+        } elseif ($user->card_brand == 'visa' || empty($user->card_brand)) {
+            $userType = 'Custom Test';
+        } elseif ($user->mode == 'Testing' || empty($user->mode)) {
+            $userType = 'Custom Test';
+        } elseif ($user->card_last_four != '4242' && $user->card_brand != 'visa' && $user->mode == 'Live') {
+            $userType = 'Custom Live';
+        }
+    } else {
+        if ($user->card_last_four == '4242' || empty($user->card_last_four)) {
+            $userType = 'Test';
+        } elseif ($user->card_brand == 'visa' || empty($user->card_brand)) {
+            $userType = 'Test';
+        } elseif ($user->mode == 'Testing' || empty($user->mode)) {
+            $userType = 'Test';
+        } elseif ($user->card_last_four != '4242' && $user->card_brand != 'visa' && $user->mode == 'Live') {
+            $userType = 'Live';
+        }
+    }
+
+
+
+    return $userType;
+
+}
+
 
