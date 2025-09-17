@@ -903,8 +903,15 @@ class NewChannelApiController extends Controller
                 return $channel;
             });
             $record->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->image = $assetData['uri'];
                 $channel->genre_ids = json_decode($channel->genre_ids);
+
+                if ($channel->id == 11) {
+                    $channel->stationName = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+
+                }
                 unset($channel->db_image);
                 unset($channel->assets);
                 unset($channel->genre_ids);
