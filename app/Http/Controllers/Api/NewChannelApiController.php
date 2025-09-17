@@ -148,6 +148,11 @@ class NewChannelApiController extends Controller
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
+                if ($channel->id == 11) {
+                    $channel->name = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                }
+
                 unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
@@ -193,9 +198,16 @@ class NewChannelApiController extends Controller
             $query->orderBy('stationName', 'asc');
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->image = $assetData['uri'];
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->id == 11) {
+                    $channel->name = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+
+
                 }
                 unset($channel->db_image);
                 unset($channel->assets);
