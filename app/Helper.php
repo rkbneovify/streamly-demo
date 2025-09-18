@@ -1064,10 +1064,11 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
 {
     $ua = request()->header('User-Agent');
     $device_id = explode("#~", $deviceDetails)[1];
-    if ($ua === 'okhttp/4.11.0') {
-
+    // this for okhttp client (Android TV & Fire TV)
+    if (empty(request()->build_version) && strpos($ua, 'okhttp') !== false) {
         $device_id = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
+
     $isDevice = isDeviceAppleRokuOthers($ua);
     $isTV = isTV($isDevice);
     if ($isTV !== false) {
@@ -1648,11 +1649,11 @@ function personaldeviceTableStore($user_id, $deviceDetails)
 {
     $deviceid = explode("#~", $deviceDetails)[1];
     $ua = request()->header('User-Agent');
-
-    if ($ua === 'okhttp/4.11.0') {
-
+    // this for okhttp client (Android TV & Fire TV)
+    if (empty(request()->build_version) && strpos($ua, 'okhttp') !== false) {
         $deviceid = base64_encode($user_id . "/" . getUserIpAddr() . $ua . request()->device_title);
     }
+
     $device_count = PersonalDevice::where([
         ['user_id', '=', $user_id],
         ['device_id', '=', $deviceid],
