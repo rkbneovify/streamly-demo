@@ -151,6 +151,7 @@ class NewChannelApiController extends Controller
                 if ($channel->id == 11) {
                     $channel->name = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
 
                 unset($channel->db_image);
