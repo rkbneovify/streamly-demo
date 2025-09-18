@@ -126,11 +126,16 @@ class UsersController extends Controller
         }
 
         $users = $query->paginate(10);
+        $dates = [
+            'start_date' => User::orderBy('created_at', 'asc')->value('created_at'),
+            'end_date' => User::orderBy('created_at', 'desc')->value('created_at')
+        ];
+
         // return response()->json($users);
         if ($request->ajax()) {
-            return view('admin.users.partials.new-table', compact('users', 'roles'));
+            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'));
         }
-        return view('admin.users.index2', compact('users', 'roles'));
+        return view('admin.users.index2', compact('users', 'roles', 'dates'));
     }
 
     public function create()
