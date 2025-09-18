@@ -151,6 +151,7 @@ class NewChannelApiController extends Controller
                 if ($channel->id == 11) {
                     $channel->name = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
 
                 unset($channel->db_image);
@@ -898,6 +899,11 @@ class NewChannelApiController extends Controller
             $recommended_channels = $query1->get()->unique()->map(function ($channel) {
                 $assetData = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->image = $assetData['uri'];
+                if ($channel->id == 11) {
+                    $channel->stationName = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+
+                }
                 unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
