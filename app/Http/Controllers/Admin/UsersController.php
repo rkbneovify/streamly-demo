@@ -83,10 +83,18 @@ class UsersController extends Controller
 
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
-        } elseif (env('APP_ENV') == 'production' && empty($request->mode)) {
-            $query->where('mode', "Live");
-        } elseif (env('APP_DEBUG') == false && empty($request->mode)) {
-            $query->where('mode', "Live");
+        }
+        if (env('APP_ENV') == 'local') {
+            if (
+                empty($request->mode) &&
+                empty($request->role) &&
+                empty($request->status) &&
+                empty($request->search) &&
+                empty($request->daterange)
+            ) {
+                $query->where('mode', 'Live');
+            }
+
         }
         if (!empty($request->status)) {
             $status = null;
