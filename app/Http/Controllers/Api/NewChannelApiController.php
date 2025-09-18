@@ -937,6 +937,7 @@ class NewChannelApiController extends Controller
                 // WHERE `start` <= 1719313930 AND `end` >= 1719313930
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
+
             if (!empty($program)) {
                 $up_next = GracenoteScheduleProgram::select('title', 'description', 'time', 'duration')
                     ->where('date', $program->date)
@@ -944,6 +945,19 @@ class NewChannelApiController extends Controller
                     ->where('gracenote_schedule_program.prgSvcId', $record[0]->prgSvcId)
                     ->orderBy('start')
                     ->get();
+
+                if (strtolower(trim($program->title)) === 'tv guide') {
+                    $data = [
+                        "title" => "FanDuel",
+                        "description" => $program->description,
+                        "duration" => $program->duration,
+                        "quals" => $program->quals,
+                        "genre" => json_decode($program->genre),
+                        "image" => env('APP_URL') . '/uploads/fandue.png', // your custom FanDuel logo
+                        "up_next" => $up_next
+                    ];
+
+                }
                 $data = [
                     "title" => $program->title,
                     "description" => $program->description,
