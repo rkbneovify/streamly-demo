@@ -149,7 +149,7 @@ class NewChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
                 if ($channel->id == 11) {
-                    $channel->name = 'FanDuel';
+                    $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
@@ -205,7 +205,7 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
                 }
                 if ($channel->id == 11) {
-                    $channel->name = 'FanDuel';
+                    $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
 
 
