@@ -957,16 +957,18 @@ class NewChannelApiController extends Controller
                         "up_next" => $up_next
                     ];
 
+                } else {
+                    $data = [
+                        "title" => $program->title,
+                        "description" => $program->description,
+                        "duration" => $program->duration,
+                        "quals" => $program->quals,
+                        "genre" => json_decode($program->genre),
+                        "image" => $this->getURIFromAssetForProgram($program->assets),
+                        "up_next" => $up_next
+                    ];
                 }
-                $data = [
-                    "title" => $program->title,
-                    "description" => $program->description,
-                    "duration" => $program->duration,
-                    "quals" => $program->quals,
-                    "genre" => json_decode($program->genre),
-                    "image" => $this->getURIFromAssetForProgram($program->assets),
-                    "up_next" => $up_next
-                ];
+
             } else {
                 $data = NULL;
             }
