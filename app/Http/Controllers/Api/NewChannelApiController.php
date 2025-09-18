@@ -949,7 +949,7 @@ class NewChannelApiController extends Controller
                 if (strtolower(trim($program->title)) === 'tv guide') {
                     $data = [
                         "title" => "FanDuel",
-                        "description" => $program->description,
+                        "description" => "FanDuel",
                         "duration" => $program->duration,
                         "quals" => $program->quals,
                         "genre" => json_decode($program->genre),
