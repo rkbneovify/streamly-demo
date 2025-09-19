@@ -72,16 +72,8 @@
 
                      <td>{{ getUserType($subscription->user) }}</td>
                      <td>
-                         @if ($subscription->user->is_custom_user == 1 || $subscription->user->user_type == 'custom')
-                             Custom
-                         @else
-                             Live
-                         @endif
-                         {{-- @if ($mode == 'Testing' || $mode == 'Test')
-                             Custom
-                         @else
-                             Live
-                         @endif --}}
+                         {{ $subscription->subscription_mode }}
+
 
                      </td>
                      <td>

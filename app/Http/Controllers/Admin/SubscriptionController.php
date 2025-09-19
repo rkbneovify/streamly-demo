@@ -12,6 +12,7 @@ use App\Mail\SubscriptionUpgradeMail;
 use App\Models\Subscription;
 use App\Models\SubscriptionPack;
 use App\Models\Zipcode;
+use App\Services\StripeService;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -138,15 +139,28 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
-    public function index2(Request $request)
+    public function index2(Request $request, StripeService $stripeService)
     {
 
+        // $planList = $stripeService->getAllPlans();
+        // $data = $stripeService->hasSubscription('sub_1S15JbGbCi8tAySGgZlsITT3');
+        // return response()->json($data);
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user');      // still eager load user data
         $query->latest();
 
-        $subscriptions = $query->paginate(10)->appends($request->query());
+        $subscriptions = $query->paginate(10)
+            ->appends($request->query());
+
+        $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
+
+            $item->subscription_mode = $stripeService->hasSubscription($item->stripe_id);
+            return $item;
+        });
+        // return response()->json($subscriptions);
+
+
 
 
 
