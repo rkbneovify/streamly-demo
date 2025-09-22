@@ -589,7 +589,7 @@ class ReportController extends Controller
         //return $resultCount;
     }
 
-    public function subscriptionDetailView($id)
+    public function subscriptionDetailView($id, StripeService $stripeService)
     {
 
 
@@ -601,23 +601,28 @@ class ReportController extends Controller
 
 
             $subscriptionId = Subscription::where('user_id', $id)->first()->stripe_id;
-            $subscription = \Stripe\Subscription::retrieve($subscriptionId);
-            $customer = \Stripe\Customer::retrieve($subscription->customer);
+            $isLiveMode = $stripeService->isLiveSubscription($subscriptionId);
 
-            $invoices = \Stripe\Invoice::all([
-                'customer' => $subscription->customer,
-                'limit' => 3
-            ]);
-
-            $subscriptions = \Stripe\Subscription::all([
-                'customer' => $subscription->customer,
-                'status' => 'all', // active, trialing, canceled, unpaid, or all
-                'limit' => 3
-            ]);
+            if ($isLiveMode) {
+                $subscription = $stripeService->getSubscriptionById($subscriptionId);
+                $customer = $stripeService->findCustomerById($subscription->customer);
+                $invoices = $stripeService->getInvoiceByCustomerId($user->stripe_id);
+            } else {
+                $subscription = $stripeService->getSubscriptionById($subscriptionId, "Testing");
+                $customer = $stripeService->findCustomerById($subscription->customer, "Testing");
+                $invoices = $stripeService->getInvoiceByCustomerId($customer->id, "Testing");
+            }
 
 
-            // return response()->json($subscriptions);
-            return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices'));
+            // $subscriptions = \Stripe\Subscription::all([
+            //     'customer' => $subscription->customer,
+            //     'status' => 'all', // active, trialing, canceled, unpaid, or all
+            //     'limit' => 3
+            // ]);
+
+
+            // return response()->json($customer);
+            return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices', 'customer'));
         } catch (InvalidRequestException $th) {
             Alert::error('Oops !', "Subscription not found !");
             return redirect()->back();
@@ -1002,31 +1007,26 @@ class ReportController extends Controller
         return Excel::download(new SubscriptionReportExport($filters), $filename);
     }
 
-    public function invoiceListByUser(Request $request, $id)
+    public function invoiceListByUser(Request $request, $id, StripeService $stripeService)
     {
 
         try {
 
 
 
-            $user = User::find($id);
+            // $user = User::find($id);
 
-            $statuses = ['draft', 'open', 'paid', 'void', 'uncollectible'];
+            $subscriptionId = Subscription::where('user_id', $id)->first()->stripe_id;
+            $isLiveMode = $stripeService->isLiveSubscription($subscriptionId);
 
-            $allInvoices = collect();
-
-            foreach ($statuses as $status) {
-                $invoices = \Stripe\Invoice::all([
-                    'customer' => $user->stripe_id,
-                    'status' => $status,
-                    'limit' => 100, // get more from Stripe so we can paginate locally
-                ]);
-
-                $allInvoices = $allInvoices->merge($invoices->data);
+            if ($isLiveMode) {
+                $subscription = $stripeService->getSubscriptionById($subscriptionId);
+                $allInvoices = $stripeService->getAllInvoiceByCustomerId($subscription->customer);
+            } else {
+                $subscription = $stripeService->getSubscriptionById($subscriptionId, "Testing");
+                $allInvoices = $stripeService->getAllInvoiceByCustomerId($subscription->customer, "Testing");
             }
 
-            // Sort newest first
-            $allInvoices = $allInvoices->sortByDesc('created')->values();
 
             // Laravel pagination setup
             $page = $request->get('page', 1);
