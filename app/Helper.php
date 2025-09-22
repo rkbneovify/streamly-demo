@@ -2065,3 +2065,23 @@ function getUserType($user)
 }
 
 
+
+
+function getSubscriptionExpireAt($subscription)
+{
+    if ($subscription->renews_at) {
+        return Carbon::parse($subscription->renews_at)->format('d/m/Y');
+    }
+
+    if ($subscription->ends_at) {
+        return Carbon::parse($subscription->ends_at)->format('d/m/Y');
+    }
+
+    if ($subscription->trial_ends_at && !$subscription->user->is_custom_user) {
+        return Carbon::parse($subscription->trial_ends_at)->format('d/m/Y');
+    }
+
+    return null;
+}
+
+
