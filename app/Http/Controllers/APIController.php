@@ -156,7 +156,7 @@ class APIController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
-        $uid =  $user['id'];
+        $uid = $user['id'];
         $this->authenticated($request, $user, $token);
 
         checkLoginLimit($uid, $token);
@@ -164,7 +164,8 @@ class APIController extends Controller
     public function unhashid($id)
     {
 
-        $User = UnHashUserID($id);;
+        $User = UnHashUserID($id);
+        ;
         if ($User) {
             $response = array('status' => true, 'message' => "id unhashed retrieved.", 'data' => $User);
             return response()->json($response, 200);
@@ -204,7 +205,7 @@ class APIController extends Controller
                     'response_code' => 401,
 
                 ], 401);
-            } else   if ((count($acctoken) == 0)) {
+            } else if ((count($acctoken) == 0)) {
                 $response = [
                     'success' => false,
                     'data' => 'Empty',
@@ -214,7 +215,7 @@ class APIController extends Controller
                 return response()->json($response, 404);
             } else {
 
-                $id =  $acctoken[0]['id'];
+                $id = $acctoken[0]['id'];
                 LogoutandDecrementDevice($id);
             }
         } catch (JWTException $exception) {
@@ -244,7 +245,8 @@ class APIController extends Controller
         $jwtToken = new JwtToken();
         $jwtToken->user_id = $user->id;
         $jwtToken->token = $token;
-        $jwtToken->browser = $agent->browser();;
+        $jwtToken->browser = $agent->browser();
+        ;
         $jwtToken->platform = $agent->platform();
         $jwtToken->device = $agent->device();
         $mobileHeader = $request->header('x_platform');
@@ -264,14 +266,17 @@ class APIController extends Controller
     public function connecteddevice()
     {
         $user = JWTAuth::user(); //all the user info
-        $uid =  $user['id'];
+        $uid = $user['id'];
         //and get the number of last connected device
-        $userRole =  $user->roles->first()->name;
+        $userRole = $user->roles->first()->name;
         if ($userRole == 'tieruser') {
-            $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'hotel:id,hotel_room,session_id',
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                }
+            ])
                 ->select('user_ip', 'logintime')
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
                 ->where([
@@ -300,11 +305,13 @@ class APIController extends Controller
                     return $address;
                 });
         } else {
-            $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->where('user_id', '=', $uid);
-            }])
+            $prevConnectDevicecount = SessionTable::with([
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                        ->where('user_id', '=', $uid);
+                }
+            ])
                 ->where([
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
@@ -343,10 +350,10 @@ class APIController extends Controller
         $user = JWTAuth::user(); // All the user info
         $uid = $user->id;
         $userRole = $user->roles->first()->name;
-    
+
         // Fetch `connected_device` from users table
         $userConnectedDevice = $user->connected_device;
-    
+
         if ($userRole == 'tieruser') {
             $prevConnectDevicecount = SessionTable::with([
                 'hotel:id,hotel_room,session_id',
@@ -362,22 +369,22 @@ class APIController extends Controller
                     ['users_id', '=', $uid],
                 ])
                 ->orderBy('connected_devices', 'asc');
-    
+
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-    
+
                 // ✅ Fix logintime format (remove microseconds)
-                // if (!empty($address['logintime'])) {
-                //     $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
-                // }
-                
-    
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
+                }
+
+
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
-                return $address;  
-            });  
+                return $address;
+            });
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
@@ -392,24 +399,24 @@ class APIController extends Controller
                 ->select('user_ip', 'logintime')
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
                 ->orderBy('connected_devices', 'asc');
-    
+
             $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
                 $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
-    
+
                 // ✅ Fix logintime format (remove microseconds)
-                // if (!empty($address['logintime'])) {
-                //     $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
-                // } 
-                
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
+                }
+
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
             });
         }
-    
+
         $numofdevice = $prevConnectDevicecount->count();
-    
+
         // Final response
         $response = [
             'success' => true,
@@ -420,12 +427,12 @@ class APIController extends Controller
             'message' => 'Connected device found successfully',
             'data' => $s,
         ];
-    
+
         return response()->json($response, 200);
     }
-    
 
-   
+
+
 
     public function support()
     {
@@ -463,7 +470,8 @@ class APIController extends Controller
         $ua = $request->server('HTTP_USER_AGENT');
         $validate = 0;
         $zipcode = $request->get('zipcode');
-        if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
+        if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode'))
+            $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         if ($isDevice == 'apple') {
             $type = 'url';
@@ -477,7 +485,7 @@ class APIController extends Controller
 
         if ($validate) {
             $a = $data->groupBy('genre_name')->keys();
-            foreach ($data  as $key => $res) {
+            foreach ($data as $key => $res) {
 
                 if ($res->zip_code !== ["All"]) {
                     $check = in_array($zipcode, $res->zip_code);
@@ -665,7 +673,7 @@ class APIController extends Controller
         try {
             $id = JWTAuth::user()->id;
             $count = RecentChannel::where('user_id', '=', $id)->count();
-            if ($count >=  $limit) {
+            if ($count >= $limit) {
                 RecentChannel::where('user_id', '=', $id)->orderBy('created_at', 'desc')->skip(5)->delete();
             }
             $now = Carbon::now('utc')->toDateTimeString();
@@ -809,14 +817,17 @@ class APIController extends Controller
                 $user = User::find($uid);
 
                 // $user = JWTAuth::user();//all the user info
-                $uid =  $user['id'];
+                $uid = $user['id'];
                 // //and get the number of last connected device
-                $userRole =  $user->roles->first()->name;
+                $userRole = $user->roles->first()->name;
                 if ($userRole == 'tieruser') {
-                    $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                        // Query the name field in status table
-                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-                    }])
+                    $prevConnectDevicecount = SessionTable::with([
+                        'hotel:id,hotel_room,session_id',
+                        'pdname' => function ($q) use ($uid) {
+                            // Query the name field in status table
+                            $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                        }
+                    ])
                         ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
                         ->where([
                             ['status', '=', '1'],
@@ -844,11 +855,13 @@ class APIController extends Controller
                             return $address;
                         });
                 } else {
-                    $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                        // Query the name field in status table
-                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                            ->where('user_id', '=', $uid);
-                    }])
+                    $prevConnectDevicecount = SessionTable::with([
+                        'pdname' => function ($q) use ($uid) {
+                            // Query the name field in status table
+                            $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                                ->where('user_id', '=', $uid);
+                        }
+                    ])
                         ->where([
                             ['status', '=', '1'],
                             ['users_id', '=', $uid],
@@ -885,7 +898,7 @@ class APIController extends Controller
                 //$user = JWTAuth::user();//all the user info
                 // $uid=  $user['id'];
                 //and get the number of last connected device
-                $userRole =  $user->roles->first()->name;
+                $userRole = $user->roles->first()->name;
 
                 //return response()->json($userRole,200);
                 if (empty(request('email')) || empty(request('password'))) {
@@ -896,10 +909,13 @@ class APIController extends Controller
                     return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Invalid credentials'], 401);
                 } else {
                     if ($userRole == 'tieruser') {
-                        $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id', 'pdname' => function ($q) use ($uid) {
-                            // Query the name field in status table
-                            $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
-                        }])
+                        $prevConnectDevicecount = SessionTable::with([
+                            'hotel:id,hotel_room,session_id',
+                            'pdname' => function ($q) use ($uid) {
+                                // Query the name field in status table
+                                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
+                            }
+                        ])
                             ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
                             ->where([
                                 ['status', '=', '1'],
@@ -927,11 +943,13 @@ class APIController extends Controller
                                 return $address;
                             });
                     } else {
-                        $prevConnectDevicecount = SessionTable::with(['pdname' => function ($q) use ($uid) {
-                            // Query the name field in status table
-                            $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                                ->where('user_id', '=', $uid);
-                        }])
+                        $prevConnectDevicecount = SessionTable::with([
+                            'pdname' => function ($q) use ($uid) {
+                                // Query the name field in status table
+                                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                                    ->where('user_id', '=', $uid);
+                            }
+                        ])
                             ->where([
                                 ['status', '=', '1'],
                                 ['users_id', '=', $uid],
