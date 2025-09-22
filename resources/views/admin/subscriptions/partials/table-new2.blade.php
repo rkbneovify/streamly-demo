@@ -121,7 +121,7 @@
                         {{ getUserType($subscription->user) }}</td>
                     <td style="vertical-align: middle;">
                         {{ $subscription->mode }}
-
+                        {{-- {{ getSubscriptionType($subscription) }} --}}
 
                     </td>
                     <td style="vertical-align: middle;">
@@ -134,16 +134,10 @@
                     </td>
                     <td style="vertical-align: middle;">
 
-                        @if ($subscription->renews_at != null)
-                            {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
-                        @elseif ($subscription->ends_at != null)
-                            {{ date('d/m/Y', strtotime($subscription->ends_at)) }}
-                        @elseif ($subscription->trial_ends_at != null && $subscription->user->is_custom_user != 1)
-                            {{ date('d/m/Y', strtotime($subscription->trial_ends_at)) }}
+                        @if (getSubscriptionExpireAt($subscription) != null)
+                            {{ getSubscriptionExpireAt($subscription) }}
                         @else
-                            <span class="badge badge-success">
-                                Never
-                            </span>
+                            <span class="badge badge-success">Never</span>
                         @endif
 
                     </td>
