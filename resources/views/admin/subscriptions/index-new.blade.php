@@ -20,6 +20,98 @@
         color: #000;
     }
 </style>
+<style>
+    .select-wrapper {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .select-wrapper:hover {
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .select-wrapper img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .select-custom {
+        width: 100%;
+        padding: 4px 10px;
+        border: none;
+        /* border-radius: 4px; */
+        font-size: 13.8px;
+        font-weight: 600;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        /* Remove default arrow for most browsers */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: none;
+    }
+
+    .select-custom:focus {
+        border-color: none;
+        box-shadow: none;
+    }
+
+    .btn-add-user {
+        text-decoration: none;
+        color: #333;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .input-daterange {
+        width: 100%;
+        padding: 4px 10px;
+        border: none;
+        /* border-radius: 4px; */
+        font-size: 13.8px;
+        font-weight: 600;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        /* Remove default arrow for most browsers */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: none;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 10px 40px 10px 15px !important;
+        border: none;
+        /* border-radius: 4px; */
+        font-size: 13.8px;
+        font-weight: 600;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        /* Remove default arrow for most browsers */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: none;
+    }
+
+    .input-custom {
+        padding: 18px 10px !important;
+    }
+</style>
 @extends('master')
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -32,13 +124,7 @@
                         <h1>Subscription</h1> {{ session()->get('info') }}
                     </div>
                     <div class="col-sm-6">
-                        <div class="card-tools">
 
-                            <a class="btn btn-xs btn-primary" href="{{ url('admin/subscriptions/create') }} ">
-                                Add new subscription
-                            </a>
-                            <a class=" btn btn-xs btn-warning" href="{{ url('stripesync') }}">Stripe Expiry Date Sync</a>
-                        </div>
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
                             <li class="breadcrumb-item active">Subscription</li>
@@ -54,49 +140,45 @@
 
                 <div class="card-body">
                     <div class="row mb-3">
-                        {{-- <div class="col-md-3">
-                            <select class="form-control" name="plan">
-                                <option value="">Select Plan</option>
-                                @foreach ($plankey as $plan)
-                                    <option value="{{ $plan }}" {{ Request()->plan == $plan ? 'selected' : '' }}>
-                                        {{ ucfirst($plan) }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        <div class="col-md-3">
-                            <select class="form-control" name="status">
-                                <option value="">Select Status</option>
-                                @foreach ($statusTypes as $status)
-                                    <option value="{{ $status }}"
-                                        {{ Request()->status == $status ? 'selected' : '' }}>
-                                        {{ ucfirst($status) }}</option>
-                                @endforeach
 
-                            </select>
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_status" class="select-custom">
+                                    <option value="">Select Status</option>
+                                    @foreach ($statusTypes as $status)
+                                        <option value="{{ $status }}"
+                                            {{ Request()->status == $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="input-container ">
+
+                        <div class="col-md-4 mb-3">
+                            <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control" placeholder="Search by name, email">
+                                    class="form-control input-custom" placeholder="Search by name, email">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="exportDropdown"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Export
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                                    <a class="dropdown-item"
-                                        href="{{ route('admin.subscriptions.users.export', ['type' => 'xlsx'] + request()->query()) }}">Export
-                                        to Excel</a>
-                                    <a class="dropdown-item"
-                                        href="{{ route('admin.subscriptions.users.export', ['type' => 'csv'] + request()->query()) }}">Export
-                                        to CSV</a>
 
-                                </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/export.png') }}" alt="status icon">
+                                <a href="{{ route('admin.subscriptions.users.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                    class="btn-add-user">Export</a>
                             </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <a class="btn btn-primary w-100" href="{{ url('admin/subscriptions/create') }} ">
+                                New Subscription
+                            </a>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <a class=" btn btn-warning" href="{{ url('stripesync') }}">Stripe Sync</a>
                         </div>
                     </div>
 
