@@ -90,7 +90,26 @@ class StripeService
             }
         }
 
-        return "N/A";
+
+    }
+    public function isLiveSubscription($subscriptionId)
+    {
+        $subscriptions = $this->getAllSubscriptionsById($subscriptionId);
+        if (count($subscriptions) == 0) {
+            return false;
+        } else {
+            if (count($subscriptions) > 0) {
+                if ($subscriptions->last()->livemode) {
+                    return true;
+
+                } else {
+                    return false;
+
+                }
+            }
+        }
+
+
     }
     protected function findCustomers(string $email, string $mode = 'Live')
     {
@@ -117,23 +136,47 @@ class StripeService
         return $testCustomers->merge($liveCustomers);
     }
 
-    public function isCustomerInLiveMode(string $email)
+
+    public function getInvoiceByCustomerId(string $customerId, string $mode = 'Live')
     {
-        $customer = $this->findByEmail($email);
-        if (count($customer) == 0) {
-            return "N/A";
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
 
+        try {
+            $invoices = $stripe->invoices->all([
+                'customer' => $customerId,
+                'limit' => 3,
+            ]);
+            return $invoices->data;
+        } catch (\Exception $e) {
+            return null;
         }
-
-        if (count($customer) > 0 && $customer->first()->livemode == true) {
-            return "Live Mode";
-
-        } else {
-            return "Testing Mode";
-        }
-
-
     }
+
+    public function getAllInvoiceByCustomerId(string $customerId, $mode = 'Live')
+    {
+
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
+        $statuses = ['draft', 'open', 'paid', 'void', 'uncollectible'];
+
+        $allInvoices = collect();
+
+        foreach ($statuses as $status) {
+            $invoices = $stripe->invoices->all([
+                'customer' => $customerId,
+                'status' => $status,
+                'limit' => 100, // get more from Stripe so we can paginate locally
+            ]);
+
+            $allInvoices = $allInvoices->merge($invoices->data);
+        }
+
+
+        return $allInvoices->sortByDesc('created')->values();
+    }
+
+
 
 
 
