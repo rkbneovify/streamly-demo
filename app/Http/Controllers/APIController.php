@@ -370,9 +370,9 @@ class APIController extends Controller
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
     
                 // ✅ Fix logintime format (remove microseconds)
-                if (!empty($address['logintime'])) {
-                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
-                }
+                // if (!empty($address['logintime'])) {
+                //     $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
+                // }
                 
     
                 unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
@@ -399,9 +399,9 @@ class APIController extends Controller
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
     
                 // ✅ Fix logintime format (remove microseconds)
-                if (!empty($address['logintime'])) {
-                    $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
-                } 
+                // if (!empty($address['logintime'])) {
+                //     $address['logintime'] = \Carbon\Carbon::parse($address['logintime'])->toISOString();
+                // } 
                 
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
