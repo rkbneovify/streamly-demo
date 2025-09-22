@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
@@ -1003,7 +1004,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
             $filters = $request->only(['sort_subscribe_at', 'status']);
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
-            return Excel::download(new UsersSubscriptionExport($filters), $filename);
+            // return Excel::download(new UsersSubscriptionExport($filters), $filename);
+            return Excel::download(new SubscriptionNewReportExport($filters), $filename);
         } catch (\Throwable $th) {
             //throw $th;
             Alert::error('Oops !', $th->getMessage());
