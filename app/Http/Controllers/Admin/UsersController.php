@@ -83,10 +83,18 @@ class UsersController extends Controller
 
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
-        } elseif (env('APP_ENV') == 'production' && empty($request->mode)) {
-            $query->where('mode', "Live");
-        } elseif (env('APP_DEBUG') == false && empty($request->mode)) {
-            $query->where('mode', "Live");
+        }
+        if (env('APP_ENV') == 'production') {
+            if (
+                empty($request->mode) ||
+                empty($request->role) ||
+                empty($request->status) ||
+                empty($request->search) ||
+                empty($request->daterange)
+            ) {
+                $query->where('mode', 'Live');
+            }
+
         }
         if (!empty($request->status)) {
             $status = null;
@@ -118,11 +126,16 @@ class UsersController extends Controller
         }
 
         $users = $query->paginate(10);
+        $dates = [
+            'start_date' => User::orderBy('created_at', 'asc')->value('created_at'),
+            'end_date' => User::orderBy('created_at', 'desc')->value('created_at')
+        ];
+
         // return response()->json($users);
         if ($request->ajax()) {
-            return view('admin.users.partials.new-table', compact('users', 'roles'));
+            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'));
         }
-        return view('admin.users.index2', compact('users', 'roles'));
+        return view('admin.users.index2', compact('users', 'roles', 'dates'));
     }
 
     public function create()
@@ -1040,14 +1053,7 @@ class UsersController extends Controller
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('status', 1)
                 ->where('users_id', $id)
-                ->whereIn('id', function ($query) use ($id) {
-                    $query->selectRaw('MAX(id)')
-                        ->from('session_table')
-                        ->where('users_id', $id)
-                        ->where('status', 1)
-                        ->groupBy('device_id');
-                })
-                ->orderBy('connected_devices', 'asc')
+                ->orderBy('connected_devices', 'desc')
                 ->get();
             if ($allSession->count() <= 0) {
                 toast('No active device.', 'error')
@@ -1078,22 +1084,15 @@ class UsersController extends Controller
                 'user.roles',
                 'hotel',
                 'pdInfo' => fn($query) => $query->where('user_id', $id),
-            ])
-                ->selectRaw("id, users_id, connected_devices, access_token, device_id,
-        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,device_title,device_model,platform,
-        build_version,device_os_version,zipcode,
-        created_on,
+            ]);
+            $query->selectRaw("*, 
+        SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
-                ->where('status', 1)
                 ->where('users_id', $id)
-                ->whereIn('id', function ($query) use ($id) {
-                    $query->selectRaw('MAX(id)')
-                        ->from('session_table')
-                        ->where('users_id', $id)
-                        ->where('status', 1)
-                        ->groupBy('device_id');
-                })
-                ->orderBy('connected_devices', 'asc');
+                ->where('status', 1);
+
+
+
             if (!empty($request->search)) {
                 $query->whereHas('pdInfo', function ($query) use ($request) {
                     $query->where('personal_devicename', 'like', '%' . $request->search . '%')
@@ -1105,7 +1104,7 @@ class UsersController extends Controller
 
 
             }
-
+            $query->orderBy('created_on', 'desc');
             $allSession = $query->paginate(10);
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 

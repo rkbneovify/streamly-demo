@@ -419,6 +419,10 @@
         $(function() {
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
+                startDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                minDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
+                maxDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
                 locale: {
                     format: 'DD/MM/YYYY'
                 }
