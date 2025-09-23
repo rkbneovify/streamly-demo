@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\WebSocketServer::class,
         Commands\DemoCron::class,
+        Commands\CheckStripeSubscription::class,
         //
     ];
 
@@ -31,7 +32,9 @@ class Kernel extends ConsoleKernel
         //     // Do Something Here
         // })->everyMinute();
         $schedule->command('demo:cron')
-        ->everyMinute();
+            ->everyMinute();
+        $schedule->command('stripe:check-subscriptions')
+            ->daily();
     }
 
     /**
@@ -41,7 +44,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

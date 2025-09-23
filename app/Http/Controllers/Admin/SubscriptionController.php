@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
@@ -12,6 +13,7 @@ use App\Mail\SubscriptionUpgradeMail;
 use App\Models\Subscription;
 use App\Models\SubscriptionPack;
 use App\Models\Zipcode;
+use App\Services\StripeService;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -138,15 +140,48 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.tierindex', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
-    public function index2(Request $request)
+    public function index2(Request $request, StripeService $stripeService)
     {
+
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user');      // still eager load user data
+
+        // if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+        //     $query->orderByDesc('updated_at');
+        // } else {
+        //     $query->orderBy('updated_at');
+        // }
+        // Filter by status if provided
+        if (!empty($request->status)) {
+
+            $query->where('stripe_status', $request->status);
+        }
+
+        // Apply search filter if provided
+        if (!empty($request->search)) {
+
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
         $query->latest();
 
-        $subscriptions = $query->paginate(10)->appends($request->query());
+        $subscriptions = $query->paginate(10)
+            ->appends($request->query());
+
+        // $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
+
+        //     $item->mode = $stripeService->hasSubscription($item->stripe_id);
+        //     return $item;
+        // });
+        // return response()->json($subscriptions);
+
+
 
 
 
@@ -157,32 +192,7 @@ class SubscriptionController extends Controller
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Extracting subscription status types
-        $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
-            $query->where('mode', $mode);
-        })->pluck('stripe_status')->unique()->values();
-
-
-        // $plans = collect($stripePlans->data)->map(function ($plan) {
-        //     return [
-        //         'id' => $plan->id,
-        //         'billing_scheme' => $plan->billing_scheme,
-        //     ];
-        // });
-        // $planIds = $plans->pluck('id');
-
-        // if (!empty($request->plan)) {
-        //     //   Plans id according to billing scheme from stripe
-        //     $plansFilteredByBillingScheme = collect($stripePlans->data)
-        //         ->where('billing_scheme', $request->plan)->values();
-        //     $plans = collect($plansFilteredByBillingScheme)->map(function ($plan) {
-        //         return [
-        //             'id' => $plan->id,
-        //             'billing_scheme' => $plan->billing_scheme,
-        //         ];
-        //     });
-
-        //     $planIds = $plans->pluck('id');
-        // }
+        $statusTypes = Subscription::whereHas('user')->pluck('stripe_status')->unique()->values();
 
 
 
@@ -192,40 +202,9 @@ class SubscriptionController extends Controller
 
 
 
-        // $query = Subscription::query()->with('user')
-        //     ->whereHas('user', function ($query) use ($mode) {
-        //         $query->where('mode', $mode);
-        //     })
-        //     ->whereIn('stripe_plan', $planIds);
-        // if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-        //     $query->orderByDesc('updated_at');
-        // } else {
-        //     $query->orderBy('updated_at');
-        // }
-        // // Filter by status if provided
-        // if (!empty($request->status)) {
 
-        //     $query->where('stripe_status', $request->status);
-        // }
 
-        // // Apply search filter if provided
-        // if (!empty($request->search)) {
 
-        //     $search = $request->search;
-        //     $query->whereHas('user', function ($q) use ($search) {
-        //         $q->where('name', 'like', '%' . $search . '%')
-        //             ->orWhere('email', 'like', '%' . $search . '%');
-        //     });
-        // }
-
-        // $subscriptions = $query->paginate(10)->appends($request->query());
-
-        // // Add billing_scheme to each subscription in the paginated collection
-        // $subscriptions->getCollection()->transform(function ($subscription) use ($plans) {
-        //     $plan = $plans->firstWhere('id', $subscription->stripe_plan);
-        //     $subscription->billing_scheme = $plan ? $plan['billing_scheme'] : 'Unknown Plan';
-        //     return $subscription;
-        // });
 
         if ($request->ajax()) {
             return view('admin.subscriptions.partials.table-new2', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
@@ -1018,12 +997,15 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
     }
 
-    public function exportUsersSubscription(Request $request, $type)
+    public function exportUsersSubscription(Request $request, $type, StripeService $stripeService)
     {
+        $data = $stripeService->isLiveSubscription('sub_1S8yjoGbCi8tAySGxFHbIxCR');
+        return response()->json($data);
         try {
-            $filters = $request->only(['sort_subscribe_at', 'status']);
+
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
-            return Excel::download(new UsersSubscriptionExport($filters), $filename);
+            // return Excel::download(new UsersSubscriptionExport($filters), $filename);
+            return Excel::download(new SubscriptionNewReportExport($request), $filename);
         } catch (\Throwable $th) {
             //throw $th;
             Alert::error('Oops !', $th->getMessage());
