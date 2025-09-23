@@ -428,6 +428,7 @@ Route::get('dropzone/fetch', 'DropzoneController@fetch')->name('dropzone.fetch')
 Route::get('dropzone/delete', 'DropzoneController@delete')->name('dropzone.delete');
 
 Route::get('/stripesync', function (Request $request) {
+
     Artisan::call('stripe:sync-renewals');
 
     return redirect('admin/subscriptions')->with('info', Artisan::output());
