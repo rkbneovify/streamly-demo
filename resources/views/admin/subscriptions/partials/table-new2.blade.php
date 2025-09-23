@@ -120,7 +120,14 @@
                     <td style="vertical-align: middle;">
                         {{ getUserType($subscription->user) }}</td>
                     <td style="vertical-align: middle;">
-                        {{ $subscription->mode }}
+                        @if ($subscription->livemode == 1)
+                            Stripe/Live
+                        @elseif ($subscription->livemode == 0)
+                            Stripe/Test
+                        @else
+                            Admin/Custom
+                        @endif
+
                         {{-- {{ getSubscriptionType($subscription) }} --}}
 
                     </td>
