@@ -92,7 +92,7 @@ class StripeService
         $testCustomer = $this->findCustomerById($customerId, 'Testing');
         $liveCustomer = $this->findCustomerById($customerId, 'Live');
 
-        return collect([$testCustomer, $liveCustomer]);
+        return collect([$testCustomer, $liveCustomer])->filter()->values();
     }
 
 

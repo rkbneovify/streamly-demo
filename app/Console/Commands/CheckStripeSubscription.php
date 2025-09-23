@@ -45,10 +45,23 @@ class CheckStripeSubscription extends Command
         Subscription::whereHas('user')->latest()->chunk(50, function ($subscriptions) use ($stripeService) {
             foreach ($subscriptions as $subscription) {
                 try {
-                    $livemode = $stripeService->isLiveSubscription($subscription->stripe_id);
-                    $subscription->update(['livemode' => $livemode]);
 
-                    usleep(200000); // 0.2 second delay to avoid rate limits
+                    if ($subscription->user->stripe_id != null) {
+                        $customer = $stripeService->getAllCustomerById($subscription->user->stripe_id);
+
+                        if ($customer && count($customer) > 0) {
+                            $lastCustomer = $customer->last();
+
+                            if (isset($lastCustomer->livemode) && $lastCustomer->livemode) {
+                                $subscription->update(['livemode' => 1]);
+                            } else {
+                                $subscription->update(['livemode' => 0]);
+                            }
+                        }
+                    }
+
+
+                    // usleep(200000); // 0.2 second delay to avoid rate limits
                 } catch (\Exception $e) {
                     Log::error("Stripe subscription check failed for ID {$subscription->id}: {$e->getMessage()}");
                 }
@@ -56,6 +69,7 @@ class CheckStripeSubscription extends Command
         });
 
         $this->info('stripe:check-subscriptions Command run successfully!');
+        return 0;
     }
 
 
