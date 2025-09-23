@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 @property timestamp $ends_at ends at
 @property timestamp $created_at created at
 @property timestamp $updated_at updated at
-   
+
  */
 class Subscription extends Model
 {
@@ -38,6 +38,7 @@ class Subscription extends Model
         'stripe_status',
         'stripe_plan',
         'quantity',
+        'livemode',
         'trial_ends_at',
         'renews_at',
         'ends_at'

@@ -148,11 +148,11 @@ class SubscriptionController extends Controller
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user');      // still eager load user data
 
-        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-            $query->orderByDesc('updated_at');
-        } else {
-            $query->orderBy('updated_at');
-        }
+        // if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+        //     $query->orderByDesc('updated_at');
+        // } else {
+        //     $query->orderBy('updated_at');
+        // }
         // Filter by status if provided
         if (!empty($request->status)) {
 
@@ -174,11 +174,11 @@ class SubscriptionController extends Controller
         $subscriptions = $query->paginate(10)
             ->appends($request->query());
 
-        $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
+        // $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
 
-            $item->mode = $stripeService->hasSubscription($item->stripe_id);
-            return $item;
-        });
+        //     $item->mode = $stripeService->hasSubscription($item->stripe_id);
+        //     return $item;
+        // });
         // return response()->json($subscriptions);
 
 
@@ -192,9 +192,7 @@ class SubscriptionController extends Controller
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Extracting subscription status types
-        $statusTypes = Subscription::whereHas('user', function ($query) use ($mode) {
-            $query->where('mode', $mode);
-        })->pluck('stripe_status')->unique()->values();
+        $statusTypes = Subscription::whereHas('user')->pluck('stripe_status')->unique()->values();
 
 
 
@@ -999,13 +997,15 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         }
     }
 
-    public function exportUsersSubscription(Request $request, $type)
+    public function exportUsersSubscription(Request $request, $type, StripeService $stripeService)
     {
+        $data = $stripeService->isLiveSubscription('sub_1S8yjoGbCi8tAySGxFHbIxCR');
+        return response()->json($data);
         try {
-            $filters = $request->only(['sort_subscribe_at', 'status']);
+
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
             // return Excel::download(new UsersSubscriptionExport($filters), $filename);
-            return Excel::download(new SubscriptionNewReportExport($filters), $filename);
+            return Excel::download(new SubscriptionNewReportExport($request), $filename);
         } catch (\Throwable $th) {
             //throw $th;
             Alert::error('Oops !', $th->getMessage());

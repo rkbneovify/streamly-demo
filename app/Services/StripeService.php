@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Stripe\StripeClient;
 
@@ -15,6 +16,28 @@ class StripeService
             'expand' => ['data.product'],
             'limit' => 100,
         ]);
+    }
+
+    public function getPlansAndStore()
+    {
+        $cacheKey = "stripe_plans_all";
+
+        // If cached, return directly
+        if (Cache::has($cacheKey)) {
+            return collect(Cache::get($cacheKey));
+        }
+
+        // Otherwise fetch from Stripe
+        $livePlans = $this->getPlans('Live');
+        $testPlans = $this->getPlans('Testing');
+
+        // Merge both Live + Test plans into one flat array
+        $plans = array_merge($livePlans->data, $testPlans->data);
+
+        // Store in cache for 6 hours
+        Cache::put($cacheKey, $plans, now()->addHours(6));
+
+        return collect($plans);
     }
 
     public function getSubscriptionById(string $subscriptionId, string $mode = 'Live')
@@ -47,7 +70,7 @@ class StripeService
 
     public function getPlanMode($planId)
     {
-        return $this->getAllPlans()->where('id', $planId)->first()->livemode;
+        return $this->getPlansAndStore()->where('id', $planId)->first()->livemode;
 
     }
 
@@ -96,14 +119,14 @@ class StripeService
     {
         $subscriptions = $this->getAllSubscriptionsById($subscriptionId);
         if (count($subscriptions) == 0) {
-            return false;
+            return null;
         } else {
             if (count($subscriptions) > 0) {
                 if ($subscriptions->last()->livemode) {
-                    return true;
+                    return 1;
 
                 } else {
-                    return false;
+                    return 0;
 
                 }
             }
@@ -176,6 +199,23 @@ class StripeService
         return $allInvoices->sortByDesc('created')->values();
     }
 
+
+    public function getPlanModeBySubscription($subscription)
+    {
+        if ($subscription->user->is_custom_user == 1 || $subscription->user->user_type == 'custom') {
+            if ($subscription->user->is_live_on_stripe == 1 && $subscription->user->mode == 'Live') {
+                return 'Stripe/Live';
+            } elseif ($subscription->user->is_live_on_stripe == 1 && $subscription->user->mode == 'Testing') {
+                return 'Stripe/Test';
+            }
+            return 'Admin/Custom';
+        }
+        $plan = $this->getPlansAndStore()->where('id', $subscription->stripe_plan)->first();
+        if ($plan) {
+            return $plan->livemode ? 'Live' : 'Testing';
+        }
+        return null;
+    }
 
 
 
