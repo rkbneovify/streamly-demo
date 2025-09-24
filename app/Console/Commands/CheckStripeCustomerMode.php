@@ -7,21 +7,21 @@ use App\Services\StripeService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class CheckStripeSubscription extends Command
+class CheckStripeCustomerMode extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'stripe:check-subscriptions';
+    protected $signature = 'stripe:check-customer-mode';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Check if subscription exist in Stripe one by one';
+    protected $description = 'Checks and updates the livemode of Stripe customer';
 
     /**
      * Create a new command instance.
@@ -70,9 +70,7 @@ class CheckStripeSubscription extends Command
                 }
             });
 
-        $this->info('stripe:check-subscriptions Command run successfully!');
+        $this->info('stripe:check-customer Command run successfully !');
         return 0;
     }
-
-
 }
