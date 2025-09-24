@@ -16,10 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AngularController;
 use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
-
-
-
-
+use Illuminate\Support\Facades\Artisan;
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -432,7 +429,7 @@ Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     Artisan::call('stripe:check-customer-mode');
 
-    return redirect('admin/subscriptions')->with('info', Artisan::output());
+    return redirect()->back()->with('info', Artisan::output());
     //return Artisan::output();
 });
 //  Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
