@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Maatwebsite\Excel\Facades\Excel;
+use Stevebauman\Location\Facades\Location;
 use Stripe\PaymentMethod;
 use Stripe\Stripe;
 use Stripe\StripeClient;
@@ -1000,8 +1001,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     {
         // $data = $stripeService->getAllCustomerById("cus_T591UwSy7wB178");
         // return response()->json($data);
-        // $timezone = Carbon::now()->timezone;
-        // return response()->json(['timezone' => $timezone]);
+
+        return response()->json(config('app.timezone'));
         try {
 
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
