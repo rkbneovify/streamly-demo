@@ -42,31 +42,33 @@ class CheckStripeSubscription extends Command
     {
         $stripeService = new StripeService();
 
-        Subscription::whereHas('user')->latest()->chunk(50, function ($subscriptions) use ($stripeService) {
-            foreach ($subscriptions as $subscription) {
-                try {
+        Subscription::whereHas('user')
+            ->whereNull('livemode')
+            ->latest()->chunk(50, function ($subscriptions) use ($stripeService) {
+                foreach ($subscriptions as $subscription) {
+                    try {
 
-                    if ($subscription->user->stripe_id != null) {
-                        $customer = $stripeService->getAllCustomerById($subscription->user->stripe_id);
+                        if ($subscription->user->stripe_id != null) {
+                            $customer = $stripeService->getAllCustomerById($subscription->user->stripe_id);
 
-                        if ($customer && count($customer) > 0) {
-                            $lastCustomer = $customer->last();
+                            if ($customer && count($customer) > 0) {
+                                $lastCustomer = $customer->last();
 
-                            if (isset($lastCustomer->livemode) && $lastCustomer->livemode) {
-                                $subscription->update(['livemode' => 1]);
-                            } else {
-                                $subscription->update(['livemode' => 0]);
+                                if (isset($lastCustomer->livemode) && $lastCustomer->livemode) {
+                                    $subscription->update(['livemode' => 1]);
+                                } else {
+                                    $subscription->update(['livemode' => 0]);
+                                }
                             }
                         }
+
+
+                        // usleep(200000); // 0.2 second delay to avoid rate limits
+                    } catch (\Exception $e) {
+                        Log::error("Stripe subscription check failed for ID {$subscription->id}: {$e->getMessage()}");
                     }
-
-
-                    // usleep(200000); // 0.2 second delay to avoid rate limits
-                } catch (\Exception $e) {
-                    Log::error("Stripe subscription check failed for ID {$subscription->id}: {$e->getMessage()}");
                 }
-            }
-        });
+            });
 
         $this->info('stripe:check-subscriptions Command run successfully!');
         return 0;
