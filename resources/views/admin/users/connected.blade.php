@@ -220,7 +220,7 @@
 
 
                                         <td>
-                                            {{ $user->created_on ?? '' }}
+                                            {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s') }}
                                         </td>
                                         <td>
                                             {{ $user->zipcode ?? '' }}
