@@ -147,7 +147,8 @@
                              <td style="vertical-align: middle;">
                                  📅 {{ date('d/m/Y', strtotime($user->created_on)) }}
                                  <br>
-                                 🕒 {{ date('h:i:s A', strtotime($user->created_on)) }}
+                                 🕒
+                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                              </td>
 
                              <td style="vertical-align: middle;">

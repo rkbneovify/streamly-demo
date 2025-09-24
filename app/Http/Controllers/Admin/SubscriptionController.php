@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Maatwebsite\Excel\Facades\Excel;
+use Stevebauman\Location\Facades\Location;
 use Stripe\PaymentMethod;
 use Stripe\Stripe;
 use Stripe\StripeClient;
@@ -148,11 +149,7 @@ class SubscriptionController extends Controller
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user');      // still eager load user data
 
-        // if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-        //     $query->orderByDesc('updated_at');
-        // } else {
-        //     $query->orderBy('updated_at');
-        // }
+
         // Filter by status if provided
         if (!empty($request->status)) {
 
@@ -169,8 +166,11 @@ class SubscriptionController extends Controller
             });
         }
 
-        $query->latest();
-
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->orderByDesc('created_at');
+        } else {
+            $query->orderBy('created_at');
+        }
         $subscriptions = $query->paginate(10)
             ->appends($request->query());
 
@@ -837,7 +837,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $plan = \Stripe\Plan::retrieve($productId);
         DB::beginTransaction();
         try {
-
+            $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
             $user = User::find($request->user_id);
             if ($user->is_custom_user == 0 || $user->user_type != "custom") {
                 alert()->error('Oops !', 'You can only update custom user on stripe.');
@@ -999,8 +999,10 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function exportUsersSubscription(Request $request, $type, StripeService $stripeService)
     {
-        $data = $stripeService->isLiveSubscription('sub_1S8yjoGbCi8tAySGxFHbIxCR');
-        return response()->json($data);
+        // $data = $stripeService->getAllCustomerById("cus_T591UwSy7wB178");
+        // return response()->json($data);
+
+        return response()->json(config('app.timezone'));
         try {
 
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;

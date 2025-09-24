@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\WebSocketServer::class,
         Commands\DemoCron::class,
-        Commands\CheckStripeSubscription::class,
+        Commands\CheckStripeCustomerMode::class,
         //
     ];
 
@@ -33,8 +33,8 @@ class Kernel extends ConsoleKernel
         // })->everyMinute();
         $schedule->command('demo:cron')
             ->everyMinute();
-        $schedule->command('stripe:check-subscriptions')
-            ->daily();
+        $schedule->command('stripe:check-customer-mode')
+            ->everyMinute();
     }
 
     /**
