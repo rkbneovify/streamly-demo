@@ -373,27 +373,40 @@
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
-                        {{-- <div class="col-md-4">
-                            <div class="input-conatiner">
-                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control" placeholder="Search by name, email">
-                                <span class="btn-clear" id="btnClear">×</span>
-                            </div>
-                        </div> --}}
 
                     </div>
-                    <h3 class="card-title">Total : {{ $users->total() }}</h3>
+
+
 
                 </div>
                 {{-- row end --}}
+                <div class="row mt-2 px-2">
+                    <div class="col-md-2 mb-3">
+                        <div class="select-wrapper">
+                            <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                            <select name="limit" id="sel_limit" class="select-custom">
+                                <option value="10" {{ request()->limit == 10 ? 'selected' : '' }}>Show 10</option>
+                                <option value="30" {{ request()->limit == 30 ? 'selected' : '' }}>Show 30</option>
+                                <option value="50" {{ request()->limit == 50 ? 'selected' : '' }}>Show 50</option>
+                                <option value="100" {{ request()->limit == 100 ? 'selected' : '' }}>Show 100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <h3 class="card-title mt-2">Total Users : {{ $users->total() }}</h3>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <h3 id="selected" class="card-title mt-2"></h3>
+                    </div>
 
-
+                </div>
+                {{-- row end --}}
                 <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
                     @csrf
 
                     <input hidden type="text" name="action">
-                    <div id="user-data">
 
+                    <div id="user-data">
                         @include('admin.users.partials.new-table')
                     </div>
 
@@ -412,11 +425,15 @@
     <!-- /.content-wrapper -->
 @endsection
 
+
+
+
 @section('scripts')
 
 
     <script>
         $(function() {
+            restoreSelectedData();
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
                 startDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
@@ -483,21 +500,90 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const userCheckboxes = document.querySelectorAll('.row-checkbox');
+        let storageKey = "selected_users";
 
-            selectAllCheckbox.addEventListener('change', function() {
-                userCheckboxes.forEach(checkbox => {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
+        // Get selected IDs from localStorage
+        function getSelected() {
+            return JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // Save to localStorage
+        function saveSelected(ids) {
+            localStorage.setItem(storageKey, JSON.stringify(ids));
+        }
+
+        function removeAll() {
+            localStorage.removeItem(storageKey);
+        }
+
+        function restoreSelectedData() {
+            let selected = getSelected();
+            if (selected.length > 0) {
+                document.getElementById('selected').textContent = "Selected : " + selected.length;
+            } else {
+                document.getElementById('selected').textContent = "";
+            }
+
+            const userCheckboxes = document.querySelectorAll('.row-checkbox');
+            userCheckboxes.forEach(checkbox => {
+                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
+
             });
+        }
+
+
+        $(document).on('change', '.row-checkbox', function() {
+            let selected = getSelected();
+            if ($(this).is(':checked')) {
+                if (!selected.includes($(this).val())) {
+                    selected.push($(this).val());
+                    saveSelected(selected);
+                }
+
+            } else {
+
+
+                selected = selected.filter(id => id !== $(this).val());
+                saveSelected(selected);
+            }
+
+            restoreSelectedData();
+
+        });
+
+        $(document).on('change', '#selectAll', function() {
+            let selected = getSelected();
+            const userCheckboxes = $('.row-checkbox');
+            if ($(this).is(':checked')) {
+                userCheckboxes.each(function() {
+                    this.checked = true;
+                    if (!selected.includes(this.value)) {
+                        selected.push(this.value);
+                    }
+                });
+            } else {
+                userCheckboxes.each(function() {
+                    this.checked = false;
+                    if (selected.includes(this.value)) {
+                        selected = selected.filter(id => id !== this.value);
+                    }
+
+                });
+
+            }
+            saveSelected(selected);
+            restoreSelectedData();
         });
     </script>
     <script>
         $(document).ready(function() {
-            $('.custom-switch input[type="checkbox"]').on('change', function() {
-                var userId = $(this).closest('tr').find('.row-checkbox').val();
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+            $('.btn-user-status').on('click', function(e) {
+                e.preventDefault();
+                let $btn = $(this); // store the clicked button
+                let url = $btn.data('url');
                 Swal.fire({
                     title: "Are you sure?",
                     text: "Do you really want to change the status?",
@@ -507,11 +593,9 @@
                     cancelButtonText: "Cancel",
                 }).then((result) => {
                     if (result.isConfirmed) {
-
-                        showLoader();
-                        let url = "{{ route('admin.users.status', ':id') }}";
-                        url = url.replace(':id', userId);
                         window.location.href = url;
+                        showLoader();
+
 
                     } else {
                         location.reload();
@@ -579,9 +663,17 @@
                     cancelButtonText: "Cancel",
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        let selected = getSelected();
+
                         // Set action value in hidden input
                         $('input[name="action"]').val(action);
-                        // Submit the form
+
+                        $.each(selected, function(index, value) {
+                            $("#tbl-form").append(
+                                `<input type="hidden" name="user_ids[]" value="${value}">`
+                            );
+                        });
+
                         $('#tbl-form').submit();
                         showLoader();
                     } else {
@@ -653,6 +745,27 @@
 
             window.location.href = url.toString();
         });
+
+        $(document).on('change', '#sel_limit', function(e) {
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("limit", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("limit");
+            } else {
+
+                url.searchParams.set("limit", $(this).val());
+            }
+
+            window.location.href = url.toString();
+        });
     </script>
 
     <script>
@@ -667,8 +780,21 @@
                 url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
                 success: function(data) {
                     $('#user-data').html(data);
+
+                    restoreSelectedData();
+
+                    // Set #selectAll checked only if all visible checkboxes are checked (current page)
+                    let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                        '.row-checkbox').length;
+                    $('#selectAll').prop('checked', allChecked);
+                    console.log($('.row-checkbox:checked').length);
+
+
                 }
             });
+
+
+
         }
 
 
@@ -688,4 +814,10 @@
 
         })
     </script>
+
+    @if (session('remove'))
+        <script>
+            removeAll();
+        </script>
+    @endif
 @stop
