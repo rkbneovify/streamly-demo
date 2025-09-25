@@ -90,8 +90,7 @@
                 @foreach ($users as $key => $user)
                     <tr>
                         <td style="vertical-align: middle;">
-                            <input type="checkbox" class="row-checkbox custom-checkbox" name="user_ids[]"
-                                value="{{ $user->id }}">
+                            <input type="checkbox" class="row-checkbox custom-checkbox" value="{{ $user->id }}">
                         </td>
                         <td>
                             <a href="{{ route('admin.users.view', $user->id) }}">
@@ -123,23 +122,19 @@
 
                         </td>
                         <td style="vertical-align: middle;">
-                            @if ($user->is_active)
-                                {{-- <label class="custom-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="custom-slider"></span>
-                                </label> --}}
-                                <span class="custom-badge badge-active">Active</span>
-                            @else
-                                {{-- <label class="custom-switch">
-                                    <input type="checkbox">
-                                    <span class="custom-slider"></span>
-                                </label> --}}
-                                <span class="custom-badge badge-inactive">Inactive</span>
-                            @endif
+                            <a href="{{ route('admin.users.status', $user->id) }}"
+                                data-url="{{ route('admin.users.status', $user->id) }}" class="btn-user-status">
+                                @if ($user->is_active)
+                                    <span class="custom-badge badge-active">Active</span>
+                                @else
+                                    <span class="custom-badge badge-inactive">Inactive</span>
+                                @endif
+
+                            </a>
 
                         </td>
                         <td style="vertical-align: middle;">
-                            <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                            @if ($user->sessions_count == 0)
                                 @if ($user->is_active)
                                     @if (optional($user->roles->first())->id == 5)
                                         {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
@@ -149,8 +144,21 @@
                                 @else
                                     0
                                 @endif
+                            @else
+                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                    @if ($user->is_active)
+                                        @if (optional($user->roles->first())->id == 5)
+                                            {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                        @else
+                                            {{ $user->sessions_count ?? 0 }} / 5
+                                        @endif
+                                    @else
+                                        0
+                                    @endif
 
-                            </a>
+                                </a>
+                            @endif
+
 
                         </td>
                         <td style="vertical-align: middle;">
