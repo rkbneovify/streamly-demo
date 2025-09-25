@@ -28,7 +28,7 @@
                          <th>
                              Zipcode
                          </th>
-                         @if ($allSession->first()->user->roles->first()->id == 5)
+                         @if ($allSession->first()->user->roles->first()->id == 5 && $allSession->first()->user->user_type != 'custom')
                              <th>
                                  Hotel room
                              </th>
@@ -101,7 +101,7 @@
                              </td>
                              <td style="vertical-align: middle;">
 
-                                 {{ getPlatform($user->useragent, $user->device_title) }}
+                                 {{ getPlatform($user->useragent, $user->device_title) ?? 'N/A' }}
 
 
 
@@ -110,36 +110,28 @@
 
 
                              <td style="vertical-align: middle;">
-                                 @if ($user->device_type === 'web')
-                                     N/A
-                                 @endif
-                                 {{ getDeviceModel($user->useragent, $user->device_title, $user->device_model) }}
+
+                                 {{ getDeviceModel($user->useragent, $user->device_title, $user->device_model) ?? 'N/A' }}
 
 
                              </td>
 
                              <td style="vertical-align: middle;">
-                                 @if ($user->device_type === 'web')
-                                     N/A
-                                 @endif
-                                 {{ $user->build_version ?? '' }}
+
+                                 {{ $user->build_version ?? 'N/A' }}
                              </td>
                              <td style="vertical-align: middle;">
-                                 @if ($user->device_type === 'web')
-                                     N/A
-                                 @endif
-                                 {{ $user->device_os_version ?? '' }}
+
+                                 {{ $user->device_os_version ?? 'N/A' }}
                              </td>
                              <td style="vertical-align: middle;">
-                                 {{ $user->zipcode ?? '' }}
+                                 {{ $user->zipcode ?? 'N/A' }}
                              </td>
-                             @if ($allSession->first()->user->roles->first()->id == 5)
+                             @if ($allSession->first()->user->roles->first()->id == 5 && $allSession->first()->user->user_type != 'custom')
                                  <td style="vertical-align: middle;">
-                                     @if ($user->device_type === 'web')
-                                         N/A
-                                     @endif
+
                                      @if ($user->hotel != null)
-                                         {{ $user->hotel->hotel_room ?? '' }}
+                                         {{ $user->hotel->hotel_room ?? 'N/A' }}
                                      @endif
 
                                  </td>
