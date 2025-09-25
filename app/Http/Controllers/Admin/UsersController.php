@@ -62,6 +62,7 @@ class UsersController extends Controller
                     ->where('status', 1);
             }
         ]);
+        $limit = $request->input('limit', 10);
         $query->withCount('rooms');
 
         if ($request->sort_date == 'asc') {
@@ -125,7 +126,7 @@ class UsersController extends Controller
 
         }
 
-        $users = $query->paginate(10);
+        $users = $query->paginate($limit);
         $dates = [
             'start_date' => User::orderBy('created_at', 'asc')->value('created_at'),
             'end_date' => User::orderBy('created_at', 'desc')->value('created_at')
@@ -1092,34 +1093,43 @@ class UsersController extends Controller
                 ->where('status', 1);
 
 
+            if (!empty($request->search) && strtolower($request->search) != 'web') {
 
-            if (!empty($request->search)) {
+
                 $query->whereHas('pdInfo', function ($query) use ($request) {
                     $query->where('personal_devicename', 'like', '%' . $request->search . '%')
                         ->orWhere('platform', 'like', '%' . $request->search . '%')
                         ->orWhere('device_model', 'like', '%' . $request->search . '%')
                         ->orWhere('build_version', 'like', '%' . $request->search . '%')
                         ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+
                 });
+
+
 
 
             }
             $query->orderBy('created_on', 'desc');
-            $allSession = $query->paginate(10);
+            $allSession = $query->get();
+
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
-
+            if (!empty($request->search) && strtolower($request->search) == 'web') {
+                $allSession = $allSession->filter(function ($item) {
+                    return strtolower($item->device_type) === 'web';
+                })->values();
+            }
             if ($request->ajax()) {
                 return view('admin.users.partials.connected-table', compact('allSession', 'totalRooms'));
             }
 
 
-            if ($allSession->total() <= 0) {
-                toast('No active device.', 'error')
-                    ->timerProgressBar()
-                    ->autoClose(3000);
-                return redirect()->back();
-            }
+            // if ($allSession->total() <= 0) {
+            //     toast('No active device.', 'error')
+            //         ->timerProgressBar()
+            //         ->autoClose(3000);
+            //     return redirect()->back();
+            // }
 
             // return response()->json(['success' => true, "datalist" => $allSession]);
             return view('admin.users.connected-new', compact('allSession', 'totalRooms'));
@@ -1557,7 +1567,7 @@ class UsersController extends Controller
                     toast("User(s) activated successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
-                    return redirect()->back();
+                    return redirect()->back()->with('remove', true);
 
                 } catch (\Throwable $th) {
                     DB::rollBack();
@@ -1572,7 +1582,7 @@ class UsersController extends Controller
                     toast("User(s) inactivate successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
-                    return redirect()->back();
+                    return redirect()->back()->with('remove', true);
 
                 } catch (\Throwable $th) {
                     DB::rollBack();

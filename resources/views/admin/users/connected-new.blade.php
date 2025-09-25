@@ -254,9 +254,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="btn-wrapper btn-danger">
+                                    <div class="btn-wrapper btn-danger" id="btnDeleteAll">
                                         <img src="{{ asset('images/trash-red.png') }}" alt="status icon">
-                                        <a href="#" id="btnDeleteAll" class="btn text-danger">Delete All</a>
+                                        <a href="#" class="btn text-danger">Delete All</a>
                                     </div>
                                 </div>
                             </div>
@@ -286,6 +286,7 @@
         const selectAllCheckbox = document.getElementById('selectAll');
         const btnDeleteAll = document.getElementById('btnDeleteAll');
         const userCheckboxes = document.querySelectorAll('.row-checkbox');
+        btnDeleteAll.style.display = "none";
         txtSearch.addEventListener("input", () => {
             btnClear.style.display = txtSearch.value ? "block" : "none";
         });
@@ -301,6 +302,12 @@
             userCheckboxes.forEach(checkbox => {
                 checkbox.checked = selectAllCheckbox.checked;
             });
+
+            if (selectAllCheckbox.checked) {
+                btnDeleteAll.style.display = "inline-block";
+            } else {
+                btnDeleteAll.style.display = "none";
+            }
         });
 
         btnDeleteAll.addEventListener('click', (e) => {
@@ -322,7 +329,7 @@
             } else {
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to sessions?`,
+                    text: `Do you really want to remove sessions?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes`,
@@ -349,7 +356,7 @@
 
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to sessions?`,
+                    text: `Do you really want to remove sessions?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes`,
