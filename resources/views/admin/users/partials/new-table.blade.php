@@ -65,12 +65,30 @@
                     </th>
                     <th>
                         User Type
+                        <a href="{{ request()->get('page', 1) > 1
+                            ? request()->url() . '?mode=' . (request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live')
+                            : request()->fullUrlWithQuery([
+                                'mode' => request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live',
+                            ]) }}"
+                            class="text-primary ms-1">↑↓</a>
                     </th>
                     <th>
                         Status
+                        <a href="{{ request()->get('page', 1) > 1
+                            ? request()->url() . '?status=' . (request()->get('status', 'active') === 'active' ? 'inactive' : 'active')
+                            : request()->fullUrlWithQuery([
+                                'status' => request()->get('status', 'active') === 'active' ? 'inactive' : 'active',
+                            ]) }}"
+                            class="text-primary ms-1">↑↓</a>
                     </th>
                     <th>
                         Active <br> Devices
+                        <a href="{{ request()->get('page', 1) > 1
+                            ? request()->url() . '?sort_device=' . (request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc')
+                            : request()->fullUrlWithQuery([
+                                'sort_device' => request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc',
+                            ]) }}"
+                            class="text-primary ms-1">↑↓</a>
                     </th>
                     <th>
                         Created At
