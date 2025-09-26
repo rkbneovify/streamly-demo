@@ -253,8 +253,8 @@
                                             class="btn">Export</a>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="btn-wrapper btn-danger" id="btnDeleteAll">
+                                <div class="col-md-4 mb-3" id="btnDeleteAll">
+                                    <div class="btn-wrapper btn-danger">
                                         <img src="{{ asset('images/trash-red.png') }}" alt="status icon">
                                         <a href="#" class="btn text-danger">Delete All</a>
                                     </div>
@@ -296,6 +296,14 @@
             btnClear.style.display = "none";
             txtSearch.focus();
             fetchData();
+        });
+
+        userCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+                const checkboxCount = document.querySelectorAll('.row-checkbox').length;
+                btnDeleteAll.style.display = checkedCount == checkboxCount ? "inline-block" : "none";
+            });
         });
 
         selectAllCheckbox.addEventListener('change', function() {
