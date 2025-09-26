@@ -233,7 +233,7 @@
                 </div>
                 <div class="card-header">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-5">
                             <div class="search-box">
                                 <span class="search-icon">
                                     <i class="fas fa-search"></i>
@@ -242,7 +242,7 @@
                                     placeholder="Search by device name, platform, zipcode">
                                 <span class="clear-icon" id="btnClear">✖</span>
                             </div>
-
+                            <span id="selectedCount"></span>
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
@@ -314,6 +314,11 @@
                 '.row-checkbox').length;
             $('#selectAll').prop('checked', allChecked);
             allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
+            if ($('.row-checkbox:checked').length) {
+                $('#selectedCount').text("Selected : " + $('.row-checkbox:checked').length)
+            } else {
+                $('#selectedCount').text("")
+            }
         }
     </script>
     <script>
