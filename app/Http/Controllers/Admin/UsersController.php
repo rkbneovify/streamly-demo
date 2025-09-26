@@ -62,6 +62,22 @@ class UsersController extends Controller
                     ->where('status', 1);
             }
         ]);
+
+
+
+        if (!empty($request->sort_device)) {
+
+            if ($request->sort_device == 'desc') {
+                $query->orderByDesc('sessions_count');
+            } elseif ($request->sort_device == 'asc') {
+                $query->orderBy('sessions_count');
+            }
+
+        }
+
+
+
+
         $limit = $request->input('limit', 10);
         $query->withCount('rooms');
 
@@ -125,6 +141,11 @@ class UsersController extends Controller
 
 
         }
+
+
+
+
+
 
         $users = $query->paginate($limit);
         $dates = [
@@ -1107,18 +1128,25 @@ class UsersController extends Controller
 
 
 
-
+                $query->orderBy('created_on', 'desc');
+                $allSession = $query->get();
+            } elseif (!empty($request->search) && strtolower($request->search) == 'web') {
+                $query->orderBy('created_on', 'desc');
+                $allSession = $query->get();
+                if (!empty($request->search) && strtolower($request->search) == 'web') {
+                    $allSession = $allSession->filter(function ($item) {
+                        return strtolower($item->device_type) === 'web';
+                    })->values();
+                }
+            } else {
+                $query->orderBy('created_on', 'desc');
+                $allSession = $query->get();
             }
-            $query->orderBy('created_on', 'desc');
-            $allSession = $query->get();
+
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
-            if (!empty($request->search) && strtolower($request->search) == 'web') {
-                $allSession = $allSession->filter(function ($item) {
-                    return strtolower($item->device_type) === 'web';
-                })->values();
-            }
+
             if ($request->ajax()) {
                 return view('admin.users.partials.connected-table', compact('allSession', 'totalRooms'));
             }
