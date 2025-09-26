@@ -93,7 +93,7 @@ class UsersController extends Controller
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
         } elseif (empty($request->mode)) {
-            $query->whereIn('mode', ['Live', 'Testing'])
+            $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
                 ->orderByRaw("FIELD(mode, 'Live', 'Testing')");
 
         }
@@ -108,10 +108,11 @@ class UsersController extends Controller
             $query->where('is_active', $status);
         }
         if (!empty($request->search)) {
-            $search = $request->search;
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+
             });
         }
 
@@ -149,7 +150,7 @@ class UsersController extends Controller
 
         // return response()->json($users);
         if ($request->ajax()) {
-            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'));
+            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'))->render();
         }
         return view('admin.users.index2', compact('users', 'roles', 'dates'));
     }
