@@ -71,6 +71,7 @@ class UsersController extends Controller
                 $query->orderByDesc('sessions_count');
             } elseif ($request->sort_device == 'asc') {
                 $query->orderBy('sessions_count');
+
             }
 
         }
@@ -81,16 +82,7 @@ class UsersController extends Controller
         $limit = $request->input('limit', 10);
         $query->withCount('rooms');
 
-        if ($request->sort_date == 'asc') {
 
-            $query->orderBy('created_at', 'asc');
-        } elseif (empty($request->sort_date) && !empty($request->daterange)) {
-            $query->orderBy('created_at', 'asc');
-            $request->merge(['sort_date' => 'asc']);
-        } else {
-
-            $query->latest();
-        }
 
         if (!empty($request->role)) {
             $query->whereHas('roles', function ($q) use ($request) {
@@ -101,7 +93,9 @@ class UsersController extends Controller
         if (!empty($request->mode)) {
             $query->where('mode', $request->mode);
         } elseif (empty($request->mode)) {
-            $query->where('mode', 'Live');
+            $query->whereIn('mode', ['Live', 'Testing'])
+                ->orderByRaw("FIELD(mode, 'Live', 'Testing')");
+
         }
 
         if (!empty($request->status)) {
@@ -134,7 +128,16 @@ class UsersController extends Controller
         }
 
 
+        if ($request->sort_date == 'asc') {
 
+            $query->orderBy('created_at', 'asc');
+        } elseif (empty($request->sort_date) && !empty($request->daterange)) {
+            $query->orderBy('created_at', 'asc');
+            $request->merge(['sort_date' => 'asc']);
+        } else {
+
+            $query->latest();
+        }
 
 
 
