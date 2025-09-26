@@ -433,6 +433,7 @@
 
     <script>
         $(function() {
+
             restoreSelectedData();
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
@@ -577,6 +578,8 @@
     </script>
     <script>
         $(document).ready(function() {
+
+
             let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
                 '.row-checkbox').length;
             $('#selectAll').prop('checked', allChecked);
@@ -803,12 +806,16 @@
             let search = $('input[name="search"]').val();
             if (search.length > 0) {
                 $('#btnClear').show();
+
+            } else {
+                $('#btnClear').hide();
             }
             fetchData();
         });
         $('#btnClear').click(function() {
 
             $('input[name="search"]').val('');
+            $('input[name="search"]').focus();
             fetchData();
             $('#btnClear').hide();
 
