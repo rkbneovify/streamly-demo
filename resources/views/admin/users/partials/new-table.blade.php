@@ -1,11 +1,4 @@
 <style>
-    .custom-checkbox {
-        width: 18px;
-        height: 18px;
-        position: relative;
-        cursor: pointer;
-    }
-
     .custom-badge {
         font-size: 14px;
         font-weight: 500;
