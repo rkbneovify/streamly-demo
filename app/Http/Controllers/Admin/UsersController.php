@@ -94,7 +94,7 @@ class UsersController extends Controller
             $query->where('mode', $request->mode);
         } elseif (empty($request->mode)) {
             $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
-                ->orderByRaw("FIELD(mode, 'Live', 'Testing')");
+                ->orderByRaw("FIELD(mode, 'Live', 'Testing','Test')");
 
         }
 
@@ -148,9 +148,11 @@ class UsersController extends Controller
             'end_date' => User::orderBy('created_at', 'desc')->value('created_at')
         ];
 
+
         // return response()->json($users);
         if ($request->ajax()) {
-            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'))->render();
+            $ajaxUser = $query->paginate($limit);
+            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates', 'ajaxUser'));
         }
         return view('admin.users.index2', compact('users', 'roles', 'dates'));
     }
