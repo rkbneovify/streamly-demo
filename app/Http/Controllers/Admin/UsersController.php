@@ -151,8 +151,8 @@ class UsersController extends Controller
 
         // return response()->json($users);
         if ($request->ajax()) {
-            $ajaxUser = $query->paginate($limit);
-            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates', 'ajaxUser'));
+
+            return view('admin.users.partials.new-table', compact('users', 'roles', 'dates'));
         }
         return view('admin.users.index2', compact('users', 'roles', 'dates'));
     }
