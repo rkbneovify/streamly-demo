@@ -379,42 +379,12 @@
 
 
                 </div>
-                {{-- row end --}}
-                <div class="row mt-2 px-2">
-                    <div class="col-md-2 mb-3">
-                        <div class="select-wrapper">
-                            <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
-                            <select name="limit" id="sel_limit" class="select-custom">
-                                <option value="10" {{ request()->limit == 10 ? 'selected' : '' }}>Show 10</option>
-                                <option value="30" {{ request()->limit == 30 ? 'selected' : '' }}>Show 30</option>
-                                <option value="50" {{ request()->limit == 50 ? 'selected' : '' }}>Show 50</option>
-                                <option value="100" {{ request()->limit == 100 ? 'selected' : '' }}>Show 100</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <h3 class="card-title mt-2">Total Users : {{ $users->total() }}</h3>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <h3 id="selected" class="card-title mt-2"></h3>
-                    </div>
 
+
+                <div id="user-data">
+                    @include('admin.users.partials.new-table')
                 </div>
-                {{-- row end --}}
-                <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
-                    @csrf
 
-                    <input hidden type="text" name="action">
-
-                    <div id="user-data">
-                        @include('admin.users.partials.new-table')
-                    </div>
-
-                </form>
-                {{-- table end --}}
-                <div class="d-flex justify-content-end mt-5 mr-1">
-                    {{ $users->withQueryString()->links() }}
-                </div>
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -780,7 +750,8 @@
 
 
             $.ajax({
-                url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
+                url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
+                    search + "&page=" + page,
                 success: function(data) {
                     $('#user-data').html(data);
 
