@@ -605,9 +605,10 @@
                         showLoader();
 
 
-                    } else {
-                        location.reload();
-                    }
+                    } 
+                    // else {
+                    //     loadSelected();
+                    // }
                 });
 
 
@@ -633,9 +634,11 @@
                     showLoader();
                     // Redirect to URL
                     window.location.href = url;
-                } else {
-                    location.reload();
                 }
+
+                // else {
+                //     loadSelected();
+                // }
             });
         });
         $(document).on('change', '#sel_bulk_action', function(e) {
@@ -685,7 +688,7 @@
                         $('#tbl-form').submit();
                         showLoader();
                     } else {
-                        location.reload();
+                        loadSelected();
                     }
                 });
             }
