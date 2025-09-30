@@ -414,21 +414,19 @@
 
 
             restoreSelectedData();
-            @if (request()->daterange == null)
-                $('input[name="daterange"]').daterangepicker({
-                    opens: 'left',
-                    startDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                    endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                    minDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
-                    maxDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                    locale: {
-                        format: 'DD/MM/YYYY'
-                    }
-                }, function(start, end, label) {
-                    console.log("A new date selection was made: " + start.format('DD/MM/YYYY') +
-                        ' to ' + end.format('DD/MM/YYYY'));
-                });
-            @endif
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                startDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
+                endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                minDate: "{{ $dates['min_date'] ? date('d/m/Y', strtotime($dates['min_date'])) : '' }}",
+                maxDate: "{{ $dates['max_date'] ? date('d/m/Y', strtotime($dates['max_date'])) : '' }}",
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('DD/MM/YYYY') +
+                    ' to ' + end.format('DD/MM/YYYY'));
+            });
 
 
             $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
