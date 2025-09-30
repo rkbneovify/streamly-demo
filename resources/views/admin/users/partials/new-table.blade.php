@@ -57,7 +57,10 @@
 
     </div>
     <div class="col-md-2 mb-3">
-        <h3 id="selected" class="card-title mt-2"></h3>
+        <a href="javascript:void(0)" id="btn-show-selected">
+            <h3 id="selected" class="card-title mt-2"></h3>
+        </a>
+        
     </div>
 
 </div>
@@ -162,7 +165,8 @@
                             </td>
                             <td style="vertical-align: middle;">
                                 <a href="{{ route('admin.users.status', $user->id) }}"
-                                    data-url="{{ route('admin.users.status', $user->id) }}" class="btn-user-status">
+                                    data-url="{{ route('admin.users.status', $user->id) }}" title="Change user status"
+                                    class="btn-user-status">
                                     @if ($user->is_active)
                                         <span class="custom-badge badge-active">Active</span>
                                     @else
@@ -241,12 +245,30 @@
                         </th>
                         <th>
                             User Type
+                            <a href="{{ request()->get('page', 1) > 1
+                                ? request()->url() . '?mode=' . (request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live')
+                                : request()->fullUrlWithQuery([
+                                    'mode' => request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live',
+                                ]) }}"
+                                class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Status
+                            <a href="{{ request()->get('page', 1) > 1
+                                ? request()->url() . '?status=' . (request()->get('status', 'active') === 'active' ? 'inactive' : 'active')
+                                : request()->fullUrlWithQuery([
+                                    'status' => request()->get('status', 'active') === 'active' ? 'inactive' : 'active',
+                                ]) }}"
+                                class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Active <br> Devices
+                            <a href="{{ request()->get('page', 1) > 1
+                                ? request()->url() . '?sort_device=' . (request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc')
+                                : request()->fullUrlWithQuery([
+                                    'sort_device' => request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc',
+                                ]) }}"
+                                class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Created At
