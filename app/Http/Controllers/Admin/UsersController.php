@@ -64,6 +64,11 @@ class UsersController extends Controller
         ]);
 
 
+        if (!empty($request->selected)) {
+            // Put selected IDs first
+            $ids = implode(',', $request->selected);
+            $query->orderByRaw("FIELD(id, $ids) DESC");
+        }
 
         if (!empty($request->sort_device)) {
 
@@ -91,7 +96,12 @@ class UsersController extends Controller
         }
 
         if (!empty($request->mode)) {
-            $query->where('mode', $request->mode);
+            if (strtolower($request->mode) == 'live') {
+                $query->where('mode', $request->mode);
+            } else {
+                $query->whereIn('mode', ['Testing', 'Test', null]);
+            }
+
         } elseif (empty($request->mode)) {
             $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
                 ->orderByRaw("FIELD(mode, 'Live', 'Testing','Test')");
