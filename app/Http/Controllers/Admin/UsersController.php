@@ -153,10 +153,27 @@ class UsersController extends Controller
 
 
         $users = $query->paginate($limit);
-        $dates = [
-            'start_date' => User::orderBy('created_at', 'asc')->value('created_at'),
-            'end_date' => User::orderBy('created_at', 'desc')->value('created_at')
-        ];
+
+        if (empty($request->daterange)) {
+            $dates = [
+                'start_date' => User::orderBy('created_at', 'desc')->value('created_at'),
+                'end_date' => User::orderBy('created_at', 'desc')->value('created_at'),
+                'min_date' => User::orderBy('created_at', 'asc')->value('created_at'),
+                'max_date' => User::orderBy('created_at', 'desc')->value('created_at')
+            ];
+        } else {
+
+
+            $daterange = explode(' - ', $request->daterange);
+            // dd($daterange);
+            $dates = [
+                'start_date' => $daterange[0],
+                'end_date' => $daterange[1],
+                'min_date' => User::orderBy('created_at', 'asc')->value('created_at'),
+                'max_date' => User::orderBy('created_at', 'desc')->value('created_at')
+            ];
+        }
+
 
 
         // return response()->json($users);
