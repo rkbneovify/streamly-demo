@@ -376,7 +376,7 @@
 
                         <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
-                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
                                 <a href="{{ url()->current() }}" class="btn-add-user">Reset filters</a>
                             </div>
                         </div>
@@ -495,6 +495,7 @@
 
         function removeAll() {
             localStorage.removeItem(storageKey);
+            restoreSelectedData();
         }
 
         function restoreSelectedData() {
@@ -510,6 +511,24 @@
                 selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
 
             });
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+        }
+
+        function loadSelected() {
+            let selected = getSelected();
+
+            // Create a new base URL (without existing query params)
+            const url = new URL(window.location.origin + window.location.pathname);
+
+            // Add only currently selected IDs
+            selected.forEach(id => {
+                url.searchParams.append("selected[]", id);
+            });
+
+            // Navigate to the new URL
+            window.location.href = url.toString();
         }
 
 
@@ -796,10 +815,11 @@
 
             } else {
                 $('#btnClear').hide();
-
+                loadSelected();
 
             }
             fetchData();
+
         });
         $('#btnClear').click(function() {
 
@@ -808,22 +828,11 @@
             fetchData();
             $('#btnClear').hide();
 
-
+            loadSelected();
         })
 
         $(document).on('click', '#btn-show-selected', function() {
-            let selected = getSelected();
-
-            // Create a new base URL (without existing query params)
-            const url = new URL(window.location.origin + window.location.pathname);
-
-            // Add only currently selected IDs
-            selected.forEach(id => {
-                url.searchParams.append("selected[]", id);
-            });
-
-            // Navigate to the new URL
-            window.location.href = url.toString();
+            loadSelected();
         })
         window.addEventListener("load", () => {
             const [nav] = performance.getEntriesByType("navigation");
@@ -831,7 +840,7 @@
 
             if (nav.type !== "reload" && !hasParams) {
                 removeAll();
-                restoreSelectedData();
+
             }
         });
     </script>
