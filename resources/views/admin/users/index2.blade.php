@@ -374,6 +374,13 @@
                             </div>
                         </div>
 
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <a href="{{ url()->current() }}" class="btn-add-user">Reset filters</a>
+                            </div>
+                        </div>
+
                     </div>
 
 
@@ -404,20 +411,25 @@
     <script>
         $(function() {
 
+
+
             restoreSelectedData();
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left',
-                startDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                minDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
-                maxDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                locale: {
-                    format: 'DD/MM/YYYY'
-                }
-            }, function(start, end, label) {
-                console.log("A new date selection was made: " + start.format('DD/MM/YYYY') +
-                    ' to ' + end.format('DD/MM/YYYY'));
-            });
+            @if (request()->daterange == null)
+                $('input[name="daterange"]').daterangepicker({
+                    opens: 'left',
+                    startDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                    endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                    minDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
+                    maxDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                }, function(start, end, label) {
+                    console.log("A new date selection was made: " + start.format('DD/MM/YYYY') +
+                        ' to ' + end.format('DD/MM/YYYY'));
+                });
+            @endif
+
 
             $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
                 $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate
@@ -509,6 +521,7 @@
                 if (!selected.includes($(this).val())) {
                     selected.push($(this).val());
                     saveSelected(selected);
+
                 }
 
             } else {
@@ -516,9 +529,11 @@
 
                 selected = selected.filter(id => id !== $(this).val());
                 saveSelected(selected);
+
             }
 
             restoreSelectedData();
+
 
         });
 
@@ -544,6 +559,7 @@
             }
             saveSelected(selected);
             restoreSelectedData();
+
         });
     </script>
     <script>
@@ -553,8 +569,10 @@
             let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
                 '.row-checkbox').length;
             $('#selectAll').prop('checked', allChecked);
-            $('.btn-user-status').on('click', function(e) {
+
+            $(document).on('click', '.btn-user-status', function(e) {
                 e.preventDefault();
+
                 let $btn = $(this); // store the clicked button
                 let url = $btn.data('url');
                 Swal.fire({
@@ -780,6 +798,8 @@
 
             } else {
                 $('#btnClear').hide();
+
+
             }
             fetchData();
         });
@@ -790,7 +810,32 @@
             fetchData();
             $('#btnClear').hide();
 
+
         })
+
+        $(document).on('click', '#btn-show-selected', function() {
+            let selected = getSelected();
+
+            // Create a new base URL (without existing query params)
+            const url = new URL(window.location.origin + window.location.pathname);
+
+            // Add only currently selected IDs
+            selected.forEach(id => {
+                url.searchParams.append("selected[]", id);
+            });
+
+            // Navigate to the new URL
+            window.location.href = url.toString();
+        })
+        window.addEventListener("load", () => {
+            const [nav] = performance.getEntriesByType("navigation");
+            const hasParams = window.location.search.length > 0;
+
+            if (nav.type !== "reload" && !hasParams) {
+                removeAll();
+                restoreSelectedData();
+            }
+        });
     </script>
 
     @if (session('remove'))
