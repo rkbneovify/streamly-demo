@@ -377,7 +377,7 @@
                         <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                <a href="{{ url()->current() }}" class="btn-add-user">Reset filters</a>
+                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
                             </div>
                         </div>
 
@@ -519,17 +519,21 @@
         function loadSelected() {
             let selected = getSelected();
 
-            // Create a new base URL (without existing query params)
-            const url = new URL(window.location.origin + window.location.pathname);
+            // Start with the current URL (preserve existing params)
+            const url = new URL(window.location.href);
+
+            // Remove old selected[] params
+            url.searchParams.delete("selected[]");
 
             // Add only currently selected IDs
             selected.forEach(id => {
                 url.searchParams.append("selected[]", id);
             });
 
-            // Navigate to the new URL
+            // Reload with updated query string (keeping other params intact)
             window.location.href = url.toString();
         }
+
 
 
         $(document).on('change', '.row-checkbox', function() {
@@ -605,7 +609,7 @@
                         showLoader();
 
 
-                    } 
+                    }
                     // else {
                     //     loadSelected();
                     // }
@@ -837,20 +841,33 @@
         $(document).on('click', '#btn-show-selected', function() {
             loadSelected();
         })
-        window.addEventListener("load", () => {
-            const [nav] = performance.getEntriesByType("navigation");
-            const hasParams = window.location.search.length > 0;
 
-            if (nav.type !== "reload" && !hasParams) {
-                removeAll();
-
-            }
-        });
+        $(document).on('click', '.btn-reset-all', function(e) {
+            e.preventDefault();
+            removeAll();
+            location.href = "{{ url()->current() }}"
+        })
     </script>
 
     @if (session('remove'))
         <script>
+            loadSelected();
+        </script>
+        {{-- @elseif (session('remove-all'))
+        <script>
             removeAll();
+        </script> --}}
+    @elseif (!session('remove') && !session('remove-all'))
+        <script>
+            window.addEventListener("load", () => {
+                const [nav] = performance.getEntriesByType("navigation");
+                const hasParams = window.location.search.length > 0;
+
+                if (nav.type !== "reload" && !hasParams) {
+                    removeAll();
+
+                }
+            });
         </script>
     @endif
 @stop
