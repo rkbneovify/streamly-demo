@@ -23,8 +23,9 @@ class Kernel extends HttpKernel
         // \Barryvdh\Cors\HandleCors::class,
 
         \Fruitcake\Cors\HandleCors::class,   // ✅ add this line here
+        \App\Http\Middleware\SetUserTimezone::class,
 
-    ]; 
+    ];
 
     /**
      * The application's route middleware groups.
