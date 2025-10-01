@@ -798,7 +798,7 @@ class APIController extends Controller
     public function qrvisibility()
     {
         $return = array(
-            'visible' => false
+            'visible' => true
         );
         return response()->json($return, 200);
     }
