@@ -3,13 +3,12 @@
 namespace App\Exports;
 
 use App\Models\Subscription;
-use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class SubscriptionNewReportExport implements FromCollection, WithHeadings, WithChunkReading
+
+class SubscriptionNewReportExport implements FromCollection, WithHeadings
 {
     protected $filters;
 
@@ -23,34 +22,34 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings, WithC
      */
     public function collection()
     {
-        $stripeService = new StripeService();
+
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user');      // still eager load user data
 
 
-        if ($this->filters->sort_subscribe_at == null || $this->filters->sort_subscribe_at == 'desc') {
-            $query->orderByDesc('updated_at');
-        } else {
-            $query->orderBy('updated_at');
-        }
+
         // // Filter by status if provided
         if (!empty($this->filters->status)) {
             $query->where('stripe_status', $this->filters->status);
         }
 
 
-
-        return $query->get()->map(function ($item, $key) use ($stripeService) {
+        if ($this->filters->sort_subscribe_at == null || $this->filters->sort_subscribe_at == 'desc') {
+            $query->orderByDesc('created_at');
+        } else {
+            $query->orderBy('created_at');
+        }
+        return $query->get()->map(function ($item, $key) {
             return [
                 'Sl. No.' => $key + 1,
                 'Name' => $item->user->name,
                 'Email' => $item->user->email,
                 'User Type' => getUserType($item->user),
-                'Subscription Type' => $stripeService->hasSubscription($item),
+                'Subscription Type' => $item->livemode === null ? 'Admin/Custom' : ($item->livemode === 1 ? 'Stripe/Live' : 'Stripe/Test'),
                 'Status' => $item->stripe_status,
-                'Subscribe At' => $item->updated_at ? $item->updated_at->format('d/m/Y') : '',
+                'Subscribe At' => $item->created_at ? $item->created_at->format('d/m/Y') : '',
                 'Subscription Expire At' => getSubscriptionExpireAt($item) != null ? getSubscriptionExpireAt($item) : 'Never',
             ];
         });
@@ -62,8 +61,5 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings, WithC
         return ['Sl. No.', 'Name', 'Email', 'User Type', 'Subscription Type', 'Status', 'Subscribe At', 'Subscription Expire At'];
     }
 
-    public function chunkSize(): int
-    {
-        return 5; // Process 1000 records at a time
-    }
+
 }

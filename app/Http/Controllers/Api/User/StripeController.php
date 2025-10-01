@@ -119,7 +119,7 @@ class StripeController extends Controller
                     $status = Coupon::retrieve($request->input('coupon'));
                     if ($status->valid) {
                         if ($status->amount_off) {
-                            $price =  $status->currency . ' ' . $status->amount_off / 100 . ' Off ' . $status->duration;
+                            $price = $status->currency . ' ' . $status->amount_off / 100 . ' Off ' . $status->duration;
                         } else {
                             if ($status->duration == 'repeating') {
                                 $duration = '(' . $status->duration_in_months . ' months)';
@@ -340,7 +340,7 @@ class StripeController extends Controller
 
             for ($i = 0; $i < $quantity; $i++) {
                 DB::table('hotel_rooms')->insert([
-                    'user_id'    => $user->id,
+                    'user_id' => $user->id,
                     'hotel_room' => 'Room' . $i,
                     'session_id' => null,
                     'created_on' => now(),
@@ -488,7 +488,7 @@ class StripeController extends Controller
             }
 
             $subscription_data = [
-                'id' => (string)$subscription->id,
+                'id' => (string) $subscription->id,
                 'name' => $plan_name ?? null,
                 'plan_type' => $plan_type ?? null,
                 'renewaldatetime' => $renewaldatetime ?? null,
@@ -675,7 +675,7 @@ class StripeController extends Controller
         if ($request->plan_type == 'tiered') {
             $tieruserrole = Role::where('name', 'tieruser')->first();
 
-            $userRole =  $user->roles->first()->display_name;
+            $userRole = $user->roles->first()->display_name;
 
             if ($userRole !== 'admin' || 'superadmin') {
 
@@ -684,7 +684,7 @@ class StripeController extends Controller
         } else {
             $tieruserrole = Role::where('name', 'user')->first();
 
-            $userRole =  $user->roles->first()->display_name;
+            $userRole = $user->roles->first()->display_name;
 
             if ($userRole !== 'admin' || 'superadmin') {
 
@@ -695,7 +695,7 @@ class StripeController extends Controller
 
     private function get_user_invoices($customerId)
     {
-        $invoices_data =  \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
+        $invoices_data = \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
         $invoices = [];
         foreach ($invoices_data->data as $invoice) {
             $amount = Cashier::formatAmount($invoice->total ?? '0', $invoice->currency ?? 'USD');

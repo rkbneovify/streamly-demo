@@ -120,12 +120,13 @@
                     <td style="vertical-align: middle;">
                         {{ getUserType($subscription->user) }}</td>
                     <td style="vertical-align: middle;">
-                        @if ($subscription->livemode == 1)
-                            Stripe/Live
-                        @elseif ($subscription->livemode == 0)
-                            Stripe/Test
-                        @else
+                        {{-- {{ $subscription->livemode ?? 'Admin/Custom' }} --}}
+                        @if ($subscription->livemode === null)
                             Admin/Custom
+                        @elseif ($subscription->livemode === 1)
+                            Stripe/Live
+                        @elseif ($subscription->livemode === 0)
+                            Stripe/Test
                         @endif
 
                         {{-- {{ getSubscriptionType($subscription) }} --}}
@@ -137,7 +138,7 @@
 
 
                     <td style="vertical-align: middle;">
-                        {{ date('d/m/Y', strtotime($subscription->updated_at)) }}
+                        {{ date('d/m/Y', strtotime($subscription->created_at)) }}
                     </td>
                     <td style="vertical-align: middle;">
 
@@ -150,7 +151,7 @@
                     </td>
 
                     <td style="vertical-align: middle;text-align: center;">
-                        @if ($subscription->mode == 'Admin/Custom' || $subscription->stripe_status == 'canceled')
+                        @if ($subscription->livemode == null || $subscription->stripe_status == 'canceled')
                             <a href="{{ route('admin.subscriptions.custom.view', $subscription->user_id) }}"
                                 class="btn btn-xs btn-link mb-1 w-75">Subscribe Now</a>
                             <br>
