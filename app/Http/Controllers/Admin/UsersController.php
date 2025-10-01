@@ -1500,7 +1500,7 @@ class UsersController extends Controller
             toast("User status changed successfully", 'success')
                 ->autoClose(3000)
                 ->timerProgressBar();
-            return redirect()->back();
+            return redirect()->back()->with('remove', true);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
@@ -1619,7 +1619,7 @@ class UsersController extends Controller
                     toast("User(s) activated successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
-                    return redirect()->back()->with('remove', true);
+                    return redirect()->back()->with('remove-all', true);
 
                 } catch (\Throwable $th) {
                     DB::rollBack();
@@ -1634,7 +1634,7 @@ class UsersController extends Controller
                     toast("User(s) inactivate successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
-                    return redirect()->back()->with('remove', true);
+                    return redirect()->back()->with('remove-all', true);
 
                 } catch (\Throwable $th) {
                     DB::rollBack();
@@ -1655,7 +1655,7 @@ class UsersController extends Controller
                     toast("User(s) deleted successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
-                    return redirect()->back();
+                    return redirect()->back()->with('remove-all', true);
 
                 } catch (\Throwable $th) {
                     DB::rollBack();
