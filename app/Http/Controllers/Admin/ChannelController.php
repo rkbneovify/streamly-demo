@@ -46,6 +46,20 @@ class ChannelController extends Controller
         }
     }
 
+    public function index3()
+    {
+        $record = Channel::with('genre')->paginate(10);
+        $encoded_auth_xml = getKeyOSAuthToken();
+
+        $ua = request()->server('HTTP_USER_AGENT');
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        if ($isDevice == 'apple') {
+            return view('admin.channels.fairplayindex', compact('record', 'encoded_auth_xml'));
+        } else {
+            return view('admin.channels.index3', compact('record', 'encoded_auth_xml'));
+        }
+    }
+
     public function channelDelete($channelID)
     {
         $DeleteChannel = Channel::where('id', $channelID)->delete();
@@ -174,7 +188,7 @@ class ChannelController extends Controller
             $image = $request->file('image');
             $name = $request->name . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/channellogo');
-            $imagePath = $destinationPath . "/" .  $name;
+            $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
             $model->image = $name;
         }
@@ -216,7 +230,7 @@ class ChannelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $request->validate([
             'name' => 'required',
             'url' => 'required',
@@ -260,7 +274,7 @@ class ChannelController extends Controller
             $image = $request->file('image');
             $name = $request->name . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/channellogo');
-            $imagePath = $destinationPath . "/" .  $name;
+            $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
             $model->image = $name;
         }
@@ -337,7 +351,7 @@ class ChannelController extends Controller
     {
         $this->validate($request, [
             'id' => 'required|array',
-            "id.*"  => "required|numeric|distinct",
+            "id.*" => "required|numeric|distinct",
             'status' => 'required|numeric|min:0|max:1',
 
         ]);
@@ -400,7 +414,7 @@ class ChannelController extends Controller
         $imagePath = url("/uploads/channellogo/");
         $input = url('livetv/');
         DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet')); //SET @@session.time_zone = "+00:00";
-        $record  = Gracenote::select(["sub.id", "sub.callSign", "StationName AS name", "genres", DB::raw("CONCAT('$imagePath/',`image`) icon")])
+        $record = Gracenote::select(["sub.id", "sub.callSign", "StationName AS name", "genres", DB::raw("CONCAT('$imagePath/',`image`) icon")])
             ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
             ->selectRaw(" concat( '[', group_concat(json_object( 'start',(UNIX_TIMESTAMP(StartDateTimewithTimezon)*1000),'end',(UNIX_TIMESTAMP(EndDateTimewithTimezon)*1000),'TimeZoneName',TimeZoneName,'title', EventTitle ) Order By StartDateTime ), ']') events")
             ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, sub.genres)"), DB::raw('>'), DB::raw('0'))
