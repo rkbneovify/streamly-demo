@@ -30,7 +30,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore']]);
+        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore']]);
     }
     public function index()
     {
