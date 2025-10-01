@@ -526,7 +526,7 @@
             url.searchParams.delete("selected[]");
 
             // Add only currently selected IDs
-            selected.forEach(id => {
+            selected.reverse().forEach(id => {
                 url.searchParams.append("selected[]", id);
             });
 
