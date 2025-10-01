@@ -37,20 +37,16 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
                 $q->where('name', $this->filters['role']);
             });
         }
-        if (!empty($this->filters['sort_date']) && $this->filters['sort_date'] == 'asc') {
-            $query->orderBy('created_at', 'asc');
-        } elseif (empty($this->filters->sort_date) && !empty($this->filters->daterange)) {
-            $query->orderBy('created_at', 'asc');
-            request()->merge(['sort_date' => 'asc']);
-        } else {
 
-            $query->latest();
-        }
 
 
 
         if (!empty($this->filters['mode'])) {
             $query->where('mode', $this->filters['mode']);
+        } elseif (empty($request->mode)) {
+            $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
+                ->orderByRaw("FIELD(mode, 'Live', 'Testing','Test')");
+
         }
         if (!empty($this->filters['status'])) {
             $status = null;
@@ -81,6 +77,16 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
 
 
         }
+        if (!empty($this->filters['sort_date']) && $this->filters['sort_date'] == 'asc') {
+            $query->orderBy('created_at', 'asc');
+        } elseif (empty($this->filters->sort_date) && !empty($this->filters->daterange)) {
+            $query->orderBy('created_at', 'asc');
+            request()->merge(['sort_date' => 'asc']);
+        } else {
+
+            $query->latest();
+        }
+
         return $query->get()->map(function ($user, $key) {
             return [
                 "Sl.No." => $key + 1,

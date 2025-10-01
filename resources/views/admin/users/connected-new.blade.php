@@ -233,7 +233,7 @@
                 </div>
                 <div class="card-header">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-5">
                             <div class="search-box">
                                 <span class="search-icon">
                                     <i class="fas fa-search"></i>
@@ -242,7 +242,7 @@
                                     placeholder="Search by device name, platform, zipcode">
                                 <span class="clear-icon" id="btnClear">✖</span>
                             </div>
-
+                            <span id="selectedCount"></span>
                         </div>
                         <div class="col">
                             <div class="row justify-content-end">
@@ -253,10 +253,10 @@
                                             class="btn">Export</a>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3" id="btnDeleteAll">
                                     <div class="btn-wrapper btn-danger">
                                         <img src="{{ asset('images/trash-red.png') }}" alt="status icon">
-                                        <a href="#" id="btnDeleteAll" class="btn text-danger">Delete All</a>
+                                        <a href="#" class="btn text-danger">Delete All</a>
                                     </div>
                                 </div>
                             </div>
@@ -279,13 +279,60 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-
     <script>
+        let storageKey = "selected_sessions";
+
+        // Get selected IDs from localStorage
+        function getSelected() {
+            return JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // Save to localStorage
+        function saveSelected(ids) {
+            localStorage.setItem(storageKey, JSON.stringify(ids));
+        }
+
+        function removeAll() {
+            localStorage.removeItem(storageKey);
+        }
+
+        function restoreSelectedData() {
+            let selected = getSelected();
+            // if (selected.length > 0) {
+            //     document.getElementById('selected').textContent = "Selected : " + selected.length;
+            // } else {
+            //     document.getElementById('selected').textContent = "";
+            // }
+
+            const userCheckboxes = document.querySelectorAll('.row-checkbox');
+            userCheckboxes.forEach(checkbox => {
+                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
+
+            });
+
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+            allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
+            if ($('.row-checkbox:checked').length) {
+                $('#selectedCount').text("Selected : " + $('.row-checkbox:checked').length)
+            } else {
+                $('#selectedCount').text("")
+            }
+        }
+    </script>
+    <script>
+        restoreSelectedData()
         const txtSearch = document.getElementById("txtSearch");
         const btnClear = document.getElementById("btnClear");
         const selectAllCheckbox = document.getElementById('selectAll');
         const btnDeleteAll = document.getElementById('btnDeleteAll');
         const userCheckboxes = document.querySelectorAll('.row-checkbox');
+
+
+
+
+        $('#btnDeleteAll').hide();
         txtSearch.addEventListener("input", () => {
             btnClear.style.display = txtSearch.value ? "block" : "none";
         });
@@ -297,10 +344,51 @@
             fetchData();
         });
 
-        selectAllCheckbox.addEventListener('change', function() {
-            userCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
+
+
+        $(document).on('change', '.row-checkbox', function() {
+            let selected = getSelected();
+            if ($(this).is(':checked')) {
+                if (!selected.includes($(this).val())) {
+                    selected.push($(this).val());
+                    saveSelected(selected);
+                }
+
+            } else {
+
+
+                selected = selected.filter(id => id !== $(this).val());
+                saveSelected(selected);
+            }
+
+            restoreSelectedData();
+
+        });
+
+        $(document).on('change', '#selectAll', function() {
+            let selected = getSelected();
+            const userCheckboxes = $('.row-checkbox');
+            if ($(this).is(':checked')) {
+                userCheckboxes.each(function() {
+                    this.checked = true;
+                    if (!selected.includes(this.value)) {
+                        selected.push(this.value);
+                    }
+                });
+                $('#btnDeleteAll').show();
+            } else {
+                $('#btnDeleteAll').hide();
+                userCheckboxes.each(function() {
+                    this.checked = false;
+                    if (selected.includes(this.value)) {
+                        selected = selected.filter(id => id !== this.value);
+                    }
+
+                });
+
+            }
+            saveSelected(selected);
+            restoreSelectedData();
         });
 
         btnDeleteAll.addEventListener('click', (e) => {
@@ -322,7 +410,7 @@
             } else {
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to sessions?`,
+                    text: `Do you really want to remove sessions?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes`,
@@ -349,7 +437,7 @@
 
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to sessions?`,
+                    text: `Do you really want to remove sessions?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes`,
@@ -388,6 +476,7 @@
                 url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
                 success: function(data) {
                     $('#user-data').html(data);
+                    restoreSelectedData()
                 }
             });
         }
@@ -401,5 +490,12 @@
             }
             fetchData();
         });
+
+        $(document).ready(function() {
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+            allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
+        })
     </script>
 @stop
