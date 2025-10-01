@@ -182,6 +182,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/channelstatus/create', 'Admin\ChannelController@create'); //channels Statust
 
     Route::get('/channelstatus', 'Admin\ChannelController@index'); //channel
+    Route::get('/channel/new', 'Admin\ChannelController@index3'); //channel
     Route::get('/channelstore', 'Admin\ChannelController@channelStore'); //channel Store
 
     Route::get('/channelstatus2', 'Admin\ChannelController@index2'); //channel
