@@ -46,18 +46,52 @@ class ChannelController extends Controller
         }
     }
 
-    public function index3()
+    public function index3(Request $request)
     {
-        $record = Channel::with('genre')->paginate(10);
-        $encoded_auth_xml = getKeyOSAuthToken();
 
-        $ua = request()->server('HTTP_USER_AGENT');
-        $isDevice = isDeviceAppleRokuOthers($ua);
-        if ($isDevice == 'apple') {
-            return view('admin.channels.fairplayindex', compact('record', 'encoded_auth_xml'));
-        } else {
-            return view('admin.channels.index3', compact('record', 'encoded_auth_xml'));
+        $genres = Genre::pluck('name', 'id');
+        $genres[count($genres) + 1] = "Others";
+
+        $query = Channel::query();
+        $query->with('genreNames');
+        if (!empty($request->status)) {
+            if ($request->status == 1) {
+                $query->where('status', 1);
+            } else {
+                $query->where('status', 0);
+            }
+
         }
+        if (!empty($request->availability)) {
+            // dd(trim($request->availability));
+            if (trim($request->availability == 'all')) {
+                $query->whereJsonContains('zip_code', 'All');
+            } else {
+                $query->whereJsonDoesntContain('zip_code', 'All');
+            }
+
+        }
+        if (!empty($request->genre) && $request->genre == "Others") {
+            $query->where('genres', "");
+        } elseif (!empty($request->genre)) {
+            $query->whereHas('genreNames', function ($q) use ($request) {
+                return $q->where('name', $request->genre);
+            });
+        }
+
+
+        $limit = $request->input('limit', 10);
+        $record = $query->paginate($limit);
+
+        $record->getCollection()->transform(function ($item) {
+            $item->genre_list = $item->genreNames->count() <= 0 ? "Others" : $item->genreNames->pluck('name')->implode(',<br> ');
+            return $item;
+        });
+
+
+
+        // return response()->json($record);
+        return view('admin.channels.index3', compact('record', 'genres'));
     }
 
     public function channelDelete($channelID)
