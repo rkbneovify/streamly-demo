@@ -13,54 +13,78 @@ use Illuminate\Support\Facades\Cache;
 @property timestamp $updated_at updated at
 @property Genre $genre belongsTo
 @property \Illuminate\Database\Eloquent\Collection $status belongsToMany
-   
+
  */
-class Channel extends Model 
+class Channel extends Model
 {
-    
+
     /**
-    * Database table name
-    */
+     * Database table name
+     */
     protected $table = 'channels';
     // protected $casts = [
     //     'genrename' => 'array'
     //   ];
     /**
-    * Mass assignable columns
-    */
-    protected $fillable=['name',
-'url','callSign',
-'dash_url',
-'smooth_url',
-'genre_id','status','genres','image','stationName', 'zip_code'];
-// protected $appends = ['logo'];
+     * Mass assignable columns
+     */
+    protected $fillable = [
+        'name',
+        'url',
+        'callSign',
+        'dash_url',
+        'smooth_url',
+        'genre_id',
+        'status',
+        'genres',
+        'image',
+        'stationName',
+        'zip_code'
+    ];
+    // protected $appends = ['logo'];
 
-protected $casts = [
-    'programs' => 'array',
-    'Programs' => 'array',
-    'Channel' => 'array',
-    'events' => 'array','genrename' => 'array',
-    'genre_name' => 'string',
-    'zip_code' => 'array'
-];
+    protected $casts = [
+        'programs' => 'array',
+        'Programs' => 'array',
+        'Channel' => 'array',
+        'events' => 'array',
+        'genrename' => 'array',
+        'genre_name' => 'string',
+        'zip_code' => 'array'
+    ];
     /**
-    * Date time columns.
-    */
-    protected $dates=[];
+     * Date time columns.
+     */
+    protected $dates = [];
+
 
     /**
-    * genre
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    */
+     * genre
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function genre()
     {
-        return $this->belongsTo(Genre::class,'genre_id');
+        return $this->belongsTo(Genre::class, 'genre_id');
     }
+    public function genreNames()
+    {
+        return $this->belongsToMany(
+            Genre::class,
+            'channels_genre',
+            'channels_id',
+            'genre_id'
+        );
+    }
+
     public function genresync()
     {
-        return $this->belongsToMany(Genre::class, 'channels_genre', 
-        'channels_id', 'genre_id');
+        return $this->belongsToMany(
+            Genre::class,
+            'channels_genre',
+            'channels_id',
+            'genre_id'
+        );
     }
     // public function getLogoAttribute($value)
     // {
@@ -73,25 +97,25 @@ protected $casts = [
     //     }
     // }
 
-public function favorited()
-{
-    return (bool) FavouriteChannel::where('user_id', Auth::id())
-                        ->where('channels_id', $this->id)
-                        ->first();
-}
-// public function getGenrenameAttribute($value)
+    public function favorited()
+    {
+        return (bool) FavouriteChannel::where('user_id', Auth::id())
+            ->where('channels_id', $this->id)
+            ->first();
+    }
+    // public function getGenrenameAttribute($value)
 // {
 //   return $value = is_array($value) ? $value : json_decode($value) ;
-    
-// if (is_null($value)) {
+
+    // if (is_null($value)) {
 //         $value = [];
 //     }
 
-//     return $value;
+    //     return $value;
 // }
 
 
-protected static function boot()
+    protected static function boot()
     {
         static::creating(function ($model) {
         });
@@ -104,7 +128,7 @@ protected static function boot()
         });
 
         static::updating(function ($model) {
-           //blah
+            //blah
         });
 
         static::deleting(function ($model) {
@@ -114,12 +138,12 @@ protected static function boot()
             // bluh bluh
 
         });
-        
+
         parent::boot();
     }
 
 
-    
+
 
 
 }
