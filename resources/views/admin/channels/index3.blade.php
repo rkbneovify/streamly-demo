@@ -208,7 +208,7 @@
 
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-3 mb-2">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
@@ -219,7 +219,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_status" class="select-custom">
@@ -245,7 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_genres" class="select-custom">
@@ -268,127 +268,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-2 px-2">
-                    <div class="col-md-2 mb-3">
-                        <div class="select-wrapper">
-                            <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
-                            <select name="limit" id="sel_limit" class="select-custom">
-                                <option value="10" {{ request()->limit == 10 ? 'selected' : '' }}>Show 10</option>
-                                <option value="30" {{ request()->limit == 30 ? 'selected' : '' }}>Show 30</option>
-                                <option value="50" {{ request()->limit == 50 ? 'selected' : '' }}>Show 50</option>
-                                <option value="100" {{ request()->limit == 100 ? 'selected' : '' }}>Show 100</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mb-3">
 
-                        <h3 class="card-title mt-2">Total Channels : {{ $record->total() }}</h3>
 
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <a href="javascript:void(0)" id="btn-show-selected">
-                            <h3 id="selected" class="card-title mt-2"></h3>
-                        </a>
 
-                    </div>
-
+                <div id="user-data">
+                    @include('admin.channels.index3-table')
                 </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="checkAll">
-                                </th>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Genres</th>
-                                <th>Availability</th>
-                                <th>Status</th>
-                                <th>Callsign</th>
-                                <th>Url</th>
-                                <th>Dash Url</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($record as $item)
-                                <tr>
-                                    <td style="vertical-align: middle;">
-                                        <input type="checkbox" class="row-checkbox">
-                                    </td>
-                                    <td style="vertical-align: middle;">{{ $item->id }}</td>
-                                    <td>
-                                        <img src="{{ url('/uploads/channellogo') . '/' . $item->image }}"
-                                            alt="channel logo"
-                                            style="background:#f0f0f0; padding:10px; border-radius:8px; max-width:100px;">
-
-                                        <br class="mb-2">
-                                        <b>{{ $item->stationName ?? ($item->name ?? $item->callSign) }}</b>
-                                    </td>
-                                    <td style="vertical-align: middle;">{!! nl2br($item->genre_list) !!}</td>
-                                    <td style="vertical-align: middle;">
-                                        @if (count($item->zip_code) == 1)
-                                            All
-                                        @else
-                                            <div>
-                                                <a href="javascript:void(0)" class="toggle-zipcodes"
-                                                    data-id="{{ $item->id }}">
-                                                    {{ count($item->zip_code) }} Zipcodes
-                                                </a>
-                                                <div id="zipcodes-{{ $item->id }}" class="zipcodes-list d-none mt-2">
-                                                    <ul class="mb-0">
-                                                        @foreach ($item->zip_code as $zip)
-                                                            <li>{{ $zip }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </td>
-
-                                    <td style="vertical-align: middle;">
-                                        @if ($item->status == 1)
-                                            <span class="custom-badge badge-active">Active</span>
-                                        @else
-                                            <span class="custom-badge badge-inactive">Inactive</span>
-                                        @endif
-                                    </td>
-                                    <td style="vertical-align: middle;">{{ $item->callSign }}</td>
-
-                                    {{-- Url with toggle --}}
-                                    <td style="vertical-align: middle;">
-                                        <a href="javascript:void(0)" class="toggle-url">
-                                            <span class="short-url">{{ Str::limit($item->url, 10) }}</span>
-                                            <span class="full-url d-none">{{ $item->url }}</span>
-                                        </a>
-                                    </td>
-
-                                    {{-- Dash Url with toggle --}}
-                                    <td style="vertical-align: middle;">
-                                        <a href="javascript:void(0)" class="toggle-url">
-                                            <span class="short-url">{{ Str::limit($item->dash_url, 10) }}</span>
-                                            <span class="full-url d-none">{{ $item->dash_url }}</span>
-                                        </a>
-                                    </td>
-
-                                    <td style="vertical-align: middle;">
-                                        <a class="btn btn-xs btn-outline-primary w-100"
-                                            href="{{ url('/admin/channelstatus/edit') . '/' . $item->id }}">Edit</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    <div class="d-flex justify-content-end mt-5 mr-1">
-                        {{ $record->withQueryString()->links() }}
-                    </div>
-
-                </div>
-
-
-
 
                 <!-- /.card-body -->
             </div>
@@ -414,6 +299,104 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
     <script type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+    <script>
+        // functions
+        let storageKey = "selected_channels";
+
+        // Get selected IDs from localStorage
+        function getSelected() {
+            return JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
+
+        // Save to localStorage
+        function saveSelected(newIds) {
+            if (!Array.isArray(newIds)) {
+                newIds = [newIds]; // handle single ID input
+            }
+
+            let selected = getSelected();
+
+            // Add new IDs at the beginning if not already present
+            newIds.forEach(id => {
+                if (!selected.includes(id)) {
+                    selected.unshift(id); // add to start
+                }
+            });
+
+            localStorage.setItem(storageKey, JSON.stringify(selected));
+        }
+
+        function removeAll() {
+            localStorage.removeItem(storageKey);
+            restoreSelectedData();
+        }
+
+        function restoreSelectedData() {
+            let selected = getSelected();
+            if (selected.length > 0) {
+                document.getElementById('selected').textContent = "Selected : " + selected.length;
+            } else {
+                document.getElementById('selected').textContent = "";
+            }
+
+            const userCheckboxes = document.querySelectorAll('.row-checkbox');
+            userCheckboxes.forEach(checkbox => {
+                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
+
+            });
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+        }
+
+        function loadSelected() {
+            let selected = getSelected();
+
+            if (selected.length > 0) {
+                // Start with the current URL (preserve existing params)
+                const url = new URL(window.location.href);
+
+                // Remove old selected[] params
+                url.searchParams.delete("selected[]");
+
+                // Add only currently selected IDs
+                selected.reverse().forEach(id => {
+                    url.searchParams.append("selected[]", id);
+                });
+
+                // Reload with updated query string (keeping other params intact)
+                window.location.href = url.toString();
+            }
+        }
+
+        function fetchData(page = 1) {
+
+            let search = $('input[name="search"]').val();
+
+
+            $.ajax({
+                url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
+                    search + "&page=" + page,
+                success: function(data) {
+                    $('#user-data').html(data);
+
+                    restoreSelectedData();
+
+                    // Set #selectAll checked only if all visible checkboxes are checked (current page)
+                    let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                        '.row-checkbox').length;
+                    $('#selectAll').prop('checked', allChecked);
+                    console.log($('.row-checkbox:checked').length);
+
+
+                }
+            });
+
+
+
+        }
+    </script>
+
     <script>
         $(document).on('change', '#sel_limit', function(e) {
             let url = new URL(window.location.href);
@@ -498,7 +481,43 @@
 
             window.location.href = url.toString();
         });
-       
+        $(document).on('keyup', 'input[name="search"]', function() {
+            let search = $('input[name="search"]').val();
+            if (search.length > 0) {
+                $('#btnClear').show();
+
+            } else {
+                $('#btnClear').hide();
+                loadSelected();
+
+            }
+            fetchData();
+
+        });
+        $('#btnClear').click(function() {
+
+            $('input[name="search"]').val('');
+            $('input[name="search"]').focus();
+            fetchData();
+            $('#btnClear').hide();
+
+            loadSelected();
+        })
+
+        $(document).ready(function() {
+            $("#search").focus();
+            $("#checkAll").on("change", function() {
+                $(".row-checkbox").prop("checked", $(this).prop("checked"));
+            });
+
+            $(".row-checkbox").on("change", function() {
+                if ($(".row-checkbox:checked").length === $(".row-checkbox").length) {
+                    $("#checkAll").prop("checked", true);
+                } else {
+                    $("#checkAll").prop("checked", false);
+                }
+            });
+        });
     </script>
 
     <script>
