@@ -54,30 +54,44 @@ class ChannelController extends Controller
 
         $query = Channel::query();
         $query->with('genreNames');
-        if (!empty($request->status)) {
-            if ($request->status == 1) {
-                $query->where('status', 1);
+
+        $query->when($request->status, function ($q, $status) {
+            if ($status == 1) {
+                $q->where('status', 1);
             } else {
-                $query->where('status', 0);
+                $q->where('status', 0);
             }
 
-        }
-        if (!empty($request->availability)) {
-            // dd(trim($request->availability));
-            if (trim($request->availability == 'all')) {
-                $query->whereJsonContains('zip_code', 'All');
-            } else {
-                $query->whereJsonDoesntContain('zip_code', 'All');
-            }
-
-        }
-        if (!empty($request->genre) && $request->genre == "Others") {
-            $query->where('genres', "");
-        } elseif (!empty($request->genre)) {
-            $query->whereHas('genreNames', function ($q) use ($request) {
-                return $q->where('name', $request->genre);
+        });
+        // search 
+        $query->when($request->search, function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('stationName', 'like', "%{$search}%")
+                    ->orWhere('callSign', 'like', "%{$search}%");
             });
-        }
+        });
+
+        $query->when($request->availability, function ($q, $availability) {
+            if (trim($availability == 'all')) {
+                $q->whereJsonContains('zip_code', 'All');
+            } else {
+                $q->whereJsonDoesntContain('zip_code', 'All');
+            }
+        });
+
+
+
+        $query->when($request->genre, function ($q, $genre) {
+            if ($genre == "Others") {
+                $q->where('genres', "");
+            } else {
+                $q->whereHas('genreNames', function ($q) use ($genre) {
+                    return $q->where('name', $genre);
+                });
+            }
+
+        });
 
 
         $limit = $request->input('limit', 10);
@@ -91,6 +105,9 @@ class ChannelController extends Controller
 
 
         // return response()->json($record);
+        if ($request->ajax()) {
+            return view('admin.channels.index3-table', compact('record', 'genres'));
+        }
         return view('admin.channels.index3', compact('record', 'genres'));
     }
 
