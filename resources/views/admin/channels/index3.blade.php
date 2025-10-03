@@ -262,7 +262,7 @@
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control input-custom" placeholder="Search by name, email">
+                                    class="form-control input-custom" placeholder="Search by name, station, callsign">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
@@ -321,15 +321,32 @@
                                     <td>
                                         <img src="{{ url('/uploads/channellogo') . '/' . $item->image }}"
                                             alt="channel logo"
-                                            style="background:#f0f0f0; padding:10px; border-radius:8px; max-width:150px;">
+                                            style="background:#f0f0f0; padding:10px; border-radius:8px; max-width:100px;">
 
                                         <br class="mb-2">
-                                        <b>{{ $item->stationName }}</b>
+                                        <b>{{ $item->stationName ?? ($item->name ?? $item->callSign) }}</b>
                                     </td>
                                     <td style="vertical-align: middle;">{!! nl2br($item->genre_list) !!}</td>
                                     <td style="vertical-align: middle;">
-                                        {{ count($item->zip_code) == 1 ? 'All' : count($item->zip_code) . ' Zipcodes' }}
+                                        @if (count($item->zip_code) == 1)
+                                            All
+                                        @else
+                                            <div>
+                                                <a href="javascript:void(0)" class="toggle-zipcodes"
+                                                    data-id="{{ $item->id }}">
+                                                    {{ count($item->zip_code) }} Zipcodes
+                                                </a>
+                                                <div id="zipcodes-{{ $item->id }}" class="zipcodes-list d-none mt-2">
+                                                    <ul class="mb-0">
+                                                        @foreach ($item->zip_code as $zip)
+                                                            <li>{{ $zip }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </td>
+
                                     <td style="vertical-align: middle;">
                                         @if ($item->status == 1)
                                             <span class="custom-badge badge-active">Active</span>
@@ -356,7 +373,7 @@
                                     </td>
 
                                     <td style="vertical-align: middle;">
-                                        <a class="btn btn-xs btn-outline-primary w-75"
+                                        <a class="btn btn-xs btn-outline-primary w-100"
                                             href="{{ url('/admin/channelstatus/edit') . '/' . $item->id }}">Edit</a>
                                     </td>
                                 </tr>
@@ -481,6 +498,7 @@
 
             window.location.href = url.toString();
         });
+       
     </script>
 
     <script>
@@ -497,6 +515,15 @@
                         shortUrl.classList.remove("d-none");
                         fullUrl.classList.add("d-none");
                     }
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".toggle-zipcodes").forEach(function(el) {
+                el.addEventListener("click", function() {
+                    let id = this.getAttribute("data-id");
+                    let row = document.getElementById("zipcodes-" + id);
+                    row.classList.toggle("d-none");
                 });
             });
         });
