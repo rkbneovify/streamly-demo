@@ -28,7 +28,7 @@
           <thead>
               <tr>
                   <th>
-                      <input type="checkbox" id="checkAll">
+                      <input type="checkbox" id="selectAll">
                   </th>
                   <th>#</th>
                   <th>Name</th>
@@ -46,7 +46,7 @@
               @foreach ($record as $item)
                   <tr>
                       <td style="vertical-align: middle;">
-                          <input type="checkbox" class="row-checkbox">
+                          <input type="checkbox" class="row-checkbox" value="{{ $item->id }}">
                       </td>
                       <td style="vertical-align: middle;">{{ $item->id }}</td>
                       <td>
@@ -77,11 +77,15 @@
                       </td>
 
                       <td style="vertical-align: middle;">
-                          @if ($item->status == 1)
-                              <span class="custom-badge badge-active">Active</span>
-                          @else
-                              <span class="custom-badge badge-inactive">Inactive</span>
-                          @endif
+                          <a href="{{ route('admin.channel.status', $item->id) }}"
+                              data-url="{{ route('admin.channel.status', $item->id) }}" title="Change channel status"
+                              class="btn-user-status">
+                              @if ($item->status == 1)
+                                  <span class="custom-badge badge-active">Active</span>
+                              @else
+                                  <span class="custom-badge badge-inactive">Inactive</span>
+                              @endif
+                          </a>
                       </td>
                       <td style="vertical-align: middle;">{{ $item->callSign }}</td>
                       <td style="vertical-align: middle;">{{ date('d/m/Y', strtotime($item->created_at)) }}

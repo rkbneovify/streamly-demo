@@ -309,22 +309,11 @@
         }
 
         // Save to localStorage
-        function saveSelected(newIds) {
-            if (!Array.isArray(newIds)) {
-                newIds = [newIds]; // handle single ID input
-            }
+        function saveSelected(ids) {
+            localStorage.setItem(storageKey, JSON.stringify(ids));
 
-            let selected = getSelected();
-
-            // Add new IDs at the beginning if not already present
-            newIds.forEach(id => {
-                if (!selected.includes(id)) {
-                    selected.unshift(id); // add to start
-                }
-            });
-
-            localStorage.setItem(storageKey, JSON.stringify(selected));
         }
+
 
         function removeAll() {
             localStorage.removeItem(storageKey);
@@ -333,16 +322,16 @@
 
         function restoreSelectedData() {
             let selected = getSelected();
+
             if (selected.length > 0) {
                 document.getElementById('selected').textContent = "Selected : " + selected.length;
             } else {
                 document.getElementById('selected').textContent = "";
+
             }
 
-            const userCheckboxes = document.querySelectorAll('.row-checkbox');
-            userCheckboxes.forEach(checkbox => {
-                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
-
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', selected.includes($(this).val()));
             });
             let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
                 '.row-checkbox').length;
@@ -360,13 +349,40 @@
                 url.searchParams.delete("selected[]");
 
                 // Add only currently selected IDs
-                selected.reverse().forEach(id => {
+                // selected.reverse().forEach(id => {
+                //     url.searchParams.append("selected[]", id);
+                // });
+                selected.forEach(id => {
                     url.searchParams.append("selected[]", id);
                 });
 
                 // Reload with updated query string (keeping other params intact)
                 window.location.href = url.toString();
             }
+        }
+
+        function reloadLoadSelected() {
+            let selected = getSelected();
+
+
+            // Start with the current URL (preserve existing params)
+            const url = new URL(window.location.href);
+
+            // Remove old selected[] params
+            url.searchParams.delete("selected[]");
+            url.searchParams.delete("page");
+
+            // Add only currently selected IDs
+            // selected.reverse().forEach(id => {
+            //     url.searchParams.append("selected[]", id);
+            // });
+            selected.forEach(id => {
+                url.searchParams.append("selected[]", id);
+            });
+
+            // Reload with updated query string (keeping other params intact)
+            window.location.href = url.toString();
+
         }
 
         function fetchData(page = 1) {
@@ -379,16 +395,7 @@
                     search + "&page=" + page,
                 success: function(data) {
                     $('#user-data').html(data);
-
                     restoreSelectedData();
-
-                    // Set #selectAll checked only if all visible checkboxes are checked (current page)
-                    let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                        '.row-checkbox').length;
-                    $('#selectAll').prop('checked', allChecked);
-                    console.log($('.row-checkbox:checked').length);
-
-
                 }
             });
 
@@ -504,21 +511,109 @@
             loadSelected();
         })
 
+
+        $(document).on('click', '#btn-show-selected', function() {
+            reloadLoadSelected();
+        })
+
         $(document).ready(function() {
+            restoreSelectedData();
             $("#search").focus();
-            $("#checkAll").on("change", function() {
-                $(".row-checkbox").prop("checked", $(this).prop("checked"));
+            $(document).on("change", "#selectAll", function() {
+                let selected = getSelected();
+                const userCheckboxes = $('.row-checkbox');
+                if ($(this).is(':checked')) {
+                    userCheckboxes.each(function() {
+                        this.checked = true;
+                        if (!selected.includes(this.value)) {
+                            selected.push(this.value);
+                        }
+                    });
+                    saveSelected(selected);
+                } else {
+                    userCheckboxes.each(function() {
+                        this.checked = false;
+                        if (selected.includes(this.value)) {
+                            selected = selected.filter(id => id !== this.value);
+                        }
+
+                    });
+                    saveSelected(selected);
+
+
+
+                }
+
+                selected = getSelected();
+                if (selected.length <= 0) {
+                    reloadLoadSelected();
+                } else {
+                    restoreSelectedData();
+                }
+
             });
 
-            $(".row-checkbox").on("change", function() {
-                if ($(".row-checkbox:checked").length === $(".row-checkbox").length) {
-                    $("#checkAll").prop("checked", true);
+            $(document).on("change", ".row-checkbox", function() {
+                let selected = getSelected();
+
+                if ($(this).is(':checked')) {
+                    if (!selected.includes($(this).val())) {
+                        selected.push($(this).val())
+                    }
+
                 } else {
-                    $("#checkAll").prop("checked", false);
+                    selected = selected.filter(id => id !== $(this).val());
+
+
                 }
+
+
+
+
+                saveSelected(selected);
+                selected = getSelected();
+                if (selected.length <= 0) {
+                    reloadLoadSelected();
+                } else {
+                    restoreSelectedData();
+                }
+
             });
+
+
+        });
+
+        $(document).on('click', '.btn-user-status', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to change the status?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, change it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+
+
         });
     </script>
+
+    @if (session('reload'))
+        <script>
+            loadSelected();
+        </script>
+    @endif
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -545,6 +640,17 @@
                     row.classList.toggle("d-none");
                 });
             });
+        });
+
+
+        window.addEventListener("load", () => {
+            const [nav] = performance.getEntriesByType("navigation");
+            const hasParams = window.location.search.length > 0;
+
+            if (nav.type !== "reload" && !hasParams) {
+                removeAll();
+
+            }
         });
     </script>
 @stop
