@@ -182,6 +182,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/channelstatus/create', 'Admin\ChannelController@create'); //channels Statust
 
     Route::get('/channelstatus', 'Admin\ChannelController@index'); //channel
+    Route::get('/channel-new', 'Admin\ChannelController@index3'); //channel
     Route::get('/channelstore', 'Admin\ChannelController@channelStore'); //channel Store
 
     Route::get('/channelstatus2', 'Admin\ChannelController@index2'); //channel
@@ -192,6 +193,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('channelstatus/updateall', 'Admin\ChannelController@UpdateAll');
     Route::post('insertchannel', 'Admin\ChannelController@store')->name('insertchannel');
     Route::put('channelupdate/{id}', 'Admin\ChannelController@update')->name('channelupdate');
+    Route::get('channel/status/{id}', 'Admin\ChannelController@changeStatus')->name('channel.status');
+    Route::post('channel/bulk/action', 'Admin\ChannelController@bulkAction')->name('channel.bulk.action');
 
     //Genres
     Route::get('/allgenre', 'Admin\GenreController@index'); //genre
