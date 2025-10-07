@@ -213,8 +213,8 @@
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
                                     <option value="">Bulk Action</option>
-                                    <option value="activate">Activate</option>
-                                    <option value="inactivate">Inactivate</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
 
                                 </select>
                             </div>
@@ -264,6 +264,12 @@
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control input-custom" placeholder="Search by name, station, callsign">
                                 <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
                             </div>
                         </div>
                     </div>
@@ -573,7 +579,13 @@
                 saveSelected(selected);
                 selected = getSelected();
                 if (selected.length <= 0) {
-                    reloadLoadSelected();
+                    const url = new URL(window.location.href); // get current URL
+                    const params = new URLSearchParams(url.search);
+                    if (params.has('selected[]')) {
+                        reloadLoadSelected();
+                    } else {
+                        restoreSelectedData();
+                    }
                 } else {
                     restoreSelectedData();
                 }
@@ -607,13 +619,70 @@
 
 
         });
+
+        $(document).on('change', '#sel_bulk_action', function(e) {
+            e.preventDefault();
+            let selectedIds = $('.row-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+            if (selectedIds.length == 0) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'Please select at least one user',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    // location.reload(); // reload after toast timeout
+                });
+
+            } else {
+
+                let action = $(this).val();
+                console.log(action);
+
+                if (!action) {
+                    return; // No action selected
+                }
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `Do you really want to ${action} selected users?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: `Yes, ${action} them!`,
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let selected = getSelected();
+
+                        // Set action value in hidden input
+                        $('input[name="action"]').val(action);
+
+                        $.each(selected, function(index, value) {
+                            $("#tbl-form").append(
+                                `<input type="hidden" name="selected[]" value="${value}">`
+                            );
+                        });
+
+                        $('#tbl-form').submit();
+                        showLoader();
+                    } else {
+                        loadSelected();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.btn-reset-all', function(e) {
+            e.preventDefault();
+            removeAll();
+            location.href = "{{ url()->current() }}"
+        })
     </script>
 
-    @if (session('reload'))
-        <script>
-            loadSelected();
-        </script>
-    @endif
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -653,4 +722,10 @@
             }
         });
     </script>
+
+    @if (session()->pull('remove-all'))
+        <script>
+            removeAll();
+        </script>
+    @endif
 @stop

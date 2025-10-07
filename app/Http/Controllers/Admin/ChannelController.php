@@ -33,7 +33,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus']]);
+        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus', 'bulkAction']]);
     }
     public function index()
     {
@@ -57,6 +57,18 @@ class ChannelController extends Controller
 
         $query = Channel::query();
         $query->with('genreNames');
+
+        $query->when($request->sort_created, function ($q, $date) {
+
+
+            if ($date == 'asc') {
+                $q->orderBy('created_at');
+            } else {
+                $q->orderBy('created_at', 'desc');
+            }
+
+
+        });
 
         $query->when($request->selected, function ($q, $selected) {
 
@@ -450,7 +462,7 @@ class ChannelController extends Controller
             toast("Channel status changed successfully", 'success')
                 ->autoClose(3000)
                 ->timerProgressBar();
-            return redirect()->back()->with('reload', true);
+            return redirect()->back()->with('remove-all', true);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
@@ -462,14 +474,14 @@ class ChannelController extends Controller
 
     public function bulkAction(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         $validator = Validator::make($request->all(), [
-            'user_ids' => 'required|array|min:1',
+            'selected' => 'required|array|min:1',
         ], [
-            'user_ids.required' => 'Please select at least one userx.',
-            'user_ids.array' => 'Invalid data format for selected user.',
-            'user_ids.min' => 'You must select at least one user before proceeding.',
+            'selected.required' => 'Please select at least one.',
+            'selected.array' => 'Invalid data format for selected.',
+            'selected.min' => 'You must select at least one  before proceeding.',
         ]);
         if ($validator->fails()) {
             toast($validator->errors()->first(), "error")
@@ -480,10 +492,10 @@ class ChannelController extends Controller
 
         DB::beginTransaction();
         switch ($request->action) {
-            case 'activate':
+            case 'active':
 
                 try {
-                    Channel::whereIn('id', $request->user_ids)->update(['status' => 1]);
+                    Channel::whereIn('id', $request->selected)->update(['status' => 1]);
                     DB::commit();
 
                     toast("Channel(s) activated successfully !", "success")
@@ -497,9 +509,9 @@ class ChannelController extends Controller
                     return redirect()->back();
                 }
 
-            case 'inactivate':
+            case 'inactive':
                 try {
-                    Channel::whereIn('id', $request->user_ids)->update(['status' => 1]);
+                    Channel::whereIn('id', $request->selected)->update(['status' => 0]);
                     DB::commit();
                     toast("Channel(s) inactivate successfully !", "success")
                         ->timerProgressBar()
