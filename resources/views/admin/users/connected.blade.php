@@ -154,22 +154,7 @@
                                         </td>
 
                                         <td>
-                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
-                                                @case('android')
-                                                    @if ($user->device_title == 'RokuTv')
-                                                        {{ $user->device_title }}
-                                                    @else
-                                                        {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                                    @endif
-                                                @break
-
-                                                @case('okhttp')
-                                                    {{ $user->device_title }}
-                                                @break
-
-                                                @default
-                                                    {{ detectDeviceByUserAgent($user->useragent ?? '') }}
-                                            @endswitch
+                                            {{ getPlatform($user->useragent, $user->device_title) ?? 'N/A' }}
 
 
 
@@ -185,25 +170,14 @@
                                         </td>
                                         <td>
 
-                                            @switch(detectDeviceByUserAgent($user->useragent ?? ''))
-                                                @case('android')
-                                                    @if ($user->device_title == 'RokuTv')
-                                                        {{ $user->device_model }}
-                                                    @else
-                                                        {{ $user->device_title ?? '' }}
-                                                    @endif
-                                                @break
-
-                                                @default
-                                                    {{ $user->device_model }}
-                                            @endswitch
+                                            {{ getDeviceModel($user->useragent, $user->device_title, $user->device_model) ?? 'N/A' }}
 
                                         </td>
                                         <td>
-                                            {{ $user->build_version ?? '' }}
+                                            {{ $user->build_version ?? 'N/A' }}
                                         </td>
                                         <td>
-                                            {{ $user->device_os_version ?? '' }}
+                                            {{ $user->device_os_version ?? 'N/A' }}
                                         </td>
 
 
