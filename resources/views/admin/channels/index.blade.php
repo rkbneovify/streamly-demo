@@ -1,6 +1,7 @@
 @extends('master')
 @section('stylesheets')
-<style>video {
+<style>
+video {
   width: 100%;
 }
 
