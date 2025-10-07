@@ -1,459 +1,731 @@
 @extends('master')
 @section('stylesheets')
-<style>video {
-  width: 100%;
-}
+    <style>
+        video {
+            width: 100%;
+        }
 
-.dash-video-player {
-  position: relative;  /* This position relative is needed to position the menus */
-  width: 640px;
-  margin: 0 auto;
-}
-.hide_column {
-    display : none;
-}</style>
-<link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+        .dash-video-player {
+            position: relative;
+            /* This position relative is needed to position the menus */
+            width: 640px;
+            margin: 0 auto;
+        }
 
-<link rel="stylesheet" href="{{ asset('frontend/controlbar/controlbar.css') }}">
-<script defer src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
-<script defer src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script>
-<script defer src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
-    @stop
+        .hide_column {
+            display: none;
+        }
+    </style>
+    <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('frontend/controlbar/controlbar.css') }}">
+    <script defer src="{{ asset('frontend/dashjs/dash.all.min.js') }}"></script>
+    <script defer src="{{ asset('frontend/dashjs/dash.mss.min.js') }}"></script>
+    <script defer src="{{ asset('frontend/controlbar/ControlBar.js') }}"></script>
+    <style>
+        .custom-badge {
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 14px;
+            padding: 5px 10px;
+            display: inline-block;
+        }
+
+        .badge-active {
+            color: #578f6d;
+            background-color: #dff5e8;
+        }
+
+        .badge-inactive {
+            color: #cf6773;
+            background-color: #ffebf0;
+        }
+
+        .table thead {
+            background-color: #fafafa;
+        }
+
+        .table thead tr th {
+            font-size: 14px;
+            color: #7d7d7d;
+        }
+
+        .table tbody tr td {
+            font-size: 16px;
+            color: #383838;
+            font-weight: 500;
+
+        }
+
+        .badge-light {
+            background: none;
+        }
+    </style>
+    <style>
+        .select-wrapper {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .select-wrapper:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .select-wrapper img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .select-custom {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .select-custom:focus {
+            border-color: none;
+            box-shadow: none;
+        }
+
+        .btn-add-user {
+            text-decoration: none;
+            color: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-daterange {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+    </style>
+    <style>
+        .input-container {
+            position: relative;
+
+
+        }
+
+        .btn-clear {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 30px;
+            color: #888;
+            display: none;
+        }
+
+        .btn-clear:hover {
+            color: #000;
+        }
+
+        .input-custom {
+
+            padding: 20px 12px;
+        }
+    </style>
+@stop
 @section('content')
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Channel</h1> {{ session()->get( 'info' ) }}
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Channel</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-    <a class="btn btn-xs btn-primary" href="{{  url('admin/channelstatus/create') }} ">
-                                        Add new Channel
-                                    </a>
-
-      <!-- Default box -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Channel</h3>
-
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-              <i class="fas fa-minus"></i></button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-              <i class="fas fa-times"></i></button>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <div class="form-group">
-            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-              <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
-              <label class="custom-control-label" for="customSwitch3">Turn this on to test smooth links</label>
-            </div>
-            <div style="padding: 8px; width: 30%;" class="form-group">
-          <label for="zip-codes-filter">Filter by Availability:</label>
-          <select class="form-control" id="zip-codes-filter">
-          <option value="">All channels</option>
-          <option value="Null">Channels with all zipcodes</option>
-          <option value="Other">Channels with restricted zipcodes</option>
-          </select>
-          </div>
-          </div>
-          <table id="data-table" class="table table-striped projects">
-              <thead>
-                  <tr>
-                      <th style="width: 1%">
-                          #
-                      </th>
-                      <th style="width: 20%">
-                      name
-                      </th>
-                      <th style="width: 20%">
-                      url
-                      </th>
-
-                      <th style="width: 20%">
-                      genres
-                      </th>
-                      <th style="width: 20%">
-                      status
-                      </th>
-                      
-                      <th style="width: 20%">
-                        image
-                        </th>
-
-
-                      <th style="width: 20%">
-                        dash url
-                        </th>
-                        <th style="width: 15%">
-                      Availability
-                      </th>
-                      <th style="width: 20%">
-                      Action
-                      </th>
-                      <th style="width: 20%">
-                      Callsign
-                      </th>
-                      <th style="width: 20%" style="display:none">
-                      ism
-                      </th>
-
-                      <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="1" value='Activate selected' ><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
-    
-                  </tr>
-              </thead>
-          </table>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content" style="
-    width: 602px;">
-      <div class="modal-header">
-        <h4 class="modal-title">Video player</h4>
-      </div>
-      <div class="modal-body">
-        <div class="username">url:<span></span></div>
-        <div >
-          <video   autoplay="" preload="auto" id="videoPlayer"  autoplay > </video>
-          <div id="videoController" class="video-controller unselectable">
-            <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-                <span id="iconPlayPause" class="icon-play"></span>
-            </div>
-            <span id="videoTime" class="time-display">00:00:00</span>
-            <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-                <span class="icon-fullscreen-enter"></span>
-            </div>
-            <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-                <span class="icon-bitrate"></span>
-            </div>
-            <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01"/>
-            <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-                <span id="iconMute" class="icon-mute-off"></span>
-            </div>
-            <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-                <span class="icon-tracks"></span>
-            </div>
-            <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-                <span class="icon-caption"></span>
-            </div>
-            <span id="videoDuration" class="duration-display">00:00:00</span>
-            <div class="seekContainer">
-                <div id="seekbar" class="seekbar seekbar-complete">
-                    <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
-                    <div id="seekbar-play" class="seekbar seekbar-play"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Channel</h1> {{ session()->get('info') }}
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Channel</li>
+                        </ol>
+                    </div>
                 </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+
+            <!-- Default box -->
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
+                                <select name="bulk_action" id="sel_bulk_action" class="select-custom">
+                                    <option value="">Bulk Action</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_status" class="select-custom">
+                                    <option value="">Select Status</option>
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active
+                                    </option>
+                                    <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>
+                                        Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_availability" class="select-custom">
+                                    <option value="">Select Availability</option>
+                                    <option value="all" {{ request('availability') == 'all' ? 'selected' : '' }}>All
+                                    </option>
+                                    <option value="local" {{ request('availability') == 'local' ? 'selected' : '' }}>
+                                        Local</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_genres" class="select-custom">
+                                    <option value="">Select Genres</option>
+                                    @foreach ($genres as $item)
+                                        <option value="{{ $item }}"
+                                            {{ request()->genre == $item ? 'selected' : '' }}>
+                                            {{ $item }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control input-custom" placeholder="Search by name, station, callsign">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div id="user-data">
+                    @include('admin.channels.index3-table')
+                </div>
+
+                <!-- /.card-body -->
             </div>
-        </div>
+            <!-- /.card -->
+            <!-- Modal -->
 
-          <div class="channel-detail">
-            <p>{{$channelData[0]->callSign??'channel detail'}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
+
+
+
+        </section>
+        <!-- /.content -->
     </div>
-    
-  </div>
-  </div>
-  
-    <!-- Modal HTML -->
-    {{-- <div id="myModal" class="modal fade">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title">YouTube Video</h4>
-              </div>
-              <div class="modal-body">
-                  
-					<div class="col-md-8 col-centered">
-						<video  autoplay="" preload="auto" id="videoPlayer"  autoplay > </video>
-            <div id="videoController" class="video-controller unselectable">
-              <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-                  <span id="iconPlayPause" class="icon-play"></span>
-              </div>
-              <span id="videoTime" class="time-display">00:00:00</span>
-              <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-                  <span class="icon-fullscreen-enter"></span>
-              </div>
-              <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-                  <span class="icon-bitrate"></span>
-              </div>
-              <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01"/>
-              <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-                  <span id="iconMute" class="icon-mute-off"></span>
-              </div>
-              <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-                  <span class="icon-tracks"></span>
-              </div>
-              <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-                  <span class="icon-caption"></span>
-              </div>
-              <span id="videoDuration" class="duration-display">00:00:00</span>
-              <div class="seekContainer">
-                  <div id="seekbar" class="seekbar seekbar-complete">
-                      <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
-                      <div id="seekbar-play" class="seekbar seekbar-play"></div>
-                  </div>
-              </div>
-          </div>
-
-						<div class="channel-detail">
-								<p>{{$channelData[0]->callSign??'channel detail'}}</p>
-						</div>
-					</div>
-              </div>
-          </div>
-      </div>
-  </div> --}}
-  
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+    <!-- /.content-wrapper -->
 @endsection
 
 @section('scripts')
 
-<script defer type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
-<script>
-$('.select2').select2();
-</script>
-<script defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script defer type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>
+    <script>
+        $('.select2').select2();
+    </script>
+    <script defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-<script type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
-<script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+    <script>
+        // functions
+        let storageKey = "selected_channels";
 
- 
- function init(url) {
-     player = dashjs.MediaPlayer().create();
-    //  player.getProtectionController().setRobustnessLevel('SW_SECURE_CRYPTO');
-     // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
-     player.updateSettings({
-         // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-         'streaming': {
-          //  'liveDelay': 1,
-           'fastSwitchEnabled': true  ,
-             //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
-             //determine which assets to request in order to perfom adaptive streaming of the content.
-             //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
-             'retryIntervals': {MPD: 5000},
-             'retryAttempts': {MPD: 3}
-         },'abr': { 'autoSwitchBitrate': { 'video': false } }
-     });
-     player.setProtectionData({
-       "com.widevine.alpha": {
-         serverURL: "//wv-keyos.licensekeyserver.com/",
-         httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
-         clearkeys: ""
-       },
-       "com.microsoft.playready": {
-         serverURL: "//pr-keyos.licensekeyserver.com/core/rightsmanager.asmx",
-         httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
-         clearkeys: ""
-       }
-     });
-     firstLoad = false;
-                 
-            
-              // var url1 = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
-                 player.initialize(document.querySelector("video"), url, true);
-                 var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
- controlbar.initialize();
- }
- 
-$(function() {
- 
-   var dataTable = $('#data-table').DataTable({
-      pageLength: 100,
-        processing: true,
-        serverSide: true,
-        ajax: '{!! url('admin/channelstatus/channeldata') !!}',
-    
-        columns: [
-            { data: 'id', name: 'id' },
-            { data: 'StationName', name: 'name',orderable: true },
-            { data: 'url', name: 'url' },
-            { data: 'genrename', name: 'genrename' ,searchable: true},
-            
-            { data: 'status', name: 'status' ,orderable:true},
-            { data: 'image', name: 'logo',orderable: false, searchable: false },
+        // Get selected IDs from localStorage
+        function getSelected() {
+            return JSON.parse(localStorage.getItem(storageKey)) || [];
+        }
 
-            {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
-            { data: 'zip_code', name: 'zip_code', orderable: true},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-            { data: 'callSign', name: 'callSign',orderable: true },
+        // Save to localStorage
+        function saveSelected(ids) {
+            localStorage.setItem(storageKey, JSON.stringify(ids));
 
-            {data: 'smooth_url', name: 'smooth_url', orderable: false, searchable: false ,},
-            {data: 'action2', name: 'action2', orderable: false, searchable: false},
-        ],
-        columnDefs: [
-        {       
-            "render": function(data, type, row) {
-                if (row.status==1) {
-                  return '<span class="dotgreen"></span> Active';
-                }
-                else if (row.status==0) {
-                  return '<span class="dotred"></span> Inactive';
-                }
-                else {
-                    return '<span class="label label-default">unknown</span>';
-                }
-             }, "targets": [4]
-        },
-         {
-          "render": function(data, type, row) {
-            if(row.zip_code == 'Null'){
-             return 'All Zipcodes';
-            }else{
-              var zipCodes = row.zip_code.split(',').map(function(item) {
-        return item.trim();
-      });
-      return zipCodes.length.toString().concat(' Zipcodes');
+        }
+
+
+        function removeAll() {
+            localStorage.removeItem(storageKey);
+            restoreSelectedData();
+        }
+
+        function restoreSelectedData() {
+            let selected = getSelected();
+
+            if (selected.length > 0) {
+                document.getElementById('selected').textContent = "Selected : " + selected.length;
+            } else {
+                document.getElementById('selected').textContent = "";
+
             }
-          },"targets": [7],
-          "searchable": true,
-          "orderable": true
-        },
-        {       
-            "render": function ( data, type, row, meta ) {
-      return type === 'display' && data?.trim().length > 15 ?
-        '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
-        data;
-    }, "targets": [6]
-        },{       
-            "render": function(data, type, row) {
-             return '<a href="../uploads/channellogo/'+row.image+'" target="_blank"><img src="../uploads/channellogo/'+row.image+'"" width="50px" height="50px"></a>';
-             }, "targets": [5]
-        },
-        {
-    "targets": 2,
-    "data": "url",
-    "render": function ( data, type, row, meta ) {
-      return type === 'display' && data?.trim().length > 15 ?
-        '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
-        data;
-    }
-  } ,  { 'targets': [ 10 ],
-      'className': "hide_column"
-    }
-        
-        ]
-    });
 
-    $('#zip-codes-filter').on('change', function() {
-    var filterValue = $(this).val();
-    
-    // Update the DataTable's search query based on the selected filter
-    if (filterValue === 'Null') {
-      dataTable.column(7).search('Null').draw();
-    } else if(filterValue === 'Other'){
-      dataTable.column(7).search('^(?!Null$)', true, false).draw();
-    } else {
-      dataTable.column(7).search('').draw();
-    }
-    });
-
-    $('#data-table').on('click', '.videoplay', function () {
-    
-        var name = $('td', this).eq(1).text();
-        var mpd = $('td', this).eq(6).text();
-        var ism = $('td', this).eq(9).text();
-        var url = $('td', this).eq(2).find("span").prop("title");
-        var checkISMlink=$('#customSwitch3').is(":checked");
-        // console.log('name',name);
-        // console.log('url',url);
-        // console.log('ism',ism);
-        // console.log('checkISMlink',checkISMlink);
-        
-        $(".modal-body div span").text("");
-        if(checkISMlink){$(".username span").text(ism);
-        init(ism);
-        }else{
-        $(".username span").text(mpd);
-
-              //  var url1 = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
-        init(mpd);}
-        $('#myModal').modal("show");
-        // $("#videoPlayer").attr('src', url);
-    });
-    /* Assign empty url value to the iframe src attribute when
-    modal hide, which stop the video playing */
-    $("#myModal").on('hide.bs.modal', function(){
-      player.reset()
-        // $("#videoPlayer").attr('src', '');
-    });
-
-    // Check all 
-   $('#checkall').click(function(){
-      if($(this).is(':checked')){
-         $('.update_check').prop('checked', true);
-      }else{
-         $('.update_check').prop('checked', false);
-      }
-   });
-
-   $(document).on('click', '.update_record', function(){
-        var id = [];var status;
-        if(confirm("Are you sure you want to Update this data?"))
-        {
-            $('.update_check:checked').each(function(){
-                id.push($(this).val());
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', selected.includes($(this).val()));
             });
-            if(id.length > 0)
-            {   
-              status= this.id;
-                $.ajax({
-                    url:"{{url('admin/channelstatus/updateall') }}",
-                    method:"get",
-                    data:{id:id,status:status},
-                    success:function(data)
-                    {
-                        alert(data.message);
-                        console.log(data.message);
-                        $('#data-table').DataTable().ajax.reload();
-                    },
-          error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
-          //   $.each(xhr.responseJSON.errors, function (key, item) 
-          // {
-          //   $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
-          // });
-          xhr.responseJSON.errors!== undefined?console.table(xhr.responseJSON.errors):console.table(xhr);
-          }
+            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                '.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+        }
+
+        function loadSelected() {
+            let selected = getSelected();
+
+            if (selected.length > 0) {
+                // Start with the current URL (preserve existing params)
+                const url = new URL(window.location.href);
+
+                // Remove old selected[] params
+                url.searchParams.delete("selected[]");
+
+                // Add only currently selected IDs
+                // selected.reverse().forEach(id => {
+                //     url.searchParams.append("selected[]", id);
+                // });
+                selected.forEach(id => {
+                    url.searchParams.append("selected[]", id);
                 });
-            }
-            else
-            {
-                alert("Please select atleast one checkbox");
+
+                // Reload with updated query string (keeping other params intact)
+                window.location.href = url.toString();
             }
         }
-    });
-});
 
-</script>
+        function reloadLoadSelected() {
+            let selected = getSelected();
+
+
+            // Start with the current URL (preserve existing params)
+            const url = new URL(window.location.href);
+
+            // Remove old selected[] params
+            url.searchParams.delete("selected[]");
+            url.searchParams.delete("page");
+
+            // Add only currently selected IDs
+            // selected.reverse().forEach(id => {
+            //     url.searchParams.append("selected[]", id);
+            // });
+            selected.forEach(id => {
+                url.searchParams.append("selected[]", id);
+            });
+
+            // Reload with updated query string (keeping other params intact)
+            window.location.href = url.toString();
+
+        }
+
+        function fetchData(page = 1) {
+
+            let search = $('input[name="search"]').val();
+
+
+            $.ajax({
+                url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
+                    search + "&page=" + page,
+                success: function(data) {
+                    $('#user-data').html(data);
+                    restoreSelectedData();
+                }
+            });
+
+
+
+        }
+    </script>
+
+    <script>
+        $(document).on('change', '#sel_limit', function(e) {
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("limit", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("limit");
+            } else {
+
+                url.searchParams.set("limit", $(this).val());
+            }
+
+            window.location.href = url.toString();
+        });
+        $(document).on('change', '#sel_genres', function(e) {
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("genre", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("genre");
+            } else {
+
+                url.searchParams.set("genre", $(this).val());
+            }
+
+            window.location.href = url.toString();
+        });
+        $(document).on('change', '#sel_status', function(e) {
+
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("status", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("status");
+            } else {
+
+                url.searchParams.set("status", $(this).val());
+            }
+
+            window.location.href = url.toString();
+        });
+
+        $(document).on('change', '#sel_availability', function(e) {
+
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("availability", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("availability");
+            } else {
+
+                url.searchParams.set("availability", $(this).val());
+            }
+
+            window.location.href = url.toString();
+        });
+        $(document).on('keyup', 'input[name="search"]', function() {
+            let search = $('input[name="search"]').val();
+            if (search.length > 0) {
+                $('#btnClear').show();
+
+            } else {
+                $('#btnClear').hide();
+                loadSelected();
+
+            }
+            fetchData();
+
+        });
+        $('#btnClear').click(function() {
+
+            $('input[name="search"]').val('');
+            $('input[name="search"]').focus();
+            fetchData();
+            $('#btnClear').hide();
+
+            loadSelected();
+        })
+
+
+        $(document).on('click', '#btn-show-selected', function() {
+            reloadLoadSelected();
+        })
+
+        $(document).ready(function() {
+            restoreSelectedData();
+            $("#search").focus();
+            $(document).on("change", "#selectAll", function() {
+                let selected = getSelected();
+                const userCheckboxes = $('.row-checkbox');
+                if ($(this).is(':checked')) {
+                    userCheckboxes.each(function() {
+                        this.checked = true;
+                        if (!selected.includes(this.value)) {
+                            selected.push(this.value);
+                        }
+                    });
+                    saveSelected(selected);
+                } else {
+                    userCheckboxes.each(function() {
+                        this.checked = false;
+                        if (selected.includes(this.value)) {
+                            selected = selected.filter(id => id !== this.value);
+                        }
+
+                    });
+                    saveSelected(selected);
+
+
+
+                }
+
+                selected = getSelected();
+                if (selected.length <= 0) {
+                    reloadLoadSelected();
+                } else {
+                    restoreSelectedData();
+                }
+
+            });
+
+            $(document).on("change", ".row-checkbox", function() {
+                let selected = getSelected();
+
+                if ($(this).is(':checked')) {
+                    if (!selected.includes($(this).val())) {
+                        selected.push($(this).val())
+                    }
+
+                } else {
+                    selected = selected.filter(id => id !== $(this).val());
+
+
+                }
+
+
+
+
+                saveSelected(selected);
+                selected = getSelected();
+                if (selected.length <= 0) {
+                    const url = new URL(window.location.href); // get current URL
+                    const params = new URLSearchParams(url.search);
+                    if (params.has('selected[]')) {
+                        reloadLoadSelected();
+                    } else {
+                        restoreSelectedData();
+                    }
+                } else {
+                    restoreSelectedData();
+                }
+
+            });
+
+
+        });
+
+        $(document).on('click', '.btn-user-status', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to change the status?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, change it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+
+
+        });
+
+        $(document).on('change', '#sel_bulk_action', function(e) {
+            e.preventDefault();
+            let selectedIds = $('.row-checkbox:checked').map(function() {
+                return $(this).val();
+            }).get();
+            if (selectedIds.length == 0) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'Please select at least one user',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    // location.reload(); // reload after toast timeout
+                });
+
+            } else {
+
+                let action = $(this).val();
+                console.log(action);
+
+                if (!action) {
+                    return; // No action selected
+                }
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `Do you really want to ${action} selected users?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: `Yes, ${action} them!`,
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let selected = getSelected();
+
+                        // Set action value in hidden input
+                        $('input[name="action"]').val(action);
+
+                        $.each(selected, function(index, value) {
+                            $("#tbl-form").append(
+                                `<input type="hidden" name="selected[]" value="${value}">`
+                            );
+                        });
+
+                        $('#tbl-form').submit();
+                        showLoader();
+                    } else {
+                        loadSelected();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.btn-reset-all', function(e) {
+            e.preventDefault();
+            removeAll();
+            location.href = "{{ url()->current() }}"
+        })
+    </script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".toggle-url").forEach(function(el) {
+                el.addEventListener("click", function() {
+                    let shortUrl = this.querySelector(".short-url");
+                    let fullUrl = this.querySelector(".full-url");
+
+                    if (fullUrl.classList.contains("d-none")) {
+                        shortUrl.classList.add("d-none");
+                        fullUrl.classList.remove("d-none");
+                    } else {
+                        shortUrl.classList.remove("d-none");
+                        fullUrl.classList.add("d-none");
+                    }
+                });
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".toggle-zipcodes").forEach(function(el) {
+                el.addEventListener("click", function() {
+                    let id = this.getAttribute("data-id");
+                    let row = document.getElementById("zipcodes-" + id);
+                    row.classList.toggle("d-none");
+                });
+            });
+        });
+
+
+        window.addEventListener("load", () => {
+            const [nav] = performance.getEntriesByType("navigation");
+            const hasParams = window.location.search.length > 0;
+
+            if (nav.type !== "reload" && !hasParams) {
+                removeAll();
+
+            }
+        });
+    </script>
+
+    @if (session()->pull('remove-all'))
+        <script>
+            removeAll();
+        </script>
+    @endif
 @stop

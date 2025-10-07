@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 use Svg\Tag\Rect;
 
 //use App\Traits\ImageUpload;programs
@@ -30,7 +33,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore']]);
+        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus', 'bulkAction']]);
     }
     public function index()
     {
@@ -46,18 +49,87 @@ class ChannelController extends Controller
         }
     }
 
-    public function index3()
+    public function index3(Request $request)
     {
-        $record = Channel::with('genre')->paginate(10);
-        $encoded_auth_xml = getKeyOSAuthToken();
 
-        $ua = request()->server('HTTP_USER_AGENT');
-        $isDevice = isDeviceAppleRokuOthers($ua);
-        if ($isDevice == 'apple') {
-            return view('admin.channels.fairplayindex', compact('record', 'encoded_auth_xml'));
-        } else {
-            return view('admin.channels.index3', compact('record', 'encoded_auth_xml'));
+        $genres = Genre::pluck('name', 'id');
+        $genres[count($genres) + 1] = "Others";
+
+        $query = Channel::query();
+        $query->with('genreNames');
+
+        $query->when($request->sort_created, function ($q, $date) {
+
+
+            if ($date == 'asc') {
+                $q->orderBy('created_at');
+            } else {
+                $q->orderBy('created_at', 'desc');
+            }
+
+
+        });
+
+        $query->when($request->selected, function ($q, $selected) {
+
+            $ids = implode(',', $selected);
+            $q->orderByRaw("FIELD(id, $ids) DESC");
+        });
+
+        $query->when($request->status, function ($q, $status) {
+            if ($status == 1) {
+                $q->where('status', 1);
+            } else {
+                $q->where('status', 0);
+            }
+
+        });
+        // search 
+        $query->when($request->search, function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('stationName', 'like', "%{$search}%")
+                    ->orWhere('callSign', 'like', "%{$search}%");
+            });
+        });
+
+        $query->when($request->availability, function ($q, $availability) {
+            if (trim($availability == 'all')) {
+                $q->whereJsonContains('zip_code', 'All');
+            } else {
+                $q->whereJsonDoesntContain('zip_code', 'All');
+            }
+        });
+
+
+
+        $query->when($request->genre, function ($q, $genre) {
+            if ($genre == "Others") {
+                $q->where('genres', "");
+            } else {
+                $q->whereHas('genreNames', function ($q) use ($genre) {
+                    return $q->where('name', $genre);
+                });
+            }
+
+        });
+
+
+        $limit = $request->input('limit', 10);
+        $record = $query->paginate($limit);
+
+        $record->getCollection()->transform(function ($item) {
+            $item->genre_list = $item->genreNames->count() <= 0 ? "Others" : $item->genreNames->pluck('name')->implode(',<br> ');
+            return $item;
+        });
+
+
+
+        // return response()->json($record);
+        if ($request->ajax()) {
+            return view('admin.channels.index3-table', compact('record', 'genres'));
         }
+        return view('admin.channels.index3', compact('record', 'genres'));
     }
 
     public function channelDelete($channelID)
@@ -365,6 +437,104 @@ class ChannelController extends Controller
         } else {
             return response()->json(['message' => "Channel Updated Error Occured"], 400);
         }
+    }
+
+
+    public function changeStatus($id)
+    {
+        DB::beginTransaction();
+        try {
+            $channel = Channel::find($id);
+            if ($channel == null) {
+                toast("Channel not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+
+            if ($channel->status == 1) {
+                $channel->status = 0;
+            } else {
+                $channel->status = 1;
+            }
+            $channel->save();
+            DB::commit();
+            toast("Channel status changed successfully", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back()->with('remove-all', true);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
+
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function bulkAction(Request $request)
+    {
+        // dd($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'selected' => 'required|array|min:1',
+        ], [
+            'selected.required' => 'Please select at least one.',
+            'selected.array' => 'Invalid data format for selected.',
+            'selected.min' => 'You must select at least one  before proceeding.',
+        ]);
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), "error")
+                ->timerProgressBar()
+                ->autoClose(5000);
+            return redirect()->back();
+        }
+
+        DB::beginTransaction();
+        switch ($request->action) {
+            case 'active':
+
+                try {
+                    Channel::whereIn('id', $request->selected)->update(['status' => 1]);
+                    DB::commit();
+
+                    toast("Channel(s) activated successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back()->with('remove-all', true);
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+            case 'inactive':
+                try {
+                    Channel::whereIn('id', $request->selected)->update(['status' => 0]);
+                    DB::commit();
+                    toast("Channel(s) inactivate successfully !", "success")
+                        ->timerProgressBar()
+                        ->autoClose(5000);
+                    return redirect()->back()->with('remove-all', true);
+
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    Alert::success("Error ", "Something went wrong !");
+                    return redirect()->back();
+                }
+
+
+            default:
+
+                toast("Please select any action", "error")
+                    ->timerProgressBar()
+                    ->autoClose(5000);
+                return redirect()->back();
+
+        }
+
+
     }
 
 
