@@ -154,7 +154,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
     }
 }
 
-function checkLoginLimit2($user_id, $token, $deviceDetails)
+function checkLoginLimitX($user_id, $token, $deviceDetails)
 {
     $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
@@ -1925,7 +1925,7 @@ function formatActiveDevices($user)
     return $user->sessions_count ?? 0 . "/" . 5;
 }
 
-function detectDeviceByUserAgent(string $userAgent): string
+function detectDeviceByUserAgent($userAgent = null): string
 {
     $ua = strtolower($userAgent);
 
@@ -1946,6 +1946,7 @@ function detectDeviceByUserAgent(string $userAgent): string
         return 'tizen-tv';
     }
     // Android devices
+                                    
     if (preg_match('/android/i', $ua)) {
         return 'android';
     }
@@ -1986,7 +1987,7 @@ function getPlatform($ua, $deviceTitle)
     $device = strtolower(detectDeviceByUserAgent($ua));
     switch ($device) {
         case 'android':
-            if ($deviceTitle == 'rokutv') {
+            if (strtolower($deviceTitle) == 'rokutv') {
                 $platform = $deviceTitle;
             } else {
                 $platform = $device;
