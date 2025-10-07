@@ -271,7 +271,7 @@ class AuthController extends Controller
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
             $uid = $user['id'];
-            checkLoginLimit2($uid, $token, $deviceDetails);
+            checkLoginLimitX($uid, $token, $deviceDetails);
             exit;
         }
         $this->authenticated($request, $user, $token);
