@@ -85,8 +85,8 @@ class GracenoteChannelApiController extends Controller
                 }
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.jpg';
 
                 }
                 unset($channel->db_image);
@@ -228,8 +228,8 @@ class GracenoteChannelApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.jpg';
                 }
 
                 if ($channel->roku_image == null) {
