@@ -44,6 +44,37 @@ class BuyDRMController extends Controller
         }
     }
 
+    public function index2()
+    {
+
+
+
+        try {
+            $encoded_auth_xml = getKeyOSAuthToken();
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                // 'data' => $encoded_auth_xml,
+                // 'widevinelicense' => 'https://wv-keyos.licensekeyserver.com/',
+                // 'playreadylicense' => 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx',
+                'widevinelicense' => 'https://widevine.keyos.com/api/v4/getLicense',
+                'playreadylicense' => 'https://playready.keyos.com/api/v4/getLicense',
+
+                'message' => 'DRM authentication key successfully retreived.'
+            ];
+
+            return response()->json($response, 200);
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'data' => 'Empty',
+                'message' => $e->getMessage(),
+                'response_code' => 404,
+            ];
+            return response()->json($response, 404);
+        }
+    }
+
     public function WidevinePlayer2()
     {
 
@@ -191,7 +222,7 @@ class BuyDRMController extends Controller
     }
     public function proxyServer()
     {
-        $payload =  $this->getPayload();
+        $payload = $this->getPayload();
         dd($payload);
         die();
         $drm_type = $this->get_drm_type();

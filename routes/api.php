@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NotificationController;   
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubscriptionCronController;
 
 Route::get('/', function (Request $request) {
@@ -61,7 +61,7 @@ Route::post('subscription-payment', 'Api\User\StripeController@afterLoginSubscri
 /** Gracenote API data into db cron code start here */
 Route::get('gracenote-sources-cron', 'GracenoteCron\GracenoteCronController@gracenoteSourcesCron');
 Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronController@gracenoteScheduleProgramCron2');
-  
+
 /** Gracenote API data into db cron code end here */
 
 /** Gracenote channel images optimization cron code start here */
@@ -153,7 +153,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('newconnecteddevice', 'APIController@newconnecteddevice');
 
 
-    
+
     Route::match(['put', 'patch', 'post'], 'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
     Route::get('/homescreenbanner', 'HomescreenBannerController@index'); //piyush banner
@@ -161,11 +161,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('termofuse', 'APIController@termofuse');
     Route::post('addtofavorite/', 'APIController@favoriteChannel');
     Route::post('unfavorite/', 'APIController@unFavoriteChannel');
-    Route::get('my_favorites', 'APIController@myFavorites');  
+    Route::get('my_favorites', 'APIController@myFavorites');
     Route::get('my_recents', 'APIController@myRecents');
     Route::post('addtorecent', 'APIController@addToRecent');
     Route::get('searchall', 'APIController@searchOnPlatform');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
+    Route::get('getdrmkey-roku', 'Admin\BuyDRMController@index2');
     Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
     Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);
 
