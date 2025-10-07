@@ -150,8 +150,8 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.jpg';
                 }
 
                 unset($channel->db_image);
@@ -206,7 +206,7 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
 
 
                 }
@@ -479,7 +479,7 @@ class NewChannelApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
                 }
 
                 unset($channel->db_image);
@@ -655,8 +655,8 @@ class NewChannelApiController extends Controller
 
                 if (strtolower(trim($channel->name)) === 'tv guide') {
                     $channel->name = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.jpg';
                 }
 
 
@@ -795,7 +795,7 @@ class NewChannelApiController extends Controller
                     trim($programs[0]->title ?? '') === 'TV Guide'
                 ) {
                     $stationName = 'FanDuel';
-                    $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+                    $image = env('APP_URL') . '/uploads/fandue.jpg'; // your custom FanDuel logo
                     $programs[0]->title = 'FanDuel'; // Replace title also
                 }
 
@@ -901,7 +901,7 @@ class NewChannelApiController extends Controller
                 $channel->image = $assetData['uri'];
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg'; // your custom FanDuel logo
 
                 }
                 unset($channel->db_image);
@@ -915,7 +915,7 @@ class NewChannelApiController extends Controller
 
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+                    $channel->image = env('APP_URL') . '/uploads/fandue.jpg'; // your custom FanDuel logo
 
                 }
                 unset($channel->db_image);
@@ -953,7 +953,7 @@ class NewChannelApiController extends Controller
                         "duration" => $program->duration,
                         "quals" => $program->quals,
                         "genre" => json_decode($program->genre),
-                        "image" => env('APP_URL') . '/uploads/fandue.png', // your custom FanDuel logo
+                        "image" => env('APP_URL') . '/uploads/fandue.jpg', // your custom FanDuel logo
                         "up_next" => $up_next
                     ];
 
