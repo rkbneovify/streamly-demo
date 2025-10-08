@@ -23,7 +23,12 @@ class SetUserTimezone
             $ip = '1.10.10.0';
         }
         $position = Location::get($ip);
-        Config::set('app.timezone', $position->timezone);
+        if ($position != null) {
+            Config::set('app.timezone', $position->timezone);
+        } else {
+            Config::set('app.timezone', "UTC");
+        }
+
         return $next($request);
     }
 }
