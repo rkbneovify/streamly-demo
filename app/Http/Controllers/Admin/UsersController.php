@@ -1176,12 +1176,12 @@ class UsersController extends Controller
             }
 
 
-            // if ($allSession->total() <= 0) {
-            //     toast('No active device.', 'error')
-            //         ->timerProgressBar()
-            //         ->autoClose(3000);
-            //     return redirect()->back();
-            // }
+            if ($allSession->count() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
 
             // return response()->json(['success' => true, "datalist" => $allSession]);
             return view('admin.users.connected-new', compact('allSession', 'totalRooms'));
