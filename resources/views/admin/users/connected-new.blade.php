@@ -242,9 +242,13 @@
                                     placeholder="Search by device name, platform, zipcode">
                                 <span class="clear-icon" id="btnClear">✖</span>
                             </div>
-                            <span id="selectedCount"></span>
+
+
                         </div>
                         <div class="col">
+                            <a href="javascript:void(0)" id="btn-show-selected">
+                                <h3 id="selected" class="card-title mt-2"></h3>
+                            </a>
                             <div class="row justify-content-end">
                                 <div class="col-md-4 mb-3">
                                     <div class="btn-wrapper">
@@ -256,7 +260,7 @@
                                 <div class="col-md-4 mb-3" id="btnDeleteAll">
                                     <div class="btn-wrapper btn-danger">
                                         <img src="{{ asset('images/trash-red.png') }}" alt="status icon">
-                                        <a href="#" class="btn text-danger">Delete All</a>
+                                        <a href="javascript:void(0)" class="btn text-danger">Delete All</a>
                                     </div>
                                 </div>
                             </div>
@@ -294,40 +298,63 @@
 
         function removeAll() {
             localStorage.removeItem(storageKey);
+            restoreSelectedData();
         }
 
         function restoreSelectedData() {
             let selected = getSelected();
-            // if (selected.length > 0) {
-            //     document.getElementById('selected').textContent = "Selected : " + selected.length;
-            // } else {
-            //     document.getElementById('selected').textContent = "";
-            // }
 
-            const userCheckboxes = document.querySelectorAll('.row-checkbox');
-            userCheckboxes.forEach(checkbox => {
-                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
 
+            $('.row-checkbox').each(function() {
+                $(this).prop('checked', selected.includes($(this).val()));
             });
-
             let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
                 '.row-checkbox').length;
             $('#selectAll').prop('checked', allChecked);
-            allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
-            if ($('.row-checkbox:checked').length) {
-                $('#selectedCount').text("Selected : " + $('.row-checkbox:checked').length)
+
+            // let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+            //     '.row-checkbox').length;
+            // $('#selectAll').prop('checked', allChecked);
+            // allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
+
+            if ($('.row-checkbox:checked').length <= 0) {
+                $('#selected').text("")
+                $('#btnDeleteAll').hide()
             } else {
-                $('#selectedCount').text("")
+                $('#selected').text("Selected : " + $('.row-checkbox:checked').length)
+                if ($('.row-checkbox:checked').length > 1) {
+                    $('#btnDeleteAll').show()
+                } else {
+                    $('#btnDeleteAll').hide()
+                }
+
+
             }
         }
+
+        window.addEventListener("load", () => {
+            const [nav] = performance.getEntriesByType("navigation");
+            const hasParams = window.location.search.length > 0;
+
+            if (nav.type !== "reload" && !hasParams) {
+                removeAll();
+
+            }
+
+
+        });
+
+        $(document).ready(function() {
+            restoreSelectedData();
+        });
     </script>
     <script>
-        restoreSelectedData()
         const txtSearch = document.getElementById("txtSearch");
         const btnClear = document.getElementById("btnClear");
         const selectAllCheckbox = document.getElementById('selectAll');
         const btnDeleteAll = document.getElementById('btnDeleteAll');
         const userCheckboxes = document.querySelectorAll('.row-checkbox');
+
 
 
 
@@ -490,12 +517,10 @@
             }
             fetchData();
         });
-
-        $(document).ready(function() {
-            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                '.row-checkbox').length;
-            $('#selectAll').prop('checked', allChecked);
-            allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
-        })
     </script>
+    @if (session()->pull('remove-all'))
+        <script>
+            removeAll();
+        </script>
+    @endif
 @stop
