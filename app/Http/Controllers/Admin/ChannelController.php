@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ChannelReportExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Svg\Tag\Rect;
 
@@ -33,7 +35,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus', 'bulkAction']]);
+        $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus', 'bulkAction', 'exportChannelReport']]);
     }
     public function index()
     {
@@ -701,5 +703,12 @@ class ChannelController extends Controller
 
         // Output the updated $channelStore array
         return view('admin.channels.channel-store', compact('channelStore'));
+    }
+
+
+    public function exportChannelReport(Request $request, $type)
+    {
+        $filename = 'channels_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+        return Excel::download(new ChannelReportExport($request), $filename);
     }
 }
