@@ -13,6 +13,7 @@ use Stripe\Coupon;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Models\RoleUser;
+use App\Models\Subscription as ModelsSubscription;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -525,10 +526,29 @@ class StripeController extends Controller
     {
         $user = User::find($id);
         $user = JWTAuth::user();
+        DB::beginTransaction();
         try {
-            $user->subscription('main')->skipTrial()->cancelNow();
+            $subscription = ModelsSubscription::where('user_id', $user->id)->first();
+
+            if ($subscription == null) {
+
+                return response()->json([
+                    'response_code' => 404,
+                    "status" => false,
+                    "message" => "Subscription not found"
+                ], 404);
+            }
+            if ($subscription->livemode == 1) {
+                $user->subscription('main')->skipTrial()->cancelNow();
+                $subscription->delete();
+            } else {
+                $subscription->delete();
+            }
+
+            DB::commit();
             return response()->json(['response_code' => 200, 'message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
