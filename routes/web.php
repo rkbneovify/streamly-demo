@@ -196,9 +196,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('channel/status/{id}', 'Admin\ChannelController@changeStatus')->name('channel.status');
     Route::post('channel/bulk/action', 'Admin\ChannelController@bulkAction')->name('channel.bulk.action');
     Route::get('channel/export/{type}', 'Admin\ChannelController@exportChannelReport')->name('channel.report.export');
-    
+
     //Genres
     Route::get('/allgenre', 'Admin\GenreController@index'); //genre
+    Route::get('/allgenre-new', 'Admin\GenreController@index2'); //genre
     Route::get('/addgenre', 'Admin\GenreController@addgenre'); //genre
     Route::post('/creategenre', 'Admin\GenreController@creategenre'); //genre
     Route::get('/deletegenre/{id}', 'Admin\GenreController@deletegenre'); //genre
