@@ -8,6 +8,7 @@ use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 //use App\Traits\ImageUpload;programs
 /**
@@ -82,6 +83,36 @@ class GenreController extends Controller
             return redirect('admin/allgenre')->with('info', 'Genre Deleted Successfully');
         } else {
             return redirect('admin/allgenre')->with('error', 'OOPS! Something Went Wrong.');
+        }
+    }
+
+    public function statusChange($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $genre = Genre::find($id);
+            if ($genre == null) {
+                toast("genre not found !", 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            if ($genre->status == 1) {
+                $genre->status = 0;
+            } else {
+                $genre->status = 1;
+            }
+            $genre->save();
+            DB::commit();
+            toast("Genre status changed successfully", 'success')
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Alert::error('Oop !', $th->getMessage());
+            return redirect()->back();
         }
     }
 }

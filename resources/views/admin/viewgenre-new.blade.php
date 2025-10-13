@@ -96,8 +96,8 @@
                         <tbody>
                             @foreach ($genres as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>
+                                    <td style="vertical-align: middle;">{{ $item->id }}</td>
+                                    <td style="vertical-align: middle;">
                                         <div>
                                             <img src="{{ $item->image }}" alt="{{ $item->name }}"
                                                 style="background:#423f3fef; padding:10px; border-radius:8px; max-width:100px;">
@@ -106,11 +106,11 @@
                                         </div>
                                     </td>
 
-                                    <td>{{ $item->position }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.channel.status', $item->id) }}"
-                                            data-url="{{ route('admin.channel.status', $item->id) }}"
-                                            title="Change channel status" class="btn-user-status">
+                                    <td style="vertical-align: middle;">{{ $item->position }}</td>
+                                    <td style="vertical-align: middle;">
+                                        <a href="{{ route('admin.genre.status', $item->id) }}"
+                                            data-url="{{ route('admin.genre.status', $item->id) }}"
+                                            title="Change genre status" class="btn-user-status">
                                             @if ($item->status == 1)
                                                 <span class="custom-badge badge-active">Active</span>
                                             @else
@@ -118,8 +118,9 @@
                                             @endif
                                         </a>
                                     </td>
-                                    <td>{{ date('d/m/Y', strtotime($item->created_at)) }}</td>
-                                    <td>
+                                    <td style="vertical-align: middle;">{{ date('d/m/Y', strtotime($item->created_at)) }}
+                                    </td>
+                                    <td style="vertical-align: middle;">
                                         <a class="text-danger" href="/admin/deletegenre/{{ $item->id }}"
                                             onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
                                     </td>
@@ -131,4 +132,33 @@
             </div>
         </section>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).on('click', '.btn-user-status', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to change the status?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, change it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+
+
+        });
+    </script>
 @endsection
