@@ -266,6 +266,14 @@
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/export.png') }}" alt="status icon">
+                                <a href="{{ route('admin.channel.report.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                    class="btn-add-user">Export</a>
+                            </div>
+                        </div>
                         <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
@@ -720,7 +728,7 @@
                 removeAll();
 
             }
-           
+
 
         });
     </script>
