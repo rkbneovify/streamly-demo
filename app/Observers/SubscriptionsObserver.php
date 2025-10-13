@@ -44,7 +44,7 @@ class SubscriptionsObserver
      * @param  \App\Subscription  $subscription
      * @return void
      */
-    public function deleted(\Laravel\Cashier\Subscription $subscription)
+    public function deleted(\App\Models\Subscription $subscription)
     {
         //
     }
