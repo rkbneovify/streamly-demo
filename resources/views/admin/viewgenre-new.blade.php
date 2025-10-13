@@ -1,11 +1,42 @@
 @extends('master')
 @section('content')
     <style>
-        .addgenre {
-            float: right;
-            color: white;
-            background-color: blue;
-            border: 2px;
+        .custom-badge {
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 14px;
+            padding: 5px 10px;
+            display: inline-block;
+        }
+
+        .badge-active {
+            color: #578f6d;
+            background-color: #dff5e8;
+        }
+
+        .badge-inactive {
+            color: #cf6773;
+            background-color: #ffebf0;
+        }
+
+        .table thead {
+            background-color: #fafafa;
+        }
+
+        .table thead tr th {
+            font-size: 14px;
+            color: #7d7d7d;
+        }
+
+        .table tbody tr td {
+            font-size: 16px;
+            color: #383838;
+            font-weight: 500;
+
+        }
+
+        .badge-light {
+            background: none;
         }
     </style>
     <div class="content-wrapper">
@@ -57,27 +88,39 @@
                                 <th>Id</th>
                                 <th>Name</th>
                                 <th>Position</th>
+                                <th>Status</th>
                                 <th>Created At</th>
-                                <th>Delete</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($genres as $genre)
+                            @foreach ($genres as $item)
                                 <tr>
-                                    <td>{{ $genre->id }}</td>
+                                    <td>{{ $item->id }}</td>
                                     <td>
                                         <div>
-                                            <img src="{{ $genre->image }}" alt="{{ $genre->name }}"
+                                            <img src="{{ $item->image }}" alt="{{ $item->name }}"
                                                 style="background:#423f3fef; padding:10px; border-radius:8px; max-width:100px;">
                                             <br>
-                                            <b> {{ $genre->name }}</b>
+                                            <b> {{ $item->name }}</b>
                                         </div>
                                     </td>
 
-                                    <td>{{ $genre->position }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($genre->created_at)) }}</td>
+                                    <td>{{ $item->position }}</td>
                                     <td>
-                                        <a href="/admin/deletegenre/{{ $genre->id }}"
+                                        <a href="{{ route('admin.channel.status', $item->id) }}"
+                                            data-url="{{ route('admin.channel.status', $item->id) }}"
+                                            title="Change channel status" class="btn-user-status">
+                                            @if ($item->status == 1)
+                                                <span class="custom-badge badge-active">Active</span>
+                                            @else
+                                                <span class="custom-badge badge-inactive">Inactive</span>
+                                            @endif
+                                        </a>
+                                    </td>
+                                    <td>{{ date('d/m/Y', strtotime($item->created_at)) }}</td>
+                                    <td>
+                                        <a class="text-danger" href="/admin/deletegenre/{{ $item->id }}"
                                             onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
                                     </td>
                                 </tr>

@@ -27,7 +27,6 @@ class GenreController extends Controller
     public function index()
     {
         $genres = DB::table('genre')->get();
-
         return view('admin.viewgenre', compact('genres'));
     }
 
