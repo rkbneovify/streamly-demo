@@ -23,6 +23,7 @@ use App\Models\Genre;
 use App\Models\RecentChannel;
 use App\Models\FrontendText;
 use App\Models\Gracenote;
+use App\Models\Subscription;
 use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -1024,68 +1025,101 @@ class APIController extends Controller
 
     public function userdeletenew(Request $request)
     {
-        $User = JWTAuth::user();
+        DB::beginTransaction();
+        try {
+            $User = JWTAuth::user();
 
-        if ($User) {
-            $UserName = $User['name'];
-            $UserEmail = $User['email'];
-            $id = $User->id;
-            if ($User['is_active'] == 1) {
+            if ($User) {
+                $UserName = $User['name'];
+                $UserEmail = $User['email'];
+                $id = $User->id;
+                if ($User['is_active'] == 1) {
 
-                if ($request->has('password')) {
-                    $credentials = ['email' => $User->email, 'password' => $request->password];
-                    $token = JWTAuth::attempt($credentials);
-                    if (!$token) {
-                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
-                        return response()->json($response, 400);
-                    }
-                    try {
-                        $User->subscription('main')->skipTrial()->cancelNow();
-                    } catch (Exception $e) {
-                        return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);
-                    }
+                    if ($request->has('password')) {
+                        $credentials = ['email' => $User->email, 'password' => $request->password];
+                        $token = JWTAuth::attempt($credentials);
+                        if (!$token) {
+                            DB::rollBack();
+                            $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
+                            return response()->json($response, 400);
+                        }
+                        try {
+                            $subscriptin = Subscription::where('user_id', $User->id)->first();
 
-                    DB::table('users')
-                        ->where('id', $id)
-                        ->update(['is_active' => "0", 'deleted_at' => date('Y-m-d H:i:s')]);
+                            if ($subscriptin == null) {
+                                DB::rollBack();
+                                return response()->json([
+                                    'response_code' => 404,
+                                    "status" => false,
+                                    "message" => "Subscription not found"
+                                ], 404);
+                            }
 
-                    $subscribtionCheck = DB::table('subscriptions')
-                        ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                        ->get();
+                            if ($subscriptin->livemode == 1) {
+                                $User->subscription('main')->skipTrial()->cancelNow();
+                                $subscriptin->delete();
+                            } else {
+                                $subscriptin->delete();
+                            }
 
-                    try {
-
-                        if (count($subscribtionCheck) > 0) {
-                            $User->subscription('main')->skipTrial()->cancelNow();
+                        } catch (Exception $e) {
+                            DB::rollBack();
+                            return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);
                         }
 
-                        DB::table('subscriptions')
+                        DB::table('users')
+                            ->where('id', $id)
+                            ->update(['is_active' => "0", 'deleted_at' => date('Y-m-d H:i:s')]);
+
+                        $subscribtionCheck = DB::table('subscriptions')
                             ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                            ->update(['stripe_status' => "canceled"]);
-                    } catch (Exception $e) {
-                        DB::table('subscriptions')
-                            ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                            ->update(['stripe_status' => "canceled"]);
+                            ->get();
+
+                        try {
+
+                            if (count($subscribtionCheck) > 0) {
+                                $User->subscription('main')->skipTrial()->cancelNow();
+                            }
+
+                            DB::table('subscriptions')
+                                ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                                ->update(['stripe_status' => "canceled"]);
+                        } catch (Exception $e) {
+                            DB::table('subscriptions')
+                                ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                                ->update(['stripe_status' => "canceled"]);
+                        }
+
+
+                        DB::table('session_table')
+                            ->where('users_id', $id)
+                            ->where('status', "1")
+                            ->update(['status' => "0"]);
+                        DB::commit();
+                        $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
+                        return response()->json($response, 200);
+                    } else {
+                        DB::rollBack();
+                        return response()->json(['success' => false, 'response_code' => 400, 'message' => 'password is required to delete'], 400);
                     }
-
-
-                    DB::table('session_table')
-                        ->where('users_id', $id)
-                        ->where('status', "1")
-                        ->update(['status' => "0"]);
-
-                    $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
-                    return response()->json($response, 200);
                 } else {
-                    return response()->json(['success' => false, 'response_code' => 400, 'message' => 'password is required to delete'], 400);
+                    DB::rollBack();
+                    $response = array('status' => false, 'response_code' => 200, 'message' => 'User Already Deleted.');
+                    return response()->json($response, 200);
                 }
             } else {
-                $response = array('status' => false, 'response_code' => 200, 'message' => 'User Already Deleted.');
-                return response()->json($response, 200);
+                DB::rollBack();
+                $response = array('status' => false, 'response_code' => 404, 'message' => 'User not found.');
+                return response()->json($response, 404);
             }
-        } else {
-            $response = array('status' => false, 'response_code' => 404, 'message' => 'User with Id: ' . $id . ' Does Not Exist.', 'UserID' => $id);
-            return response()->json($response, 404);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
+            ], 500);
         }
     }
 
