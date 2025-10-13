@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Subscription as ModelsSubscription;
+
 use DB;
 use Exception;
 use Carbon\Carbon;
@@ -33,7 +33,7 @@ class SubscriptionsObserver
      * @param  \App\Subscription  $subscription
      * @return void
      */
-    public function updated(ModelsSubscription $subscription)
+    public function updated(\Laravel\Cashier\Subscription $subscription)
     {
         //
     }
@@ -44,7 +44,7 @@ class SubscriptionsObserver
      * @param  \App\Subscription  $subscription
      * @return void
      */
-    public function deleted(Subscription $subscription)
+    public function deleted(\Laravel\Cashier\Subscription $subscription)
     {
         //
     }
