@@ -195,13 +195,15 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::put('channelupdate/{id}', 'Admin\ChannelController@update')->name('channelupdate');
     Route::get('channel/status/{id}', 'Admin\ChannelController@changeStatus')->name('channel.status');
     Route::post('channel/bulk/action', 'Admin\ChannelController@bulkAction')->name('channel.bulk.action');
+    Route::get('channel/export/{type}', 'Admin\ChannelController@exportChannelReport')->name('channel.report.export');
 
     //Genres
     Route::get('/allgenre', 'Admin\GenreController@index'); //genre
+    Route::get('/allgenre-new', 'Admin\GenreController@index2'); //genre
     Route::get('/addgenre', 'Admin\GenreController@addgenre'); //genre
     Route::post('/creategenre', 'Admin\GenreController@creategenre'); //genre
     Route::get('/deletegenre/{id}', 'Admin\GenreController@deletegenre'); //genre
-
+    Route::get('/genre/status/{id}', 'Admin\GenreController@statusChange')->name('genre.status');
     // Zipcode Routes
     Route::get('zipcode2', 'Admin\ZipcodeController@index');
     Route::get('zipcode', 'Admin\ZipcodeController@index2');
