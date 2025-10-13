@@ -203,7 +203,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/addgenre', 'Admin\GenreController@addgenre'); //genre
     Route::post('/creategenre', 'Admin\GenreController@creategenre'); //genre
     Route::get('/deletegenre/{id}', 'Admin\GenreController@deletegenre'); //genre
-
+    Route::get('/genre/status/{id}', 'Admin\GenreController@statusChange')->name('genre.status');
     // Zipcode Routes
     Route::get('zipcode2', 'Admin\ZipcodeController@index');
     Route::get('zipcode', 'Admin\ZipcodeController@index2');
