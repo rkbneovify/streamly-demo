@@ -79,7 +79,7 @@
                               <td style="vertical-align: middle;">{{ $item->id }}</td>
                               <td>
                                   <img src="{{ url('/uploads/channellogo') . '/' . $item->image }}" alt="channel logo"
-                                      style="background:#f0f0f0; padding:10px; border-radius:8px; max-width:100px;">
+                                      style="background:#464444; padding:10px; border-radius:8px; max-width:100px;">
 
                                   <br class="mb-2">
                                   <b>{{ $item->stationName ?? ($item->name ?? $item->callSign) }}</b>
