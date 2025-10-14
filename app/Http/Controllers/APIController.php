@@ -1056,10 +1056,17 @@ class APIController extends Controller
                             }
 
                             if ($subscriptin->livemode == 1) {
+
                                 $User->subscription('main')->skipTrial()->cancelNow();
-                                $subscriptin->delete();
+
+                                DB::table('subscriptions')
+                                    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                                    ->update(['stripe_status' => "canceled"]);
                             } else {
-                                $subscriptin->delete();
+                                DB::table('subscriptions')
+                                    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                                    ->update(['stripe_status' => "canceled"]);
+
                             }
 
                         } catch (Exception $e) {
@@ -1071,24 +1078,24 @@ class APIController extends Controller
                             ->where('id', $id)
                             ->update(['is_active' => "0", 'deleted_at' => date('Y-m-d H:i:s')]);
 
-                        $subscribtionCheck = DB::table('subscriptions')
-                            ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                            ->get();
+                        // $subscribtionCheck = DB::table('subscriptions')
+                        //     ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                        //     ->get();
 
-                        try {
+                        // try {
 
-                            if (count($subscribtionCheck) > 0) {
-                                $User->subscription('main')->skipTrial()->cancelNow();
-                            }
+                        //     if (count($subscribtionCheck) > 0) {
+                        //         $User->subscription('main')->skipTrial()->cancelNow();
+                        //     }
 
-                            DB::table('subscriptions')
-                                ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                                ->update(['stripe_status' => "canceled"]);
-                        } catch (Exception $e) {
-                            DB::table('subscriptions')
-                                ->where(['user_id' => $id, 'stripe_status' => 'active'])
-                                ->update(['stripe_status' => "canceled"]);
-                        }
+                        //     DB::table('subscriptions')
+                        //         ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                        //         ->update(['stripe_status' => "canceled"]);
+                        // } catch (Exception $e) {
+                        //     DB::table('subscriptions')
+                        //         ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                        //         ->update(['stripe_status' => "canceled"]);
+                        // }
 
 
                         DB::table('session_table')

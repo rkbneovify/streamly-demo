@@ -540,11 +540,13 @@ class StripeController extends Controller
             }
             if ($subscription->livemode == 1) {
                 $user->subscription('main')->skipTrial()->cancelNow();
-                $subscription->delete();
+                $subscription->stripe_status = "canceled";
+                // $subscription->delete();
             } else {
-                $subscription->delete();
+                // $subscription->delete();
+                $subscription->stripe_status = "canceled";
             }
-
+            $subscription->save();
             DB::commit();
             return response()->json(['response_code' => 200, 'message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
