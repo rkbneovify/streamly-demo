@@ -817,7 +817,9 @@ class UsersController extends Controller
 
 
 
-        $user = User::find($id); //Find the requested role
+        $user = User::where('id', $id)
+            ->with('roles')
+            ->first();
 
 
         //Get the permissions linked to the role
@@ -875,6 +877,7 @@ class UsersController extends Controller
                 $plan = null;
             }
 
+            // return response()->json($user);
             return view('admin.users.show', compact(
                 'user',
                 'channelRule',
