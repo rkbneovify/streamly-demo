@@ -44,13 +44,13 @@ class UsersController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index2()
     {
         $roles = Role::all()->pluck('name', 'id');
 
         return view('admin.users.index', compact('roles'));
     }
-    public function index2(Request $request)
+    public function index(Request $request)
     {
 
         $roles = Role::all()->pluck('name', 'id');
