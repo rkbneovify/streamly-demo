@@ -53,6 +53,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
 
+
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
@@ -84,7 +85,7 @@ class UsersController extends Controller
 
 
 
-        $limit = $request->input('limit', 10);
+
         $query->withCount('rooms');
 
 
@@ -103,9 +104,11 @@ class UsersController extends Controller
             }
 
         } elseif (empty($request->mode)) {
-            $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
-                ->orderByRaw("FIELD(mode, 'Live', 'Testing','Test')");
-
+            $query->where(function ($q) {
+                $q->whereIn('mode', ['Live', 'Testing', 'Test'])
+                    ->orWhereNull('mode');
+            })
+                ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test')");
         }
 
         if (!empty($request->status)) {
@@ -151,7 +154,7 @@ class UsersController extends Controller
         }
 
 
-
+        $limit = $request->input('limit', 10);
         $users = $query->paginate($limit);
 
         if (empty($request->daterange)) {
@@ -817,7 +820,9 @@ class UsersController extends Controller
 
 
 
-        $user = User::find($id); //Find the requested role
+        $user = User::where('id', $id)
+            ->with('roles')
+            ->first();
 
 
         //Get the permissions linked to the role
@@ -875,6 +880,7 @@ class UsersController extends Controller
                 $plan = null;
             }
 
+            // return response()->json($user);
             return view('admin.users.show', compact(
                 'user',
                 'channelRule',
