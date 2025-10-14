@@ -153,6 +153,11 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'FanDuel';
+                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                }
 
                 unset($channel->db_image);
                 unset($channel->assets);
@@ -208,6 +213,12 @@ class NewChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
 
+
+                }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    $channel->image = env('APP_URL') . '/uploads/hall-fam.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/hall-fam.png';
 
                 }
                 unset($channel->db_image);
@@ -663,7 +674,12 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    $channel->image = env('APP_URL') . '/uploads/hall-fam.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/hall-fam.png';
 
+                }
 
                 unset($channel->assets);
                 $channel->type = 'channel';
