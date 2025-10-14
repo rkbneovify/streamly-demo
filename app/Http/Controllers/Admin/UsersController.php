@@ -53,6 +53,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
 
+
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
@@ -84,7 +85,7 @@ class UsersController extends Controller
 
 
 
-        $limit = $request->input('limit', 10);
+
         $query->withCount('rooms');
 
 
@@ -103,9 +104,11 @@ class UsersController extends Controller
             }
 
         } elseif (empty($request->mode)) {
-            $query->whereIn('mode', ['Live', 'Testing', 'Test', null])
-                ->orderByRaw("FIELD(mode, 'Live', 'Testing','Test')");
-
+            $query->where(function ($q) {
+                $q->whereIn('mode', ['Live', 'Testing', 'Test'])
+                    ->orWhereNull('mode');
+            })
+                ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test')");
         }
 
         if (!empty($request->status)) {
@@ -151,7 +154,7 @@ class UsersController extends Controller
         }
 
 
-
+        $limit = $request->input('limit', 10);
         $users = $query->paginate($limit);
 
         if (empty($request->daterange)) {
