@@ -20,4 +20,5 @@ resources/frontend/angular/src/environments/environment.ts
 # to upload channel logo
 !public/uploads/fundue.jpg
 !public/uploads/fundue.png
+!public/uploads/hall-fam.png
  

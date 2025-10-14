@@ -482,6 +482,11 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
 
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    $channel->image = env('APP_URL') . '/uploads/hall-fam.png';
+                }
+
                 unset($channel->db_image);
                 return $channel;
             });
