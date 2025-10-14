@@ -33,7 +33,7 @@ class SubscriptionsObserver
      * @param  \App\Subscription  $subscription
      * @return void
      */
-    public function updated(\Laravel\Cashier\Subscription $subscription)
+    public function updated(\App\Models\Subscription $subscription)
     {
         //
     }
