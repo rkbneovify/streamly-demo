@@ -23,7 +23,7 @@
 
         <!-- Main content -->
         <section class="content">
-            @if ($user->user_type == 'custom')
+            @if ($user->user_type == 'custom' && optional($user->roles)->first()->id !== 5)
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card card-primary">
@@ -202,6 +202,14 @@
                                     <input type="text" class="form-control" value="{{ $plan->nickname ?? 'N/A' }}"
                                         disabled>
                                 </div>
+                                @if (optional($user->roles)->first()->id == 5)
+                                    <div class="form-group">
+                                        <label>Device Limit </label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $currentDeviceCount ?? 'N/A' }}" disabled>
+                                    </div>
+                                @endif
+
                                 <div class="form-group">
                                     <label for="inputZip">Address </label>
                                     <input type="text" class="form-control" value="{{ $user->address ?? 'N/A' }}"
