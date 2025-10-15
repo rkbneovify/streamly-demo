@@ -1683,7 +1683,7 @@ class UsersController extends Controller
                     }
                     DB::commit();
                     toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                    return redirect()->route("admin.users.new.index");
+                    return redirect()->back();
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
