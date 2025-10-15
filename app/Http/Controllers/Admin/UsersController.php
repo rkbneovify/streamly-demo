@@ -103,13 +103,15 @@ class UsersController extends Controller
                 $query->whereIn('mode', ['Testing', 'Test', null]);
             }
 
-        } elseif (empty($request->mode)) {
-            $query->where(function ($q) {
-                $q->whereIn('mode', ['Live', 'Testing', 'Test'])
-                    ->orWhereNull('mode');
-            })
-                ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test')");
         }
+        // elseif (empty($request->mode)) {
+        //     $query->where(function ($q) {
+        //         $q->whereIn('mode', ['Live', 'Testing', 'Test'])
+        //             ->orWhereNull('mode');
+        //     })
+        //         ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test', NULL)");
+
+        // }
 
         if (!empty($request->status)) {
             $status = null;
@@ -1681,7 +1683,7 @@ class UsersController extends Controller
                     }
                     DB::commit();
                     toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                    return redirect()->route("admin.users.new.index");
+                    return redirect()->back();
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
