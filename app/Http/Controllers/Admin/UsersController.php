@@ -103,13 +103,15 @@ class UsersController extends Controller
                 $query->whereIn('mode', ['Testing', 'Test', null]);
             }
 
-        } elseif (empty($request->mode)) {
-            $query->where(function ($q) {
-                $q->whereIn('mode', ['Live', 'Testing', 'Test'])
-                    ->orWhereNull('mode');
-            })
-                ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test')");
         }
+        // elseif (empty($request->mode)) {
+        //     $query->where(function ($q) {
+        //         $q->whereIn('mode', ['Live', 'Testing', 'Test'])
+        //             ->orWhereNull('mode');
+        //     })
+        //         ->orderByRaw("FIELD(mode, 'Live', 'Testing', 'Test', NULL)");
+
+        // }
 
         if (!empty($request->status)) {
             $status = null;
