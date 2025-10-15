@@ -370,6 +370,7 @@ class NewChannelApiController extends Controller
     public function epgGuide(Request $request)
     {
 
+        abort(500);
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
             'day' => 'nullable',
