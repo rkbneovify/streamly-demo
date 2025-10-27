@@ -118,12 +118,10 @@ class GracenoteChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
                 }
                 if ($channel->id == 139) {
-
                     $channel->image = env('APP_URL') . '/uploads/fox-139.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
                 }
                 if ($channel->id == 140) {
-
                     $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
                 }
