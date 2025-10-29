@@ -48,7 +48,7 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 
 /** Angular Frontend APIs code start here */
 
-//Get all stripe plans  
+//Get all stripe plans
 Route::get('/stripe/plans', 'HomeController@getAllPlans');
 Route::get('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
 Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getTierPlan');
@@ -109,6 +109,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('verify-password', 'Auth\UserController@verifyPassword')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
+
+    
 
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
@@ -236,5 +238,5 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whet
 // });
 
 
-// cron subscription table 
+// cron subscription table
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
