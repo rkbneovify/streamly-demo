@@ -234,6 +234,34 @@ class RokuEpgGuideApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam.png';
 
                 }
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
+                }
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
+                }
+                if ($channel->id == 136) {
+                    $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
+                }
+                if ($channel->id == 137) {
+                    $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/abc7-137.png';
+                }
+                if ($channel->id == 138) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
+                }
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
+                }
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+                }
 
                 unset($channel->db_image);
                 return $channel;
