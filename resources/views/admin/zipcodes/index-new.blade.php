@@ -127,6 +127,34 @@ appearance: none;
 background: none;
 }
 </style>
+<style>
+    .input-container {
+        position: relative;
+
+
+    }
+
+    .btn-clear {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 30px;
+        color: #888;
+        display: none;
+    }
+
+    .btn-clear:hover {
+        color: #000;
+    }
+
+    .input-custom {
+
+        padding: 20px 12px;
+    }
+</style>
 @stop
 @section('content')
 
@@ -158,7 +186,40 @@ Add new zipcode
 <!-- Default box -->
 <div class="card">
 <div class="card-header">
+    <div class="row mt-2 px-2">
+
+        <div class="col-md-2 mb-2">
+            <div class="select-wrapper">
+                <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
+                <select name="bulk_action" id="sel_bulk_action" class="select-custom">
+                    <option value="">Bulk Action</option>
+                    <option value="activate">Activate</option>
+                    <option value="inactivate">Inactivate</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="input-conatiner">
+                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                    class="form-control input-custom" placeholder="Search by city, state">
+                <span class="btn-clear" id="btnClear">×</span>
+            </div>
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <div class="select-wrapper">
+                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
+            </div>
+        </div>
+
+    </div>
 <div class="row mt-2 px-2">
+
+
+
 <div class="col-md-2 mb-3">
 <div class="select-wrapper">
 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
@@ -181,6 +242,7 @@ Add new zipcode
 </a>
 
 </div>
+
 
 </div>
 </div>
@@ -260,5 +322,12 @@ url.searchParams.set("limit", $(this).val());
 
 window.location.href = url.toString();
 });
+
+$(document).on('click', '.btn-reset-all', function(e) {
+            e.preventDefault();
+            // removeAll();
+            location.href = "{{ url()->current() }}"
+})
+
 </script>
 @stop
