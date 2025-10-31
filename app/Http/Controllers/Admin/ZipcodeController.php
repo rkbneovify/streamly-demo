@@ -38,6 +38,14 @@ class ZipcodeController extends Controller
         return view('admin.zipcodes.index2');
     }
 
+    public function index3(Request $request){
+        $query = Zipcode::query();
+        $limit = $request->input('limit', 10);
+        $zipcode = $query->paginate($limit);
+        // return response()->json($zipcode);
+        return view('admin.zipcodes.index-new', compact('zipcode'));
+    }
+
     public function allowedZipcodes()
     {
         // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
@@ -46,7 +54,7 @@ class ZipcodeController extends Controller
         return view('admin.zipcodes.allowedzipcode');
     }
 
-    
+
 
     public function localZipcodes()
     {
@@ -74,7 +82,7 @@ class ZipcodeController extends Controller
     {
         $emails = User::select('email')->where('is_active', 1)->get();
         return view('admin.zipcodes.user-zipcode-rule-create', compact('emails'));
-    }  
+    }
 
     public function userZipcodeRuleUpdate(Request $request, $id)
     {
@@ -307,7 +315,7 @@ class ZipcodeController extends Controller
 
         $data_arr = array();
 
-        foreach ($records as $record) {  
+        foreach ($records as $record) {
             $id = $record->id;
             $zipcode = $record->zipcode;
             $city = $record->city;
@@ -650,10 +658,10 @@ class ZipcodeController extends Controller
         $status  = $record->status ?? 1;
 
         // Buttons
-        $toggleButton = "<button class='btn btn-xs " . ($status ? "btn-danger" : "btn-success") . " toggleStatus' data-id='{$id}'>" 
+        $toggleButton = "<button class='btn btn-xs " . ($status ? "btn-danger" : "btn-success") . " toggleStatus' data-id='{$id}'>"
                         . ($status ? "Disable" : "Enable") . "</button>";
 
-        $action = $toggleButton; 
+        $action = $toggleButton;
 
         $data_arr[] = [
             "id"      => $id,
@@ -692,7 +700,7 @@ public function toggleZipcodeStatus(Request $request)
     return response()->json(['success' => true, 'status' => $zipcode->status]);
 }
 
-    
+
 }
 
-     
+
