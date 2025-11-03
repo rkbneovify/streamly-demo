@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\HoaUser;
 use App\HotelRoomTable;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -283,6 +284,30 @@ class AuthController extends Controller
         $deviceDetails = getDeviceIdforAPI($request);
         $passcode = $request->only('passcode');
         $uid = UnHashUserID($passcode['passcode']);
+
+        $hoaUser = HoaUser::where(
+            'passcode',
+            $passcode['passcode']
+        )->first();
+
+        if ($hoaUser != null) {
+            if ($hoaUser->status == 0) {
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
+
+            }
+            // device limit check
+            $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)->where("passcode", $request->passcode)->where("status", 1)->count();
+            if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 402,
+                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
+
+                ], 402);
+            }
+            $uid = $hoaUser->user_id;
+        }
+
         if (!$uid) {
 
             $response = array('success' => false, 'response_code' => 404, 'message' => 'User not found');
