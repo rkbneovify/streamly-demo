@@ -159,18 +159,17 @@ class NewChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                 }
 
-                if ($channel->id == 140) {
 
-                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
                 }
-                if ($channel->id == 139) {
-
-                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
                 }
                 if ($channel->id == 136) {
-
                     $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
                 }
@@ -182,13 +181,13 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
                 }
-                if ($channel->id == 134) {
-                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
                 }
-                if ($channel->id == 135) {
-                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
                 }
 
                 unset($channel->db_image);
@@ -249,10 +248,40 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
-                    $channel->image = env('APP_URL') . '/uploads/hall-fam.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/hall-fam.png';
+                    $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
 
                 }
+
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
+                }
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
+                }
+                if ($channel->id == 136) {
+                    $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
+                }
+                if ($channel->id == 137) {
+                    $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/abc7-137.png';
+                }
+                if ($channel->id == 138) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
+                }
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
+                }
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+                }
+
                 unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
@@ -531,13 +560,13 @@ class NewChannelApiController extends Controller
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                 }
-                if ($channel->id == 140) {
 
-                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
                 }
-                if ($channel->id == 139) {
-
-                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
                 }
                 if ($channel->id == 136) {
 
@@ -549,11 +578,11 @@ class NewChannelApiController extends Controller
                 if ($channel->id == 138) {
                     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
                 }
-                if ($channel->id == 134) {
-                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
                 }
-                if ($channel->id == 135) {
-                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
                 }
 
                 unset($channel->db_image);
@@ -739,18 +768,15 @@ class NewChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
 
                 }
-                if ($channel->id == 140) {
-
-                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
                 }
-                if ($channel->id == 139) {
-
-                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
                 }
                 if ($channel->id == 136) {
-
                     $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
                 }
@@ -762,13 +788,13 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
                 }
-                if ($channel->id == 134) {
-                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
                 }
-                if ($channel->id == 135) {
-                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
                 }
 
                 unset($channel->assets);
@@ -1015,6 +1041,33 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
 
                 }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+
+                }
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                }
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                }
+                if ($channel->id == 136) {
+                    $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                }
+                if ($channel->id == 137) {
+                    $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                }
+                if ($channel->id == 138) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                }
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                }
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                }
+
                 unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
@@ -1029,6 +1082,34 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
 
                 }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+
+                }
+
+                if ($channel->id == 134) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                }
+                if ($channel->id == 135) {
+                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                }
+                if ($channel->id == 136) {
+                    $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                }
+                if ($channel->id == 137) {
+                    $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                }
+                if ($channel->id == 138) {
+                    $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                }
+                if ($channel->id == 139) {
+                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                }
+                if ($channel->id == 140) {
+                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                }
+
                 unset($channel->db_image);
                 unset($channel->assets);
                 unset($channel->genre_ids);
