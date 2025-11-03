@@ -10,6 +10,7 @@ use App\Models\PersonalDevice;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 function checkLoginLimit($user_id, $token, $deviceDetails)
@@ -1946,7 +1947,7 @@ function detectDeviceByUserAgent($userAgent = null): string
         return 'tizen-tv';
     }
     // Android devices
-                                    
+
     if (preg_match('/android/i', $ua)) {
         return 'android';
     }
@@ -2083,6 +2084,22 @@ function getSubscriptionExpireAt($subscription)
     }
 
     return null;
+}
+
+function generatePasscodeForHoa(): string
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $passcode = '';
+    do {
+        for ($i = 0; $i < 10; $i++) {
+            $passcode .= $characters[random_int(0, strlen($characters) - 1)];
+        }
+        $exists = DB::table('hoausers')
+            ->where('passcode', $passcode)
+            ->exists();
+    } while ($exists);
+
+    return $passcode;
 }
 
 
