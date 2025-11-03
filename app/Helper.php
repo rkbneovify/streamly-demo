@@ -1,5 +1,6 @@
 <?php
 
+use App\HoaUser;
 use Carbon\Carbon;
 use App\SessionTable;
 //use Illuminate\Support\Facades\Http;
@@ -788,6 +789,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         $rooms = getActiveHotelRooms($user_id);
         $subscriptionStatus = GetSubscriptionStatusOfUser($user_id);
         $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
+        // $hoaUserHouses = getHousesOfHoaUser($user_id);
         return response()->json([
 
             'success' => true,
@@ -810,6 +812,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'user' => $userInfo,
             'termandcondition' => $termAndCondition,
             'rooms' => $rooms,
+            'houses' => getHoaUserWithDetails($user_id),
+            'hoa_user' => getCurrentHoaUser($user_id),
             'userrole' => $userInfo->roles->pluck('name')[0],
             'subscribed' => $subscriptionStatus,
             'subscribedmsgis' => $kindlysubscribemsg
@@ -1078,6 +1082,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
         $deviceInfoClasses = getBodyClass();
     }
     // dd($deviceInfoClasses);
+
     $date = date('Y-m-d H:i:s');
     $session_tab = new SessionTable();
     $session_tab->users_id = $user_id;
@@ -1088,6 +1093,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->connected_devices = $connected_devices;
     $session_tab->device = $deviceInfoClasses;
     $session_tab->platform = getPlatform($ua, request()->device_title);
+    $session_tab->passcode = request()->passcode ?? null;
     $session_tab->device_title = request()->device_title ?? null;
     $session_tab->device_model = request()->device_model ?? null;
     $session_tab->build_version = request()->build_version ?? null;
@@ -2100,6 +2106,31 @@ function generatePasscodeForHoa(): string
     } while ($exists);
 
     return $passcode;
+}
+
+function getHoaUserWithDetails($userId)
+{
+    $user = User::find($userId);
+    $currentUser = HoaUser::where('user_id', $userId)
+        ->where('passcode', request()->passcode)
+        ->first();
+    $roleId = $user->roles->pluck('id')[0];
+    if ($roleId == 7 && $currentUser == null) {
+        return HoaUser::where('user_id', $userId)->with('session')->get();
+    }
+
+    return [];
+}
+
+function getCurrentHoaUser($userId)
+{
+    $currentUser = HoaUser::where('user_id', $userId)
+        ->where('passcode', request()->passcode)
+        ->with('session')
+        ->first();
+
+
+    return $currentUser;
 }
 
 
