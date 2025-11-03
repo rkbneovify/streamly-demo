@@ -6,6 +6,7 @@ use App\Exports\CustomUserExport;
 use App\Exports\UserExport;
 use App\Exports\UserSessionDeviceExport;
 use App\Exports\UserSessionExport;
+use App\HoaUser;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -489,6 +490,23 @@ class UsersController extends Controller
                 }
                 Log::info("Hotel rooms added: {$quantity} for user {$user->id}");
             }
+
+
+            //  for HOA user
+            if ($request->roles == 7) {
+                $qty = $request->number_of_devices;
+                for ($i = 1; $i <= $qty; $i++) {
+                    $hoa = new HoaUser();
+                    $hoa->user_id = $user->id;
+                    $hoa->serial_no = $i;
+                    $hoa->passcode = generatePasscodeForHoa();
+                    $hoa->device_limit = $request->device_limit ?? 5;
+                    $hoa->save();
+                }
+            }
+
+
+
 
             $verification_code = Crypt::encrypt($user->email);
             $FRONTEND_URL = env('FRONTEND_URL');
