@@ -40,9 +40,22 @@ class ZipcodeController extends Controller
 
     public function index3(Request $request){
         $query = Zipcode::query();
+
+
+        if (!empty($request->search)) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%");
+
+            });
+        }
         $limit = $request->input('limit', 10);
         $zipcode = $query->paginate($limit);
         // return response()->json($zipcode);
+        if($request->ajax()){
+            return view('admin.zipcodes.index-new-table', compact('zipcode'));
+        }
         return view('admin.zipcodes.index-new', compact('zipcode'));
     }
 
