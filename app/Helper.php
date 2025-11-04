@@ -812,8 +812,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'user' => $userInfo,
             'termandcondition' => $termAndCondition,
             'rooms' => $rooms,
-            'houses' => getHoaUserWithDetails($user_id),
-            'hoa_user' => getCurrentHoaUser($user_id),
+            'houses' => HoaUser::getHoaUserWithDetails($user_id),
+            'hoa_user' => HoaUser::getCurrentHoaUser($user_id),
             'userrole' => $userInfo->roles->pluck('name')[0],
             'subscribed' => $subscriptionStatus,
             'subscribedmsgis' => $kindlysubscribemsg
@@ -2092,45 +2092,6 @@ function getSubscriptionExpireAt($subscription)
     return null;
 }
 
-function generatePasscodeForHoa(): string
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $passcode = '';
-    do {
-        for ($i = 0; $i < 10; $i++) {
-            $passcode .= $characters[random_int(0, strlen($characters) - 1)];
-        }
-        $exists = DB::table('hoausers')
-            ->where('passcode', $passcode)
-            ->exists();
-    } while ($exists);
 
-    return $passcode;
-}
-
-function getHoaUserWithDetails($userId)
-{
-    $user = User::find($userId);
-    $currentUser = HoaUser::where('user_id', $userId)
-        ->where('passcode', request()->passcode)
-        ->first();
-    $roleId = $user->roles->pluck('id')[0];
-    if ($roleId == 7 && $currentUser == null) {
-        return HoaUser::where('user_id', $userId)->with('session')->get();
-    }
-
-    return [];
-}
-
-function getCurrentHoaUser($userId)
-{
-    $currentUser = HoaUser::where('user_id', $userId)
-        ->where('passcode', request()->passcode)
-        ->with('session')
-        ->first();
-
-
-    return $currentUser;
-}
 
 

@@ -499,7 +499,7 @@ class UsersController extends Controller
                     $hoa = new HoaUser();
                     $hoa->user_id = $user->id;
                     $hoa->serial_no = $i;
-                    $hoa->passcode = generatePasscodeForHoa();
+                    $hoa->passcode = HoaUser::generatePasscodeForHoa();
                     $hoa->device_limit = $request->device_limit ?? 5;
                     $hoa->save();
                 }
