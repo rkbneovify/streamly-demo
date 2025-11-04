@@ -110,7 +110,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     /** Angular Frontend APIs code ends here */
 
-    
+
 
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
@@ -184,6 +184,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
     /** Channel SLider API */
     Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
+
+    // Hoa Main User APIs
+    Route::group(['prefix' => 'hoa'], function () {
+        Route::put("passcode-regenerate", "Api\ApiHoaController@passcodeRegenerate")->middleware(['jwt.verify']);
+        Route::put("update-details", "Api\ApiHoaController@updateSubUserDetails")->middleware(['jwt.verify']);
+        Route::put("status-change", "Api\ApiHoaController@changeStatus")->middleware(['jwt.verify']);
+        Route::put("update-device-limit", "Api\ApiHoaController@updateDeviceLimit")->middleware(['jwt.verify']);
+    });
 });
 
 Route::post('check-update', 'Api\VersionUpdateController@checkUpdate');
