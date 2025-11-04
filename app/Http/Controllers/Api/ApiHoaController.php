@@ -44,7 +44,8 @@ class ApiHoaController extends Controller
 
         try {
             DB::beginTransaction();
-            $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
+            $newPasscode = HoaUser::generatePasscodeForHoa();
+            $hoaUser->passcode = $newPasscode;
             $hoaUser->save();
 
             $this->removeActiveSessions($request->passcode, $user->id);
@@ -53,7 +54,8 @@ class ApiHoaController extends Controller
             return response()->json([
                 'success' => true,
                 'response_code' => 200,
-                'message' => 'Passcode regenerated successfully !'
+                'message' => 'Passcode regenerated successfully !',
+                'new_passcode' => $newPasscode
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
