@@ -287,10 +287,18 @@ class AuthController extends Controller
 
         $hoaUser = HoaUser::where(
             'passcode',
-            $passcode['passcode']
+            $request->passcode
         )->first();
 
         if ($hoaUser != null) {
+            $user = User::find($hoaUser->user_id);
+            if ($user == null) {
+                return response()->json(['success' => false, 'response_code' => 404, 'message' => 'User not found !'], 401);
+            }
+            if ($user->is_active == 0) {
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin 1.'], 401);
+
+            }
             if ($hoaUser->status == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
 
