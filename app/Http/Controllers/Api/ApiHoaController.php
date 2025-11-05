@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
 use App\SessionTable;
@@ -307,7 +308,7 @@ class ApiHoaController extends Controller
             $user = Auth::user();
 
             $sessions = SessionTable::where('passcode', $request->passcode)
-                ->where('users_id', $user)
+                ->where('users_id', $user->id)
                 ->get();
             if ($sessions->isEmpty()) {
                 return $this->notFoundResponse('Session not found !');
@@ -322,6 +323,59 @@ class ApiHoaController extends Controller
 
             DB::commit();
             return $this->successResponse('All session remove successfully !');
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+
+        }
+
+
+    }
+
+    public function subscriptionPlan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'passcode' => 'required|string|max:255',
+            'duration' => 'required|in:1,3,6,12',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+
+        }
+
+
+
+
+
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+
+            $hoaUser = HoaUser::where('passcode', $request->passcode)
+                ->where('user_id', $user->id)
+                ->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse('User not found !');
+
+            }
+
+
+
+            $hoaSubscription = new HoaSubUserSubscription();
+            $hoaSubscription->user_id = Auth::id();
+            $hoaSubscription->sub_user_id = $hoaUser->id;
+            $hoaSubscription->passcode = $hoaUser->passcode;
+            $hoaSubscription->plan_name = $request->duration . ' Month Plan';
+            $hoaSubscription->plan_start_at = now();
+            $hoaSubscription->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->duration);
+            $hoaSubscription->created_at = now();
+            $hoaSubscription->updated_at = now();
+            $hoaSubscription->save();
+
+
+            DB::commit();
+            return $this->successResponse('Plan Subscribed successfully !');
 
         } catch (\Throwable $th) {
             DB::rollBack();
