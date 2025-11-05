@@ -16,6 +16,38 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ApiHoaController extends Controller
 {
 
+    public function index(Request $request)
+    {
+        try {
+            $perPage = $request->get('per_page', 10);
+            $page = $request->get('page', 1);
+            $user = Auth::user();
+
+            $data = HoaUser::where('user_id', $user->id)
+                ->with('session')
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            return response()->json([
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Data fetched successfully!',
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'response_code' => 500,
+                'message' => "Something went wrong! Please try again later.",
+            ], 500);
+        }
+    }
+
     public function passcodeRegenerate(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -276,27 +308,12 @@ class ApiHoaController extends Controller
 
     }
 
-    public function removeSessionById(Request $request)
+    public function removeSessionById($id)
     {
-        $validator = Validator::make($request->all(), [
-            'session_id' => 'required|numeric',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'response_code' => 422,
-                'message' => 'Validation error !',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-
-
-
 
         try {
             DB::beginTransaction();
-            $session = SessionTable::where('id', $request->session_id)->first();
+            $session = SessionTable::where('id', $id)->first();
 
             if ($session == null) {
                 return response()->json([
@@ -350,23 +367,21 @@ class ApiHoaController extends Controller
 
             $sessions = SessionTable::where('passcode', $request->passcode)
                 ->where('users_id', $user)
-                ->where('status', 1)
-
                 ->get();
-            foreach ($sessions as $session) {
-                JWTAuth::setToken($session->access_token)->invalidate();
-                $session->delete();
-            }
-
-            if ($session == null) {
+            if ($sessions->isEmpty()) {
                 return response()->json([
                     'success' => false,
                     'response_code' => 404,
                     'message' => 'Session not found !'
                 ], 404);
             }
-            JWTAuth::setToken($session->access_token)->invalidate();
-            $session->delete();
+            foreach ($sessions as $session) {
+                JWTAuth::setToken($session->access_token)->invalidate();
+                $session->delete();
+            }
+
+
+
             DB::commit();
             return response()->json([
                 'success' => true,
@@ -379,7 +394,9 @@ class ApiHoaController extends Controller
             return response()->json([
                 'success' => false,
                 'response_code' => 500,
-                'message' => "Something went wrong ! Please try again later."
+                'message' =>
+                    env('APP_DEBUG') ? $th->getMessage() : "Something went wrong ! Please try again later.",
+
             ], 500);
         }
 
