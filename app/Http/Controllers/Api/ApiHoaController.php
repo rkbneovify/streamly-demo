@@ -27,6 +27,7 @@ class ApiHoaController extends Controller
             $user = Auth::user();
             $query = HoaUser::query();
             $query->with('session');
+            $query->withCount('session');
             $query->where('user_id', $user->id);
             $query->when($request->has('q'), function ($q) use ($request) {
                 $q->where('passcode', 'like', '%' . $request->q . '%')
