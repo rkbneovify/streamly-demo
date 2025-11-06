@@ -6,16 +6,12 @@ use Illuminate\Console\Command;
 
 class GitSync extends Command
 {
-    /**
-     * Usage:
-     * php artisan git:sync {branch?} {message?} {--auto : Run all steps automatically (no confirmation prompts)}
-     */
     protected $signature = 'git:sync
-                            {branch? : Branch name (default: newstaging)}
+                            {branch? : Branch name (optional, default is current branch)}
                             {message? : Commit message (required for normal use)}
                             {--auto : Run all steps automatically (no confirmation prompts)}';
 
-    protected $description = 'Commit, stash, pull, pop, and push with merge-conflict detection and an optional --auto flag.';
+    protected $description = 'Commit, stash, pull, pop, and push with merge-conflict detection and optional --auto flag.';
 
     public function handle()
     {
@@ -26,32 +22,33 @@ class GitSync extends Command
         // Smart detection: if only one argument is provided and looks like a message
         if ($branch && !$message && str_contains($branch, ':')) {
             $message = $branch;
-            $branch = 'newstaging';
+            $branch = null; // use current branch
         }
-
-        // Default branch if missing
-        $branch = $branch ?: 'newstaging';
 
         // Help command
         if ($branch === 'help' || $message === 'help') {
             return $this->showHelp();
         }
 
-        // If no commit message is provided, offer push-only behavior
+        // STEP 0️⃣: Determine current branch if none provided
+        if (!$branch) {
+            exec('git rev-parse --abbrev-ref HEAD', $currentBranchOutput);
+            $branch = $currentBranchOutput[0] ?? 'unknown';
+            $this->info("🌿 Using current branch: {$branch}");
+        }
+
+        // If no commit message is provided, do push-only behavior
         if (empty($message)) {
             $this->info("🚀 Checking local commits on branch: {$branch}...");
 
-            // Ensure branch exists and checkout
+            // Ensure branch exists
             exec("git rev-parse --verify {$branch} 2>/dev/null", $output, $branchExists);
             if ($branchExists !== 0) {
-                $this->warn("🌱 Local branch '{$branch}' does not exist. Creating and tracking it from origin...");
-                exec("git fetch origin {$branch}");
-                exec("git checkout -b {$branch} origin/{$branch}");
-            } else {
-                exec("git checkout {$branch}");
+                $this->warn("🌱 Local branch '{$branch}' does not exist. Aborting push check.");
+                return 1;
             }
 
-            // Get local commits not yet pushed
+            // Count local commits not yet pushed
             exec("git log origin/{$branch}..HEAD --oneline", $commits);
             $count = count($commits);
 
@@ -178,15 +175,11 @@ class GitSync extends Command
         $this->line("\n⚙️  Description:");
         $this->line("  Commits local changes (or stashes), pulls latest code, restores stashed work, and pushes to remote.");
         $this->line("\n🔹 Options:");
-        $this->line("  branch     Branch to sync with (default: newstaging)");
+        $this->line("  branch     Branch to sync with (default is current branch)");
         $this->line("  message    Commit message (required for normal workflow)");
         $this->line("  --auto     Run automatically without Y/N prompts");
-        $this->line("\n💡  Examples:");
-        $this->info("  php artisan git:sync \"fix: update routes\"");
-        $this->info("  php artisan git:sync main \"chore: deploy updates\"");
-        $this->info("  php artisan git:sync newstaging \"refactor: improve API\" --auto");
-        $this->line("\n🧠  Notes:");
-        $this->line("  • If no commit message is provided, the command will only check local commits and offer to push them.\n");
+        $this->line("\n💡  Notes:");
+        $this->line("  • If no commit message is provided, the command will check local commits and offer to push only.\n");
         return 0;
     }
 
