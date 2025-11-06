@@ -7,49 +7,39 @@ use Illuminate\Console\Command;
 class GitSync extends Command
 {
     protected $signature = 'git:sync
-                            {branch? : Branch name (optional, default is current branch)}
                             {message? : Commit message (required for normal use)}
                             {--auto : Run all steps automatically (no confirmation prompts)}';
 
-    protected $description = 'Commit, stash, pull, pop, and push with merge-conflict detection and optional --auto flag.';
+    protected $description = 'Commit, stash, pull from newstaging, pop, and push with merge-conflict detection.';
 
     public function handle()
     {
-        $branch = $this->argument('branch');
         $message = $this->argument('message');
         $auto = $this->option('auto');
 
-        // Smart detection: if only one argument is provided and looks like a message
-        if ($branch && !$message && str_contains($branch, ':')) {
-            $message = $branch;
-            $branch = null; // use current branch
+        // Detect current branch
+        exec('git rev-parse --abbrev-ref HEAD', $currentBranchOutput);
+        $currentBranch = $currentBranchOutput[0] ?? null;
+        if (!$currentBranch) {
+            $this->error("❌ Could not detect current branch.");
+            return 1;
         }
+        $this->info("🌿 Current branch: {$currentBranch}");
+
+        // Remote branch to pull from
+        $remoteBranch = 'newstaging';
 
         // Help command
-        if ($branch === 'help' || $message === 'help') {
+        if ($message === 'help') {
             return $this->showHelp();
         }
 
-        // STEP 0️⃣: Determine current branch if none provided
-        if (!$branch) {
-            exec('git rev-parse --abbrev-ref HEAD', $currentBranchOutput);
-            $branch = $currentBranchOutput[0] ?? 'unknown';
-            $this->info("🌿 Using current branch: {$branch}");
-        }
-
-        // If no commit message is provided, do push-only behavior
+        // If no commit message is provided, offer push-only mode
         if (empty($message)) {
-            $this->info("🚀 Checking local commits on branch: {$branch}...");
-
-            // Ensure branch exists
-            exec("git rev-parse --verify {$branch} 2>/dev/null", $output, $branchExists);
-            if ($branchExists !== 0) {
-                $this->warn("🌱 Local branch '{$branch}' does not exist. Aborting push check.");
-                return 1;
-            }
+            $this->info("🚀 Checking local commits on current branch: {$currentBranch}...");
 
             // Count local commits not yet pushed
-            exec("git log origin/{$branch}..HEAD --oneline", $commits);
+            exec("git log origin/{$currentBranch}..HEAD --oneline", $commits);
             $count = count($commits);
 
             if ($count === 0) {
@@ -63,12 +53,10 @@ class GitSync extends Command
             }
 
             // Ask user whether to push
-            if ($this->confirm("\n🚀 Do you want to push these commits to origin/{$branch}?")) {
+            if ($this->confirm("\n🚀 Do you want to push these commits to origin/{$currentBranch}?")) {
                 $this->info("Pushing commits...");
-                exec("git push origin {$branch} 2>&1", $pushOutput, $pushResult);
-                foreach ($pushOutput as $line) {
-                    $this->line($line);
-                }
+                exec("git push origin {$currentBranch} 2>&1", $pushOutput, $pushResult);
+                $this->outputLines($pushOutput);
                 if ($pushResult === 0) {
                     $this->info("✅ Push complete!");
                 } else {
@@ -81,8 +69,7 @@ class GitSync extends Command
             return 0;
         }
 
-        // If commit message exists, proceed with normal commit/stash/pull/pop/push workflow
-        $this->info("🚀 Starting Git sync on branch: {$branch}");
+        $this->info("🚀 Starting Git sync: commit → stash → pull → pop → push");
         if ($auto) {
             $this->warn("⚙️  Running in AUTO mode — all confirmations skipped!");
         }
@@ -95,7 +82,7 @@ class GitSync extends Command
 
         if ($hasChanges) {
             if ($auto || $this->confirm("📦 Local changes found. Commit these changes?")) {
-                $this->info("🔧 Staging and committing...");
+                $this->info("🔧 Staging and committing on {$currentBranch}...");
                 exec('git add .');
                 exec("git commit -m \"$message\"", $commitOutput);
                 $this->outputLines($commitOutput);
@@ -111,11 +98,11 @@ class GitSync extends Command
             $this->warn("⚠️  No local changes to commit or stash.");
         }
 
-        // STEP 2️⃣: Pull latest remote changes
-        if ($auto || $this->confirm("\n🔄 Pull latest changes from origin/{$branch}?")) {
-            $this->info("Fetching updates...");
-            exec("git fetch origin {$branch} 2>&1");
-            exec("git pull origin {$branch} 2>&1", $pullOutput, $pullResult);
+        // STEP 2️⃣: Pull latest changes from newstaging
+        if ($auto || $this->confirm("\n🔄 Pull latest changes from origin/{$remoteBranch}?")) {
+            $this->info("Fetching updates from origin/{$remoteBranch}...");
+            exec("git fetch origin {$remoteBranch} 2>&1");
+            exec("git pull origin {$remoteBranch} 2>&1", $pullOutput, $pullResult);
             $this->outputLines($pullOutput);
 
             if ($pullResult !== 0) {
@@ -124,14 +111,14 @@ class GitSync extends Command
             }
 
             if ($this->hasMergeConflicts()) {
-                $this->error("\n🚨 Merge conflicts detected after pull! Please resolve them manually before continuing.");
+                $this->error("\n🚨 Merge conflicts detected after pull! Resolve them manually.");
                 return 1;
             }
         } else {
             $this->warn("⏩ Skipped pulling remote changes.");
         }
 
-        // STEP 3️⃣: Pop stash
+        // STEP 3️⃣: Pop stash if used
         if ($didStash) {
             if ($auto || $this->confirm("\n📤 Pop (restore) your stashed changes?")) {
                 $this->info("Restoring stashed changes...");
@@ -139,7 +126,7 @@ class GitSync extends Command
                 $this->outputLines($popOutput);
 
                 if ($this->hasMergeConflicts()) {
-                    $this->error("\n🚨 Merge conflicts detected after stash pop! Please resolve them manually before pushing.");
+                    $this->error("\n🚨 Merge conflicts detected after stash pop! Resolve manually before pushing.");
                     return 1;
                 }
             } else {
@@ -147,16 +134,16 @@ class GitSync extends Command
             }
         }
 
-        // STEP 4️⃣: Push to remote
-        if ($auto || $this->confirm("\n🚀 Push updates to origin/{$branch}?")) {
+        // STEP 4️⃣: Push current branch to remote
+        if ($auto || $this->confirm("\n🚀 Push updates to origin/{$currentBranch}?")) {
             $this->info("Pushing changes...");
-            exec("git push origin {$branch} 2>&1", $pushOutput, $pushResult);
+            exec("git push origin {$currentBranch} 2>&1", $pushOutput, $pushResult);
             $this->outputLines($pushOutput);
 
             if ($pushResult === 0) {
-                $this->info("\n✅ Push complete!");
+                $this->info("✅ Push complete!");
             } else {
-                $this->error("\n❌ Push failed!");
+                $this->error("❌ Push failed!");
             }
         } else {
             $this->warn("⏩ Push skipped.");
@@ -171,15 +158,14 @@ class GitSync extends Command
         $this->line("\n📘  GitSync Command Help");
         $this->line(str_repeat('=', 35));
         $this->line("\n🧭  Usage:");
-        $this->info("  php artisan git:sync [branch] \"commit message\" [--auto]");
+        $this->info("  php artisan git:sync \"commit message\" [--auto]");
         $this->line("\n⚙️  Description:");
-        $this->line("  Commits local changes (or stashes), pulls latest code, restores stashed work, and pushes to remote.");
+        $this->line("  Commits local changes on current branch, pulls latest code from newstaging, restores stashed work, and pushes current branch.");
         $this->line("\n🔹 Options:");
-        $this->line("  branch     Branch to sync with (default is current branch)");
         $this->line("  message    Commit message (required for normal workflow)");
         $this->line("  --auto     Run automatically without Y/N prompts");
         $this->line("\n💡  Notes:");
-        $this->line("  • If no commit message is provided, the command will check local commits and offer to push only.\n");
+        $this->line("  • If no commit message is provided, the command will check un-pushed commits on current branch and offer to push only.\n");
         return 0;
     }
 
