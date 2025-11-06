@@ -75,6 +75,8 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\EntrustRole::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'subscribed' => \App\Http\Middleware\Subscribed::class,
+        'hoa.subuser.subscription' => \App\Http\Middleware\HoaSubUserSubscription::class,
+        'hoa.admin.check' => \App\Http\Middleware\HoaAdminCheck::class,
     ];
 
     /**
