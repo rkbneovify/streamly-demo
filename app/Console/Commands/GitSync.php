@@ -23,28 +23,68 @@ class GitSync extends Command
         $message = $this->argument('message');
         $auto = $this->option('auto');
 
-        // 🧭 Smart detection: if only one argument is provided and looks like a message
+        // Smart detection: if only one argument is provided and looks like a message
         if ($branch && !$message && str_contains($branch, ':')) {
             $message = $branch;
             $branch = 'newstaging';
         }
 
-        // 📘 Help command
+        // Default branch if missing
+        $branch = $branch ?: 'newstaging';
+
+        // Help command
         if ($branch === 'help' || $message === 'help') {
             return $this->showHelp();
         }
 
-        // 🧩 Default branch if missing
-        $branch = $branch ?: 'newstaging';
-
-        // ❌ Require commit message
+        // If no commit message is provided, offer push-only behavior
         if (empty($message)) {
-            $this->error("❌ Commit message is required.");
-            $this->line("Usage: php artisan git:sync [branch] \"your commit message\" [--auto]");
-            $this->line("💡 For more info: php artisan git:sync help");
-            return 1;
+            $this->info("🚀 Checking local commits on branch: {$branch}...");
+
+            // Ensure branch exists and checkout
+            exec("git rev-parse --verify {$branch} 2>/dev/null", $output, $branchExists);
+            if ($branchExists !== 0) {
+                $this->warn("🌱 Local branch '{$branch}' does not exist. Creating and tracking it from origin...");
+                exec("git fetch origin {$branch}");
+                exec("git checkout -b {$branch} origin/{$branch}");
+            } else {
+                exec("git checkout {$branch}");
+            }
+
+            // Get local commits not yet pushed
+            exec("git log origin/{$branch}..HEAD --oneline", $commits);
+            $count = count($commits);
+
+            if ($count === 0) {
+                $this->info("✅ No local commits to push.");
+                return 0;
+            }
+
+            $this->info("⚡ {$count} local commit(s) not yet pushed:");
+            foreach ($commits as $line) {
+                $this->line("   • {$line}");
+            }
+
+            // Ask user whether to push
+            if ($this->confirm("\n🚀 Do you want to push these commits to origin/{$branch}?")) {
+                $this->info("Pushing commits...");
+                exec("git push origin {$branch} 2>&1", $pushOutput, $pushResult);
+                foreach ($pushOutput as $line) {
+                    $this->line($line);
+                }
+                if ($pushResult === 0) {
+                    $this->info("✅ Push complete!");
+                } else {
+                    $this->error("❌ Push failed!");
+                }
+            } else {
+                $this->warn("⏩ Push skipped.");
+            }
+
+            return 0;
         }
 
+        // If commit message exists, proceed with normal commit/stash/pull/pop/push workflow
         $this->info("🚀 Starting Git sync on branch: {$branch}");
         if ($auto) {
             $this->warn("⚙️  Running in AUTO mode — all confirmations skipped!");
@@ -129,9 +169,6 @@ class GitSync extends Command
         return 0;
     }
 
-    /**
-     * Prints example usage and options.
-     */
     private function showHelp()
     {
         $this->line("\n📘  GitSync Command Help");
@@ -142,21 +179,17 @@ class GitSync extends Command
         $this->line("  Commits local changes (or stashes), pulls latest code, restores stashed work, and pushes to remote.");
         $this->line("\n🔹 Options:");
         $this->line("  branch     Branch to sync with (default: newstaging)");
-        $this->line("  message    Commit message (required)");
+        $this->line("  message    Commit message (required for normal workflow)");
         $this->line("  --auto     Run automatically without Y/N prompts");
         $this->line("\n💡  Examples:");
         $this->info("  php artisan git:sync \"fix: update routes\"");
         $this->info("  php artisan git:sync main \"chore: deploy updates\"");
         $this->info("  php artisan git:sync newstaging \"refactor: improve API\" --auto");
         $this->line("\n🧠  Notes:");
-        $this->line("  • Detects merge conflicts and stops automatically if found.");
-        $this->line("  • Works interactively or in automated CI/CD mode with --auto.\n");
+        $this->line("  • If no commit message is provided, the command will only check local commits and offer to push them.\n");
         return 0;
     }
 
-    /**
-     * Prints each line of shell output.
-     */
     private function outputLines(array $lines)
     {
         foreach ($lines as $line) {
@@ -164,9 +197,6 @@ class GitSync extends Command
         }
     }
 
-    /**
-     * Detects merge conflicts in working tree.
-     */
     private function hasMergeConflicts(): bool
     {
         exec('git diff --name-only --diff-filter=U', $conflictFiles);
