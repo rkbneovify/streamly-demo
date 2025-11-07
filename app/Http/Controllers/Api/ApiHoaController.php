@@ -193,7 +193,7 @@ class ApiHoaController extends Controller
             return $this->notFoundResponse('Passcode not found !');
 
         }
-
+        $message = $hoaUser->status == 1 ? 'deactivated' : 'activated';
         try {
             DB::beginTransaction();
             if ($hoaUser->status == 1) {
@@ -206,7 +206,7 @@ class ApiHoaController extends Controller
 
 
             DB::commit();
-            return $this->successResponse('User status changed successfully !');
+            return $this->successResponse('Account' . $message . 'suscessfully !');
 
         } catch (\Throwable $th) {
             DB::rollBack();
