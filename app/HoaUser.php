@@ -103,4 +103,14 @@ class HoaUser extends Model
         return $currentUser;
     }
 
+    public static function isHoaMainUser($userId)
+    {
+
+        $mainPasscode = HashUserID($userId);
+        if ($mainPasscode === request()->passcode) {
+            return true;
+        }
+        return false;
+    }
+
 }
