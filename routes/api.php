@@ -96,7 +96,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify', 'subscribed']);
-    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
+    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed', 'hoa.subuser.subscription']);
     Route::post('epg-guide-roku', 'Api\RokuEpgGuideApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
     Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify']);
     Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'subscribed']);
@@ -185,12 +185,17 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 
-    // Hoa Main User APIs
+    // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
-        Route::put("passcode-regenerate", "Api\ApiHoaController@passcodeRegenerate")->middleware(['jwt.verify']);
-        Route::put("update-details", "Api\ApiHoaController@updateSubUserDetails")->middleware(['jwt.verify']);
-        Route::put("status-change", "Api\ApiHoaController@changeStatus")->middleware(['jwt.verify']);
-        Route::put("update-device-limit", "Api\ApiHoaController@updateDeviceLimit")->middleware(['jwt.verify']);
+        Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
+        Route::get("house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::put("passcode-regenerate", "Api\ApiHoaController@passcodeRegenerate")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::put("update-details", "Api\ApiHoaController@updateSubUserDetails")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::put("status-change", "Api\ApiHoaController@changeStatus")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::put("update-device-limit", "Api\ApiHoaController@updateDeviceLimit")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::post("remove-session/{id}", "Api\ApiHoaController@removeSessionById")->middleware(['jwt.verify']);
+        Route::post("remove-all-sessions", "Api\ApiHoaController@removeAllSessions")->middleware(['jwt.verify']);
+        Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
     });
 });
 
