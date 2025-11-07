@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 class GitSync extends Command
 {
+    // Define the command signature and description
     protected $signature = 'git:sync
                             {message? : Commit message (required for normal use)}
                             {--auto : Run all steps automatically (no confirmation prompts)}';
