@@ -395,7 +395,6 @@ class ApiHoaController extends Controller
 
             $sessions = SessionTable::where('passcode', $passcode)
                 ->where('users_id', $userId)
-                ->where('status', 1)
                 ->limit($count)
                 ->get();
             foreach ($sessions as $session) {
@@ -407,7 +406,6 @@ class ApiHoaController extends Controller
         } else {
             $sessions = SessionTable::where('passcode', $passcode)
                 ->where('users_id', $userId)
-                ->where('status', 1)
                 ->get();
             foreach ($sessions as $session) {
                 JWTAuth::setToken($session->access_token)->invalidate();
