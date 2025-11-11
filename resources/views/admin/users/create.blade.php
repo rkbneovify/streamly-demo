@@ -199,6 +199,48 @@
                                     </div>
                                 </div>
 
+                                <div class="" id="housesDiv" style="display: none;">
+                                   <div class="row">
+                                    <div class="col">
+                                        <div class="form-group{{ $errors->has('num_of_devices') ? ' has-error' : '' }}">
+                                            <label for="number_of_devices">Number of Houses</label>
+                                            <div class="device-counter">
+                                                <button type="button" onclick="decreaseHouses()">−</button>
+                                                <input type="text" id="num_of_houses" name="num_of_houses"
+                                                    value="{{ old('num_of_houses', 1) }}">
+                                                <button type="button" onclick="increaseHouses()">+</button>
+                                            </div>
+                                            @if ($errors->has('num_of_houses'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('num_of_houses') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group{{ $errors->has('device_per_unit') ? ' has-error' : '' }}">
+                                            <label for="number_of_devices">Device Per Unit</label>
+                                            <div class="device-counter">
+                                                <button type="button" onclick="decreaseDevicePerUnit()">−</button>
+                                                <input min="1"  max="5" type="number" id="device_per_unit" name="device_per_unit"
+                                                readonly
+                                                    value="{{ old('device_per_unit', 1) }}">
+                                                <button type="button" onclick="increaseDevicePerUnit()">+</button>
+                                            </div>
+                                            @if ($errors->has('device_per_unit'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('device_per_unit') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                   </div>
+
+
+                                </div>
+
 
 
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -434,12 +476,20 @@
         function handleRoleChange() {
             const selectedRole = document.getElementById('roles').value;
             const deviceSection = document.getElementById('deviceSection');
+            const housesDiv = document.getElementById('housesDiv');
 
-            if (selectedRole === '5' || selectedRole === '7') { // role ID for 'tieruser'
+            if (selectedRole === '5') { // role ID for 'tieruser'
                 deviceSection.style.display = 'block';
             } else {
                 deviceSection.style.display = 'none';
                 document.getElementById('number_of_devices').value = 1;
+            }
+
+            if (selectedRole === '7') { // role ID for 'hoa'
+            housesDiv.style.display = 'block';
+            } else {
+                housesDiv.style.display = 'none';
+                document.getElementById('num_of_houses').value = 1;
             }
         }
 
@@ -450,6 +500,33 @@
 
         function decreaseDevices() {
             let input = document.getElementById('number_of_devices');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        function increaseHouses() {
+            let input = document.getElementById('num_of_houses');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decreaseHouses() {
+            let input = document.getElementById('num_of_houses');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        function increaseDevicePerUnit() {
+            let input = document.getElementById('device_per_unit');
+            if (parseInt(input.value) < 5) {
+                input.value = parseInt(input.value) + 1;
+            }
+
+        }
+
+        function decreaseDevicePerUnit() {
+            let input = document.getElementById('device_per_unit');
             if (parseInt(input.value) > 1) {
                 input.value = parseInt(input.value) - 1;
             }
