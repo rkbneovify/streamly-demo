@@ -17,6 +17,9 @@ yarn-error.log
 /public/uploads/channel_slider
 resources/frontend/angular/src/environments/environment.prod.ts
 resources/frontend/angular/src/environments/environment.ts
+
+# Ignore personal artisan cmd file
+/app/Console/Commands/GitSync.php
 # to upload channel logo
 !public/uploads/fundue.jpg
 !public/uploads/fundue.png
