@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -118,6 +119,44 @@ class HoaUser extends Model
             }
         }
         return false;
+    }
+
+    public static function getActiveHousesCount($userId)
+    {
+        return HoaUser::where('user_id', $userId)
+            ->count();
+
+    }
+
+    public static function updateDevice($user, Request $request)
+    {
+
+        $houseCount = ($user->num_of_houses - $request->num_of_houses);
+        $deviceLimitCountPerHouse = ($user->device_per_house - $request->device_per_house);
+
+        $activeHouseCount = HoaUser::where('user_id', $user->id)
+            ->count();
+
+        if ($request->num_of_houses <= $activeHouseCount) {
+            return [
+                'status' => false,
+                'message' => 'Cannot reduce houses below active houses: ' . $activeHouseCount
+            ];
+        }
+
+        if ($houseCount <= 0) {
+
+            $user->num_of_houses = (abs($houseCount) + $user->num_of_houses);
+        }
+
+        if ($activeHouseCount <= 0 && $deviceLimitCountPerHouse <= 0) {
+
+            $user->device_per_house = (abs($deviceLimitCountPerHouse) + $user->device_per_house);
+        }
+
+        $user->save();
+        return null;
+
     }
 
 }

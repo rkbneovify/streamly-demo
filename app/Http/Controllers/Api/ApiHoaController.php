@@ -22,8 +22,14 @@ class ApiHoaController extends Controller
     public function index(Request $request)
     {
         try {
-            $perPage = $request->get('per_page', 10);
-            $page = $request->get('page', 1);
+
+            $perPage = null;
+            $page = null;
+            if ($request->has('page')) {
+                $perPage = $request->get('per_page', 10);
+                $page = $request->get('page', 1);
+
+            }
             $user = Auth::user();
             $query = HoaUser::query();
             $query->with('session');
@@ -35,18 +41,35 @@ class ApiHoaController extends Controller
                     ->orWhere('phone', 'like', '%' . $request->q . '%')
                     ->orWhere('house_no', 'like', '%' . $request->q . '%');
             });
-            $data = $query->paginate($perPage, ['*'], 'page', $page);
+            if ($page == null) {
 
-            return response()->json([
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Data fetched successfully !',
-                'data' => $data->items(),
-                'current_page' => $data->currentPage(),
-                'last_page' => $data->lastPage(),
-                'per_page' => $data->perPage(),
-                'total' => $data->total(),
-            ], 200);
+
+                $data = $query->get();
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 200,
+                    'message' => 'Data fetched successfully !',
+                    'data' => $data,
+
+                ], 200);
+
+
+            } else {
+                $data = $query->paginate($perPage, ['*'], 'page', $page);
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 200,
+                    'message' => 'Data fetched successfully !',
+                    'data' => $data->items(),
+                    'current_page' => $data->currentPage(),
+                    'last_page' => $data->lastPage(),
+                    'per_page' => $data->perPage(),
+                    'total' => $data->total(),
+                ], 200);
+            }
+
+
+
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
