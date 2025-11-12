@@ -225,6 +225,8 @@ class UsersController extends Controller
                 'roles' => 'required|numeric',
                 'plan_duration' => 'required|string',
                 'number_of_devices' => 'nullable|integer|min:1',
+                'num_of_devices' => 'nullable|integer|min:1',
+                'device_per_house' => 'nullable|integer|min:1',
                 'connected_device' => 'required|in:0,1',
                 'channel_availability' => 'required',
 
@@ -337,7 +339,8 @@ class UsersController extends Controller
                 'forced_change' => 1,
                 'mode' => 'Testing',
                 'user_type' => 'custom',
-                'is_custom_user' => 1
+                'is_custom_user' => 1,
+
             ]);
 
             // $user->is_custom_user = 1;
@@ -494,15 +497,19 @@ class UsersController extends Controller
 
             //  for HOA user
             if ($request->roles == 7) {
-                $qty = $request->number_of_devices;
-                for ($i = 1; $i <= $qty; $i++) {
-                    $hoa = new HoaUser();
-                    $hoa->user_id = $user->id;
-                    $hoa->serial_no = $i;
-                    $hoa->passcode = HoaUser::generatePasscodeForHoa();
-                    $hoa->device_limit = $request->device_limit ?? 5;
-                    $hoa->save();
-                }
+                // $qty = $request->num_of_houses;
+                // for ($i = 1; $i <= $qty; $i++) {
+                //     $hoa = new HoaUser();
+                //     $hoa->user_id = $user->id;
+                //     $hoa->serial_no = $i;
+                //     $hoa->passcode = HoaUser::generatePasscodeForHoa();
+                //     $hoa->device_limit = $request->device_per_house;
+                //     $hoa->save();
+                // }
+
+                $user->num_of_houses = $request->num_of_houses;
+                $user->device_per_house = $request->device_per_house;
+                $user->save();
             }
 
 
@@ -549,6 +556,8 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
+
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
@@ -753,6 +762,18 @@ class UsersController extends Controller
                 ]);
         }
 
+        // Hoa update logic
+        if (in_array(7, $request->input('roles'))) {
+
+            $updateStatus = HoaUser::updateDevice($user, $request);
+            if ($updateStatus != null && $updateStatus['status'] === false) {
+                return redirect('admin/users')->with('info', $updateStatus['message']);
+            }
+
+        }
+
+
+
 
         return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
@@ -800,8 +821,11 @@ class UsersController extends Controller
                 $planDuration = '';
             }
         }
+        // Hoa user
+        if ($userRoles && in_array(7, $userRoles)) {
+            $currentDeviceCount = HoaUser::getActiveHousesCount($user->id);
 
-
+        }
         return view('admin.users.edit', compact(
             'user',
             'roles',
