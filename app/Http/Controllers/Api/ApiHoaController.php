@@ -547,6 +547,7 @@ class ApiHoaController extends Controller
                 }
             }
             DB::commit();
+            // 
             $hoaUser = HoaUser::where('id', $request->user_id)
                 ->with('subscriptionLatest')
                 ->first();
