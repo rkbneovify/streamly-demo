@@ -21,9 +21,13 @@ class VerifyHoaSubUserEmail extends Mailable
      */
     public $user;
     public $verificationUrl;
-    public function __construct($user)
+    public $planInMonth;
+    public $amount;
+    public function __construct($user, $planInMonth, $amount)
     {
         $this->user = $user;
+        $this->planInMonth = $planInMonth;
+        $this->amount = $amount;
 
         // Create a signed verification URL
         $this->verificationUrl = URL::temporarySignedRoute(
@@ -32,6 +36,8 @@ class VerifyHoaSubUserEmail extends Mailable
             [
                 'id' => $user->getKey(),
                 'hash' => sha1($user->email),
+                'plan_in_month' => $planInMonth,
+                'amount' => $amount
             ]
         );
     }
@@ -43,7 +49,8 @@ class VerifyHoaSubUserEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.hoa.sub-user-email-verification')
+        return $this->subject('Verify your email address')
+            ->view('emails.hoa.sub-user-email-verification')
             ->with([
                 'user' => $this->user,
                 'verificationUrl' => $this->verificationUrl,
