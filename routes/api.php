@@ -189,6 +189,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
         Route::get("house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::post("add-house", "Api\ApiHoaController@addHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("passcode-regenerate", "Api\ApiHoaController@passcodeRegenerate")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("update-details", "Api\ApiHoaController@updateSubUserDetails")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("status-change", "Api\ApiHoaController@changeStatus")->middleware(['jwt.verify', 'hoa.admin.check']);
