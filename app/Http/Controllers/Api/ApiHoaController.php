@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyHoaSubUserEmail;
 use App\SessionTable;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -74,6 +77,41 @@ class ApiHoaController extends Controller
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
+    }
+
+    public function addHouse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|array',
+            'email.*' => 'required|email|max:225',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->email as $email) {
+                $hoaUser = HoaUser::where('email', $email)->first();
+                if ($hoaUser == null) {
+                    $hoaUser = new HoaUser();
+                    $hoaUser->user_id = auth()->user()->id;
+                    $hoaUser->email = $email;
+                    $hoaUser->save();
+                }
+
+                Mail::to($email)->send(new VerifyHoaSubUserEmail($hoaUser));
+            }
+            DB::commit();
+            return $this->successResponse("House added successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+
+
+
     }
 
     public function subUserDetail(Request $request)
@@ -436,5 +474,29 @@ class ApiHoaController extends Controller
             }
         }
 
+    }
+
+    public function emailVerify($id, $hash, Request $request)
+    {
+
+        $expireTime = Carbon::createFromTimestamp($request->expires);
+        $minutesRemaining = now()->diffInMinutes($expireTime, false);
+
+        if ($minutesRemaining <= 0) {
+            toast("Expired", "error");
+            return redirect('/');
+
+        }
+        $hoaUser = HoaUser::where('id', $id)->first();
+        if ($hoaUser == null) {
+
+        }
+        // return response()->json(
+        //     [
+        //         'id' => $id,
+        //         'hash' => $hash,
+        //         'expires' => $minutesRemaining
+        //     ]
+        // );
     }
 }
