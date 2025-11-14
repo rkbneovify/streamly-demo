@@ -197,7 +197,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("remove-session/{id}", "Api\ApiHoaController@removeSessionById")->middleware(['jwt.verify']);
         Route::post("remove-all-sessions", "Api\ApiHoaController@removeAllSessions")->middleware(['jwt.verify']);
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::post("account-active", "Api\ApiHoaController@accountActive")->middleware(['jwt.verify']);
     });
+});
+
+Route::group(['prefix' => 'hoa/sub-user'], function () {
+    Route::post("account-active", "Api\ApiHoaController@accountActive");
 });
 
 Route::post('check-update', 'Api\VersionUpdateController@checkUpdate');

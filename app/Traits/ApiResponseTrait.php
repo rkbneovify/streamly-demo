@@ -1,6 +1,8 @@
 <?php
 namespace App\Traits;
 
+use Throwable;
+
 trait ApiResponseTrait
 {
 
@@ -24,6 +26,7 @@ trait ApiResponseTrait
             'success' => $success,
             'response_code' => $code,
             'message' => $errorMessage,
+            'line' => $th->getLine(),
         ], $code);
     }
 
@@ -37,13 +40,42 @@ trait ApiResponseTrait
         ], $code);
     }
 
-    public function validationErrorResponse($message = null, $errors, $code = 422, $success = false)
+    public function validationErrorResponse($message = null, $errors = null, $code = 422, $success = false)
     {
+        if ($errors == null) {
+            return response()->json([
+                'success' => $success,
+                'response_code' => $code,
+                'message' => $message ?? 'Validation error !',
+
+
+            ], $code);
+        }
         return response()->json([
             'success' => $success,
             'response_code' => $code,
             'message' => $message ?? 'Validation error !',
             'errors' => $errors,
+
+        ], $code);
+    }
+
+    public function maxlimitExceed($message = null, $code = 429, $success = false)
+    {
+        return response()->json([
+            'success' => $success,
+            'response_code' => $code,
+            'message' => $message ?? 'max limit exceeded',
+
+        ], $code);
+    }
+
+    public function errorResponse($message, $code = 422, $success = false)
+    {
+        return response()->json([
+            'success' => $success,
+            'response_code' => $code,
+            'message' => $message,
 
         ], $code);
     }
