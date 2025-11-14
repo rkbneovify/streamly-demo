@@ -17,12 +17,12 @@ class HoaSubUserWelcome extends Mailable
      * @return void
      */
     public $user;
-    public $supportMail;
+    public $supportEmail;
 
-    public function __construct($user, $supportMail)
+    public function __construct($user, $supportEmail)
     {
         $this->user = $user;
-        $this->supportMail = $supportMail;
+        $this->supportEmail = $supportEmail;
     }
 
     /**
@@ -35,7 +35,7 @@ class HoaSubUserWelcome extends Mailable
         return $this->view('emails.hoa.sub-user-welcome')
             ->with([
                 "user" => $this->user,
-                "suppportEmail" => $this->supportMail
+                "suppportEmail" => $this->supportEmail
             ]);
     }
 }
