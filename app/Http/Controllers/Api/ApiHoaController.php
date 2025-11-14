@@ -5,16 +5,20 @@ namespace App\Http\Controllers\Api;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\HoaSubUserWelcome;
 use App\Mail\VerifyHoaSubUserEmail;
 use App\SessionTable;
 use App\Traits\ApiResponseTrait;
+use App\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -82,8 +86,11 @@ class ApiHoaController extends Controller
     public function addHouse(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|array',
-            'email.*' => 'required|email|max:225',
+            // 'email' => 'required|array',
+            'email' => 'required|email|max:225',
+            'plan_in_month' => 'required|in:1,3,6,12',
+            'amount' => 'nullable|numeric',
+            'device_limit' => 'required|integer'
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
@@ -91,17 +98,26 @@ class ApiHoaController extends Controller
 
         DB::beginTransaction();
         try {
-            foreach ($request->email as $email) {
-                $hoaUser = HoaUser::where('email', $email)->first();
-                if ($hoaUser == null) {
-                    $hoaUser = new HoaUser();
-                    $hoaUser->user_id = auth()->user()->id;
-                    $hoaUser->email = $email;
-                    $hoaUser->save();
-                }
-
-                Mail::to($email)->send(new VerifyHoaSubUserEmail($hoaUser));
+            if (!HoaUser::isHouseAvailable()) {
+                return $this->maxlimitExceed("You have reached the maximum number of houses.");
+            } elseif ($request->device_limit > auth()->user()->device_per_house) {
+                return $this->validationErrorResponse("Per house device limit exceed !");
             }
+
+            $hoaUser = HoaUser::where('email', $request->email)->first();
+            if ($hoaUser == null) {
+                $hoaUser = new HoaUser();
+                $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->email = $request->email;
+                $hoaUser->device_limit = $request->device_limit;
+                $hoaUser->save();
+            } else {
+                $hoaUser->device_limit = $request->device_limit;
+                $hoaUser->email_verified_at = null;
+                $hoaUser->save();
+            }
+
+            Mail::to($request->email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
             DB::commit();
             return $this->successResponse("House added successfully !");
         } catch (\Throwable $th) {
@@ -267,7 +283,7 @@ class ApiHoaController extends Controller
 
 
             DB::commit();
-            return $this->successResponse('Account' . $message . 'suscessfully !');
+            return $this->successResponse('Account ' . $message . ' suscessfully !');
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -476,27 +492,165 @@ class ApiHoaController extends Controller
 
     }
 
+    public function accountActive(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'house_no' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|digits:10',
+            'plan_in_month' => 'required|in:1,3,6,12',
+            'amount' => 'nullable|numeric',
+            'sub_user_id' => 'required|integer',
+            'zipcode' => 'required|integer',
+
+
+
+
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+
+        }
+
+        DB::beginTransaction();
+        try {
+            $hoaUser = HoaUser::where('id', $request->sub_user_id)
+                ->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+            if (!HoaUser::isEmailVerified($hoaUser->id)) {
+                return $this->errorResponse("Please verify your email", 403);
+            }
+            // if ($hoaUser->status == 1) {
+            //     return $this->errorResponse("Account already active.", 403);
+            // }
+            $user = User::where('id', $hoaUser->user_id)->first();
+            if ($user == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+
+            $hoaUser->name = $request->name;
+            $hoaUser->house_no = $request->house_no;
+            $hoaUser->phone = $request->phone;
+            $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
+            $hoaUser->status = 1;
+            $hoaUser->zipcode = $request->zipcode;
+            $hoaUser->save();
+            $subs = HoaSubUserSubscription::where('user_id', $user->id)->where('sub_user_id', $hoaUser->id)->first();
+            if ($subs == null) {
+                $subs = new HoaSubUserSubscription();
+                $subs->user_id = $hoaUser->user_id;
+                $subs->sub_user_id = $hoaUser->id;
+                $subs->passcode = $hoaUser->passcode;
+                $subs->amount = $request->amount;
+                $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                $subs->plan_start_at = now();
+                $subs->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->plan_in_month);
+                $subs->created_at = now();
+                $subs->updated_at = now();
+                $subs->save();
+            }
+
+            DB::commit();
+            $hoaUser = HoaUser::where('id', $request->sub_user_id)
+                ->with('subscriptionLatest')
+                ->first();
+
+            Mail::to($hoaUser->email)
+                ->send(new HoaSubUserWelcome($hoaUser, $user->email));
+
+
+            return $this->successResponse("Account active successfully ! Please check your email for details.");
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+
+            return $this->exceptionResponse($th);
+        }
+
+    }
     public function emailVerify($id, $hash, Request $request)
     {
 
         $expireTime = Carbon::createFromTimestamp($request->expires);
         $minutesRemaining = now()->diffInMinutes($expireTime, false);
 
+
+
         if ($minutesRemaining <= 0) {
-            toast("Expired", "error");
+            toast("Verification link expired. Please contact your admin.", "error")
+                ->autoClose(3000)
+                ->timerProgressBar();
             return redirect('/');
 
         }
-        $hoaUser = HoaUser::where('id', $id)->first();
-        if ($hoaUser == null) {
+        DB::beginTransaction();
+        try {
+            $hoaUser = HoaUser::where('id', $id)->first();
+            if ($hoaUser != null) {
+                if (!hash_equals(sha1($hoaUser->email), $hash)) {
+                    toast("Invalid verification link. Please contact your admin.", "error")
+                        ->autoClose(3000)
+                        ->timerProgressBar();
+                    return redirect('/');
+                }
+            }
 
+            HoaUser::markedEmailVerified($id);
+            // send link to frontend
+            $accountRegisterUrl = URL::temporarySignedRoute(
+                'sub.user.account.register',
+                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                [
+                    'id' => $id,
+                    'hash' => sha1($hoaUser->email),
+                    'plan_in_month' => $request->plan_in_month,
+                    'amount' => $request->amount,
+                ]
+            );
+            DB::commit();
+            return redirect($accountRegisterUrl);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+
+            return response()->json($th->getMessage());
+            toast("Something went wrong please try again later.", "error")
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect('/');
         }
-        // return response()->json(
-        //     [
-        //         'id' => $id,
-        //         'hash' => $hash,
-        //         'expires' => $minutesRemaining
-        //     ]
-        // );
+
+    }
+
+
+    public function accountRegister($id, $hash, Request $request)
+    {
+        $hoaUser = HoaUser::where('id', $id)->first();
+        if ($hoaUser != null) {
+            if (!hash_equals(sha1($hoaUser->email), $hash)) {
+                toast("Invalid verification link. Please contact your admin.", "error")
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect('/');
+            }
+        }
+
+        if (!HoaUser::isEmailVerified($id)) {
+            toast("Email not verified.", "error")
+                ->autoClose(3000)
+                ->timerProgressBar();
+
+            return redirect('/');
+        }
+        return response()->json([
+            "id" => $id,
+            "hash" => $hash,
+            'plan_in_month' => $request->plan_in_month,
+            'amount' => $request->amount,
+            'is_email_verified' => HoaUser::isEmailVerified($id)
+        ]);
     }
 }

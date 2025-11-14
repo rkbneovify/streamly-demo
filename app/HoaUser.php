@@ -16,6 +16,11 @@ class HoaUser extends Model
         return $this->hasMany(SessionTable::class, 'passcode', 'passcode');
     }
 
+    public function subscriptionLatest()
+    {
+        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')->latest();
+    }
+
 
     public function getSubscriptionExpireInAttribute()
     {
@@ -61,6 +66,28 @@ class HoaUser extends Model
         }
 
         return $result ?? 0;
+    }
+
+
+    public static function markedEmailVerified($userId)
+    {
+        $user = HoaUser::where('id', $userId)->first();
+        if ($user != null) {
+            $user->email_verified_at = now();
+            $user->save();
+        }
+    }
+
+    public static function isEmailVerified($userId)
+    {
+        $user = HoaUser::where('id', $userId)
+
+            ->first();
+        if ($user != null && $user->email_verified_at != null) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function generatePasscodeForHoa(): string
@@ -125,6 +152,18 @@ class HoaUser extends Model
     {
         return HoaUser::where('user_id', $userId)
             ->count();
+
+    }
+
+    public static function isHouseAvailable()
+    {
+        $numOfHouses = auth()->user()->num_of_houses;
+        $numOfHousesAssignCount = HoaUser::where('user_id', auth()->user()->id)
+            ->count();
+        if ($numOfHousesAssignCount >= $numOfHouses) {
+            return false;
+        }
+        return true;
 
     }
 
