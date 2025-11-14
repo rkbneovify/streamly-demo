@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Email Verification</title>
+    <title>Welcome </title>
     <style>
         .body {
             padding: 24px;
@@ -43,8 +43,8 @@
             margin-top: 8px;
             padding: 10px 16px;
             border-radius: 6px;
-            background: #0b6efd;
-            color: #fff;
+            background: #ffd75e;
+            color: #000000;
             text-decoration: none;
             font-weight: 600;
         }
@@ -112,10 +112,13 @@
                     <tr>
                         <td>
                             <div class="body">
-                                <p class="lead">Hi Suresh,</p>
+                                <p class="lead">Hi {{ $user->name ?? $user->email }},</p>
                                 <p class="lead">Thank you for subscribing to <strong>Streamly</strong>. Your account
                                     is now active — use the
                                     details below to access your streaming service.</p>
+
+
+
 
                                 <div class="card" role="region" aria-label="Passcode and Streaming Access">
                                     <span class="label">Login Credentials (Passcode Login)</span>
@@ -130,7 +133,7 @@
                                         rel="noopener">Login</a>
                                     <div style="margin-top:10px;" class="muted">Or visit: <a href="{{ url('/') }}"
                                             target="_blank" rel="noopener"
-                                            style="color:#0b6efd; text-decoration:none;">https://streamlytv.com</a>
+                                            style="color:#0b6efd; text-decoration:none;">{{ url('/') }}</a>
                                     </div>
                                 </div>
 
@@ -170,12 +173,13 @@
                                     <span class="label">Support</span>
                                     <div class="muted">If you need assistance, please contact us:</div>
                                     <div style="margin-top:8px;">
-                                        <div><strong>Email:</strong> <a href="mailto:{{ $suppportEmail }}"
-                                                style="color:#0b6efd; text-decoration:none;">{{ $suppportEmail }}</a>
+                                        <div><strong>Email:</strong> <a href="mailto:{{ $supportEmail }}"
+                                                style="color:#0b6efd; text-decoration:none;">{{ $supportEmail }}</a>
                                         </div>
-
+                                        {{-- <div><strong>Helpline:</strong> 1234567890</div> --}}
                                     </div>
                                 </div>
+
                             </div>
                         </td>
                     </tr>
