@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,11 @@ class HoaUser extends Model
     public function session()
     {
         return $this->hasMany(SessionTable::class, 'passcode', 'passcode');
+    }
+
+    public function subscriptionLatest()
+    {
+        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')->latest();
     }
 
 
@@ -60,6 +66,28 @@ class HoaUser extends Model
         }
 
         return $result ?? 0;
+    }
+
+
+    public static function markedEmailVerified($userId)
+    {
+        $user = HoaUser::where('id', $userId)->first();
+        if ($user != null) {
+            $user->email_verified_at = now();
+            $user->save();
+        }
+    }
+
+    public static function isEmailVerified($userId)
+    {
+        $user = HoaUser::where('id', $userId)
+
+            ->first();
+        if ($user != null && $user->email_verified_at != null) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function generatePasscodeForHoa(): string
@@ -118,6 +146,56 @@ class HoaUser extends Model
             }
         }
         return false;
+    }
+
+    public static function getActiveHousesCount($userId)
+    {
+        return HoaUser::where('user_id', $userId)
+            ->count();
+
+    }
+
+    public static function isHouseAvailable()
+    {
+        $numOfHouses = auth()->user()->num_of_houses;
+        $numOfHousesAssignCount = HoaUser::where('user_id', auth()->user()->id)
+            ->count();
+        if ($numOfHousesAssignCount >= $numOfHouses) {
+            return false;
+        }
+        return true;
+
+    }
+
+    public static function updateDevice($user, Request $request)
+    {
+
+        $houseCount = ($user->num_of_houses - $request->num_of_houses);
+        $deviceLimitCountPerHouse = ($user->device_per_house - $request->device_per_house);
+
+        $activeHouseCount = HoaUser::where('user_id', $user->id)
+            ->count();
+
+        if ($request->num_of_houses <= $activeHouseCount) {
+            return [
+                'status' => false,
+                'message' => 'Cannot reduce houses below active houses: ' . $activeHouseCount
+            ];
+        }
+
+        if ($houseCount <= 0) {
+
+            $user->num_of_houses = (abs($houseCount) + $user->num_of_houses);
+        }
+
+        if ($activeHouseCount <= 0 && $deviceLimitCountPerHouse <= 0) {
+
+            $user->device_per_house = (abs($deviceLimitCountPerHouse) + $user->device_per_house);
+        }
+
+        $user->save();
+        return null;
+
     }
 
 }

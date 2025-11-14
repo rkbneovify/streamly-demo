@@ -23,7 +23,7 @@ class HoaAdminCheck
         }
         if ($token != null) {
             $session = SessionTable::where('access_token', $token)->first();
-            if ($session != null) {
+            if ($session != null && $session->passcode != null) {
                 $uid = UnHashUserID($session->passcode);
                 $user = User::where('id', $uid)->first();
                 if ($user == null) {

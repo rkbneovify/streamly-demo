@@ -189,6 +189,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
         Route::get("house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::post("add-house", "Api\ApiHoaController@addHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::delete("delete-house/{id}", "Api\ApiHoaController@deleteHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("passcode-regenerate", "Api\ApiHoaController@passcodeRegenerate")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("update-details", "Api\ApiHoaController@updateSubUserDetails")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::put("status-change", "Api\ApiHoaController@changeStatus")->middleware(['jwt.verify', 'hoa.admin.check']);
@@ -196,7 +198,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("remove-session/{id}", "Api\ApiHoaController@removeSessionById")->middleware(['jwt.verify']);
         Route::post("remove-all-sessions", "Api\ApiHoaController@removeAllSessions")->middleware(['jwt.verify']);
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
+
     });
+});
+
+Route::group(['prefix' => 'hoa/sub-user'], function () {
+    Route::post("account-active", "Api\ApiHoaController@accountActive");
 });
 
 Route::post('check-update', 'Api\VersionUpdateController@checkUpdate');

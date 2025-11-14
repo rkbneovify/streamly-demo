@@ -199,6 +199,50 @@
                                     </div>
                                 </div>
 
+                                {{-- houses calc --}}
+                                <div class="" id="housesDiv" style="display: none;">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group{{ $errors->has('num_of_houses') ? ' has-error' : '' }}">
+                                                <label for="number_of_devices">Number of Houses</label>
+                                                <div class="device-counter">
+                                                    <button type="button" onclick="decreaseHouses()">−</button>
+                                                    <input type="text" id="num_of_houses" name="num_of_houses"
+                                                        value="{{ old('num_of_houses', 1) }}">
+                                                    <button type="button" onclick="increaseHouses()">+</button>
+                                                </div>
+                                                @if ($errors->has('num_of_houses'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('num_of_houses') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col">
+                                            <div
+                                                class="form-group{{ $errors->has('device_per_house') ? ' has-error' : '' }}">
+                                                <label for="number_of_devices">Device Per House</label>
+                                                <div class="device-counter">
+                                                    <button type="button" onclick="decreaseDevicePerUnit()">−</button>
+                                                    <input min="1" type="number" id="device_per_house"
+                                                        name="device_per_house" readonly
+                                                        value="{{ old('device_per_house', 5) }}">
+                                                    <button type="button" onclick="increaseDevicePerUnit()">+</button>
+                                                </div>
+                                                @if ($errors->has('device_per_house'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('device_per_house') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p>Total Devices : <span id="totalDevices"></span> </p>
+
+                                </div>
+
 
 
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -232,7 +276,8 @@
                                     <label for="password" class="col-md-4 control-label">Password</label>
 
 
-                                    <input id="password" type="password" class="form-control" name="password" autofocus>
+                                    <input id="password" type="password" class="form-control" name="password"
+                                        autofocus>
                                     @if ($errors->has('password'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('password') }}</strong>
@@ -434,12 +479,21 @@
         function handleRoleChange() {
             const selectedRole = document.getElementById('roles').value;
             const deviceSection = document.getElementById('deviceSection');
+            const housesDiv = document.getElementById('housesDiv');
 
-            if (selectedRole === '5' || selectedRole === '7') { // role ID for 'tieruser'
+            if (selectedRole === '5') { // role ID for 'tieruser'
                 deviceSection.style.display = 'block';
             } else {
                 deviceSection.style.display = 'none';
                 document.getElementById('number_of_devices').value = 1;
+            }
+
+            if (selectedRole === '7') { // role ID for 'hoa'
+                housesDiv.style.display = 'block';
+                totalDeviceCalc();
+            } else {
+                housesDiv.style.display = 'none';
+                document.getElementById('num_of_houses').value = 1;
             }
         }
 
@@ -455,6 +509,53 @@
             }
         }
 
+        function increaseHouses() {
+            let input = document.getElementById('num_of_houses');
+            input.value = parseInt(input.value) + 1;
+            totalDeviceCalc();
+        }
+
+        function decreaseHouses() {
+            let input = document.getElementById('num_of_houses');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+            totalDeviceCalc();
+        }
+
+        function increaseDevicePerUnit() {
+            let input = document.getElementById('device_per_house');
+            input.value = parseInt(input.value) + 1;
+            totalDeviceCalc();
+
+        }
+
+        function decreaseDevicePerUnit() {
+            let input = document.getElementById('device_per_house');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+            totalDeviceCalc();
+        }
+
+        function totalDeviceCalc() {
+            let devicePerHouse = parseInt(document.getElementById('device_per_house').value);
+            let numOfHouses = parseInt(document.getElementById('num_of_houses').value);
+            if (numOfHouses > 0) {
+                let totalDevices = devicePerHouse * numOfHouses;
+                document.getElementById('totalDevices').innerText = totalDevices;
+            } else {
+                document.getElementById('totalDevices').innerText = 0;
+            }
+
+
+        }
+
+
+        let numOfHouses = document.getElementById('num_of_houses');
+        numOfHouses.addEventListener('input', () => {
+            totalDeviceCalc();
+        });
         document.addEventListener('DOMContentLoaded', function() {
             handleRoleChange();
         });
