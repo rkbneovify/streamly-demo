@@ -130,6 +130,27 @@ class ApiHoaController extends Controller
 
     }
 
+    public function deleteHouse($id)
+    {
+
+        $hoaUser = HoaUser::where('id', $id)->first();
+
+        if ($hoaUser == null) {
+            return $this->notFoundResponse("House not found !");
+        }
+        DB::beginTransaction();
+        try {
+            HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->delete();
+            $hoaUser->delete();
+            DB::commit();
+            return $this->successResponse("House deleted successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function subUserDetail(Request $request)
     {
         $validator = Validator::make($request->all(), [
