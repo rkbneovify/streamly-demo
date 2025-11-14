@@ -104,21 +104,20 @@ class ApiHoaController extends Controller
                 return $this->validationErrorResponse("Per house device limit exceed !");
             }
 
-            foreach ($request->email as $email) {
-                $hoaUser = HoaUser::where('email', $email)->first();
-                if ($hoaUser == null) {
-                    $hoaUser = new HoaUser();
-                    $hoaUser->user_id = auth()->user()->id;
-                    $hoaUser->email = $email;
-                    $hoaUser->device_limit = $request->device_limit;
-                    $hoaUser->save();
-                } else {
-                    $hoaUser->email_verified_at = null;
-                    $hoaUser->save();
-                }
-
-                Mail::to($email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
+            $hoaUser = HoaUser::where('email', $request->email)->first();
+            if ($hoaUser == null) {
+                $hoaUser = new HoaUser();
+                $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->email = $request->email;
+                $hoaUser->device_limit = $request->device_limit;
+                $hoaUser->save();
+            } else {
+                $hoaUser->device_limit = $request->device_limit;
+                $hoaUser->email_verified_at = null;
+                $hoaUser->save();
             }
+
+            Mail::to($request->email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
             DB::commit();
             return $this->successResponse("House added successfully !");
         } catch (\Throwable $th) {
@@ -501,7 +500,8 @@ class ApiHoaController extends Controller
             'phone' => 'required|digits:10',
             'plan_in_month' => 'required|in:1,3,6,12',
             'amount' => 'nullable|numeric',
-            'user_id' => 'required|integer',
+            'sub_user_id' => 'required|integer',
+            'zipcode' => 'required|integer',
 
 
 
@@ -514,55 +514,59 @@ class ApiHoaController extends Controller
 
         DB::beginTransaction();
         try {
-            $hoaUser = HoaUser::where('id', $request->user_id)
+            $hoaUser = HoaUser::where('id', $request->sub_user_id)
                 ->first();
             if ($hoaUser == null) {
                 return $this->notFoundResponse("Data not found !");
             }
-            if ($hoaUser != null) {
-                $user = User::where('id', $hoaUser->user_id)->first();
-                if ($user == null) {
-                    return $this->notFoundResponse("Data not found !");
-                }
-
-                $hoaUser->name = $request->name;
-                $hoaUser->house_no = $request->house_no;
-                $hoaUser->phone = $request->phone;
-                $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
-                $hoaUser->status = 1;
-                $hoaUser->save();
-                $subs = HoaSubUserSubscription::where('user_id', $user->id)->where('sub_user_id', $hoaUser->user_id)->first();
-                if ($subs == null) {
-                    $subs = new HoaSubUserSubscription();
-                    $subs->user_id = $hoaUser->user_id;
-                    $subs->sub_user_id = $hoaUser->id;
-                    $subs->passcode = $hoaUser->passcode;
-                    $subs->amount = $request->amount;
-                    $subs->plan_name = $request->plan_in_month . ' Month Plan';
-                    $subs->plan_start_at = now();
-                    $subs->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->plan_in_month);
-                    $subs->created_at = now();
-                    $subs->updated_at = now();
-                    $subs->save();
-                }
+            if (!HoaUser::isEmailVerified($hoaUser->id)) {
+                return $this->errorResponse("Please verify your email", 403);
             }
+            // if ($hoaUser->status == 1) {
+            //     return $this->errorResponse("Account already active.", 403);
+            // }
+            $user = User::where('id', $hoaUser->user_id)->first();
+            if ($user == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+
+            $hoaUser->name = $request->name;
+            $hoaUser->house_no = $request->house_no;
+            $hoaUser->phone = $request->phone;
+            $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
+            $hoaUser->status = 1;
+            $hoaUser->zipcode = $request->zipcode;
+            $hoaUser->save();
+            $subs = HoaSubUserSubscription::where('user_id', $user->id)->where('sub_user_id', $hoaUser->id)->first();
+            if ($subs == null) {
+                $subs = new HoaSubUserSubscription();
+                $subs->user_id = $hoaUser->user_id;
+                $subs->sub_user_id = $hoaUser->id;
+                $subs->passcode = $hoaUser->passcode;
+                $subs->amount = $request->amount;
+                $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                $subs->plan_start_at = now();
+                $subs->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->plan_in_month);
+                $subs->created_at = now();
+                $subs->updated_at = now();
+                $subs->save();
+            }
+
             DB::commit();
-            // 
-            $hoaUser = HoaUser::where('id', $request->user_id)
+            $hoaUser = HoaUser::where('id', $request->sub_user_id)
                 ->with('subscriptionLatest')
                 ->first();
 
-            if ($hoaUser != null) {
-                Mail::to($hoaUser->email)
-                    ->send(new HoaSubUserWelcome($hoaUser, $user->email));
-            }
+            Mail::to($hoaUser->email)
+                ->send(new HoaSubUserWelcome($hoaUser, $user->email));
 
 
-            return $this->successResponse("Account active successfuly !");
+            return $this->successResponse("Account active successfully ! Please check your email for details.");
 
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
+
             return $this->exceptionResponse($th);
         }
 

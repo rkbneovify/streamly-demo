@@ -23,7 +23,7 @@ class VerifyHoaSubUserEmail extends Mailable
     public $verificationUrl;
     public $planInMonth;
     public $amount;
-    public function __construct($user, $planInMonth, $amount)
+    public function __construct($user, $planInMonth, $amount = null)
     {
         $this->user = $user;
         $this->planInMonth = $planInMonth;
