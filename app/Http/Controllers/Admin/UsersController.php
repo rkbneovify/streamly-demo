@@ -589,16 +589,17 @@ class UsersController extends Controller
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
         $predefinedLocalZipcodes = [
-            "85120",
-            "85215",
-            "85205",
-            "75662",
-            "08872",
-            "08904",
-            "18344",
-            "18438",
-            "18302",
-            "18326"
+            "10005"
+            // "85120",
+            // "85215",
+            // "85205",
+            // "75662",
+            // "08872",
+            // "08904",
+            // "18344",
+            // "18438",
+            // "18302",
+            // "18326"
         ];
         //  channels
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
