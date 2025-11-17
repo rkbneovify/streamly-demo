@@ -638,10 +638,7 @@ class ApiHoaController extends Controller
             DB::rollBack();
 
             return response()->json($th->getMessage());
-            // toast("Something went wrong please try again later.", "error")
-            //     ->autoClose(3000)
-            //     ->timerProgressBar();
-            // return redirect('/');
+
         }
 
     }
