@@ -96,7 +96,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify', 'subscribed']);
-    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed', 'hoa.subuser.subscription']);
+    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
     Route::post('epg-guide-roku', 'Api\RokuEpgGuideApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
     Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify']);
     Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'subscribed']);
