@@ -600,7 +600,7 @@ class UsersController extends Controller
             "18302",
             "18326"
         ];
-
+        //  channels
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
 
         $newZip = $request->zipcode;
