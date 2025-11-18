@@ -588,18 +588,22 @@ class UsersController extends Controller
 
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
+        // $localZipcodes = DB::table('channels')
+        //     ->whereBetween('id', [134, 140])
+        //     ->pluck('zip_code')
+        //     ->toArray();
+
         $predefinedLocalZipcodes = [
-            "10005"
-            // "85120",
-            // "85215",
-            // "85205",
-            // "75662",
-            // "08872",
-            // "08904",
-            // "18344",
-            // "18438",
-            // "18302",
-            // "18326"
+            "85120",
+            "85215",
+            "85205",
+            "75662",
+            "08872",
+            "08904",
+            "18344",
+            "18438",
+            "18302",
+            "18326"
         ];
         //  channels
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
@@ -629,6 +633,7 @@ class UsersController extends Controller
                 'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
             ], 422);
         }
+
 
 
         // 3. Add zip to local channels if needed
