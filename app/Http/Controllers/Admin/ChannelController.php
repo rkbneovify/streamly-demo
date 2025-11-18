@@ -9,6 +9,7 @@ use App\Models\Channel;
 use App\Models\Gracenote;
 use App\Models\Gracenotechannel;
 use App\Models\Genre;
+use App\Models\Zipcode;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
@@ -335,8 +336,20 @@ class ChannelController extends Controller
         }
 
         if ($request->input('zip_codes')) {
-            $zipCodes = explode(',', $request->input('zip_codes'));
-            $input['zip_code'] = $zipCodes;
+            // $zipCodes = explode(',', $request->input('zip_codes'));
+            // $input['zip_code'] = $zipCodes;
+
+            $zipCodes = array_map('trim', explode(',', $request->input('zip_codes')));
+
+            $found = Zipcode::whereIn('zipcode', $zipCodes)->pluck('zipcode')->toArray();
+
+            $notFound = array_diff($zipCodes, $found);
+            if (count($notFound) > 0) {
+                return redirect()->back()->with('error', 'The following zip codes are invalid: ' . implode(', ', $notFound))->withInput();
+            }
+
+            $arrayZipcode = array_map('trim', explode(',', $request->input('zip_codes')));
+            $input['zip_code'] = $arrayZipcode;
         } else {
             $input['zip_code'] = ["All"];
         }
