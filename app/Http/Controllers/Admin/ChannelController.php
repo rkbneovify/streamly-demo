@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\ChannelReportExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\LocalZipcode;
 use App\Models\Channel;
 use App\Models\Gracenote;
 use App\Models\Gracenotechannel;
@@ -306,6 +307,7 @@ class ChannelController extends Controller
     public function update(Request $request, $id)
     {
 
+
         $request->validate([
             'name' => 'required',
             'url' => 'required',
@@ -313,6 +315,8 @@ class ChannelController extends Controller
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $input = $request->only('name', 'stationName', 'url', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
+        $alreadyAvalableZipcodes = Channel::where('id', $id)->first()->zip_code;
+
 
         if ($request->has('stationName')) {
             // Only update stationName if it is present in the request
@@ -339,17 +343,66 @@ class ChannelController extends Controller
             // $zipCodes = explode(',', $request->input('zip_codes'));
             // $input['zip_code'] = $zipCodes;
 
-            $zipCodes = array_map('trim', explode(',', $request->input('zip_codes')));
+            // $zipCodes = array_map('trim', explode(',', $request->input('zip_codes')));
 
-            $found = Zipcode::whereIn('zipcode', $zipCodes)->pluck('zipcode')->toArray();
+            // $found = Zipcode::whereIn('zipcode', $zipCodes)->pluck('zipcode')->toArray();
 
-            $notFound = array_diff($zipCodes, $found);
-            if (count($notFound) > 0) {
-                return redirect()->back()->with('error', 'The following zip codes are invalid: ' . implode(', ', $notFound))->withInput();
+            // $notFound = array_diff($zipCodes, $found);
+            // if (count($notFound) > 0) {
+            //     return redirect()->back()->with('error', 'The following zip codes are invalid: ' . implode(', ', $notFound))->withInput();
+            // }
+            $zipcodeListUpdate = array_map('trim', explode(',', $request->input('zip_codes')));
+            $channelAvalableInLocalzipcode = LocalZipcode::where('channel_id', $id)->first();
+            if ($channelAvalableInLocalzipcode == null) {
+
+                $manageZipcode = Zipcode::whereIn('zipcode', $zipcodeListUpdate)
+                    ->where('status', 1)
+                    ->pluck('zipcode')
+                    ->toArray();
+                $notFoundInManageZipcodes = array_diff($zipcodeListUpdate, $manageZipcode);
+
+
+                if (count($notFoundInManageZipcodes) > 0) {
+                    return redirect()->back()->with('error', 'The following zip codes are not found in our service area: ' . implode(', ', $notFoundInManageZipcodes))->withInput();
+                }
+
+
+            } else {
+                $zipcodeListUpdate = array_map('trim', explode(',', $request->input('zip_codes')));
+                $newZipcodeForChannel = array_diff($zipcodeListUpdate, $alreadyAvalableZipcodes);
+
+                $manageZipcode = Zipcode::whereIn('zipcode', $newZipcodeForChannel)
+                    ->where('status', 1)
+                    ->pluck('zipcode')
+                    ->toArray();
+                $notFoundInManageZipcodes = array_diff($newZipcodeForChannel, $manageZipcode);
+                if (count($notFoundInManageZipcodes) > 0) {
+                    return redirect()->back()->with('error', 'The following zip codes are not found in our service area: ' . implode(', ', $notFoundInManageZipcodes))->withInput();
+                }
+
+            }
+            $manageZipcode = Zipcode::whereIn('zipcode', $manageZipcode)
+                ->where('status', 1)
+                ->get();
+            foreach ($manageZipcode as $item) {
+
+                $localzipcode = new LocalZipcode();
+                $localzipcode->channel_id = $id;
+                $localzipcode->zipcode = $item->zipcode;
+                $localzipcode->city = $item->city;
+                $localzipcode->state = $item->state;
+                $localzipcode->state_abbr = $item->state_abbr;
+                $localzipcode->county_area = $item->county_area;
+                $localzipcode->code = $item->code;
+                $localzipcode->latitude = $item->latitude;
+                $localzipcode->longitude = $item->longitude;
+                $localzipcode->status = 1;
+                $localzipcode->save();
+
+
             }
 
-            $arrayZipcode = array_map('trim', explode(',', $request->input('zip_codes')));
-            $input['zip_code'] = $arrayZipcode;
+            $input['zip_code'] = $zipcodeListUpdate;
         } else {
             $input['zip_code'] = ["All"];
         }
