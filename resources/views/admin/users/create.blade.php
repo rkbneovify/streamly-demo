@@ -811,7 +811,12 @@
             }
         });
     </script>
-
+    <script>
+        const zip = document.getElementById('zipcode');
+        zip.addEventListener('input', () => {
+            zip.value = zip.value.toString().slice(0, 5);
+        });
+    </script>
 
 
 
