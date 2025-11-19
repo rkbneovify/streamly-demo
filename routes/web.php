@@ -217,6 +217,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::delete('/userzipcoderule/delete/{id}', 'Admin\ZipcodeController@userZipcodeRuleDelete')->name('userzipcoderuledelete');
     // Localzipcode
     Route::get('local-zipcode', 'Admin\LocalZipcodeController@index');
+    Route::get('local-zipcode/{zipcode}', 'Admin\LocalZipcodeController@zipcodeWiseChannel')->name('zipcode.local.channel');
+    Route::get('local-zipcode/status/{id}', 'Admin\LocalZipcodeController@changeStatus')->name('zipcode.local.channel.status');
 
 
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
