@@ -247,7 +247,7 @@
                 </div>
 
 
-
+                <!-- table include -->
                 <div id="user-data">
                     @include('admin.zipcodes.local.channel.index-table')
                 </div>
