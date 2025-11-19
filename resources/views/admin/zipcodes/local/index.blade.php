@@ -224,7 +224,7 @@
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control input-custom" placeholder="Search by name, station, callsign">
+                                    class="form-control input-custom" placeholder="Search by zipcode, city, state">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
