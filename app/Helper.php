@@ -812,7 +812,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'user' => $userInfo,
             'termandcondition' => $termAndCondition,
             'rooms' => $rooms,
-            'is_hoa_main_user' => HoaUser::isHoaMainUser(HashUserID($userInfo->id)),
+            'is_hoa_main_user' => HoaUser::isHoaMainUser($user_id),
             'houses' => HoaUser::getHoaUserWithDetails($user_id),
             'hoa_user' => HoaUser::getCurrentHoaUser($user_id),
             'userrole' => $userInfo->roles->pluck('name')[0],

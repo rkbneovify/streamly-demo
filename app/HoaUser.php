@@ -108,47 +108,79 @@ class HoaUser extends Model
 
     public static function getHoaUserWithDetails($userId)
     {
-        $user = User::find($userId);
-        $currentUser = HoaUser::where('user_id', $userId)
-            ->where('passcode', request()->passcode)
-            ->first();
-        $roleId = $user->roles->pluck('id')[0];
-        if ($roleId == 7 && $currentUser == null) {
-            return HoaUser::where('user_id', $userId)->with('session')->get();
+        if (request()->has('passcode')) {
+            $uid = UnHashUserID(request()->passcode);
+            if ($uid == $userId) {
+                return HoaUser::where('user_id', $userId)
+                    ->with('session')
+                    ->get();
+            }
         }
 
+        if (request()->has('email')) {
+            $user = User::where('email', request()->email)->first();
+            if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
+                if ($roleId == 7) {
+                    return HoaUser::where('user_id', $userId)
+                        ->with('session')
+                        ->get();
+                }
+            }
+
+        }
+
+
         return [];
+
+
     }
 
     public static function getCurrentHoaUser($userId)
     {
-        $currentUser = HoaUser::where('user_id', $userId)
+
+
+        if (request()->has('passcode')) {
+            $uid = UnHashUserID(request()->passcode);
+            if ($uid == $userId) {
+                return null;
+            }
+        }
+        return HoaUser::where('user_id', $userId)
             ->where('passcode', request()->passcode)
             ->with('session')
             ->first();
 
 
-        return $currentUser;
     }
 
-    public static function isHoaMainUser($passcode)
+    public static function isHoaMainUser($userId)
     {
 
-        $uid = UnHashUserID($passcode);
-        $user = User::find($uid);
-        $roleId = $user->roles->pluck('id')[0];
-        if ($roleId == 7) {
-            return true;
+
+        if (request()->has('passcode')) {
+            $uid = UnHashUserID(request()->passcode);
+            if ($uid == $userId) {
+                return true;
+            }
         }
 
-        $hoaSubUser = HoaUser::where('passcode', $passcode)
-            ->first();
+        if (request()->has('email')) {
+            $user = User::where('email', request()->email)
+                ->first();
+            if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
 
-        if ($hoaSubUser != null) {
-            return false;
+                if ($roleId == 7) {
+                    return true;
+                }
+            }
+
         }
 
-        return null;
+        return false;
+
+
 
 
 

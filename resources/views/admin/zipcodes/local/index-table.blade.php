@@ -89,8 +89,8 @@
 
 
                               <td>
-                                  <a href="#" title="View Channels">
-                                      View Channels
+                                  <a href="{{ route('admin.zipcode.local.channel', $item->zipcode) }}" title="View">
+                                      View
                                   </a>
                               </td>
 
