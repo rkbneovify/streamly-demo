@@ -120,48 +120,48 @@
 
                             </div>
                             <!-- <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
-                                                                                                                                                                                                                                                                                                                                          <label for="contact" class="col-md-4 control-label">contact</label>
+                                                                                                                                                                                                                                                                                                                                                                                              <label for="contact" class="col-md-4 control-label">contact</label>
 
 
-                                                                                                                                                                                                                                                                                                                                          <input id="contact" type="text" class="form-control" name="contact" value="{{ $user->contact }}"
-                                                                                                                                                                                                                                                                                                                                            autofocus>
+                                                                                                                                                                                                                                                                                                                                                                                              <input id="contact" type="text" class="form-control" name="contact" value="{{ $user->contact }}"
+                                                                                                                                                                                                                                                                                                                                                                                                autofocus>
 
-                                                                                                                                                                                                                                                                                                                                          @if ($errors->has('contact'))
+                                                                                                                                                                                                                                                                                                                                                                                              @if ($errors->has('contact'))
     <span class="help-block">
-                                                                                                                                                                                                                                                                                                                                            <strong>{{ $errors->first('contact') }}</strong>
-                                                                                                                                                                                                                                                                                                                                          </span>
+                                                                                                                                                                                                                                                                                                                                                                                                <strong>{{ $errors->first('contact') }}</strong>
+                                                                                                                                                                                                                                                                                                                                                                                              </span>
     @endif
 
-                                                                                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
                             <!-- <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
-                                                                                                                                                                                                                                                                                                                                          <label for="gender" class="col-md-4 control-label">gender</label>
+                                                                                                                                                                                                                                                                                                                                                                                              <label for="gender" class="col-md-4 control-label">gender</label>
 
 
-                                                                                                                                                                                                                                                                                                                                          <input id="gender" type="text" class="form-control" name="gender" value="{{ $user->gender }}"
-                                                                                                                                                                                                                                                                                                                                            autofocus>
+                                                                                                                                                                                                                                                                                                                                                                                              <input id="gender" type="text" class="form-control" name="gender" value="{{ $user->gender }}"
+                                                                                                                                                                                                                                                                                                                                                                                                autofocus>
 
-                                                                                                                                                                                                                                                                                                                                          @if ($errors->has('gender'))
+                                                                                                                                                                                                                                                                                                                                                                                              @if ($errors->has('gender'))
     <span class="help-block">
-                                                                                                                                                                                                                                                                                                                                            <strong>{{ $errors->first('gender') }}</strong>
-                                                                                                                                                                                                                                                                                                                                          </span>
+                                                                                                                                                                                                                                                                                                                                                                                                <strong>{{ $errors->first('gender') }}</strong>
+                                                                                                                                                                                                                                                                                                                                                                                              </span>
     @endif
 
-                                                                                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
 
                             <!-- <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
-                                                                                                                                                                                                                                                                                                                                          <label for="country" class="col-md-4 control-label">country</label>
+                                                                                                                                                                                                                                                                                                                                                                                              <label for="country" class="col-md-4 control-label">country</label>
 
 
-                                                                                                                                                                                                                                                                                                                                          <input id="country" type="text" class="form-control" name="country" value="{{ $user->country }}"
-                                                                                                                                                                                                                                                                                                                                            autofocus>
+                                                                                                                                                                                                                                                                                                                                                                                              <input id="country" type="text" class="form-control" name="country" value="{{ $user->country }}"
+                                                                                                                                                                                                                                                                                                                                                                                                autofocus>
 
-                                                                                                                                                                                                                                                                                                                                          @if ($errors->has('country'))
+                                                                                                                                                                                                                                                                                                                                                                                              @if ($errors->has('country'))
     <span class="help-block">
-                                                                                                                                                                                                                                                                                                                                            <strong>{{ $errors->first('country') }}</strong>
-                                                                                                                                                                                                                                                                                                                                          </span>
+                                                                                                                                                                                                                                                                                                                                                                                                <strong>{{ $errors->first('country') }}</strong>
+                                                                                                                                                                                                                                                                                                                                                                                              </span>
     @endif
 
-                                                                                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
 
                             <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                                 <label for="city">City</label>
@@ -190,19 +190,19 @@
 
 
                             <!-- <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                                                                                                                                                                                                                                                                                                                                          <label for="address" class="col-md-6 control-label">address</label>
+                                                                                                                                                                                                                                                                                                                                                                                              <label for="address" class="col-md-6 control-label">address</label>
 
 
-                                                                                                                                                                                                                                                                                                                                          <input id="address" type="text" class="form-control" name="address" value="{{ $user->address }}"
-                                                                                                                                                                                                                                                                                                                                            autofocus>
+                                                                                                                                                                                                                                                                                                                                                                                              <input id="address" type="text" class="form-control" name="address" value="{{ $user->address }}"
+                                                                                                                                                                                                                                                                                                                                                                                                autofocus>
 
-                                                                                                                                                                                                                                                                                                                                          @if ($errors->has('address'))
+                                                                                                                                                                                                                                                                                                                                                                                              @if ($errors->has('address'))
     <span class="help-block">
-                                                                                                                                                                                                                                                                                                                                            <strong>{{ $errors->first('address') }}</strong>
-                                                                                                                                                                                                                                                                                                                                          </span>
+                                                                                                                                                                                                                                                                                                                                                                                                <strong>{{ $errors->first('address') }}</strong>
+                                                                                                                                                                                                                                                                                                                                                                                              </span>
     @endif
 
-                                                                                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                 <label for="email" class="col-md-4 control-label">E-Mail</label>
 
@@ -300,7 +300,7 @@
                                         <button type="button" onclick="decreaseDevices()">−</button>
 
                                         <input type="text" id="number_of_devices" name="number_of_devices"
-                                            value="{{ $user->num_of_devices }}">
+                                            value="{{ $user->num_of_devices ?? $currentDeviceCount }}">
 
                                         <button type="button" onclick="increaseDevices()">+</button>
                                     </div>
@@ -429,7 +429,8 @@
                                     <!-- Show All Channels -->
                                     <label
                                         style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                                        <input type="checkbox" name="channel_availability" value=1 class="channel-check"
+                                        <input type="checkbox" name="channel_availability" value="1"
+                                            class="channel-check"
                                             {{ isset($channelRule) && $channelRule->validate == 1 ? 'checked' : '' }}>
                                         Show All Channels
                                     </label>
@@ -437,7 +438,8 @@
                                     <!-- Show Local Channels -->
                                     <label
                                         style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                                        <input type="checkbox" name="channel_availability" value=2 class="channel-check"
+                                        <input type="checkbox" name="channel_availability" value="2"
+                                            class="channel-check"
                                             {{ isset($channelRule) && $channelRule->validate == 2 ? 'checked' : '' }}>
                                         Show Local Channels
                                     </label>
@@ -764,7 +766,10 @@
         }
 
 
-
+        const zip = document.getElementById('zipcode');
+        zip.addEventListener('input', () => {
+            zip.value = zip.value.toString().slice(0, 5);
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('useradd'); // Replace with your form ID
