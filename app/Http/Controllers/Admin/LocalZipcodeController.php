@@ -171,7 +171,7 @@ class LocalZipcodeController extends Controller
         }
     }
 
-     public function changeStatus($id)
+    public function delete($id)
     {
 
 
@@ -190,60 +190,35 @@ class LocalZipcodeController extends Controller
 
 
 
-            if ($localZipcode->status == 1) {
-                $channel = Channel::where('id', $localZipcode->channel_id)
-                    ->whereJsonContains('zip_code', $localZipcode->zipcode)
-                    ->first();
+            $channel = Channel::where('id', $localZipcode->channel_id)
+                ->whereJsonContains('zip_code', $localZipcode->zipcode)
+                ->first();
 
-                if ($channel == null) {
-                    toast('Channel not found', 'error')
-                        ->autoClose(3000)
-                        ->timerProgressBar();
+            if ($channel == null) {
+                toast('Channel not found', 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
 
-                    return redirect()->back();
-                }
-                $channelNewZipcodes = array_filter($channel->zip_code, function ($item) use ($localZipcode) {
-                    return $item !== strval($localZipcode->zipcode);
-                });
-                $channelNewZipcodes = array_values($channelNewZipcodes);
-                $channel->zip_code = $channelNewZipcodes;
-                $channel->save();
-            } else {
-                $channel = Channel::where('id', $localZipcode->channel_id)
-                    ->whereJsonDoesntContain('zip_code', $localZipcode->zipcode)
-                    ->first();
-
-                if ($channel == null) {
-                    toast('Channel not found', 'error')
-                        ->autoClose(3000)
-                        ->timerProgressBar();
-
-                    return redirect()->back();
-                }
-                $channelZipcodes = $channel->zip_code;
-                $channelZipcodes[] = strval($localZipcode->zipcode);
-                $channel->zip_code = $channelZipcodes;
-                $channel->save();
+                return redirect()->back();
             }
-
-
-
-
-
-            $localZipcode->status == 0 ? $localZipcode->status = 1 : $localZipcode->status = 0;
-            $localZipcode->save();
-
-
-
+            $channelNewZipcodes = array_filter($channel->zip_code, function ($item) use ($localZipcode) {
+                return $item !== strval($localZipcode->zipcode);
+            });
+            $channelNewZipcodes = array_values($channelNewZipcodes);
+            $channel->zip_code = $channelNewZipcodes;
+            $channel->save();
 
 
 
 
 
 
+
+
+            $localZipcode->delete();
             DB::commit();
-            $message = $localZipcode->status == 1 ? 'activated' : 'deactivated';
-            toast("Zipcode {$message} successfully", 'success')
+
+            toast("Zipcode delete successfully !", 'success')
 
                 ->autoClose(3000)
                 ->timerProgressBar();
