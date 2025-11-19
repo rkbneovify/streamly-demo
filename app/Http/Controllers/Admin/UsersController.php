@@ -714,11 +714,17 @@ class UsersController extends Controller
 
         // Step 4: Update zipcode rule
         DB::table('user_zipcode_rules')
-            ->where('email', $user->email)
-            ->update([
-                'validate' => $request->channel_availability,
-                'zipcode' => $request->zipcode
-            ]);
+            ->updateOrInsert(
+                ['email' => $user->email],
+                [
+                    'validate' => $request->channel_availability,
+                    'zipcode' => $request->zipcode
+                ]
+            );
+        // ->update([
+        //     'validate' => $request->channel_availability,
+        //     'zipcode' => $request->zipcode
+        // ]);
 
         // Step 5: Calculate subscription end date
         $endsAt = null;
@@ -805,7 +811,7 @@ class UsersController extends Controller
             ->where('email', $user->email)
             ->first();
 
-        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
 
         $planDuration = '';
 
@@ -827,11 +833,18 @@ class UsersController extends Controller
                 $planDuration = '';
             }
         }
+        // tier user
+        if ($userRoles && in_array(5, $userRoles)) {
+            $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
+        }
         // Hoa user
         if ($userRoles && in_array(7, $userRoles)) {
             $currentDeviceCount = HoaUser::getActiveHousesCount($user->id);
 
         }
+
+
         return view('admin.users.edit', compact(
             'user',
             'roles',
