@@ -91,7 +91,7 @@
 
 
                               <td>
-                                  <a class="btn btn-xs btn-danger fs-bold"
+                                  <a class="btn btn-xs btn-danger fs-bold" id="btn-delete-zip"
                                       href="{{ route('admin.zipcode.local.channel.delete', $item->id) }}"
                                       data-url="{{ route('admin.zipcode.local.channel.delete', $item->id) }}">Delete</a>
                               </td>
@@ -114,6 +114,8 @@
                       <tr>
 
                           <th>#</th>
+                          <th>Channel Id</th>
+                          <th>Channel name</th>
                           <th>Zipcode</th>
                           <th>City</th>
                           <th>State</th>
@@ -135,12 +137,12 @@
                                   ]) }}"
                                   class="text-primary ms-1">↑↓</a>
                           </th>
-
+                          <th>Action</th>
                       </tr>
                   </thead>
                   <tbody>
                       <tr>
-                          <td colspan="7" class="text-center">
+                          <td colspan="9" class="text-center">
                               Data not found !
                           </td>
                       </tr>
