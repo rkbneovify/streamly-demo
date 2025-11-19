@@ -134,18 +134,24 @@ class HoaUser extends Model
     public static function isHoaMainUser($passcode)
     {
 
-
-        if ($passcode === request()->passcode) {
+        $uid = UnHashUserID($passcode);
+        $user = User::find($uid);
+        $roleId = $user->roles->pluck('id')[0];
+        if ($roleId == 7) {
             return true;
-        } elseif (request()->passcode == null) {
-            $uid = UnHashUserID($passcode);
-            $user = User::find($uid);
-            if ($user != null) {
-
-                return true;
-            }
         }
-        return false;
+
+        $hoaSubUser = HoaUser::where('passcode', $passcode)
+            ->first();
+
+        if ($hoaSubUser != null) {
+            return false;
+        }
+
+        return null;
+
+
+
     }
 
     public static function getActiveHousesCount($userId)
