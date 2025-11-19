@@ -833,6 +833,8 @@ class UsersController extends Controller
                 $planDuration = '';
             }
         }
+
+        $currentDeviceCount = 0;
         // tier user
         if ($userRoles && in_array(5, $userRoles)) {
             $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
@@ -1743,8 +1745,8 @@ class UsersController extends Controller
                         $session->delete();
                     }
                     DB::commit();
-                    toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                    return redirect()->back();
+                    toast("Session removed successfully !", "success")->timerProgressBar()->autoClose(3000);
+                    return redirect('admin/users');
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
