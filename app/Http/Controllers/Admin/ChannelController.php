@@ -339,18 +339,8 @@ class ChannelController extends Controller
             $input['genres'] = '';
         }
 
-        if ($request->input('zip_codes')) {
-            // $zipCodes = explode(',', $request->input('zip_codes'));
-            // $input['zip_code'] = $zipCodes;
+        if ($request->input('zip_codes') && $request->input('zip_codes') != 'All') {
 
-            // $zipCodes = array_map('trim', explode(',', $request->input('zip_codes')));
-
-            // $found = Zipcode::whereIn('zipcode', $zipCodes)->pluck('zipcode')->toArray();
-
-            // $notFound = array_diff($zipCodes, $found);
-            // if (count($notFound) > 0) {
-            //     return redirect()->back()->with('error', 'The following zip codes are invalid: ' . implode(', ', $notFound))->withInput();
-            // }
             $zipcodeListUpdate = array_map('trim', explode(',', $request->input('zip_codes')));
             $channelAvalableInLocalzipcode = LocalZipcode::where('channel_id', $id)->first();
             if ($channelAvalableInLocalzipcode == null) {
