@@ -37,6 +37,7 @@
                           <th>Zipcode</th>
                           <th>City</th>
                           <th>State</th>
+                          <th>Total CH</th>
                           <th>Status
                               <a href="{{ request()->get('page', 1) > 1
                                   ? request()->url() . '?status=' . (request()->get('status', '1') === '1' ? '0' : '1')
@@ -59,15 +60,15 @@
                       </tr>
                   </thead>
                   <tbody>
-                      @foreach ($zipcodes as $item)
+                      @foreach ($zipcodes as $key => $item)
                           <tr>
 
-                              <td style="vertical-align: middle;">{{ $item->id }}</td>
+                              <td style="vertical-align: middle;">{{ $key + 1 }}</td>
                               <td style="vertical-align: middle;">{{ $item->zipcode }}</td>
 
                               <td style="vertical-align: middle;">{{ $item->city }}</td>
                               <td style="vertical-align: middle;">{{ $item->state }}</td>
-
+                              <td style="vertical-align: middle;">{{ $item->channel_count }}</td>
                               <td style="vertical-align: middle;">
 
                                   @if ($item->status == 1)
@@ -110,37 +111,83 @@
       @else
           <div class="table-responsive">
               <table class="table">
-                  <thead>
-                      <tr>
+                  <table class="table">
+                      <thead>
+                          <tr>
 
-                          <th>#</th>
-                          <th>Zipcode</th>
-                          <th>City</th>
-                          <th>State</th>
-                          <th>Status
-                              <a href="{{ request()->get('page', 1) > 1
-                                  ? request()->url() . '?status=' . (request()->get('status', '1') === '1' ? '0' : '1')
-                                  : request()->fullUrlWithQuery([
-                                      'status' => request()->get('status', '1') === '1' ? '0' : '1',
-                                  ]) }}"
-                                  class="text-primary ms-1">↑↓</a>
+                              <th>#</th>
+                              <th>Zipcode</th>
+                              <th>City</th>
+                              <th>State</th>
+                              <th>Total CH</th>
+                              <th>Status
+                                  <a href="{{ request()->get('page', 1) > 1
+                                      ? request()->url() . '?status=' . (request()->get('status', '1') === '1' ? '0' : '1')
+                                      : request()->fullUrlWithQuery([
+                                          'status' => request()->get('status', '1') === '1' ? '0' : '1',
+                                      ]) }}"
+                                      class="text-primary ms-1">↑↓</a>
 
-                          </th>
+                              </th>
 
-                          <th>Created At
-                              <a href="{{ request()->get('page', 1) > 1
-                                  ? request()->url() . '?created=' . (request()->get('sort_created', 'asc') === 'desc' ? 'asc' : 'desc')
-                                  : request()->fullUrlWithQuery([
-                                      'created' => request()->get('created', 'asc') === 'desc' ? 'asc' : 'desc',
-                                  ]) }}"
-                                  class="text-primary ms-1">↑↓</a>
-                          </th>
-                          <th>Action</th>
-                      </tr>
-                  </thead>
+                              <th>Created At
+                                  <a href="{{ request()->get('page', 1) > 1
+                                      ? request()->url() . '?created=' . (request()->get('sort_created', 'asc') === 'desc' ? 'asc' : 'desc')
+                                      : request()->fullUrlWithQuery([
+                                          'created' => request()->get('created', 'asc') === 'desc' ? 'asc' : 'desc',
+                                      ]) }}"
+                                      class="text-primary ms-1">↑↓</a>
+                              </th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach ($zipcodes as $item)
+                              <tr>
+
+                                  <td style="vertical-align: middle;">{{ $item->id }}</td>
+                                  <td style="vertical-align: middle;">{{ $item->zipcode }}</td>
+
+                                  <td style="vertical-align: middle;">{{ $item->city }}</td>
+                                  <td style="vertical-align: middle;">{{ $item->state }}</td>
+                                  <td style="vertical-align: middle;">{{ $item->channel_count }}</td>
+                                  <td style="vertical-align: middle;">
+
+                                      @if ($item->status == 1)
+                                          <a href="{{ route('admin.zipcode.local.channel.disable', $item->zipcode) }}"
+                                              data-url="{{ route('admin.zipcode.local.channel.disable', $item->zipcode) }}"
+                                              title="Change channel status" class="btn-user-status">
+                                              <span class="custom-badge badge-active">Active</span>
+                                          </a>
+                                      @else
+                                          <a href="{{ route('admin.zipcode.local.channel.enable', $item->zipcode) }}"
+                                              data-url="{{ route('admin.zipcode.local.channel.enable', $item->zipcode) }}"
+                                              title="Change channel status" class="btn-user-status">
+                                              <span class="custom-badge badge-inactive">Inactive</span>
+                                          </a>
+                                      @endif
+
+                                  </td>
+
+                                  <td style="vertical-align: middle;">{{ date('d/m/Y', strtotime($item->created_at)) }}
+                                  </td>
+
+
+                                  <td>
+                                      <a href="{{ route('admin.zipcode.local.channel', $item->zipcode) }}"
+                                          title="View">
+                                          View
+                                      </a>
+                                  </td>
+
+
+                              </tr>
+                          @endforeach
+                      </tbody>
+                  </table>
                   <tbody>
                       <tr>
-                          <td colspan="7" class="text-center">
+                          <td colspan="8" class="text-center">
                               Data not found !
                           </td>
                       </tr>
