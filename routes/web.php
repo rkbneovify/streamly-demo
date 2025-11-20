@@ -181,8 +181,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create'); //channels Statust
-
-    Route::get('/channelstatus', 'Admin\ChannelController@index'); //channel
+    Route::get('/channelstatus', 'Admin\ChannelController@index3');
+    // Route::get('/channelstatus', 'Admin\ChannelController@index'); //channel
     Route::get('/channel-new', 'Admin\ChannelController@index3'); //channel
     Route::get('/channelstore', 'Admin\ChannelController@channelStore'); //channel Store
 
@@ -218,8 +218,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Localzipcode
     Route::get('local-zipcode', 'Admin\LocalZipcodeController@index');
     Route::get('local-zipcode/{zipcode}', 'Admin\LocalZipcodeController@zipcodeWiseChannel')->name('zipcode.local.channel');
+    Route::get('local-zipcode/add/{zipcode}/{channelId}', 'Admin\LocalZipcodeController@addZipcodeToChannel')->name('zipcode.add.local.channel');
     Route::get('local-zipcode/status/{id}', 'Admin\LocalZipcodeController@changeStatus')->name('zipcode.local.channel.status');
     Route::get('local-zipcode/delete/{id}', 'Admin\LocalZipcodeController@delete')->name('zipcode.local.channel.delete');
+    Route::get('local-zipcode/disable/{zipcode}', 'Admin\LocalZipcodeController@statusDisableForAllLocalChannel')->name('zipcode.local.channel.disable');
+    Route::get('local-zipcode/enable/{zipcode}', 'Admin\LocalZipcodeController@statusEnableForAllLocalChannel')->name('zipcode.local.channel.enable');
 
 
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');

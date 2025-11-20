@@ -91,7 +91,8 @@ class ChannelController extends Controller
         // search 
         $query->when($request->search, function ($q, $search) {
             $q->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('id', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhere('stationName', 'like', "%{$search}%")
                     ->orWhere('callSign', 'like', "%{$search}%");
             });
@@ -315,7 +316,7 @@ class ChannelController extends Controller
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $input = $request->only('name', 'stationName', 'url', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
-        $alreadyAvalableZipcodes = Channel::where('id', $id)->first()->zip_code;
+        $alreadyAvalableZipcodes = array_unique(Channel::where('id', $id)->first()->zip_code);
 
 
         if ($request->has('stationName')) {
@@ -341,7 +342,8 @@ class ChannelController extends Controller
 
         if ($request->input('zip_codes') && $request->input('zip_codes') != 'All') {
 
-            $zipcodeListUpdate = array_map('trim', explode(',', $request->input('zip_codes')));
+            $zipcodeListUpdate = array_unique(array_map('trim', explode(',', $request->input('zip_codes'))));
+
             $channelAvalableInLocalzipcode = LocalZipcode::where('channel_id', $id)->first();
             if ($channelAvalableInLocalzipcode == null) {
 
@@ -352,13 +354,14 @@ class ChannelController extends Controller
                 $notFoundInManageZipcodes = array_diff($zipcodeListUpdate, $manageZipcode);
 
 
+
                 if (count($notFoundInManageZipcodes) > 0) {
                     return redirect()->back()->with('error', 'The following zip codes are not found in our service area: ' . implode(', ', $notFoundInManageZipcodes))->withInput();
                 }
 
 
             } else {
-                $zipcodeListUpdate = array_map('trim', explode(',', $request->input('zip_codes')));
+                $zipcodeListUpdate = array_unique(array_map('trim', explode(',', $request->input('zip_codes'))));
                 $newZipcodeForChannel = array_diff($zipcodeListUpdate, $alreadyAvalableZipcodes);
 
                 $manageZipcode = Zipcode::whereIn('zipcode', $newZipcodeForChannel)
@@ -371,10 +374,10 @@ class ChannelController extends Controller
                 }
 
             }
-            $manageZipcode = Zipcode::whereIn('zipcode', $manageZipcode)
+            $newManageZipcode = Zipcode::whereIn('zipcode', $manageZipcode)
                 ->where('status', 1)
                 ->get();
-            foreach ($manageZipcode as $item) {
+            foreach ($newManageZipcode as $item) {
 
                 $localzipcode = new LocalZipcode();
                 $localzipcode->channel_id = $id;
@@ -391,8 +394,11 @@ class ChannelController extends Controller
 
 
             }
+            $removedZipcodes = array_diff($alreadyAvalableZipcodes, $zipcodeListUpdate);
+            LocalZipcode::where('channel_id', $id)->whereIn('zipcode', $removedZipcodes)->update(['status' => 0]);
+            $input['zip_code'] = array_unique($zipcodeListUpdate);
 
-            $input['zip_code'] = $zipcodeListUpdate;
+
         } else {
             $input['zip_code'] = ["All"];
         }
