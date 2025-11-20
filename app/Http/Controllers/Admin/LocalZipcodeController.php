@@ -43,7 +43,12 @@ class LocalZipcodeController extends Controller
         });
         $limit = $request->input('limit', 10);
         $zipcodes = $query->paginate($limit);
-
+        $transformed = $zipcodes->getCollection()->map(function ($item) {
+            $item->channel_count = LocalZipcode::where('zipcode', $item->zipcode)->count();
+            return $item;
+        });
+        $zipcodes->setCollection($transformed);
+        // return response()->json($zipcodes);
         if ($request->ajax()) {
             return view('admin.zipcodes.local.index-table', compact('zipcodes'));
         }
