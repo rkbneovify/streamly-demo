@@ -69,15 +69,21 @@
                               <td style="vertical-align: middle;">{{ $item->state }}</td>
 
                               <td style="vertical-align: middle;">
-                                  <a href="{{ route('admin.channel.status', $item->id) }}"
-                                      data-url="{{ route('admin.channel.status', $item->id) }}"
-                                      title="Change channel status" class="btn-user-status">
-                                      @if ($item->status == 1)
+
+                                  @if ($item->status == 1)
+                                      <a href="{{ route('admin.zipcode.local.channel.disable', $item->zipcode) }}"
+                                          data-url="{{ route('admin.zipcode.local.channel.disable', $item->zipcode) }}"
+                                          title="Change channel status" class="btn-user-status">
                                           <span class="custom-badge badge-active">Active</span>
-                                      @else
+                                      </a>
+                                  @else
+                                      <a href="{{ route('admin.zipcode.local.channel.enable', $item->zipcode) }}"
+                                          data-url="{{ route('admin.zipcode.local.channel.enable', $item->zipcode) }}"
+                                          title="Change channel status" class="btn-user-status">
                                           <span class="custom-badge badge-inactive">Inactive</span>
-                                      @endif
-                                  </a>
+                                      </a>
+                                  @endif
+
                               </td>
 
                               <td style="vertical-align: middle;">{{ date('d/m/Y', strtotime($item->created_at)) }}
