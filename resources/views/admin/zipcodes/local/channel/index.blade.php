@@ -187,12 +187,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Channel</h1> {{ session()->get('info') }}
+                        <h1>Local Zipcode</h1> {{ session()->get('info') }}
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Channel</li>
+                            <li class="breadcrumb-item active">Local Zipcode</li>
                         </ol>
                     </div>
                 </div>
@@ -243,11 +243,25 @@
                                 <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
                             </div>
                         </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
+                                <select name="bulk_action" id="sel-channel" class="select-custom">
+                                    <option value="">Add Zipcode to Channel </option>
+                                    @foreach ($localChannels as $item)
+                                        <option value="{{ $item }}">{{ $item }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
 
-
+                <!-- table include -->
                 <div id="user-data">
                     @include('admin.zipcodes.local.channel.index-table')
                 </div>
@@ -564,6 +578,8 @@
 
         });
 
+
+
         $(document).on('click', '.btn-user-status', function(e) {
             e.preventDefault();
 
@@ -588,6 +604,11 @@
 
 
         });
+
+
+
+
+
 
         $(document).on('change', '#sel_bulk_action', function(e) {
             e.preventDefault();
@@ -644,11 +665,42 @@
             }
         });
 
+
+
         $(document).on('click', '.btn-reset-all', function(e) {
             e.preventDefault();
             removeAll();
             location.href = "{{ url()->current() }}"
-        })
+        });
+
+
+
+
+
+        $(document).on('click', '#btn-delete-zipcode', function(e) {
+            e.preventDefault();
+
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to delete this?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+
+
+        });
     </script>
 
 
