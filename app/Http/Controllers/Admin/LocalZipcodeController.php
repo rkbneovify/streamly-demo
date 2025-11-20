@@ -80,7 +80,10 @@ class LocalZipcodeController extends Controller
         $zipcodes = $query->paginate($limit);
 
 
-        $localChannels = Channel::whereJsonDoesntContain('zip_code', "All")->pluck('id')->toArray();
+        $localChannels = Channel::whereJsonDoesntContain('zip_code', "All")
+            ->whereJsonDoesntContain('zip_code', strval($zipcode))
+            ->pluck('id')
+            ->toArray();
 
 
         if ($request->ajax()) {

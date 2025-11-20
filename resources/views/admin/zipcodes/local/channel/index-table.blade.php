@@ -12,7 +12,7 @@
       </div>
       <div class="col-md-2 mb-3">
 
-          <h3 class="card-title mt-2">Total Channels : {{ $zipcodes->total() }}</h3>
+          <h3 class="card-title mt-2">Total Zipcode : {{ $zipcodes->total() }}</h3>
 
       </div>
       <div class="col-md-2 mb-3">
