@@ -91,7 +91,8 @@ class ChannelController extends Controller
         // search 
         $query->when($request->search, function ($q, $search) {
             $q->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('id', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhere('stationName', 'like', "%{$search}%")
                     ->orWhere('callSign', 'like', "%{$search}%");
             });
