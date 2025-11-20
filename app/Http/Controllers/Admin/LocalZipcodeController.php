@@ -80,10 +80,13 @@ class LocalZipcodeController extends Controller
         $zipcodes = $query->paginate($limit);
 
 
+        $localChannels = Channel::whereJsonDoesntContain('zip_code', "All")->pluck('id')->toArray();
+
+
         if ($request->ajax()) {
-            return view('admin.zipcodes.local.channel.index-table', compact('zipcodes'));
+            return view('admin.zipcodes.local.channel.index-table', compact('zipcodes', 'localChannels'));
         }
-        return view("admin.zipcodes.local.channel.index", compact('zipcodes'));
+        return view("admin.zipcodes.local.channel.index", compact('zipcodes', 'localChannels'));
     }
 
     public function changeStatus($id)

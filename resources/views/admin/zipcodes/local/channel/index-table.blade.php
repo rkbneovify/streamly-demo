@@ -91,7 +91,7 @@
 
 
                               <td>
-                                  <a class="btn btn-xs btn-danger fs-bold" id="btn-delete-zip"
+                                  <a class="btn btn-xs btn-danger fs-bold" id="btn-delete-zipcode"
                                       href="{{ route('admin.zipcode.local.channel.delete', $item->id) }}"
                                       data-url="{{ route('admin.zipcode.local.channel.delete', $item->id) }}">Delete</a>
                               </td>
