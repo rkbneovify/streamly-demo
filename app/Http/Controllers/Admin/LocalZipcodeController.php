@@ -6,7 +6,9 @@ use App\LocalZipcode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
+use App\Models\Zipcode;
 use Illuminate\Support\Facades\DB;
+use League\Flysystem\Adapter\Local;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class LocalZipcodeController extends Controller
@@ -41,7 +43,12 @@ class LocalZipcodeController extends Controller
         });
         $limit = $request->input('limit', 10);
         $zipcodes = $query->paginate($limit);
-
+        $transformed = $zipcodes->getCollection()->map(function ($item) {
+            $item->channel_count = LocalZipcode::where('zipcode', $item->zipcode)->count();
+            return $item;
+        });
+        $zipcodes->setCollection($transformed);
+        // return response()->json($zipcodes);
         if ($request->ajax()) {
             return view('admin.zipcodes.local.index-table', compact('zipcodes'));
         }
@@ -87,9 +94,9 @@ class LocalZipcodeController extends Controller
 
 
         if ($request->ajax()) {
-            return view('admin.zipcodes.local.channel.index-table', compact('zipcodes', 'localChannels'));
+            return view('admin.zipcodes.local.channel.index-table', compact('zipcodes', 'localChannels', 'zipcode'));
         }
-        return view("admin.zipcodes.local.channel.index", compact('zipcodes', 'localChannels'));
+        return view("admin.zipcodes.local.channel.index", compact('zipcodes', 'localChannels', 'zipcode'));
     }
 
     public function changeStatus($id)
@@ -177,6 +184,160 @@ class LocalZipcodeController extends Controller
         }
     }
 
+
+    public function statusDisableForAllLocalChannel($zipcode)
+    {
+        $localZipcode = LocalZipcode::where('zipcode', $zipcode)->get();
+        if ($localZipcode == null) {
+            toast('Zipcode not found', 'error')
+                ->autoClose(3000)
+                ->timerProgressBar();
+
+            return redirect()->back();
+        }
+
+        $channelIds = $localZipcode->pluck('channel_id')->toArray();
+        Channel::whereIn('id', $channelIds)
+            ->whereJsonContains('zip_code', strval($zipcode))
+            ->each(function ($channel) use ($zipcode) {
+                $channelNewZipcodes = array_filter($channel->zip_code, function ($item) use ($zipcode) {
+                    return $item !== strval($zipcode);
+                });
+
+                $channel->zip_code = array_values($channelNewZipcodes);
+                $channel->save();
+            });
+
+        LocalZipcode::where('zipcode', $zipcode)
+            ->update(['status' => 0]);
+
+        toast("Zipcode disable successfully for all local channels", 'success')
+            ->autoClose(3000)
+            ->timerProgressBar();
+
+        return redirect()->back();
+
+
+
+
+
+
+
+
+
+    }
+
+    public function statusEnableForAllLocalChannel($zipcode)
+    {
+        $localZipcode = LocalZipcode::where('zipcode', $zipcode)->get();
+        if ($localZipcode == null) {
+            toast('Zipcode not found', 'error')
+                ->autoClose(3000)
+                ->timerProgressBar();
+
+            return redirect()->back();
+        }
+
+        $channelIds = $localZipcode->pluck('channel_id')->toArray();
+        Channel::whereIn('id', $channelIds)
+            ->whereJsonContains('zip_code', strval($zipcode))
+            ->each(function ($channel) use ($zipcode) {
+                $channel->zip_code = strval($zipcode);
+                $channel->save();
+
+            });
+
+        LocalZipcode::where('zipcode', $zipcode)
+            ->update(['status' => 1]);
+
+        toast("Zipcode disable successfully for all local channels", 'success')
+            ->autoClose(3000)
+            ->timerProgressBar();
+
+        return redirect()->back();
+
+
+
+
+
+
+
+
+
+    }
+
+
+    public function addZipcodeToChannel($zipcode, $channelId)
+    {
+        DB::beginTransaction();
+        try {
+            $localZipcode = LocalZipcode::where('zipcode', $zipcode)
+                ->where('channel_id', $channelId)
+                ->first();
+            if ($localZipcode != null) {
+                $message = $localZipcode->status == 1 ? 'active' : 'inactive';
+                toast('Zipcode already added to this channel. ' . 'But zipcode ' . $message, 'info')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            $channel = Channel::where('id', $channelId)
+                ->first();
+
+
+            if ($channel == null) {
+                toast('Channel not found', 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+
+                return redirect()->back();
+            }
+            $channelZipcodes = $channel->zip_code;
+            if (in_array(strval($zipcode), $channelZipcodes)) {
+                toast('Zipcode already added to this channel', 'info')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            if (!in_array(strval($zipcode), $channelZipcodes)) {
+                $channelZipcodes[] = strval($zipcode);
+                $channel->zip_code = $channelZipcodes;
+                $channel->save();
+
+            }
+            $allowzipcode = Zipcode::where('zipcode', $zipcode)
+                ->where('status', 1)
+                ->first();
+            if ($allowzipcode == null) {
+                toast('Zipcode not found or inactive', 'error')
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect()->back();
+            }
+            $localZipcode = new LocalZipcode();
+            $localZipcode->channel_id = $channelId;
+            $localZipcode->zipcode = $allowzipcode->zipcode;
+            $localZipcode->city = $allowzipcode->city;
+            $localZipcode->state = $allowzipcode->state;
+            $localZipcode->state_abbr = $allowzipcode->state_abbr;
+            $localZipcode->county_area = $allowzipcode->county_area;
+            $localZipcode->code = $allowzipcode->code;
+            $localZipcode->latitude = $allowzipcode->latitude;
+            $localZipcode->longitude = $allowzipcode->longitude;
+            $localZipcode->status = $allowzipcode->status;
+            $localZipcode->save();
+            DB::commit();
+            toast("Zipcode added to channel successfully !", 'success')
+
+                ->autoClose(3000)
+                ->timerProgressBar();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Alert::error('Error', 'Something went wrong ! Please try again .');
+            return redirect()->back();
+        }
+    }
     public function delete($id)
     {
 

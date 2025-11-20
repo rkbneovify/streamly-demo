@@ -230,19 +230,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 mb-3">
+                        {{-- <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/export.png') }}" alt="status icon">
                                 <a href="{{ route('admin.channel.report.export', ['type' => 'xlsx'] + request()->query()) }}"
                                     class="btn-add-user">Export</a>
                             </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
-                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
-                            </div>
-                        </div>
+                        </div> --}}
+
 
                         <div class="col-md-3 mb-2">
                             <div class="select-wrapper">
@@ -257,6 +252,14 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -676,6 +679,19 @@
 
 
 
+        $(document).on('change', '#sel-channel', function(e) {
+
+            e.preventDefault();
+            let channelId = $(this).val();
+            if (!channelId) {
+                return;
+            }
+            let zipcode = "{{ $zipcode }}";
+            let url =
+                "{{ route('admin.zipcode.add.local.channel', ['zipcode' => ':zipcode', 'channelId' => ':channelId']) }}";
+            url = url.replace(':zipcode', zipcode).replace(':channelId', channelId);
+            window.location.href = url;
+        });
 
         $(document).on('click', '#btn-delete-zipcode', function(e) {
             e.preventDefault();
