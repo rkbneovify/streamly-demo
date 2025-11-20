@@ -32,9 +32,7 @@
               <table class="table">
                   <thead>
                       <tr>
-                          <th>
-                              <input type="checkbox" id="selectAll">
-                          </th>
+
                           <th>#</th>
                           <th>Zipcode</th>
                           <th>City</th>
@@ -63,9 +61,7 @@
                   <tbody>
                       @foreach ($zipcodes as $item)
                           <tr>
-                              <td style="vertical-align: middle;">
-                                  <input type="checkbox" class="row-checkbox" value="{{ $item->id }}">
-                              </td>
+
                               <td style="vertical-align: middle;">{{ $item->id }}</td>
                               <td style="vertical-align: middle;">{{ $item->zipcode }}</td>
 
@@ -110,9 +106,7 @@
               <table class="table">
                   <thead>
                       <tr>
-                          <th>
-                              <input type="checkbox" id="selectAll">
-                          </th>
+
                           <th>#</th>
                           <th>Zipcode</th>
                           <th>City</th>
@@ -135,7 +129,7 @@
                                   ]) }}"
                                   class="text-primary ms-1">↑↓</a>
                           </th>
-
+                          <th>Action</th>
                       </tr>
                   </thead>
                   <tbody>
