@@ -187,12 +187,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Channel</h1> {{ session()->get('info') }}
+                        <h1>Local Zipcodes</h1> {{ session()->get('info') }}
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Channel</li>
+                            <li class="breadcrumb-item active">Local Zipcodes</li>
                         </ol>
                     </div>
                 </div>
@@ -208,17 +208,7 @@
 
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <div class="select-wrapper">
-                                <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
-                                <select name="bulk_action" id="sel_bulk_action" class="select-custom">
-                                    <option value="">Bulk Action</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
 
-                                </select>
-                            </div>
-                        </div>
 
 
                         <div class="col-md-4 mb-3">
