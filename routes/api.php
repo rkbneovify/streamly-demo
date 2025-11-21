@@ -46,6 +46,9 @@ Route::get('auth/allowed', 'HomeController@allowedZipcode');
 Route::post('auth/geofence', 'Admin\TurfController@index')->middleware(['jwt.verify']);
 Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.verify']); //refactored
 
+// Hoa sub user passcode forgot API
+Route::post('hoa/sub-user/forgot-passcode', 'Api\ApiHoaController@forgotPasscode');
+
 /** Angular Frontend APIs code start here */
 
 //Get all stripe plans

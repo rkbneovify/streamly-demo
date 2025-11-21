@@ -44,7 +44,7 @@ class LocalZipcodeController extends Controller
         $limit = $request->input('limit', 10);
         $zipcodes = $query->paginate($limit);
         $transformed = $zipcodes->getCollection()->map(function ($item) {
-            $item->channel_count = LocalZipcode::where('zipcode', $item->zipcode)->count();
+            $item->channel_count = LocalZipcode::zipcodeStatusCountByUse($item->zipcode);
             return $item;
         });
         $zipcodes->setCollection($transformed);
@@ -124,7 +124,7 @@ class LocalZipcodeController extends Controller
                     ->first();
 
                 if ($channel == null) {
-                    toast('Channel not found', 'error')
+                    toast('Channel not found 1', 'error')
                         ->autoClose(3000)
                         ->timerProgressBar();
 
