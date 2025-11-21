@@ -33,6 +33,7 @@ class HoaSubUserWelcome extends Mailable
     public function build()
     {
         return $this->view('emails.hoa.sub-user-welcome')
+            ->subject('Welcome to Streamly')
             ->with([
                 "user" => $this->user,
                 "suppportEmail" => $this->supportEmail
