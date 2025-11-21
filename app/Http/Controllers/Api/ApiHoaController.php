@@ -243,7 +243,7 @@ class ApiHoaController extends Controller
 
             DB::commit();
 
-            Mail::to("ramkumar.web@neovify.com")
+            Mail::to($hoaUser->email)
                 ->send(new HoaSubUserPasscodeRegenerate($hoaUser));
 
             Alert::success('Success', 'Passcode regenerated successfully ! Please check your email.')
@@ -747,10 +747,10 @@ class ApiHoaController extends Controller
                 ]
             );
 
-            ;
+
             $resetPasscodeUrl = route('sub.user.regenerate.passcode', $token) . '?email=' . $request->email;
 
-            Mail::to("ramkumar.web@neovify.com")->send(new HoaSubUserForgotPasscode($resetPasscodeUrl));
+            Mail::to($request->email)->send(new HoaSubUserForgotPasscode($resetPasscodeUrl));
             DB::commit();
             return $this->successResponse("Please check your email for regenerate passcode link !");
         } catch (\Throwable $th) {
