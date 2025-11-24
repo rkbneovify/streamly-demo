@@ -588,6 +588,11 @@ class UsersController extends Controller
 
         $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
+        // $localZipcodes = DB::table('channels')
+        //     ->whereBetween('id', [134, 140])
+        //     ->pluck('zip_code')
+        //     ->toArray();
+
         $predefinedLocalZipcodes = [
             "85120",
             "85215",
@@ -600,7 +605,7 @@ class UsersController extends Controller
             "18302",
             "18326"
         ];
-
+        //  channels
         $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
 
         $newZip = $request->zipcode;
@@ -628,6 +633,7 @@ class UsersController extends Controller
                 'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
             ], 422);
         }
+
 
 
         // 3. Add zip to local channels if needed
@@ -708,11 +714,17 @@ class UsersController extends Controller
 
         // Step 4: Update zipcode rule
         DB::table('user_zipcode_rules')
-            ->where('email', $user->email)
-            ->update([
-                'validate' => $request->channel_availability,
-                'zipcode' => $request->zipcode
-            ]);
+            ->updateOrInsert(
+                ['email' => $user->email],
+                [
+                    'validate' => $request->channel_availability,
+                    'zipcode' => $request->zipcode
+                ]
+            );
+        // ->update([
+        //     'validate' => $request->channel_availability,
+        //     'zipcode' => $request->zipcode
+        // ]);
 
         // Step 5: Calculate subscription end date
         $endsAt = null;
@@ -799,7 +811,7 @@ class UsersController extends Controller
             ->where('email', $user->email)
             ->first();
 
-        $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
 
         $planDuration = '';
 
@@ -821,11 +833,20 @@ class UsersController extends Controller
                 $planDuration = '';
             }
         }
+
+        $currentDeviceCount = 0;
+        // tier user
+        if ($userRoles && in_array(5, $userRoles)) {
+            $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
+
+        }
         // Hoa user
         if ($userRoles && in_array(7, $userRoles)) {
             $currentDeviceCount = HoaUser::getActiveHousesCount($user->id);
 
         }
+
+
         return view('admin.users.edit', compact(
             'user',
             'roles',
@@ -1724,8 +1745,8 @@ class UsersController extends Controller
                         $session->delete();
                     }
                     DB::commit();
-                    toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                    return redirect()->back();
+                    toast("Session removed successfully !", "success")->timerProgressBar()->autoClose(3000);
+                    return redirect('admin/users');
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);

@@ -11,6 +11,7 @@ use App\Models\AddressesCheckAvailability;
 use App\Models\UserZipcodeRule;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 
 use function PHPSTORM_META\elementType;
@@ -38,7 +39,8 @@ class ZipcodeController extends Controller
         return view('admin.zipcodes.index2');
     }
 
-    public function index3(Request $request){
+    public function index3(Request $request)
+    {
         $query = Zipcode::query();
 
 
@@ -53,7 +55,7 @@ class ZipcodeController extends Controller
         $limit = $request->input('limit', 10);
         $zipcode = $query->paginate($limit);
         // return response()->json($zipcode);
-        if($request->ajax()){
+        if ($request->ajax()) {
             return view('admin.zipcodes.index-new-table', compact('zipcode'));
         }
         return view('admin.zipcodes.index-new', compact('zipcode'));
@@ -314,7 +316,7 @@ class ZipcodeController extends Controller
 
         // Fetch records
         $records = Zipcode::orderBy($columnName, $columnSortOrder)
-            ->where('zipcodes.status', '=',  '1')
+            ->where('zipcodes.status', '=', '1')
             ->where(function ($query) use ($searchValue) {
                 $query->where('zipcodes.zipcode', 'like', '%' . $searchValue . '%');
                 $query->orWhere('zipcodes.city', 'like', '%' . $searchValue . '%');
@@ -373,10 +375,10 @@ class ZipcodeController extends Controller
 
         # Build GeoJSON feature collection array
         $geojson = array(
-            'type'      => 'FeatureCollection',
+            'type' => 'FeatureCollection',
 
             // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
-            'features'  => array()
+            'features' => array()
         );
 
         if ($data->isEmpty()) {
@@ -390,7 +392,7 @@ class ZipcodeController extends Controller
         }
 
         foreach ($data as $fieldnam) {
-            $properties =  array(
+            $properties = array(
                 'color' => 'red',
                 'title' => $fieldnam['zipcode']
 
@@ -493,10 +495,10 @@ class ZipcodeController extends Controller
         $data = Zipcode::select('zipcodes.*', DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status', 1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         # Build GeoJSON feature collection array
         $geojson = array(
-            'type'      => 'FeatureCollection',
+            'type' => 'FeatureCollection',
 
             // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
-            'features'  => array()
+            'features' => array()
         );
         if ($data->isEmpty()) {
             $response = [
@@ -509,7 +511,7 @@ class ZipcodeController extends Controller
         }
 
         foreach ($data as $fieldnam) {
-            $properties =  array(
+            $properties = array(
                 'color' => 'red',
                 'title' => $fieldnam['zipcode']
 
@@ -584,7 +586,7 @@ class ZipcodeController extends Controller
     {
         $this->validate($request, [
             'id' => 'required|array',
-            "id.*"  => "required|numeric|distinct",
+            "id.*" => "required|numeric|distinct",
             'status' => 'required|numeric|min:0|max:1',
 
         ]);
@@ -601,117 +603,134 @@ class ZipcodeController extends Controller
     }
 
     public function localzipdata(Request $request)
-{
-    $draw = $request->get('draw');
-    $start = $request->get("start");
-    $rowperpage = $request->get("length"); // Rows display per page
+    {
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
 
-    $columnIndex_arr = $request->get('order');
-    $columnName_arr = $request->get('columns');
-    $order_arr = $request->get('order');
-    $search_arr = $request->get('search');
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
 
-    $columnIndex = $columnIndex_arr[0]['column']; // Column index
-    $columnName = $columnName_arr[$columnIndex]['data']; // Column name
-    $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-    $searchValue = $search_arr['value']; // Search value
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
 
-    // 🔹 Fetch all zipcodes mapped to channels 133–140 (decode JSON arrays)
-    $localZipcodesRaw = DB::table('channels')
-        ->whereBetween('id', [133, 140])
-        ->pluck('zip_code')
-        ->toArray();
+        // 🔹 Fetch all zipcodes mapped to channels 133–140 (decode JSON arrays)
+        $localZipcodesRaw = DB::table('channels')
+            ->whereBetween('id', [134, 140])
+            ->pluck('zip_code')
+            ->toArray();
 
-    $localZipcodes = [];
-    foreach ($localZipcodesRaw as $zips) {
-        $decoded = json_decode($zips, true);
-        if (is_array($decoded)) {
-            $localZipcodes = array_merge($localZipcodes, $decoded);
+        // $localZipcodes = [];
+        // foreach ($localZipcodesRaw as $zips) {
+        //     $decoded = json_decode($zips, true);
+        //     if (is_array($decoded)) {
+        //         $localZipcodes = array_merge($localZipcodes, $decoded);
+        //     }
+        // }
+
+        $resolveZipcodes = collect($localZipcodesRaw)
+            ->map(function ($row) {
+                // remove brackets
+                $row = Str::of($row)->replace(['[', ']'], '');
+
+                // split into pieces
+                $items = explode(',', $row);
+
+                // clean each item: remove quotes + trim
+                return collect($items)->map(fn($item) => trim($item, " \""))->toArray();
+            })
+            ->flatten()
+            ->unique()
+            ->values()
+            ->toArray();
+
+
+        // If no zipcodes found, return empty response
+        if (empty($resolveZipcodes)) {
+            return response()->json([
+                "draw" => intval($draw),
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => []
+            ]);
         }
-    }
 
-    // If no zipcodes found, return empty response
-    if (empty($localZipcodes)) {
-        return response()->json([
+        // 🔹 Base query (only local zipcodes)
+        $query = Zipcode::whereIn('zipcode', $resolveZipcodes)
+            ->where(function ($q) use ($searchValue) {
+                if (!empty($searchValue)) {
+                    $q->where('zipcodes.zipcode', 'like', "%$searchValue%")
+                        ->orWhere('zipcodes.city', 'like', "%$searchValue%")
+                        ->orWhere('zipcodes.state', 'like', "%$searchValue%");
+                }
+            });
+
+        // 🔹 Total records
+        $totalRecords = $query->count();
+
+        // 🔹 Apply sorting + pagination
+        $records = $query->orderBy($columnName, $columnSortOrder)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $data_arr = [];
+
+        foreach ($records as $record) {
+            $id = $record->id;
+            $zipcode = $record->zipcode;
+            $city = $record->city;
+            $state = $record->state;
+
+            // if status column does not exist in zipcodes table, set default = 1
+            $status = $record->status ?? 1;
+
+            // Buttons
+            $toggleButton = "<button class='btn btn-xs " . ($status ? "btn-danger" : "btn-success") . " toggleStatus' data-id='{$id}'>"
+                . ($status ? "Disable" : "Enable") . "</button>";
+
+            $action = $toggleButton;
+
+            $data_arr[] = [
+                "id" => $id,
+                "zipcode" => $zipcode,
+                "city" => $city,
+                "state" => $state,
+                "status" => $status,
+                "action" => $action
+            ];
+        }
+
+        // 🔹 Response format for DataTables
+        $response = [
             "draw" => intval($draw),
-            "recordsTotal" => 0,
-            "recordsFiltered" => 0,
-            "data" => []
-        ]);
-    }
-
-    // 🔹 Base query (only local zipcodes)
-    $query = Zipcode::whereIn('zipcode', $localZipcodes)
-        ->where(function ($q) use ($searchValue) {
-            if (!empty($searchValue)) {
-                $q->where('zipcodes.zipcode', 'like', "%$searchValue%")
-                  ->orWhere('zipcodes.city', 'like', "%$searchValue%")
-                  ->orWhere('zipcodes.state', 'like', "%$searchValue%");
-            }
-        });
-
-    // 🔹 Total records
-    $totalRecords = $query->count();
-
-    // 🔹 Apply sorting + pagination
-    $records = $query->orderBy($columnName, $columnSortOrder)
-        ->skip($start)
-        ->take($rowperpage)
-        ->get();
-
-    $data_arr = [];
-
-    foreach ($records as $record) {
-        $id      = $record->id;
-        $zipcode = $record->zipcode;
-        $city    = $record->city;
-        $state   = $record->state;
-
-        // if status column does not exist in zipcodes table, set default = 1
-        $status  = $record->status ?? 1;
-
-        // Buttons
-        $toggleButton = "<button class='btn btn-xs " . ($status ? "btn-danger" : "btn-success") . " toggleStatus' data-id='{$id}'>"
-                        . ($status ? "Disable" : "Enable") . "</button>";
-
-        $action = $toggleButton;
-
-        $data_arr[] = [
-            "id"      => $id,
-            "zipcode" => $zipcode,
-            "city"    => $city,
-            "state"   => $state,
-            "status"  => $status,
-            "action"  => $action
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data_arr
         ];
+
+        return response()->json($response);
     }
 
-    // 🔹 Response format for DataTables
-    $response = [
-        "draw" => intval($draw),
-        "recordsTotal" => $totalRecords,
-        "recordsFiltered" => $totalRecords,
-        "data" => $data_arr
-    ];
+    public function toggleZipcodeStatus(Request $request)
+    {
+        $id = $request->get('id');
 
-    return response()->json($response);
-}
+        $zipcode = Zipcode::find($id);
+        if (!$zipcode) {
+            return response()->json(['success' => false, 'message' => 'Zipcode not found']);
+        }
 
-public function toggleZipcodeStatus(Request $request)
-{
-    $id = $request->get('id');
+        // Toggle
+        $zipcode->status = $zipcode->status ? 0 : 1;
+        $zipcode->save();
 
-    $zipcode = Zipcode::find($id);
-    if (!$zipcode) {
-        return response()->json(['success' => false, 'message' => 'Zipcode not found']);
+        return response()->json(['success' => true, 'status' => $zipcode->status]);
     }
-
-    // Toggle
-    $zipcode->status = $zipcode->status ? 0 : 1;
-    $zipcode->save();
-
-    return response()->json(['success' => true, 'status' => $zipcode->status]);
-}
 
 
 }
