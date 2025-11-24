@@ -84,7 +84,7 @@
             <label for="zipcode">
               <span>Zipcode <span class="text-danger">*</span></span>
             </label>
-            <ng-select formControlName="zipcodex" [items]="items" bindLabel="label" bindValue="value"
+            <ng-select formControlName="zipcode" [items]="items" bindLabel="label" bindValue="value"
               placeholder="Enter your zipcode" [searchable]="true" [loading]="zipcodeLoading"
               (search)="zipcodeOnSearch($event)" (selected)="zipcodeOnSelected($event)">
               <ng-template ng-option-tmp let-item="item">
@@ -95,10 +95,10 @@
               </ng-template>
             </ng-select>
 
-            <div *ngIf="registerForm.get('zipcodex')?.touched" class="text-danger">
-              <small *ngIf="registerForm.get('zipcodex')?.errors as e">
-                {{ e['required'] && 'Zipcodex no. is required.' }}
-                {{ e['pattern'] && 'Zipcodex no. is not valid.' }}
+            <div *ngIf="registerForm.get('zipcode')?.touched" class="text-danger">
+              <small *ngIf="registerForm.get('zipcode')?.errors as e">
+                {{ e['required'] && 'Zipcode no. is required.' }}
+                {{ e['pattern'] && 'Zipcode no. is not valid.' }}
                 {{ e['server'] }}
               </small>
             </div>
