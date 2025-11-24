@@ -137,7 +137,9 @@ export class SubUserRegisterComponent implements OnInit {
           this.loading = !this.loading;
           console.log('res:', res)
           this.toastr.info(res.body.message);
-          this.router.navigate(['/auth/login']);
+          this.router.navigate(['auth/login'], {
+            queryParams: { tab: 'passcode' }
+          });
         },
         error: (err: any) => {
           this.loading = !this.loading;
