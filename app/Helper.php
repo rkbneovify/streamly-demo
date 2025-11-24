@@ -794,7 +794,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
 
             'success' => true,
             'message' => 'logged in successfully ',
-            'passcode' => HashUserID($userInfo->id),
+            'passcode' => HoaUser::isHoaMainUser() ? HashUserID($userInfo->id) : HoaUser::getCurrentHoaUser($user_id)->passcode,
             'response_code' => 200,
             'fcm_token' => $fcm_token,
             'sessionid' => HashUserID($Saved['LastInsertId']),
