@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\HoaSubUserForgotPasscode;
+use App\Mail\HoaSubUserPasscodeRegenerate;
 use App\Mail\HoaSubUserWelcome;
 use App\Mail\VerifyHoaSubUserEmail;
+use App\PasscodeResetToken;
 use App\SessionTable;
 use App\Traits\ApiResponseTrait;
 use App\User;
@@ -20,12 +23,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
+use Stripe\ApiOperations\All;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApiHoaController extends Controller
 {
 
     use ApiResponseTrait;
+
     public function index(Request $request)
     {
         try {
@@ -185,42 +192,69 @@ class ApiHoaController extends Controller
 
     }
 
-    public function passcodeRegenerate(Request $request)
+    public function regeneratePasscode(Request $request, $token)
     {
         $validator = Validator::make($request->all(), [
-            'passcode' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+
         ]);
+
+
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
         }
+        $tokenData = PasscodeResetToken::where('email', $request->email)
+            ->where('token', $token)
+            ->latest()
+            ->first();
 
-        $user = Auth::user();
-        $hoaUser = HoaUser::where('passcode', $request->passcode)
-            ->where('user_id', $user->id)
+
+        if ($tokenData == null) {
+
+            Alert::error('Error', 'Invalid link. Please request a new passcode reset.');
+            return redirect('/');
+        }
+        $expireIn = Carbon::parse($tokenData->created_at)->diffInMinutes(now());
+        if ($expireIn >= 30) {
+            Alert::error('Error', 'Link expired. Please request a new passcode reset.');
+            return redirect('/');
+        }
+
+        $hoaUser = HoaUser::where('email', $request->email)
+            ->where('status', 1)
             ->first();
         if ($hoaUser == null) {
-            return $this->notFoundResponse('Passcode not found !');
+
+            Alert::error('Error', 'No active account found for the provided email.');
+            return redirect('/');
 
         }
 
+
+
         try {
             DB::beginTransaction();
+            $this->removeActiveSessions($hoaUser->passcode, $hoaUser->user_id);
             $newPasscode = HoaUser::generatePasscodeForHoa();
             $hoaUser->passcode = $newPasscode;
             $hoaUser->save();
 
-            $this->removeActiveSessions($request->passcode, $user->id);
+            PasscodeResetToken::where('token', $token)->delete();
 
             DB::commit();
-            return response()->json([
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Passcode regenerated successfully !',
-                'new_passcode' => $newPasscode
-            ], 200);
+
+            Mail::to($hoaUser->email)
+                ->send(new HoaSubUserPasscodeRegenerate($hoaUser));
+
+            Alert::success('Success', 'Passcode regenerated successfully ! Please check your email.')
+                ->persistent(true)
+                ->autoClose(false);
+            return redirect('/');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $this->exceptionResponse($th);
+
+            Alert::error('Error', $th->getMessage());
+            return redirect('/');
         }
 
 
@@ -638,10 +672,7 @@ class ApiHoaController extends Controller
             DB::rollBack();
 
             return response()->json($th->getMessage());
-            // toast("Something went wrong please try again later.", "error")
-            //     ->autoClose(3000)
-            //     ->timerProgressBar();
-            // return redirect('/');
+
         }
 
     }
@@ -674,4 +705,61 @@ class ApiHoaController extends Controller
             'is_email_verified' => HoaUser::isEmailVerified($id)
         ]);
     }
+
+
+    public function forgotPasscode(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:225',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+
+        }
+        $hoaUser = HoaUser::where('email', $request->email)->first();
+        if ($hoaUser == null) {
+            return $this->notFoundResponse("Data not found !");
+        } elseif ($hoaUser->status == 0) {
+            return $this->errorResponse("Account is deactivated, kindly contact admin.", 403);
+        }
+
+
+
+        try {
+            DB::beginTransaction();
+            $token = Str::random(64);
+            $count = PasscodeResetToken::where('email', $request->email)
+                ->whereDate('created_at', today())
+                ->count();
+            if ($count >= 3) {
+
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 429,
+                    'message' => 'You have exceeded the number of allowed forgot passcode requests for today. Please try again later after 24 hours.',
+                ], 429);
+            }
+            DB::table('passcode_reset_tokens')->insert(
+                [
+                    'email' => $request->email,
+                    'token' => $token,
+                    'created_at' => now()
+                ]
+            );
+
+
+            $resetPasscodeUrl = route('sub.user.regenerate.passcode', $token) . '?email=' . $request->email;
+
+            Mail::to($request->email)->send(new HoaSubUserForgotPasscode($resetPasscodeUrl));
+            DB::commit();
+            return $this->successResponse("Please check your email for regenerate passcode link !");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
+
+
+
 }

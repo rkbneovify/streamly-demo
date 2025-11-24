@@ -106,46 +106,94 @@ class HoaUser extends Model
         return $passcode;
     }
 
-    public static function getHoaUserWithDetails($userId)
+    public static function getHoaHouseList()
     {
-        $user = User::find($userId);
-        $currentUser = HoaUser::where('user_id', $userId)
-            ->where('passcode', request()->passcode)
-            ->first();
-        $roleId = $user->roles->pluck('id')[0];
-        if ($roleId == 7 && $currentUser == null) {
-            return HoaUser::where('user_id', $userId)->with('session')->get();
+        if (request()->has('passcode')) {
+            $uid = UnHashUserID(request()->passcode);
+            $user = User::find($uid);
+            if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
+                if ($roleId == 7) {
+                    return HoaUser::where('user_id', $uid)
+                        ->with('session')
+                        ->get();
+                }
+            }
+
         }
 
+        if (request()->has('email')) {
+            $user = User::where('email', request()->email)->first();
+            if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
+                if ($roleId == 7) {
+                    return HoaUser::where('user_id', $user->id)
+                        ->with('session')
+                        ->get();
+                }
+            }
+
+        }
+
+
         return [];
+
+
     }
 
     public static function getCurrentHoaUser($userId)
     {
-        $currentUser = HoaUser::where('user_id', $userId)
-            ->where('passcode', request()->passcode)
-            ->with('session')
-            ->first();
 
 
-        return $currentUser;
+
+        if (!empty(request()->passcode)) {
+            return HoaUser::where('user_id', $userId)
+                ->where('passcode', request()->passcode)
+                ->where('status', 1)
+                ->with('session')
+                ->first();
+        }
+
+
+        return null;
+
     }
 
-    public static function isHoaMainUser($passcode)
+    public static function isHoaMainUser()
     {
 
 
-        if ($passcode === request()->passcode) {
-            return true;
-        } elseif (request()->passcode == null) {
-            $uid = UnHashUserID($passcode);
+        if (request()->has('passcode')) {
+            $uid = UnHashUserID(request()->passcode);
             $user = User::find($uid);
             if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
 
-                return true;
+                if ($roleId == 7) {
+                    return true;
+                }
             }
         }
+
+        if (request()->has('email')) {
+            $user = User::where('email', request()->email)
+                ->first();
+            if ($user != null) {
+                $roleId = $user->roles->pluck('id')[0];
+
+                if ($roleId == 7) {
+                    return true;
+                }
+            }
+
+        }
+
         return false;
+
+
+
+
+
     }
 
     public static function getActiveHousesCount($userId)
