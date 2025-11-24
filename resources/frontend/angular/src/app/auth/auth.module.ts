@@ -11,6 +11,7 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+
   },
   {
     path: 'register',
@@ -32,6 +33,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, RouterModule.forChild(routes),NgSelectModule],
+  imports: [CommonModule, RouterModule.forChild(routes), NgSelectModule],
 })
-export class AuthModule {}
+export class AuthModule { }
