@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\HoaSubUserSubscription;
+use App\HoaUser;
 use App\Http\Controllers\Controller;
 use App\Models\EmailOtp;
 use Illuminate\Http\Request;
@@ -420,6 +422,7 @@ class StripeController extends Controller
 
     public function showUserDetails(Request $request)
     {
+
         $response_to_send = [];
         $userinfo = JWTAuth::user();
         $resultoffset = $userinfo->zipcode;
@@ -430,6 +433,10 @@ class StripeController extends Controller
         $response_to_send['response_code'] = 200;
         $response_to_send['message'] = "Setting details successfully retrieved";
         // Always include user data
+
+        $hoaUser = HoaUser::getCurrentSubUserByToken();
+
+
         $user_data = [
             "id" => $userinfo->id,
             "name" => $userinfo->name,
@@ -437,8 +444,27 @@ class StripeController extends Controller
             "zipcode" => $resultoffset,
             "timezone" => $timezone,
             "passcode" => HashUserID($userinfo->id),
-            "connected_device" => $userinfo->connected_device
+            "connected_device" => $userinfo->connected_device,
+            "is_hoa_main_user" => $request->user()->roles[0]->id == 7 ? true : false,
+            "hoa_sub_user_subscription" => null
+
         ];
+
+        if ($hoaUser != null) {
+            $hoaSubscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
+            $user_data = [
+                "id" => $hoaUser->id,
+                "name" => $hoaUser->name,
+                "email" => $hoaUser->email,
+                "zipcode" => $hoaUser->zipcode,
+                "timezone" => $timezone,
+                "passcode" => $hoaUser->passcode,
+                "connected_device" => $userinfo->connected_device,
+                "is_hoa_main_user" => false,
+                "hoa_sub_user_subscription" => $hoaSubscription
+            ];
+        }
+
 
         $response_to_send['userinfo'] = $user_data;
 
