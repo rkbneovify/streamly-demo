@@ -436,7 +436,7 @@ class APIController extends Controller
 
 
         $sessions = HoaUser::getSubUserActiveSessions($hoaUser);
-        unset($sessions['device']);
+        // unset($sessions['device']);
         $response = [
             'success' => true,
             'response_code' => 200,
