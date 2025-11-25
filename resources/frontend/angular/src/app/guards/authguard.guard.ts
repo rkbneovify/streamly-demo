@@ -6,7 +6,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
   let user;
   const router = inject(Router); // Inject Router
   const getlocalData = inject(AuthService);
-  
+
   // const jsonData = localStorage.getItem('deviceInfo');
   const jsonData = getlocalData.getlocalData('deviceInfo');
   // const token_access = localStorage.getItem('token');
@@ -41,8 +41,11 @@ export const authguardGuard: CanActivateFn = (route, state) => {
     }
   } else {
     localStorage.clear();
-    router.navigateByUrl('auth/login');
-    return false;
+    // router.navigateByUrl('auth/login');
+    router.createUrlTree(['/auth/login'], {
+      queryParams: state.root.queryParams
+    });
+    return true;
   }
 };
 
@@ -79,16 +82,19 @@ export const authGuarLoginStatus: CanActivateFn = (route, state) => {
     if (state.url === '/auth/login') {
       return true; // Already on the target route, allow navigation
     }
-    if(
+    if (
       state?.url?.includes('register') ||
       state?.url?.includes('change-password') ||
       state?.url?.includes('forget-password') ||
       state?.url?.includes('remove-device')
-    ){
+    ) {
       // console.log('state =>',state,'route =>',route);
       return true;
     }
-    router.navigateByUrl('/auth/login');
-    return false; // Prevent navigation to the requested route
+    // router.navigateByUrl('/auth/login');
+    router.createUrlTree(['/auth/login'], {
+      queryParams: state.root.queryParams
+    });
+    return true; // Prevent navigation to the requested route
   }
 };
