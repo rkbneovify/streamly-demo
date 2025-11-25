@@ -141,14 +141,13 @@ class HoaUser extends Model
 
     }
 
-    public static function getCurrentHoaUser($userId)
+    public static function getCurrentHoaUser()
     {
 
 
 
         if (!empty(request()->passcode)) {
-            return HoaUser::where('user_id', $userId)
-                ->where('passcode', request()->passcode)
+            return HoaUser::where('passcode', request()->passcode)
                 ->where('status', 1)
                 ->with('session')
                 ->first();

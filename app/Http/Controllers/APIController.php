@@ -442,7 +442,7 @@ class APIController extends Controller
             'response_code' => 200,
             'numofdevice' => count($sessions),
             'userDeviceLimit' => $hoaUser->device_limit,
-            'user_connected_device' => count($sessions),
+            'user_connected_device' => $userConnectedDevice,
             'message' => 'Connected device found successfully',
             'data' => $sessions,
         ];
