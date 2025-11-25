@@ -794,7 +794,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
 
             'success' => true,
             'message' => 'logged in successfully ',
-            'passcode' => HoaUser::isHoaMainUser() ? HashUserID($userInfo->id) : HoaUser::getCurrentHoaUser($user_id)->passcode,
+            'passcode' => HoaUser::getCurrentHoaUser() == null ? HashUserID($userInfo->id) : HoaUser::getCurrentHoaUser()->passcode,
             'response_code' => 200,
             'fcm_token' => $fcm_token,
             'sessionid' => HashUserID($Saved['LastInsertId']),
@@ -814,7 +814,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'rooms' => $rooms,
             'is_hoa_main_user' => HoaUser::isHoaMainUser(),
             'houses' => HoaUser::getHoaHouseList(),
-            'hoa_user' => HoaUser::getCurrentHoaUser($user_id),
+            'hoa_user' => HoaUser::getCurrentHoaUser(),
             'userrole' => $userInfo->roles->pluck('name')[0],
             'subscribed' => $subscriptionStatus,
             'subscribedmsgis' => $kindlysubscribemsg

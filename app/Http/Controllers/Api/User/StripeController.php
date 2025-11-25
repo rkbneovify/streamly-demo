@@ -446,10 +446,11 @@ class StripeController extends Controller
             "passcode" => HashUserID($userinfo->id),
             "connected_device" => $userinfo->connected_device,
             "is_hoa_main_user" => $request->user()->roles[0]->id == 7 ? true : false,
-            "hoa_sub_user_subscription" => null
+            "is_hoa_sub_user" => false,
+
 
         ];
-
+        $response_to_send['hoa_sub_user_subscription'] = [];
         if ($hoaUser != null) {
             $hoaSubscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
             $user_data = [
@@ -461,13 +462,17 @@ class StripeController extends Controller
                 "passcode" => $hoaUser->passcode,
                 "connected_device" => $userinfo->connected_device,
                 "is_hoa_main_user" => false,
-                "hoa_sub_user_subscription" => $hoaSubscription
+                "is_hoa_sub_user" => true,
+
             ];
+
         }
 
 
-        $response_to_send['userinfo'] = $user_data;
 
+
+        $response_to_send['userinfo'] = $user_data;
+        $response_to_send['hoa_sub_user_subscription'] = $hoaSubscription;
         try {
             $customerId = $userinfo->stripe_id;
 
