@@ -655,8 +655,9 @@ class ApiHoaController extends Controller
 
             HoaUser::markedEmailVerified($id);
             // send link to frontend
+
             $accountRegisterUrl = URL::temporarySignedRoute(
-                'sub.user.account.register',
+                'hoa/sub-user-account/register',
                 Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                 [
                     'id' => $id,
