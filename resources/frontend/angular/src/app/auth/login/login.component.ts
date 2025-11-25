@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.checkStoredDeviceId();
-    // this.createQRCode();
+    this.checkStoredDeviceId();
+    this.createQRCode();
     this.queryTab = this.activatedRoute.snapshot.queryParamMap.get('tab');
 
     switch (this.queryTab) {
