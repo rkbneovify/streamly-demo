@@ -258,4 +258,33 @@ class HoaUser extends Model
         return null;
     }
 
+    public static function getSubUserActiveSessions($user)
+    {
+        $uid = $user->user_id;
+        return SessionTable::with([
+            'pdname' => function ($q) use ($uid) {
+                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                    ->where('user_id', '=', $uid);
+            }
+        ])
+            ->where('passcode', $user->passcode)
+            ->where("status", 1)
+            ->select('user_ip', 'logintime')
+            ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+            ->latest("created_on")->get()->makeHidden("pdname")->map(function ($address) {
+                $address['session_id'] = HashUserID($address['id']);
+                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+
+                // ✅ Fix logintime format (remove microseconds)
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
+                }
+
+                unset($address['pdname'], $address['device'], $address['id']);
+                return $address;
+            });
+
+    }
+
 }
