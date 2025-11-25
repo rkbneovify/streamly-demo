@@ -656,16 +656,31 @@ class ApiHoaController extends Controller
             HoaUser::markedEmailVerified($id);
             // send link to frontend
 
-            $accountRegisterUrl = URL::temporarySignedRoute(
-                'hoa/sub-user-account/register',
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                [
-                    'id' => $id,
-                    'hash' => sha1($hoaUser->email),
-                    'plan_in_month' => $request->plan_in_month,
-                    'amount' => $request->amount,
-                ]
-            );
+            // $accountRegisterUrl = URL::temporarySignedRoute(
+            //     url('/hoa/sub-user-account/register'),
+            //     Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            //     [
+            //         'id' => $id,
+            //         'hash' => sha1($hoaUser->email),
+            //         'plan_in_month' => $request->plan_in_month,
+            //         'amount' => $request->amount,
+            //     ]
+            // );
+
+
+
+            // $params = [
+            //     'id' => $id,
+            //     'hash' => sha1($hoaUser->email),
+            //     'plan_in_month' => $request->plan_in_month,
+            //     'amount' => $request->amount,
+            //     'expires' => $expires,
+            // ];
+            $expires = now()->addMinutes(60)->timestamp;
+            $accountRegisterUrl = url('/hoa/sub-user-account/register')
+                . "/" . $id . "/" . sha1($hoaUser->email)
+                . "?plan_in_month=" . $request->plan_in_month
+                . "&amount=" . $request->amount . "&expires=" . $expires;
             DB::commit();
             return redirect($accountRegisterUrl);
         } catch (\Throwable $th) {
