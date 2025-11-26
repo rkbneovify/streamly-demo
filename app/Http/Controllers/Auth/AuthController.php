@@ -292,36 +292,42 @@ class AuthController extends Controller
 
         if ($hoaUser != null) {
             $user = User::find($hoaUser->user_id);
+            // hoa main checking
             if ($user == null) {
                 return response()->json(['success' => false, 'response_code' => 404, 'message' => 'User not found !'], 401);
             }
+            // hoa main user status checking
             if ($user->is_active == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin 1.'], 401);
 
             }
+            // hoa sub user checking
             if ($hoaUser->status == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
 
             }
-            // device limit check
+            //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)->where("passcode", $request->passcode)->where("status", 1)->count();
             if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
                 return response()->json([
                     'success' => false,
                     'response_code' => 402,
-                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
+                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login 1',
 
                 ], 402);
             }
+
             $uid = $hoaUser->user_id;
+
         }
 
-        if (!$uid) {
+
+        $user = User::find($uid);
+        if ($user == null) {
 
             $response = array('success' => false, 'response_code' => 404, 'message' => 'User not found');
             return response()->json($response, 404);
         }
-        $user = User::find($uid);
         // $user = User::where('email', '=', $email)->first();
 
         $expirationInMinutes = 43800; //one month in minutes
@@ -337,13 +343,17 @@ class AuthController extends Controller
         if ($user->is_active == 0) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
+
+
         $userRole = $user->roles->pluck('name');
         //todo hotel check
-        if ($userRole[0] == 'user' || 'tieruser') {
-
+        if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
+            
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
+        //  hoa main login limit
+
         // $user_data=array('name'=>$user->name,'email'=>$user->email,'token'=>$token);
 
         // return response()->json($user_data,200);
