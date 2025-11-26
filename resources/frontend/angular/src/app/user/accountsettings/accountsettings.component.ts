@@ -95,16 +95,16 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
     });
-    const jsonData = localStorage.getItem('userDetails');
-    if (jsonData !== null) {
-      try {
-        this.usersdetail = JSON.parse(
-          localStorage.getItem('userDetails') || ''
-        );
-      } catch (error) {
-        console.error('Error parsing JSON data:', error);
-      }
-    }
+    // const jsonData = localStorage.getItem('userDetails');
+    // if (jsonData !== null) {
+    //   try {
+    //     this.usersdetail = JSON.parse(
+    //       localStorage.getItem('userDetails') || ''
+    //     );
+    //   } catch (error) {
+    //     console.error('Error parsing JSON data:', error);
+    //   }
+    // }
     const deviceInfoData = localStorage.getItem('deviceInfo');
     if (deviceInfoData !== null) {
       try {
@@ -225,14 +225,31 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
             this.planInterval = plan3rd;
             this.interval_count = res?.plan?.interval_count;
             this.userinfo = res?.userinfo;
+            // this.usersdetail.name = res?.userinfo?.name
+            // this.usersdetail.email = res?.userinfo?.email
+            // this.usersdetail.zipcode = res?.userinfo?.zipcode
+            // update userDetails on local
             let userData = JSON.parse(localStorage.getItem('userDetails'));
+
+            this.updateuserDetatils.controls['fullname'].setValue(
+              res?.userinfo?.name
+            );
+            this.updateuserDetatils.controls['email'].setValue(
+              res?.userinfo?.email
+            );
+            this.updateuserDetatils.controls['zipcode'].setValue(
+              res?.userinfo?.zipcode
+            );
             userData.name = res?.userinfo?.name
             userData.email = res?.userinfo?.email
             userData.zipcode = res?.userinfo?.zipcode
+
             localStorage.setItem(
               'userDetails',
               JSON.stringify(userData)
             );
+
+            this.usersdetail = userData;
 
             this.isHoaMainUser = res?.userinfo.is_hoa_main_user
             this.isHoaSubUser = res?.userinfo.is_hoa_sub_user
