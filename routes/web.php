@@ -481,10 +481,11 @@ Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
 
 Route::any('/{any}', [AngularController::class, 'index'])
-    ->where('any', '^(?!api|admin|stripe|hoa-sub-user-email).*$')
+    ->where('any', '^(?!api|admin|stripe|hoa-sub-user-email|regenerate-passcode).*$')
     ->name('angular');
 
 Route::get('/hoa-sub-user-email/verify/{id}/{hash}', [ApiHoaController::class, 'emailVerify'])->name('sub.user.email.verify');
+Route::get('/regenerate-passcode/{token}', [ApiHoaController::class, 'regeneratePasscode'])->name('sub.user.regenerate.passcode');
 // url from frontend
 // Route::get('/sub-user-account/register/{id}/{hash}', [ApiHoaController::class, 'accountRegister'])->name('sub.user.account.register');
 
