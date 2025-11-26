@@ -16,17 +16,38 @@ use Illuminate\Support\Str;
 
 function checkLoginLimit($user_id, $token, $deviceDetails)
 {
+
+    $user = User::find($user_id);
+    $userRole = $user->roles->first()->name;
+    $passcode = HashUserID($user_id);
     $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
         ['status', '=', '1'],
         ['users_id', '=', $user_id],
     ])->get()->toArray();
+    if ($userRole == "hoa") {
+        $active_session = App\SessionTable::where([
+            ['status', '=', '1'],
+            ['users_id', '=', $user_id],
+            ['passcode', '=', null],
+        ])
+            ->orWhere([
+                ["passcode", $passcode]
+            ])
+            ->get()->toArray();
+    }
+
+
+
     //check if there's no entry by this used id
     if ((count($active_session) == 0)) {
         //new entry of sessionTable
         sessionTable($user_id, $token, $deviceDetails, $connected_devices = 1);
     } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
+
+
+
         //check if device id is same
         if (duplicateDeviceId($user_id, $deviceDetails) == false) {
             //new entry of sessionTable
@@ -101,6 +122,41 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
                     return $address;
                 });
+        } elseif ($userRole == 'hoa') {
+
+
+            $prevConnectDevicecount = SessionTable::with([
+                'pdname' => function ($q) use ($uid) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                        ->where('user_id', '=', $uid);
+                }
+            ])
+                ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $uid],
+                    ['passcode', '=', null],
+                ])
+                ->orWhere([
+                    ['passcode', '=', $passcode],
+                ])
+                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
+                ->orderBy('connected_devices', 'asc');
+            $s = '';
+            $numofdevice = '';
+            $s = $prevConnectDevicecount->get()->makeHidden('pdname')
+                ->map(function ($address) {
+
+                    $address['session_id'] = HashUserID($address['id']);
+
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+                    unset($address->pdname);
+                    unset($address['device']);
+                    unset($address['id']);
+                    return $address;
+                });
+            // return response()->json(["message" => $prevConnectDevicecount->count()])->send();
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
@@ -750,6 +806,7 @@ function isDeviceAppleRokuOthers($ua)
 
 function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
 {
+
     $userInfo = JWTAuth::setToken($token)->toUser();
     $user = User::find($user_id);
     $resultoffset = $user->zipcode;
@@ -794,7 +851,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
 
             'success' => true,
             'message' => 'logged in successfully ',
-            'passcode' => HashUserID($userInfo->id),
+            'passcode' => HoaUser::getCurrentHoaUser() == null ? HashUserID($userInfo->id) : HoaUser::getCurrentHoaUser()->passcode,
             'response_code' => 200,
             'fcm_token' => $fcm_token,
             'sessionid' => HashUserID($Saved['LastInsertId']),
@@ -814,7 +871,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'rooms' => $rooms,
             'is_hoa_main_user' => HoaUser::isHoaMainUser(),
             'houses' => HoaUser::getHoaHouseList(),
-            'hoa_user' => HoaUser::getCurrentHoaUser($user_id),
+            'hoa_user' => HoaUser::getCurrentHoaUser(),
             'userrole' => $userInfo->roles->pluck('name')[0],
             'subscribed' => $subscriptionStatus,
             'subscribedmsgis' => $kindlysubscribemsg

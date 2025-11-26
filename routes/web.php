@@ -481,15 +481,13 @@ Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
 
 Route::any('/{any}', [AngularController::class, 'index'])
-    ->where('any', '^(?!api|admin|stripe|hoa).*$')
+    ->where('any', '^(?!api|admin|stripe|hoa-sub-user-email).*$')
     ->name('angular');
 
-
-
-Route::get('/hoa/sub-user/email/verify/{id}/{hash}', [ApiHoaController::class, 'emailVerify'])->name('sub.user.email.verify');
+Route::get('/hoa-sub-user-email/verify/{id}/{hash}', [ApiHoaController::class, 'emailVerify'])->name('sub.user.email.verify');
 // url from frontend
-Route::get('hoa/sub-user/account/register/{id}/{hash}', [ApiHoaController::class, 'accountRegister'])->name('sub.user.account.register');
-Route::get('/hoa/sub-user/regenerate-passcode/{token}', [ApiHoaController::class, 'regeneratePasscode'])->name('sub.user.regenerate.passcode');
+// Route::get('/sub-user-account/register/{id}/{hash}', [ApiHoaController::class, 'accountRegister'])->name('sub.user.account.register');
+
 // cron route custom user
 
 Route::post('/subscriptioncron', 'SubscriptionCronController@subscriptioncron');
