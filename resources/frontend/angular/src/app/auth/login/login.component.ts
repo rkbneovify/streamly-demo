@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
 
-interface QrCode{
-  key:string;
-  msg:string;
-  status:number;
+interface QrCode {
+  key: string;
+  msg: string;
+  status: number;
 }
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, NgClass,RouterLink],
+  imports: [NgIf, ReactiveFormsModule, NgClass, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -27,15 +27,16 @@ export class LoginComponent implements OnInit {
   showPasscode = false;
   userDeviceID!: string;
   loading = false;
-
-  qrCodeImage:string = null;
+  queryTab: string | null = null;
+  qrCodeImage: string = null;
 
   constructor(
     private fb: FormBuilder,
     private crudService: CrudService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.initializeForms();
   }
@@ -43,7 +44,25 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.checkStoredDeviceId();
     this.createQRCode();
+    this.queryTab = this.activatedRoute.snapshot.queryParamMap.get('tab');
+
+    switch (this.queryTab) {
+      case "passcode":
+        this.selectedTab = "loginwithpasscode";
+        break;
+
+      case "qr":
+        this.selectedTab = "loginwithqr";
+        break;
+
+
+      default:
+        this.selectedTab = "loginwithpassword";
+        break;
+    }
   }
+
+
 
   private initializeForms() {
     this.loginFormWithEmail = this.fb.group({
@@ -82,7 +101,7 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-  
+
   onSubmitpasscode() {
     this.checkLocationAccess(() => {
       if (this.loginPasscodeForm.valid) {
@@ -91,7 +110,7 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-  
+
 
   private authenticateUser(apiEndpoint: string, formData: any) {
     this.loading = true;
@@ -119,7 +138,7 @@ export class LoginComponent implements OnInit {
   private checkLocationAccess(callback: () => void) {
     const locationData = localStorage.getItem('userLocation');
     const locationDenied = localStorage.getItem('locationDenied');
-  
+
     if (locationData) {
       callback(); // Location is already available, proceed with login
     } else if (locationDenied) {
@@ -130,27 +149,27 @@ export class LoginComponent implements OnInit {
         tapToDismiss: false, // Disable closing on click anywhere
         extendedTimeOut: 0, // Prevent closing after some delay
       });
-      
+
     } else {
       // First time asking for location
       this.requestLocationPermission(callback);
     }
   }
-  
+
 
   // private checkLocationAccess(callback: () => void) {
   //   const storedLocation = localStorage.getItem('userLocation');
-  
+
   //   if (storedLocation) {
   //     callback(); // Location exists, proceed with login
   //   } else {
   //     this.requestLocationPermission(callback);
   //   }
   // }
-  
+
   private async getZipcodeFromCoordinates(latitude: number, longitude: number): Promise<string> {
     const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-  
+
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -160,7 +179,7 @@ export class LoginComponent implements OnInit {
       throw error;
     }
   }
-  
+
   private requestLocationPermission(callback: () => void) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -169,7 +188,7 @@ export class LoginComponent implements OnInit {
           try {
             const zipcode = await this.getZipcodeFromCoordinates(latitude, longitude);
             const locationData = { latitude, longitude, zipcode };
-  
+
             localStorage.setItem('userLocation', JSON.stringify(locationData));
             localStorage.removeItem('locationDenied'); // Clear flag if granted
             callback(); // Proceed with login
@@ -195,7 +214,7 @@ export class LoginComponent implements OnInit {
       this.toastr.error('Geolocation is not supported by your browser.');
     }
   }
-  
+
 
 
   // private requestLocationPermission(callback: () => void) {
@@ -203,11 +222,11 @@ export class LoginComponent implements OnInit {
   //     navigator.geolocation.getCurrentPosition(
   //       async (position) => {
   //         const { latitude, longitude } = position.coords;
-  
+
   //         try {
   //           const zipcode = await this.getZipcodeFromCoordinates(latitude, longitude);
   //           const locationData = { latitude, longitude, zipcode };
-  
+
   //           localStorage.setItem('userLocation', JSON.stringify(locationData));
   //           // this.toastr.success(`Location access granted. Zipcode: ${zipcode}`);
   //           callback(); // Proceed with login after location is obtained
@@ -227,8 +246,8 @@ export class LoginComponent implements OnInit {
   //     this.toastr.error('Geolocation is not supported by your browser.');
   //   }
   // }
-  
-  
+
+
 
   private handleErrorResponse(err: any, formData: any) {
     this.loading = false;
@@ -282,12 +301,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  createQRCode(){
-    this.crudService.postRequest('login/create/qrcode',{}).subscribe({
-      next:(res:QrCode)=>{
+  createQRCode() {
+    this.crudService.postRequest('login/create/qrcode', {}).subscribe({
+      next: (res: QrCode) => {
         this.qrCodeImage = res.msg;
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
       }
     })

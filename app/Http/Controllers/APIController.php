@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HoaUser;
 use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
@@ -354,82 +355,101 @@ class APIController extends Controller
 
         // Fetch `connected_device` from users table
         $userConnectedDevice = $user->connected_device;
-
-        if ($userRole == 'tieruser') {
-            $prevConnectDevicecount = SessionTable::with([
-                'hotel:id,hotel_room,session_id',
-                'pdname' => function ($q) use ($uid) {
-                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                        ->where('user_id', '=', $uid);
-                }
-            ])
-                ->select('user_ip', 'logintime')
-                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
-                ->where([
-                    ['status', '=', '1'],
-                    ['users_id', '=', $uid],
+        $hoaUser = HoaUser::getCurrentSubUserByToken();
+        if ($hoaUser == null) {
+            if ($userRole == 'tieruser') {
+                $prevConnectDevicecount = SessionTable::with([
+                    'hotel:id,hotel_room,session_id',
+                    'pdname' => function ($q) use ($uid) {
+                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                            ->where('user_id', '=', $uid);
+                    }
                 ])
-                ->orderBy('connected_devices', 'asc');
+                    ->select('user_ip', 'logintime')
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                    ->where([
+                        ['status', '=', '1'],
+                        ['users_id', '=', $uid],
+                    ])
+                    ->orderBy('connected_devices', 'asc');
 
-            $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
-                $address['session_id'] = HashUserID($address['id']);
-                $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
-                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
-                $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+                $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
+                    $address['session_id'] = HashUserID($address['id']);
+                    $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
 
-                // ✅ Fix logintime format (remove microseconds)
-                if (!empty($address['logintime'])) {
-                    $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
-                }
+                    // ✅ Fix logintime format (remove microseconds)
+                    if (!empty($address['logintime'])) {
+                        $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
+                    }
 
 
-                unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
-                return $address;
-            });
-        } else {
-            $prevConnectDevicecount = SessionTable::with([
-                'pdname' => function ($q) use ($uid) {
-                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                        ->where('user_id', '=', $uid);
-                }
-            ])
-                ->where([
-                    ['status', '=', '1'],
-                    ['users_id', '=', $uid],
+                    unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
+                    return $address;
+                });
+            } else {
+                $prevConnectDevicecount = SessionTable::with([
+                    'pdname' => function ($q) use ($uid) {
+                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                            ->where('user_id', '=', $uid);
+                    }
                 ])
-                ->select('user_ip', 'logintime')
-                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
-                ->orderBy('connected_devices', 'asc');
+                    ->where([
+                        ['status', '=', '1'],
+                        ['users_id', '=', $uid],
+                    ])
+                    ->select('user_ip', 'logintime')
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                    ->orderBy('connected_devices', 'asc');
 
-            $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
-                $address['session_id'] = HashUserID($address['id']);
-                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
-                $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+                $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
+                    $address['session_id'] = HashUserID($address['id']);
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
 
-                // ✅ Fix logintime format (remove microseconds)
-                if (!empty($address['logintime'])) {
-                    $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
-                }
+                    // ✅ Fix logintime format (remove microseconds)
+                    if (!empty($address['logintime'])) {
+                        $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
+                    }
 
-                unset($address['pdname'], $address['device'], $address['id']);
-                return $address;
-            });
+                    unset($address['pdname'], $address['device'], $address['id']);
+                    return $address;
+                });
+            }
+
+            $numofdevice = $prevConnectDevicecount->count();
+
+            // Final response
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'numofdevice' => $numofdevice,
+                'userDeviceLimit' => GetLimitForUser($uid),
+                'user_connected_device' => $userConnectedDevice,
+                'message' => 'Connected device found successfully',
+                'data' => $s,
+            ];
+
+            return response()->json($response, 200);
         }
 
-        $numofdevice = $prevConnectDevicecount->count();
 
-        // Final response
+        $sessions = HoaUser::getSubUserActiveSessions($hoaUser);
+        // unset($sessions['device']);
         $response = [
             'success' => true,
             'response_code' => 200,
-            'numofdevice' => $numofdevice,
-            'userDeviceLimit' => GetLimitForUser($uid),
+            'numofdevice' => count($sessions),
+            'userDeviceLimit' => $hoaUser->device_limit,
             'user_connected_device' => $userConnectedDevice,
             'message' => 'Connected device found successfully',
-            'data' => $s,
+            'data' => $sessions,
         ];
 
         return response()->json($response, 200);
+
+
     }
 
 
