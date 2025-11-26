@@ -286,4 +286,6 @@ class HoaUser extends Model
 
     }
 
+
+
 }
