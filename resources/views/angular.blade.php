@@ -220,11 +220,25 @@
     <script src="main.js" type="module"></script>
 
 
+    @if (session('mainalert'))
+        <script>
+            window.appAlert = @json(session('mainalert'));
+        </script>
+    @endif
+
     <script>
         window.addEventListener("load", function() {
-            @include('sweetalert::alert')
+            if (window.appAlert) {
+                Swal.fire({
+                    title: window.appAlert.title ?? '',
+                    text: window.appAlert.text ?? '',
+                    icon: window.appAlert.icon ?? 'info',
+                    allowOutsideClick: false
+                });
+            }
         });
     </script>
+
 </body>
 
 </html>
