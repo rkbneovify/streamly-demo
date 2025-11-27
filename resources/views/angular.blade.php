@@ -223,6 +223,7 @@
     @if (session('mainalert'))
         <script>
             window.appAlert = @json(session('mainalert'));
+            console.log("window.appAlert")
         </script>
     @endif
 
@@ -233,7 +234,9 @@
                     title: window.appAlert.title ?? '',
                     text: window.appAlert.text ?? '',
                     icon: window.appAlert.icon ?? 'info',
-                    allowOutsideClick: false
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+
                 });
             }
         });
