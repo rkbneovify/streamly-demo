@@ -19,8 +19,8 @@ resources/frontend/angular/src/environments/environment.prod.ts
 resources/frontend/angular/src/environments/environment.ts
 
 # Ignore personal artisan cmd file
-# /app/Console/Commands/GitSync.php
-# /app/Console/Commands/NgCommand.php
+/app/Console/Commands/GitSync.php
+/app/Console/Commands/NgCommand.php
 # to upload channel logo
 !public/uploads/fundue.jpg
 !public/uploads/fundue.png
