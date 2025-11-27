@@ -14,7 +14,6 @@ class DebugKernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-
         Commands\GitSync::class,
         Commands\NgCommand::class,
         //
