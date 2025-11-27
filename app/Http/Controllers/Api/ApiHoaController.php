@@ -215,7 +215,7 @@ class ApiHoaController extends Controller
             // return redirect('/');
             return redirect('/')->with('mainalert', [
                 'title' => 'Error !',
-                'text' => 'Link expired. Please request a new passcode reset.',
+                'text' => 'Link expired. Please request again forgot passcode .',
                 'icon' => 'error'
             ]);
         }
@@ -225,7 +225,7 @@ class ApiHoaController extends Controller
             // return redirect('/');
             return redirect('/')->with('mainalert', [
                 'title' => 'Error !',
-                'text' => 'Link expired. Please request a new passcode reset.',
+                'text' => 'Link expired. Please request again forgot passcode .',
                 'icon' => 'error'
             ]);
         }
