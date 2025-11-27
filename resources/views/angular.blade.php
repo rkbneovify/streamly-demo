@@ -218,7 +218,13 @@
     <script src="polyfills.js" type="module"></script>
     <script src="scripts.js" defer></script>
     <script src="main.js" type="module"></script>
-    @include('sweetalert::alert')
+
+
+    <script>
+        window.addEventListener("load", function() {
+            @include('sweetalert::alert')
+        });
+    </script>
 </body>
 
 </html>
