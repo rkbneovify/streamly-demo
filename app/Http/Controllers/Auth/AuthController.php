@@ -172,18 +172,19 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
         if ($user->is_custom_user == 1) {
-
+            $userRole = $user->roles->pluck('name');
             $deviceLimit = GetLimitForUser($user->id);
 
             $userActiveDeviceCount = SessionTable::where("users_id", $user->id)->where("status", 1)->count();
-            if ($userActiveDeviceCount >= $deviceLimit) {
-                return response()->json([
-                    'success' => false,
-                    'response_code' => 402,
-                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
+            if ($userRole[0] == 'tieruser')
+                if ($userActiveDeviceCount >= $deviceLimit) {
+                    return response()->json([
+                        'success' => false,
+                        'response_code' => 402,
+                        'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
 
-                ], 402);
-            }
+                    ], 402);
+                }
         }
 
         $userRole = $user->roles->pluck('name');
