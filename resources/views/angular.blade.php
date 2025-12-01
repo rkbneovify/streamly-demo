@@ -218,7 +218,30 @@
     <script src="polyfills.js" type="module"></script>
     <script src="scripts.js" defer></script>
     <script src="main.js" type="module"></script>
-    @include('sweetalert::alert')
+
+
+    @if (session('mainalert'))
+        <script>
+            window.appAlert = @json(session('mainalert'));
+            console.log("window.appAlert")
+        </script>
+    @endif
+
+    <script>
+        window.addEventListener("load", function() {
+            if (window.appAlert) {
+                Swal.fire({
+                    title: window.appAlert.title ?? '',
+                    text: window.appAlert.text ?? '',
+                    icon: window.appAlert.icon ?? 'info',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+
+                });
+            }
+        });
+    </script>
+
 </body>
 
 </html>

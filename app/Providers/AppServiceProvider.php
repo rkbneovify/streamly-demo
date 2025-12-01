@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Console\DebugKernel;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
@@ -14,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if (config('app.debug')) {
+            $this->app->singleton(DebugKernel::class);
+        }
     }
 
     /**
