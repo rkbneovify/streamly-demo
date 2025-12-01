@@ -450,7 +450,7 @@ class StripeController extends Controller
 
 
         ];
-        $response_to_send['hoa_sub_user_subscription'] = [];
+        $response_to_send['hoa_sub_user_subscription'] = null;
         if ($hoaUser != null) {
 
             $user_data = [
