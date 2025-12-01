@@ -1,63 +1,209 @@
 <main>
     <ng-container *ngIf="isConnectedDeviceShow; else elseTemplate">
         <div class="remove_Device-Container">
-                <h1>Connected Devices</h1>
-                <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
-                    <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId?.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
+            <h1>Connected Devices</h1>
+            <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
+                <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId?.length >0}" type="button"
+                    value="Log-out Devices" (click)="mutileLogout()">
                 <p class="d-inline-block">Device {{connectedDevice?.length}}/{{numOfDevice}}</p>
-                </div>
-                <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
-                    
-                    <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
-                        <div class="devi_top">
-                            <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
-                            <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
-                            <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
-                            
-                            <ng-container  *ngIf="current_device == data.personaldeviceid; else btnlogOut">
-                                <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                    <img loading="lazy" src="../../../assets/dummy-img/check-circle.svg" alt="">
-                                    <p >This Device</p>
-                                </div>
-                            </ng-container>
-    
-                            <ng-template #btnlogOut>
-                                <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                    <button class="btn_hover w-auto h-auto min-h-auto" (click)="removedevice(data.session_id)" >Log out</button>
-                                </div>
-                            </ng-template>
-    
+            </div>
+            <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
+
+                <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
+                    <div class="devi_top">
+                        <input *ngIf="current_device !== data.personaldeviceid" type="checkbox"
+                            (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
+                        <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
+                        <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png"
+                            alt="laptop">
+
+                        <ng-container *ngIf="current_device == data.personaldeviceid; else btnlogOut">
+                            <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                <img loading="lazy" src="../../../assets/dummy-img/check-circle.svg" alt="">
+                                <p>This Device</p>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #btnlogOut>
+                            <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                <button class="btn_hover w-auto h-auto min-h-auto"
+                                    (click)="removedevice(data.session_id)">Log out</button>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                    <div class="devi_bottom">
+                        <div class="remove_dev_con d-flex justify-content-between">
+                            <p class="dev_heading">IP</p>
+                            <p>{{data?.user_ip}}</p>
                         </div>
-                        <div class="devi_bottom">
-                            <div class="remove_dev_con d-flex justify-content-between">
-                                <p class="dev_heading">IP</p>
-                                <p>{{data?.user_ip}}</p>
-                            </div>
-                            <div class="remove_dev_con my-3 d-flex justify-content-between">
-                                <p class="dev_heading">Login</p>
-                                <p>{{(data?.logintime | timeAgo)}}</p>
-                            </div>
-                            <div class="remove_dev_con d-flex justify-content-between">
-                                <p class="dev_heading">{{data.device_type}}</p>
-                                <p class="d-flex gap-1 flex-nowrap">
-                                    <img loading="lazy" src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
-                                    {{data.device_name}}
-                                </p>
-                            </div>
+                        <div class="remove_dev_con my-3 d-flex justify-content-between">
+                            <p class="dev_heading">Login</p>
+                            <p>{{(data?.logintime | timeAgo)}}</p>
+                        </div>
+                        <div class="remove_dev_con d-flex justify-content-between">
+                            <p class="dev_heading">{{data.device_type}}</p>
+                            <p class="d-flex gap-1 flex-nowrap">
+                                <img loading="lazy" src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
+                                {{data.device_name}}
+                            </p>
                         </div>
                     </div>
-    
                 </div>
+
+            </div>
         </div>
     </ng-container>
+
+    <ng-container *ngIf="isHoaMainUser">
+        <div class="home-area">
+            <h1>Connected Houses</h1>
+            <div class="home-total">
+                <div class="item-left">
+                    <p>Total Houses : 3 Active | <span>1 Inactive</span></p>
+                </div>
+                <div class="item-right">
+                    <p> Device Limit : 5</p>
+                </div>
+            </div>
+            <div class="search-and-btns">
+                <div class="item-left">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search" />
+                        <img src="../../../assets/dummy-img/search-md.svg" alt="icon">
+                    </div>
+                </div>
+                <div class="item-right">
+                    <div (click)="showHomeAddPopUp()" class="btn-add-house">
+                        <img src="../../../assets/dummy-img/home-add.svg" alt="icon">
+                        Add New House
+                    </div>
+
+                    <div class="btn-sortby">
+
+                        <app-sort-by-dropdown>
+                        </app-sort-by-dropdown>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+
+                <div class="item-box" *ngFor="let item of housesList">
+                    <div [ngClass]="item.status==1?'item item-active':'item item-inactive'">
+                        <div class="item-header">
+                            <p>{{item.name}}</p>
+                            <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
+                                <span>{{item.status===1?'Active':'Inactive'}}</span>
+                            </div>
+                        </div>
+                        <div class="item-body">
+                            <div class="item-row">
+                                <p>House Number :</p>
+                                <p>{{item.house_no}}</p>
+                            </div>
+                            <div class="item-row">
+                                <p>Email :</p>
+                                <p>{{item.email}}</p>
+                            </div>
+                            <div class="item-row">
+                                <p>Passcode :</p>
+                                <p>{{item.passcode}}</p>
+                            </div>
+                            <div class="item-row">
+                                <p>Devices :</p>
+                                <p>{{item.session.length}} / {{item.device_limit}}</p>
+                            </div>
+                        </div>
+                        <div class="item-footer">
+                            <a class="btn-item btn-deactive">
+                                <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
+                                <span>Deactive</span>
+                            </a>
+                            <a class="btn-item btn-send">
+                                <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                <span>Send Email</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <!-- content end -->
+            </div>
+        </div>
+    </ng-container>
+
     <ng-template #elseTemplate>
         <div class="remove_Device-Container">
             <h1>You Have No Permssion</h1>
         </div>
-    </ng-template>   
+    </ng-template>
+
+
+
+
+    <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopDeleteAccount"
+        id="btnShowPopDeleteAccount"></button>
+    <div class="modal fade" id="showPopDeleteAccount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered zipcode_correct">
+            <div class="modal-content showPopConf popup_bg margin-left-3">
+                <div class="modal-header p-0 m-0 d-flex justify-content-end">
+                    <div class="btn-cl">
+                        <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close"
+                            src="../../../assets/dummy-img/x-circle.svg" alt="" />
+                    </div>
+                </div>
+                <div class="modal-body p-0 m-0">
+                    <div class="zip_top">
+                        <h3 class="d-flex gap-2 mt-2 mb-0">
+                            <span class="d-flex gap-2">
+                                <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+                                Add New House
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+                        <div class="zip_bottom_p">
+                            <form class="d-flex flex-column gap-2 justify-content-evenly ">
+                                <input type="text" class="input_standred" placeholder="Enter Email"
+                                    formControlName="password" />
+
+                                <select class="input_standred">
+                                    <option value="">Device Limit</option>
+                                    <option *ngFor="let num of devicePerHouse" [value]="num">
+                                        {{ num }} Device
+                                    </option>
+                                </select>
+                                <select class="input_standred">
+                                    <option value="">Plan for Month</option>
+                                    <option value="1">1 Month</option>
+                                    <option value="3">3 Month</option>
+                                    <option value="6">6 Month</option>
+                                    <option value="12">12 Month</option>
+                                </select>
+                                <input type="text" class="input_standred" placeholder="Enter Amount"
+                                    formControlName="amount" />
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </main>
 
-    <!-- channels container end -->
+<!-- channels container end -->
 <div *ngIf="isLoading" class="loader-overlay">
-  <div class="loader"></div>
+    <div class="loader"></div>
 </div>
