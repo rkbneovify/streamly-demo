@@ -55,7 +55,7 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="isHoaMainUser">
+    <ng-container *ngIf="isHoaMainUser && !isLoading">
         <div class="home-area">
             <h1>Connected Houses</h1>
             <div class="home-total">

@@ -311,10 +311,10 @@ class AuthController extends Controller
             if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
                 return response()->json([
                     'success' => false,
-                    'response_code' => 402,
+                    'response_code' => 479,
                     'message' => 'Your login limit has been reached. Please contact your service provider to enable further login 1',
 
-                ], 402);
+                ], 479);
             }
 
             $uid = $hoaUser->user_id;
@@ -348,7 +348,7 @@ class AuthController extends Controller
         $userRole = $user->roles->pluck('name');
         //todo hotel check
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
-            
+
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }

@@ -66,7 +66,11 @@ export class TotalaccountComponent {
       }
     } else console.log('not getting logged device');
     this.connectedDevice = this.response;
-    this.getHouseList();
+
+    if (this.isHoaMainUser) {
+      this.getHouseList();
+    }
+
   }
 
   get_all_device() {
@@ -209,13 +213,17 @@ export class TotalaccountComponent {
 
 
   getHouseList() {
-    this.apiService.getRequest("auth/hoa/house-list").subscribe({
+
+    this.isLoading = true;
+    this.apiService.getRequest("auth/hoa/house-list?page=1").subscribe({
       next: (res: any) => {
-        console.log("house list :", res);
+        this.isLoading = false;
+        // console.log("house list :", res);
         this.housesList = res.data;
 
       },
       error: (err: any) => {
+        this.isLoading = false;
         this.toastr.error(err.error.message);
       }
     })

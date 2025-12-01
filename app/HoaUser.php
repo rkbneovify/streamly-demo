@@ -286,6 +286,21 @@ class HoaUser extends Model
 
     }
 
+    public static function activeHouseCount()
+    {
+        $userId = auth()->user()->id;
+        return HoaUser::where('user_id', $userId)
+            ->where('status', 1)
+            ->count();
+    }
+    public static function inactiveHouseCount()
+    {
+        $userId = auth()->user()->id;
+        return HoaUser::where('user_id', $userId)
+            ->where('status', 0)
+            ->count();
+    }
+
 
 
 }
