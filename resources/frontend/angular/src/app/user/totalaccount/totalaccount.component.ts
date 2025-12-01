@@ -4,11 +4,12 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
+import { SortByDropdownComponent } from "../../components/sort-by-dropdown/sort-by-dropdown.component";
 
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss',
 })
@@ -21,12 +22,32 @@ export class TotalaccountComponent {
   deviceId: Array<string> = [];
   isLoading: boolean = false;
   isConnectedDeviceShow: boolean = false;
+  isHoaMainUser: boolean = false;
+  devicePerHouse: Array<number> = [];
+  userData: any;
+  housesList: Array<any> = [];
   constructor(private apiService: CrudService, private toastr: ToastrService) {
     this.get_all_device();
   }
 
   ngOnInit() {
     const jsonData = localStorage.getItem('loggedInDeviceDetails');
+    const isHoaMain = localStorage.getItem('is_hoa_main_user');
+    const userDetails = localStorage.getItem('userDetails');
+    if (userDetails !== null) {
+      this.userData = JSON.parse(
+        localStorage.getItem('userDetails') || ''
+      );
+      this.devicePerHouse = Array.from(
+        { length: Number(this.userData.device_per_house) },
+        (_, i) => i + 1
+      );
+
+
+    }
+    if (isHoaMain !== null) {
+      this.isHoaMainUser = (isHoaMain === 'true');
+    }
     if (jsonData !== null) {
       try {
         let data = JSON.parse(
@@ -45,6 +66,11 @@ export class TotalaccountComponent {
       }
     } else console.log('not getting logged device');
     this.connectedDevice = this.response;
+
+    if (this.isHoaMainUser) {
+      this.getHouseList();
+    }
+
   }
 
   get_all_device() {
@@ -114,7 +140,7 @@ export class TotalaccountComponent {
     this.isLoading = true;
     const userToken = localStorage.getItem('deviceInfo');
     let headers;
-  
+
     if (userToken !== null) {
       this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
       const tokenData = this.access_Token?.access_token;
@@ -124,27 +150,27 @@ export class TotalaccountComponent {
         Accept: 'application/json',
       });
     }
-  
+
     this.apiService
       .postRequest('auth/multi-session-destroy', { id: id }, headers)
       .subscribe({
         next: (res: any) => {
           if (res.jwterror == 'no error') {
             this.toastr.success('Devices removed successfully');
-  
+
             // Filter out the removed devices from the connectedDevice array
             id.forEach(sessionId => {
               this.connectedDevice = this.connectedDevice.filter(
                 (device: any) => device.session_id !== sessionId
               );
             });
-  
+
             this.response = this.connectedDevice;
             localStorage.setItem(
               'loggedInDeviceDetails',
               JSON.stringify(this.response)
             );
-            
+
             this.deviceId = [];
             this.isLoading = false;
           }
@@ -155,8 +181,8 @@ export class TotalaccountComponent {
         },
       });
   }
-  
-  
+
+
 
   removedevice(id: any): void {
     this.isLoading = true;
@@ -183,5 +209,30 @@ export class TotalaccountComponent {
           this.isLoading = false;
         },
       });
+  }
+
+
+  getHouseList() {
+
+    this.isLoading = true;
+    this.apiService.getRequest("auth/hoa/house-list?page=1").subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        // console.log("house list :", res);
+        this.housesList = res.data;
+
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        this.toastr.error(err.error.message);
+      }
+    })
+  }
+  showHomeAddPopUp() {
+    document.getElementById('btnShowPopDeleteAccount').click();
+  }
+
+  onFruitSelected(value: string) {
+    console.log("Selected:", value);
   }
 }
