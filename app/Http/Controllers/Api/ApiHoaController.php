@@ -48,6 +48,7 @@ class ApiHoaController extends Controller
             $query = HoaUser::query();
             $query->with('session');
             $query->withCount('session');
+            $query->with('subscriptionLatest');
             $query->where('user_id', $user->id);
             $query->when($request->has('q'), function ($q) use ($request) {
                 $q->where('passcode', 'like', '%' . $request->q . '%')
@@ -63,6 +64,8 @@ class ApiHoaController extends Controller
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
+                    'active_house_count' => HoaUser::activeHouseCount(),
+                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
                     'data' => $data,
 
                 ], 200);
@@ -74,6 +77,8 @@ class ApiHoaController extends Controller
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
+                    'active_house_count' => HoaUser::activeHouseCount(),
+                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
                     'data' => $data->items(),
                     'current_page' => $data->currentPage(),
                     'last_page' => $data->lastPage(),
@@ -211,13 +216,23 @@ class ApiHoaController extends Controller
 
         if ($tokenData == null) {
 
-            Alert::error('Error', 'Invalid link. Please request a new passcode reset.');
-            return redirect('/');
+            // Alert::error('Error', 'Invalid link. Please request a new passcode reset.');
+            // return redirect('/');
+            return redirect('/')->with('mainalert', [
+                'title' => 'Error !',
+                'text' => 'Link expired. Please request again forgot passcode .',
+                'icon' => 'error'
+            ]);
         }
         $expireIn = Carbon::parse($tokenData->created_at)->diffInMinutes(now());
         if ($expireIn >= 30) {
-            Alert::error('Error', 'Link expired. Please request a new passcode reset.');
-            return redirect('/');
+            // Alert::error('Error', 'Link expired. Please request a new passcode reset.');
+            // return redirect('/');
+            return redirect('/')->with('mainalert', [
+                'title' => 'Error !',
+                'text' => 'Link expired. Please request again forgot passcode .',
+                'icon' => 'error'
+            ]);
         }
 
         $hoaUser = HoaUser::where('email', $request->email)
@@ -225,8 +240,13 @@ class ApiHoaController extends Controller
             ->first();
         if ($hoaUser == null) {
 
-            Alert::error('Error', 'No active account found for the provided email.');
-            return redirect('/');
+            // Alert::error('Error', 'No active account found for the provided email.');
+            // return redirect('/');
+            return redirect('/')->with('mainalert', [
+                'title' => 'Error !',
+                'text' => 'No active account found for the provided email.',
+                'icon' => 'error'
+            ]);
 
         }
 
@@ -246,15 +266,27 @@ class ApiHoaController extends Controller
             Mail::to($hoaUser->email)
                 ->send(new HoaSubUserPasscodeRegenerate($hoaUser));
 
-            Alert::success('Success', 'Passcode regenerated successfully ! Please check your email.')
-                ->persistent(true)
-                ->autoClose(false);
-            return redirect('/');
+            // Alert::success('Success', 'Passcode regenerated successfully ! Please check your email.')
+            //     ->persistent(true)
+            //     ->autoClose(false);
+
+            return redirect('/')->with('mainalert', [
+                'title' => 'Success!',
+                'text' => 'Passcode regenerated successfully ! Please check your email.',
+                'icon' => 'success'
+            ]);
+
+
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            Alert::error('Error', $th->getMessage());
-            return redirect('/');
+            // Alert::error('Error', $th->getMessage());
+            return redirect('/')->with('mainalert', [
+                'title' => 'Error !',
+                'text' => 'Something went wrong ! Please try again later.',
+                'icon' => 'error'
+            ]);
+            // return redirect('/');
         }
 
 
