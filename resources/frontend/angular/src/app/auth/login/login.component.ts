@@ -289,6 +289,9 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
     this.authService.setAuthorizationToken(token);
     localStorage.setItem('userDetails', JSON.stringify(res.user));
+    localStorage.setItem('is_hoa_main_user', JSON.stringify(res.is_hoa_main_user));
+    localStorage.setItem('hoa_user', JSON.stringify(res.hoa_user));
+
   }
 
   private generateDeviceId() {

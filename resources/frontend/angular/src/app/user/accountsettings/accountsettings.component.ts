@@ -95,16 +95,17 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
     });
-    // const jsonData = localStorage.getItem('userDetails');
-    // if (jsonData !== null) {
-    //   try {
-    //     this.usersdetail = JSON.parse(
-    //       localStorage.getItem('userDetails') || ''
-    //     );
-    //   } catch (error) {
-    //     console.error('Error parsing JSON data:', error);
-    //   }
-    // }
+    const jsonData = localStorage.getItem('userDetails');
+    const isHoaSubUser = localStorage.getItem('hoa_user');
+    if (jsonData !== null && isHoaSubUser == 'null') {
+      try {
+        this.usersdetail = JSON.parse(
+          localStorage.getItem('userDetails') || ''
+        );
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
     const deviceInfoData = localStorage.getItem('deviceInfo');
     if (deviceInfoData !== null) {
       try {
