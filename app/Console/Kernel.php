@@ -17,9 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\WebSocketServer::class,
         Commands\DemoCron::class,
         Commands\CheckStripeCustomerMode::class,
-        Commands\GitSync::class,
-        Commands\NgCommand::class,
-        //
+
     ];
 
     /**
