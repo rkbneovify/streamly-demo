@@ -452,7 +452,7 @@ class StripeController extends Controller
         ];
         $response_to_send['hoa_sub_user_subscription'] = [];
         if ($hoaUser != null) {
-            $hoaSubscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
+
             $user_data = [
                 "id" => $hoaUser->id,
                 "name" => $hoaUser->name,
@@ -466,13 +466,18 @@ class StripeController extends Controller
 
             ];
 
+            $hoaSubscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
+            if ($hoaSubscription != null) {
+                $response_to_send['hoa_sub_user_subscription'] = $hoaSubscription;
+            }
+
         }
 
 
 
 
         $response_to_send['userinfo'] = $user_data;
-        $response_to_send['hoa_sub_user_subscription'] = $hoaSubscription;
+
         try {
             $customerId = $userinfo->stripe_id;
 
