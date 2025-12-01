@@ -48,6 +48,7 @@ class ApiHoaController extends Controller
             $query = HoaUser::query();
             $query->with('session');
             $query->withCount('session');
+            $query->with('subscriptionLatest');
             $query->where('user_id', $user->id);
             $query->when($request->has('q'), function ($q) use ($request) {
                 $q->where('passcode', 'like', '%' . $request->q . '%')
@@ -63,6 +64,8 @@ class ApiHoaController extends Controller
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
+                    'active_house_count' => HoaUser::activeHouseCount(),
+                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
                     'data' => $data,
 
                 ], 200);
@@ -74,6 +77,8 @@ class ApiHoaController extends Controller
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
+                    'active_house_count' => HoaUser::activeHouseCount(),
+                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
                     'data' => $data->items(),
                     'current_page' => $data->currentPage(),
                     'last_page' => $data->lastPage(),
