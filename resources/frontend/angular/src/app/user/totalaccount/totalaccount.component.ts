@@ -350,6 +350,22 @@ export class TotalaccountComponent {
       .then(result => {
         if (result.isConfirmed) {
           this.houseId = houseId;
+          this.sweetAlert.loading();
+
+          this.apiService.putRequest(`auth/hoa/status-change/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+                this.getHouseList(this.page, null);
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
         }
       });
   }
@@ -359,6 +375,21 @@ export class TotalaccountComponent {
       .then(result => {
         if (result.isConfirmed) {
           this.houseId = houseId;
+
+          this.apiService.putRequest(`auth/hoa/status-change/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+                this.getHouseList(this.page, null);
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
         }
       });
   }
