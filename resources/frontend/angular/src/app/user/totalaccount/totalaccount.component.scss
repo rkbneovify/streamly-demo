@@ -141,6 +141,19 @@ main {
   }
 }
 
+.text-suscess {
+  color: #219653;
+}
+
+.text-danger {
+  color: #EB5757;
+}
+
+p {
+  font-family: 'Poppins';
+  font-size: 14px;
+}
+
 // connected houses
 .home-area {
   width: 100%;
@@ -157,6 +170,9 @@ main {
     font-size: 36px;
     font-weight: bold;
   }
+
+
+
 
   .home-total {
     display: flex;
@@ -307,15 +323,24 @@ main {
     }
   }
 
+
   .content {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     width: 100%;
     justify-content: center;
     align-items: center;
     padding: 30px 30px;
     gap: 30px;
 
+    &.single {
+      grid-template-columns: max-content;
+      width: 100%;
+      justify-content: start;
+      align-items: center;
+      padding: 30px 30px;
+      gap: 30px;
+    }
 
     .item-box {
       display: flex;
@@ -400,21 +425,21 @@ main {
           background: transparent;
           border: 1px solid #ffffff;
           border-radius: 8px;
-          width: 120px;
+          width: 110px;
           height: 40px;
           text-decoration: none;
           color: #faebeb;
           font-family: 'Poppins';
 
           img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
 
           }
 
           span {
-            font-size: 14px;
-            font-weight: 300;
+            font-size: 13px;
+            font-weight: 400;
           }
 
 
@@ -437,6 +462,21 @@ main {
           }
 
 
+        }
+
+        .btn-active {
+          cursor: pointer;
+
+          &:hover {
+            background: #219653;
+            border: 1px solid #ffffff;
+            font-weight: bold;
+
+            span {
+              font-size: 12px;
+              font-weight: bold;
+            }
+          }
         }
 
         .btn-send {
