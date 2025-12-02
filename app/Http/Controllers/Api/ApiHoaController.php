@@ -27,73 +27,84 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Stripe\ApiOperations\All;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use Illuminate\Support\Facades\Cache;
 class ApiHoaController extends Controller
 {
 
     use ApiResponseTrait;
 
+
+
     public function index(Request $request)
     {
         try {
+            $perPage = $request->get('per_page', 10);
+            $page = $request->get('page');
 
-            $perPage = null;
-            $page = null;
-            if ($request->has('page')) {
-                $perPage = $request->get('per_page', 10);
-                $page = $request->get('page', 1);
-
-            }
             $user = Auth::user();
-            $query = HoaUser::query();
-            $query->with('session');
-            $query->withCount('session');
-            $query->with('subscriptionLatest');
-            $query->where('user_id', $user->id);
-            $query->when($request->has('q'), function ($q) use ($request) {
-                $q->where('passcode', 'like', '%' . $request->q . '%')
-                    ->orWhere('name', 'like', '%' . $request->q . '%')
-                    ->orWhere('phone', 'like', '%' . $request->q . '%')
-                    ->orWhere('house_no', 'like', '%' . $request->q . '%');
+
+            $query = HoaUser::query()
+                ->with('session')
+                ->withCount('session')
+                ->with('subscription')
+                ->where('user_id', $user->id);
+
+            $query->when($request->has('status'), function ($q) use ($request) {
+                $q->where('status', $request->status);
             });
+
+            $query->when($request->has('q'), function ($q) use ($request) {
+                $q->where(function ($sub) use ($request) {
+                    $sub->where('passcode', 'like', "%{$request->q}%")
+                        ->orWhere('name', 'like', "%{$request->q}%")
+                        ->orWhere('phone', 'like', "%{$request->q}%")
+                        ->orWhere('house_no', 'like', "%{$request->q}%");
+                });
+            });
+
+            // Cache keys depend on filters
+            $cacheKey = 'hoa_users_' . $user->id . '_page_' . ($page ?? 'none') . '_filters_' . md5(json_encode($request->all()));
+
             if ($page == null) {
-
-
-                $data = $query->get();
-                return response()->json([
-                    'success' => true,
-                    'response_code' => 200,
-                    'message' => 'Data fetched successfully !',
-                    'active_house_count' => HoaUser::activeHouseCount(),
-                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
-                    'data' => $data,
-
-                ], 200);
-
-
+                $data = Cache::remember($cacheKey, 60, fn() => $query->get());
             } else {
-                $data = $query->paginate($perPage, ['*'], 'page', $page);
+                $data = Cache::remember($cacheKey, 60, fn() => $query->paginate($perPage, ['*'], 'page', $page));
+            }
+
+            $active = Cache::remember("active_house_count_{$user->id}", 300, fn() => HoaUser::activeHouseCount());
+            $inactive = Cache::remember("inactive_house_count_{$user->id}", 300, fn() => HoaUser::inactiveHouseCount());
+
+            if ($page == null) {
                 return response()->json([
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
-                    'active_house_count' => HoaUser::activeHouseCount(),
-                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
-                    'data' => $data->items(),
-                    'current_page' => $data->currentPage(),
-                    'last_page' => $data->lastPage(),
-                    'per_page' => $data->perPage(),
-                    'total' => $data->total(),
+                    'active_house_count' => $active,
+                    'inactive_house_count' => $inactive,
+                    'data' => $data,
                 ], 200);
             }
 
-
+            return response()->json([
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Data fetched successfully !',
+                'device_limit_per_house' => auth()->user()->device_per_house,
+                'active_house_count' => $active,
+                'deactive_house_count' => $inactive,
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+            ], 200);
 
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
     }
+
 
     public function addHouse(Request $request)
     {
