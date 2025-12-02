@@ -48,8 +48,13 @@ class ApiHoaController extends Controller
             $query = HoaUser::query();
             $query->with('session');
             $query->withCount('session');
-            $query->with('subscriptionLatest');
+            $query->with('subscription');
             $query->where('user_id', $user->id);
+
+            $query->when($request->has('status'), function ($q) use ($request) {
+                $q->where('status', $request->status);
+
+            });
             $query->when($request->has('q'), function ($q) use ($request) {
                 $q->where('passcode', 'like', '%' . $request->q . '%')
                     ->orWhere('name', 'like', '%' . $request->q . '%')
@@ -77,8 +82,9 @@ class ApiHoaController extends Controller
                     'success' => true,
                     'response_code' => 200,
                     'message' => 'Data fetched successfully !',
+                    'device_limit_per_house' => auth()->user()->device_per_house,
                     'active_house_count' => HoaUser::activeHouseCount(),
-                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
+                    'deactive_house_count' => HoaUser::inactiveHouseCount(),
                     'data' => $data->items(),
                     'current_page' => $data->currentPage(),
                     'last_page' => $data->lastPage(),
@@ -337,22 +343,19 @@ class ApiHoaController extends Controller
 
     }
 
-    public function changeStatus(Request $request)
+    public function changeStatus($id)
     {
-        $validator = Validator::make($request->all(), [
-            'passcode' => 'required|string|max:255'
-        ]);
-        if ($validator->fails()) {
-            return $this->validationErrorResponse(null, $validator->errors());
 
-        }
 
 
 
         $user = Auth::user();
-        $hoaUser = HoaUser::where('passcode', $request->passcode)
-            ->where('user_id', $user->id)
-            ->first();
+
+        if ($id != null) {
+            $hoaUser = HoaUser::where('id', $id)
+                ->where('user_id', $user->id)
+                ->first();
+        }
         if ($hoaUser == null) {
             return $this->notFoundResponse('Passcode not found !');
 
@@ -366,7 +369,10 @@ class ApiHoaController extends Controller
                 $hoaUser->status = 1;
             }
             $hoaUser->save();
-            $this->removeActiveSessions($request->passcode, $user->id);
+            if (!empty($hoaUser->passcode)) {
+                $this->removeActiveSessions($hoaUser->passcode, $user->id);
+            }
+
 
 
             DB::commit();
