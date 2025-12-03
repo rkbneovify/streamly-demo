@@ -197,13 +197,14 @@
     <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript>
         <link rel="stylesheet" href="styles.css">
     </noscript>
-    <link rel="modulepreload" href="chunk-4K5GUJAI.js">
-    <link rel="modulepreload" href="chunk-AXQL5DDB.js">
-    <link rel="modulepreload" href="chunk-NSD5DEAS.js">
+    <link rel="modulepreload" href="chunk-OHKT3BY2.js">
+    <link rel="modulepreload" href="chunk-QYDZ2QOB.js">
+    <link rel="modulepreload" href="chunk-YZVK65QU.js">
 </head>
 
 <body>
     <app-root></app-root>
+    @include('sweetalert::alert')
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
     <!--Video.js-->
@@ -223,27 +224,7 @@
     <script src="main.js" type="module"></script>
 
 
-    @if (session('mainalert'))
-        <script>
-            window.appAlert = @json(session('mainalert'));
-            console.log("window.appAlert")
-        </script>
-    @endif
 
-    <script>
-        window.addEventListener("load", function() {
-            if (window.appAlert) {
-                Swal.fire({
-                    title: window.appAlert.title ?? '',
-                    text: window.appAlert.text ?? '',
-                    icon: window.appAlert.icon ?? 'info',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-
-                });
-            }
-        });
-    </script>
 
 </body>
 
