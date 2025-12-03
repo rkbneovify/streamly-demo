@@ -148,6 +148,33 @@ class ApiHoaController extends Controller
 
     }
 
+    public function resendMail($id)
+    {
+        try {
+            $hoaUser = HoaUser::where('id', $id)->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse("User not found !");
+            }
+
+
+            if ($hoaUser->passcode != null) {
+                return $this->errorResponse("User already verified !");
+            }
+            $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->first();
+            if ($subscription != null) {
+
+                Mail::to($hoaUser->email)->send(new VerifyHoaSubUserEmail($hoaUser, intval(trim($subscription->plan_name)), $subscription->amount));
+            }
+
+            DB::commit();
+            return $this->successResponse("Verification mail resend successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function deleteHouse($id)
     {
 
@@ -644,6 +671,15 @@ class ApiHoaController extends Controller
                 $subs->created_at = now();
                 $subs->updated_at = now();
                 $subs->save();
+            } else {
+                $subs->passcode = $hoaUser->passcode;
+                $subs->amount = $request->amount;
+                $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                $subs->plan_start_at = now();
+                $subs->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->plan_in_month);
+                $subs->created_at = now();
+                $subs->updated_at = now();
+                $subs->save();
             }
 
             DB::commit();
@@ -677,7 +713,7 @@ class ApiHoaController extends Controller
             toast("Verification link expired. Please contact your admin.", "error")
                 ->autoClose(3000)
                 ->timerProgressBar();
-            return redirect('/');
+            return redirect('/auth/login');
 
         }
         DB::beginTransaction();
@@ -691,7 +727,12 @@ class ApiHoaController extends Controller
                     return redirect('/');
                 }
             }
-
+            if ($hoaUser->passcode != null) {
+                toast("Account already verified !", "error")
+                    ->autoClose(3000)
+                    ->timerProgressBar();
+                return redirect('/auth/login');
+            }
             HoaUser::markedEmailVerified($id);
             // send link to frontend
 
@@ -720,6 +761,16 @@ class ApiHoaController extends Controller
                 . "/" . $id . "/" . sha1($hoaUser->email)
                 . "?plan_in_month=" . $request->plan_in_month
                 . "&amount=" . $request->amount . "&expires=" . $expires;
+
+            $subscription = HoaSubUserSubscription::where('sub_user_id', $id)->first();
+            if ($subscription == null) {
+                $subs = new HoaSubUserSubscription();
+                $subs->user_id = $hoaUser->user_id;
+                $subs->sub_user_id = $hoaUser->id;
+                $subs->amount = $request->amount;
+                $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                $subs->save();
+            }
             DB::commit();
             return redirect($accountRegisterUrl);
         } catch (\Throwable $th) {

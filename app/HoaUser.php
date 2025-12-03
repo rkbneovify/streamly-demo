@@ -18,7 +18,9 @@ class HoaUser extends Model
 
     public function subscription()
     {
-        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')->latest();
+        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')
+            ->whereNotNull('plan_start_at')
+            ->latest();
     }
     public function subscriptionLatest()
     {
