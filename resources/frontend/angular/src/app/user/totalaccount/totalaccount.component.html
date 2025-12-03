@@ -60,7 +60,8 @@
             <h1>Connected Houses</h1>
             <div class="home-total">
                 <div class="item-left">
-                    <p>Total Houses : {{activeHouseCount}} Active | <span>{{deactiveHouseCount}} Inactive</span></p>
+                    <p>Total Houses : {{totalHouses}} | {{activeHouseCount}} Active | <span>{{deactiveHouseCount}}
+                            Inactive</span></p>
                 </div>
                 <div class="item-right">
                     <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
@@ -216,7 +217,7 @@
                                 <select formControlName="device_limit" class="input_standred">
                                     <option selected value="">Device Limit</option>
                                     <option *ngFor="let num of devicePerHouse" [value]="num">
-                                        {{ num }} Device
+                                        {{ num }}
                                     </option>
                                 </select>
                                 <div *ngIf="addHouseForm.get('device_limit')?.touched" class="text-danger">
@@ -254,7 +255,7 @@
                                         <span *ngIf="!isLoadingAddHomeForm">Submit</span>
                                     </button>
                                     <button class="btn_2 mb-2 w-auto align-self-center btn-bg-gold" type="reset">
-                                        Cancel
+                                        Reset
                                     </button>
                                 </div>
                             </form>
