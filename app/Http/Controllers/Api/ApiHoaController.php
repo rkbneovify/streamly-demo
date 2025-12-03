@@ -37,13 +37,7 @@ class ApiHoaController extends Controller
     {
         try {
 
-            $perPage = null;
-            $page = null;
-            if ($request->has('page')) {
-                $perPage = $request->get('per_page', 10);
-                $page = $request->get('page', 1);
 
-            }
             $user = Auth::user();
             $query = HoaUser::query();
             $query->with('session');
@@ -61,37 +55,23 @@ class ApiHoaController extends Controller
                     ->orWhere('phone', 'like', '%' . $request->q . '%')
                     ->orWhere('house_no', 'like', '%' . $request->q . '%');
             });
-            if ($page == null) {
-
-
-                $data = $query->get();
-                return response()->json([
-                    'success' => true,
-                    'response_code' => 200,
-                    'message' => 'Data fetched successfully !',
-                    'active_house_count' => HoaUser::activeHouseCount(),
-                    'inactive_house_count' => HoaUser::inactiveHouseCount(),
-                    'data' => $data,
-
-                ], 200);
-
-
-            } else {
-                $data = $query->paginate($perPage, ['*'], 'page', $page);
-                return response()->json([
-                    'success' => true,
-                    'response_code' => 200,
-                    'message' => 'Data fetched successfully !',
-                    'device_limit_per_house' => auth()->user()->device_per_house,
-                    'active_house_count' => HoaUser::activeHouseCount(),
-                    'deactive_house_count' => HoaUser::inactiveHouseCount(),
-                    'data' => $data->items(),
-                    'current_page' => $data->currentPage(),
-                    'last_page' => $data->lastPage(),
-                    'per_page' => $data->perPage(),
-                    'total' => $data->total(),
-                ], 200);
-            }
+            $limit = $request->get('per_page', 10);
+            $page = $request->get('page', 1);
+            $data = $query->paginate($limit, ['*'], 'page', $page);
+            return response()->json([
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Data fetched successfully !',
+                'total_houses' => auth()->user()->num_of_houses,
+                'device_limit_per_house' => auth()->user()->device_per_house,
+                'active_house_count' => HoaUser::activeHouseCount(),
+                'deactive_house_count' => HoaUser::inactiveHouseCount(),
+                'data' => $data->items(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+            ], 200);
 
 
 

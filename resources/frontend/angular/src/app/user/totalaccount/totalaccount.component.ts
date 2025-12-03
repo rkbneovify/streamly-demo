@@ -37,7 +37,8 @@ export class TotalaccountComponent {
   deviceLimitPerHouse: number = null;
   page: number = 1;
   status: number | null = null;
-  houseListUrl: string = 'auth/hoa/house-list';
+  totalHouses: number = 0;
+
   constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
     this.get_all_device();
   }
@@ -226,7 +227,7 @@ export class TotalaccountComponent {
 
 
   getHouseList(page: number = 1, status: number | null) {
-
+    const houseListUrl: string = 'auth/hoa/house-list';
     this.isLoading = true;
     const params = new URLSearchParams();
 
@@ -235,7 +236,7 @@ export class TotalaccountComponent {
     if (status === 0 || status === 1) {
       params.set('status', String(status));
     }
-    this.apiService.getRequest(`${this.houseListUrl}?${params.toString()}`).subscribe({
+    this.apiService.getRequest(`${houseListUrl}?${params.toString()}`).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         // console.log("house list :", res);
@@ -243,6 +244,7 @@ export class TotalaccountComponent {
         this.activeHouseCount = res.active_house_count;
         this.deactiveHouseCount = res.deactive_house_count;
         this.deviceLimitPerHouse = res.device_limit_per_house;
+        this.totalHouses = res.total_houses;
 
       },
       error: (err: any) => {
