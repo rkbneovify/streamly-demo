@@ -123,7 +123,8 @@ export class LoginComponent implements OnInit {
 
   private handleSuccessResponse(res: any) {
     if (res.response_code === 200) {
-      if (res.user.forced_change === 1) {
+      if (res.user.forced_change === 1 && res.user.is_custom_user === 0) {
+
         this.loading = false;
         localStorage.setItem('changeToken', res.access_token);
         this.router.navigateByUrl('auth/change-password');
