@@ -204,6 +204,7 @@
 
 <body>
     <app-root></app-root>
+    @include('sweetalert::alert')
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
     <!--Video.js-->
@@ -223,27 +224,7 @@
     <script src="main.js" type="module"></script>
 
 
-    @if (session('mainalert'))
-        <script>
-            window.appAlert = @json(session('mainalert'));
-            console.log("window.appAlert")
-        </script>
-    @endif
 
-    <script>
-        window.addEventListener("load", function() {
-            if (window.appAlert) {
-                Swal.fire({
-                    title: window.appAlert.title ?? '',
-                    text: window.appAlert.text ?? '',
-                    icon: window.appAlert.icon ?? 'info',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-
-                });
-            }
-        });
-    </script>
 
 </body>
 
