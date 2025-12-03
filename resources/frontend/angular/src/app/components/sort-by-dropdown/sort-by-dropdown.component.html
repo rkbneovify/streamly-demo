@@ -10,8 +10,9 @@
 
 
         <div class="menu" *ngIf="isOpen">
-            <div (click)="selectOption('Active Users')" class="menu-item">Active Users</div>
-            <div (click)="selectOption('Inactive Users')" class="menu-item">Inactive Users</div>
+            <div (click)="selectOption(null)" class="menu-item">All Users</div>
+            <div (click)="selectOption(1)" class="menu-item">Active Users</div>
+            <div (click)="selectOption(0)" class="menu-item">Inactive Users</div>
 
         </div>
     </div>

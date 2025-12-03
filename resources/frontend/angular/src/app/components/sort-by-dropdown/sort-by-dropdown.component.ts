@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, EventEmitter, Output } from '@angular/core';
 @Component({
   selector: 'app-sort-by-dropdown',
   standalone: true,
@@ -8,12 +8,13 @@ import { Component, ElementRef, HostListener } from '@angular/core';
   styleUrl: './sort-by-dropdown.component.css'
 })
 export class SortByDropdownComponent {
+  @Output() sortChanged = new EventEmitter<number>();
   isOpen = false;
   constructor(private eRef: ElementRef) { }
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
-    console.log("Clicked:", this.isOpen);
+    // console.log("Clicked:", this.isOpen);
   }
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
@@ -21,8 +22,8 @@ export class SortByDropdownComponent {
       this.isOpen = false;
     }
   }
-  selectOption(option: string) {
-    console.log("Selected:", option);
+  selectOption(option: number | null) {
+    this.sortChanged.emit(option)
     this.isOpen = false;
   }
 }
