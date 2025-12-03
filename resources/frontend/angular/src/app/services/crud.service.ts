@@ -44,7 +44,7 @@ export class CrudService {
     return this.http.post(`${this.baseUrl}/api/${requestUrl}`, data, { headers });
   }
 
-  putRequest(requestUrl: string, data: any) {
+  putRequest(requestUrl: string, data?: any) {
     return this.http.put(`${this.baseUrl}/api/${requestUrl}`, data)
   }
   deleteRequest(requestUrl: string, headers?: any) {
@@ -74,5 +74,5 @@ export class CrudService {
     );
   }
 
- 
+
 }

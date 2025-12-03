@@ -90,7 +90,7 @@
 
 }
 
-.menu-item:first-child {
+.menu-item:nth-child(-n+2) {
     border-bottom: 1px solid #000;
 }
 
