@@ -274,7 +274,7 @@
 
 
   <div class="account_details_container account_subscription_container mt-4"
-    *ngIf="subscribed && !(!!planName) && !(!!cardDetails1?.lenght)">
+    *ngIf="!isHoaSubUser &&  subscribed && !(!!planName) && !(!!cardDetails1?.lenght)">
     <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
       <span class="text-red-500 font-bold text-danger">**</span>
       Other user details are not visible since your account is a test user account, and our site is operating in live
