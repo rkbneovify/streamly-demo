@@ -54,122 +54,132 @@
             </div>
         </div>
     </ng-container>
+    <div class="scroll-container" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
+        (scrolled)="onScrollDown()">
+        <ng-container *ngIf="isHoaMainUser && !isLoading">
 
-    <ng-container *ngIf="isHoaMainUser && !isLoading">
-        <div class="home-area">
-            <h1>Connected Houses</h1>
-            <div class="home-total">
-                <div class="item-left">
-                    <p>Total Houses : {{totalHouses}} | {{activeHouseCount}} Active | <span>{{deactiveHouseCount}}
-                            Inactive</span></p>
-                </div>
-                <div class="item-right">
-                    <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
-                </div>
-            </div>
-            <div class="search-and-btns">
-                <div class="item-left">
-                    <div class="search-box">
-                        <input type="text" placeholder="Search" />
-                        <img src="../../../assets/dummy-img/search-md.svg" alt="icon">
+            <div class="home-area">
+                <h1>Connected Houses</h1>
+                <div class="home-total">
+                    <div class="item-left">
+                        <p>Total Houses : {{totalHouses}} | {{activeHouseCount}} Active | <span>{{deactiveHouseCount}}
+                                Inactive</span></p>
+                    </div>
+                    <div class="item-right">
+                        <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
                     </div>
                 </div>
-                <div class="item-right">
-                    <div (click)="showHomeAddPopUp()" class="btn-add-house">
-                        <img src="../../../assets/dummy-img/home-add.svg" alt="icon">
-                        Add New House
-                    </div>
-
-                    <div class="btn-sortby">
-
-                        <app-sort-by-dropdown (sortChanged)="onSortChange($event)">
-                        </app-sort-by-dropdown>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="content" [class.single]="housesList.length === 1">
-
-                <div class="item-box" *ngFor="let item of housesList">
-
-                    <div [ngClass]="item.status==1?'item item-active':'item item-inactive'">
-                        <div class="item-header">
-                            <p>{{item.name}}</p>
-                            <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
-                                <span>{{item.status===1?'Active':'Inactive'}}</span>
-                            </div>
+                <div class="search-and-btns">
+                    <div class="item-left">
+                        <div class="search-box">
+                            <input [formControl]="txtSearch" type="text" placeholder="Search" />
+                            <img (click)="clearTxtSearch()"
+                                [src]="isSearch?'../../../assets/dummy-img/close-circle.svg':'../../../assets/dummy-img/search-md.svg'"
+                                alt="icon">
                         </div>
-                        <div class="item-body">
-                            <div class="item-row">
-                                <p>House Number :</p>
-                                <p>{{item.house_no}}</p>
-                            </div>
-                            <div class="item-row">
-                                <p>Email :</p>
-                                <p>{{item.email}}</p>
-                            </div>
-                            <div class="item-row">
-                                <p>Passcode :</p>
-                                <p>{{item.passcode}}</p>
-                            </div>
-                            <div class="item-row">
-                                <p>Devices :</p>
-                                <p>{{item.session.length}} / {{item.device_limit}}</p>
-                            </div>
-                            <div class="item-row">
-                                <p>Plan :</p>
-                                <p [ngClass]="item.subscription_expire_in==0?'text-danger':'text-success'">
-                                    {{item.subscription_expire_in==0?'Expired':(item.subscription === null?'-'
-                                    :item.subscription.plan_name)}}
-                                </p>
-                            </div>
-                            <div class="item-row">
-                                <p>Expired At :</p>
-                                <p>{{ getExpiryText(item) }}</p>
-                            </div>
+                    </div>
+                    <div class="item-right">
+                        <div (click)="showHomeAddPopUp()" class="btn-add-house">
+                            <img src="../../../assets/dummy-img/home-add.svg" alt="icon">
+                            Add New House
                         </div>
 
-                        <div class="item-footer">
-                            <a *ngIf="item.status==0 && item.email_verified_at !== null" (click)="activeHouse(item.id)"
-                                class="btn-item btn-active">
-                                <img src="../../../assets/dummy-img/home-active.svg" alt="icon">
-                                <span>Active</span>
-                            </a>
-                            <a *ngIf="item.status==1" (click)="deactiveHouse(item.id)" class="btn-item btn-deactive">
-                                <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
-                                <span>Deactive</span>
-                            </a>
-                            <a *ngIf="item.email_verified_at === null && item.status ==0" (click)="resendMail(item.id)"
-                                class="btn-item btn-send">
-                                <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
-                                <span>Send Email</span>
-                            </a>
-                            <a *ngIf="item.email_verified_at === null || item.status ===0"
-                                (click)="deleteHouse(item.id)" class="btn-item btn-deactive">
-                                <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
-                                <span>Delete</span>
+                        <div class="btn-sortby">
 
-
-                            </a>
-
-
-
-
+                            <app-sort-by-dropdown (sortChanged)="onSortChange($event)">
+                            </app-sort-by-dropdown>
 
                         </div>
-
-
                     </div>
                 </div>
 
+                <div *ngIf="housesList.length>0;else elseTemplate" class="content"
+                    [class.single]="housesList.length === 1">
+
+                    <div class="item-box" *ngFor="let item of housesList">
+
+                        <div [ngClass]="item.status==1?'item item-active':'item item-inactive'">
+                            <div class="item-header">
+                                <p>{{item.name}}</p>
+                                <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
+                                    <span>{{item.status===1?'Active':'Inactive'}}</span>
+                                </div>
+                            </div>
+                            <div class="item-body">
+                                <div class="item-row">
+                                    <p>House Number :</p>
+                                    <p>{{item.house_no}}</p>
+                                </div>
+                                <div class="item-row">
+                                    <p>Email :</p>
+                                    <p>{{item.email}}</p>
+                                </div>
+                                <div class="item-row">
+                                    <p>Passcode :</p>
+                                    <p>{{item.passcode}}</p>
+                                </div>
+                                <div class="item-row">
+                                    <p>Devices :</p>
+                                    <p>{{item.session.length}} / {{item.device_limit}}</p>
+                                </div>
+                                <div class="item-row">
+                                    <p>Plan :</p>
+                                    <p [ngClass]="item.subscription_expire_in==0?'text-danger':'text-success'">
+                                        {{item.subscription_expire_in==0?'Expired':(item.subscription === null?'-'
+                                        :item.subscription.plan_name)}}
+                                    </p>
+                                </div>
+                                <div class="item-row">
+                                    <p>Expired At :</p>
+                                    <p>{{ getExpiryText(item) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="item-footer">
+                                <a *ngIf="item.status==0 && item.email_verified_at !== null"
+                                    (click)="activeHouse(item.id)" class="btn-item btn-active">
+                                    <img src="../../../assets/dummy-img/home-active.svg" alt="icon">
+                                    <span>Active</span>
+                                </a>
+                                <a *ngIf="item.status==1" (click)="deactiveHouse(item.id)"
+                                    class="btn-item btn-deactive">
+                                    <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
+                                    <span>Deactive</span>
+                                </a>
+                                <a *ngIf="item.email_verified_at === null && item.status ==0"
+                                    (click)="resendMail(item.id)" class="btn-item btn-send">
+                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                    <span>Send Email</span>
+                                </a>
+                                <a *ngIf="item.email_verified_at === null || item.status ===0"
+                                    (click)="deleteHouse(item.id)" class="btn-item btn-deactive">
+                                    <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
+                                    <span>Delete</span>
 
 
-                <!-- content end -->
+                                </a>
+
+
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <!-- content end -->
+                </div>
+                <ng-template #elseTemplate>
+                    <h1>Data not found !</h1>
+                </ng-template>
             </div>
-        </div>
-    </ng-container>
 
+        </ng-container>
+    </div>
     <ng-template #elseTemplate>
         <div class="remove_Device-Container">
             <h1>You Have No Permssion</h1>

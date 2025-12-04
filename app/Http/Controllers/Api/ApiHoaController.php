@@ -52,6 +52,7 @@ class ApiHoaController extends Controller
             $query->when($request->has('q'), function ($q) use ($request) {
                 $q->where('passcode', 'like', '%' . $request->q . '%')
                     ->orWhere('name', 'like', '%' . $request->q . '%')
+                    ->orWhere('email', 'like', '%' . $request->q . '%')
                     ->orWhere('phone', 'like', '%' . $request->q . '%')
                     ->orWhere('house_no', 'like', '%' . $request->q . '%');
             });
@@ -71,6 +72,7 @@ class ApiHoaController extends Controller
                 'last_page' => $data->lastPage(),
                 'per_page' => $data->perPage(),
                 'total' => $data->total(),
+                'is_more_data' => $page >= $data->lastPage() ? false : true,
             ], 200);
 
 
