@@ -140,7 +140,8 @@
                                 <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
                                 <span>Deactive</span>
                             </a>
-                            <a *ngIf="item.email_verified_at === null && item.status ==0" class="btn-item btn-send">
+                            <a *ngIf="item.email_verified_at === null && item.status ==0" (click)="resendMail(item.id)"
+                                class="btn-item btn-send">
                                 <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
                                 <span>Send Email</span>
                             </a>
@@ -178,9 +179,9 @@
 
 
 
-    <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopDeleteAccount"
-        id="btnShowPopDeleteAccount"></button>
-    <div class="modal fade" id="showPopDeleteAccount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopAddHouse"
+        id="btnshowPopAddHouse"></button>
+    <div class="modal fade" id="showPopAddHouse" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered zipcode_correct">
             <div class="modal-content showPopConf popup_bg margin-left-3">
@@ -254,7 +255,8 @@
                                         }" type="submit">
                                         <span *ngIf="!isLoadingAddHomeForm">Submit</span>
                                     </button>
-                                    <button class="btn_2 mb-2 w-auto align-self-center btn-bg-gold" type="reset">
+                                    <button id="btnReset" class="btn_2 mb-2 w-auto align-self-center btn-bg-gold"
+                                        type="reset">
                                         Reset
                                     </button>
                                 </div>

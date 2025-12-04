@@ -260,7 +260,7 @@ export class TotalaccountComponent {
 
   showHomeAddPopUp() {
     this.isLoadingAddHomeForm = false;
-    document.getElementById('btnShowPopDeleteAccount').click();
+    document.getElementById('btnshowPopAddHouse').click();
 
 
   }
@@ -303,14 +303,15 @@ export class TotalaccountComponent {
       };
       this.apiService.postRequest("auth/hoa/add-house", data).subscribe({
         next: (res: any) => {
-          document.getElementById('btnShowPopDeleteAccount').click();
+
           this.isLoading = false;
 
           if (res.success == true) {
             this.toastr.success(res.message);
             this.getHouseList(this.page, null);
           }
-
+          document.getElementById('btnReset').click();
+          document.getElementById('btnshowPopAddHouse').click();
         },
         error: (err: any) => {
           this.isLoading = false;
@@ -379,6 +380,30 @@ export class TotalaccountComponent {
           this.houseId = houseId;
 
           this.apiService.putRequest(`auth/hoa/status-change/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+                this.getHouseList(this.page, null);
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
+        }
+      });
+  }
+
+  resendMail(houseId: number) {
+    this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.houseId = houseId;
+
+          this.apiService.postRequest(`auth/hoa/resend-verification-mail/${houseId}`).subscribe({
             next: (res: any) => {
               this.sweetAlert.close();
               if (res.success == true) {
