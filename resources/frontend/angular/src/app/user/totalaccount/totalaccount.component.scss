@@ -430,6 +430,7 @@ p {
           text-decoration: none;
           color: #faebeb;
           font-family: 'Poppins';
+          transition: box-shadow 0.3s ease, transform 0.3s ease;
 
           img {
             width: 18px;
@@ -454,6 +455,8 @@ p {
             background: #EB5757;
             border: 1px solid #ffffff;
             font-weight: bold;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 
             span {
               font-size: 12px;
@@ -471,6 +474,8 @@ p {
             background: #219653;
             border: 1px solid #ffffff;
             font-weight: bold;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 
             span {
               font-size: 12px;
@@ -486,6 +491,8 @@ p {
             background: #219653;
             border: 1px solid #ffffff;
             font-weight: bold;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 
             span {
               font-size: 12px;
