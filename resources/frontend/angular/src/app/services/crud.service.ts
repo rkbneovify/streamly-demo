@@ -40,7 +40,7 @@ export class CrudService {
   // }
 
 
-  postRequest(requestUrl: string, data: any, headers?: any) {
+  postRequest(requestUrl: string, data?: any, headers?: any) {
     return this.http.post(`${this.baseUrl}/api/${requestUrl}`, data, { headers });
   }
 

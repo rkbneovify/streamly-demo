@@ -109,6 +109,16 @@ class ApiHoaController extends Controller
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->save();
+                $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser)->first();
+                if ($subscription == null) {
+                    $subs = new HoaSubUserSubscription();
+                    $subs->user_id = $hoaUser->user_id;
+                    $subs->sub_user_id = $hoaUser->id;
+                    $subs->amount = $request->amount;
+                    $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                    $subs->save();
+                }
+
             } else {
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->email_verified_at = null;
@@ -742,15 +752,7 @@ class ApiHoaController extends Controller
                 . "?plan_in_month=" . $request->plan_in_month
                 . "&amount=" . $request->amount . "&expires=" . $expires;
 
-            $subscription = HoaSubUserSubscription::where('sub_user_id', $id)->first();
-            if ($subscription == null) {
-                $subs = new HoaSubUserSubscription();
-                $subs->user_id = $hoaUser->user_id;
-                $subs->sub_user_id = $hoaUser->id;
-                $subs->amount = $request->amount;
-                $subs->plan_name = $request->plan_in_month . ' Month Plan';
-                $subs->save();
-            }
+
             DB::commit();
             return redirect($accountRegisterUrl);
         } catch (\Throwable $th) {
