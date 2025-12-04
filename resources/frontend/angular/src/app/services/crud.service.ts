@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +65,8 @@ export class CrudService {
   }
 
 
+
+
   // 
   postRequestWithDetails(url: string, body: any): Observable<any> {
     return this.http.post(
@@ -73,6 +75,8 @@ export class CrudService {
       { observe: 'response' }
     );
   }
+
+
 
 
 }

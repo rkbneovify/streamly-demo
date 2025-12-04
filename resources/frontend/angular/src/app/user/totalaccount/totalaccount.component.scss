@@ -149,6 +149,10 @@ main {
   color: #EB5757;
 }
 
+.scroll-container {
+  width: 100% !important;
+}
+
 p {
   font-family: 'Poppins';
   font-size: 14px;
@@ -236,6 +240,9 @@ p {
           top: 13px;
           right: 16px;
 
+          &:hover {
+            cursor: pointer;
+          }
         }
 
         input {
@@ -246,6 +253,7 @@ p {
           outline: none;
           border: 1px solid #ffffff;
           border-radius: 30px;
+          color: #ffffff;
           // box-shadow: 0 0 0 2px #d4d4d4;
 
           &:focus {
@@ -334,8 +342,8 @@ p {
     gap: 30px;
 
     &.single {
-      grid-template-columns: max-content;
-      width: 100%;
+
+      width: 400px;
       justify-content: start;
       align-items: center;
       padding: 30px 30px;
@@ -645,6 +653,8 @@ p {
         span {
           font-size: 14px;
         }
+
+
       }
     }
 
@@ -655,6 +665,7 @@ p {
 
       .item-right {
         flex-direction: column;
+
       }
     }
 
