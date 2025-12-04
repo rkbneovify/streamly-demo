@@ -7,11 +7,13 @@ import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
 import { SortByDropdownComponent } from "../../components/sort-by-dropdown/sort-by-dropdown.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
-
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, DatePipe],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss',
 })
@@ -38,9 +40,11 @@ export class TotalaccountComponent {
   page: number = 1;
   status: number | null = null;
   totalHouses: number = 0;
-
+  txtSearch = new FormControl('');
+  isSearch: boolean = false;
   constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
     this.get_all_device();
+
   }
 
   ngOnInit() {
@@ -82,8 +86,22 @@ export class TotalaccountComponent {
     this.connectedDevice = this.response;
 
     if (this.isHoaMainUser) {
-      this.getHouseList(this.page, null);
+      this.getHouseList(this.page, null, null);
     }
+
+    this.txtSearch.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(txt => {
+      this.housesList = [];
+      this.page = 1;
+      this.isSearch = false;
+      if (txt.length > 0) {
+        this.isSearch = true;
+      }
+
+      this.getHouseList(this.page, null, txt);
+    })
 
   }
 
@@ -226,7 +244,7 @@ export class TotalaccountComponent {
   }
 
 
-  getHouseList(page: number = 1, status: number | null) {
+  getHouseList(page: number = 1, status: number | null, search: string | null) {
     const houseListUrl: string = 'auth/hoa/house-list';
     this.isLoading = true;
     const params = new URLSearchParams();
@@ -235,12 +253,19 @@ export class TotalaccountComponent {
 
     if (status === 0 || status === 1) {
       params.set('status', String(status));
+
+    }
+    if (search != null && search.length > 0) {
+      this.isLoading = false;
+      params.set('q', search);
+
     }
     this.apiService.getRequest(`${houseListUrl}?${params.toString()}`).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        // console.log("house list :", res);
-        this.housesList = res.data;
+
+        this.housesList = [...new Set([...this.housesList, ...res.data])];
+
         this.activeHouseCount = res.active_house_count;
         this.deactiveHouseCount = res.deactive_house_count;
         this.deviceLimitPerHouse = res.device_limit_per_house;
@@ -254,13 +279,15 @@ export class TotalaccountComponent {
     })
   }
   onSortChange(status: number | null) {
+    this.page = 1;
+    this.housesList = [];
     this.status = status;
-    this.getHouseList(this.page, this.status);
+    this.getHouseList(this.page, this.status, null);
   }
 
   showHomeAddPopUp() {
     this.isLoadingAddHomeForm = false;
-    document.getElementById('btnShowPopDeleteAccount').click();
+    document.getElementById('btnshowPopAddHouse').click();
 
 
   }
@@ -292,6 +319,12 @@ export class TotalaccountComponent {
 
   }
 
+  clearTxtSearch() {
+    this.txtSearch.reset();
+    this.housesList = [];
+    this.getHouseList(1, null, null);
+  }
+
   addHomeOnSubmit() {
     this.addHouseForm.markAllAsTouched();
 
@@ -303,14 +336,15 @@ export class TotalaccountComponent {
       };
       this.apiService.postRequest("auth/hoa/add-house", data).subscribe({
         next: (res: any) => {
-          document.getElementById('btnShowPopDeleteAccount').click();
+
           this.isLoading = false;
 
           if (res.success == true) {
             this.toastr.success(res.message);
-            this.getHouseList(this.page, null);
+            this.getHouseList(this.page, null, null);
           }
-
+          document.getElementById('btnReset').click();
+          document.getElementById('btnshowPopAddHouse').click();
         },
         error: (err: any) => {
           this.isLoading = false;
@@ -331,7 +365,7 @@ export class TotalaccountComponent {
               this.sweetAlert.close();
               if (res.success == true) {
                 this.toastr.success(res.message);
-                this.getHouseList(this.page, null);
+                this.getHouseList(this.page, null, null);
               }
 
             },
@@ -359,7 +393,7 @@ export class TotalaccountComponent {
               this.sweetAlert.close();
               if (res.success == true) {
                 this.toastr.success(res.message);
-                this.getHouseList(this.page, null);
+                this.getHouseList(this.page, null, null);
               }
 
             },
@@ -383,7 +417,7 @@ export class TotalaccountComponent {
               this.sweetAlert.close();
               if (res.success == true) {
                 this.toastr.success(res.message);
-                this.getHouseList(this.page, null);
+                this.getHouseList(this.page, null, null);
               }
 
             },
@@ -394,6 +428,36 @@ export class TotalaccountComponent {
           })
         }
       });
+  }
+
+  resendMail(houseId: number) {
+    this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.houseId = houseId;
+
+          this.apiService.postRequest(`auth/hoa/resend-verification-mail/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+                this.getHouseList(this.page, null, null);
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
+        }
+      });
+  }
+
+  onScrollDown() {
+    this.page++;
+    this.getHouseList(this.page, this.status, this.txtSearch.value)
+    console.log("Page count", this.page)
   }
 
   getExpiryText(item: any) {
