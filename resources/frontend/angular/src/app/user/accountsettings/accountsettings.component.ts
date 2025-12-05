@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ɵEmptyOutletComponent } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
@@ -19,11 +19,11 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor],
+  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent],
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
-export class AccountsettingsComponent implements OnInit ,OnDestroy {
+export class AccountsettingsComponent implements OnInit, OnDestroy {
   updateuserDetatils!: FormGroup;
   editMode: boolean = false;
   showPassword: boolean = false;
@@ -51,11 +51,13 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   userinfo: any;
   togglePasscode: boolean = false;
   total_price: any = 0;
-  cancelSubscription:FormGroup;
+  cancelSubscription: FormGroup;
   isConnectedDeviceShow: boolean = false;
 
   isSubscription: boolean = false;
-
+  isHoaMainUser: boolean = false;
+  isHoaSubUser: boolean = false;
+  hoaSubUSerSubscription: any = null;
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -67,8 +69,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
     this.updateuserDetatils = this.fb.group({
       fullname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      oldpassword: ['', [Validators.required,noWhitespaceValidator()]],
-      newpassword: ['', [Validators.required,noWhitespaceValidator()]],
+      oldpassword: ['', [Validators.required, noWhitespaceValidator()]],
+      newpassword: ['', [Validators.required, noWhitespaceValidator()]],
       zipcode: ['', Validators.required],
     });
 
@@ -77,12 +79,12 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       password: ['', [Validators.required]],
     });
 
-      // delete user account form
-      this.cancelSubscription = this.fb.group({
-        password: ['', [Validators.required]],
-      });
+    // delete user account form
+    this.cancelSubscription = this.fb.group({
+      password: ['', [Validators.required]],
+    });
 
-      this.isSubscription = JSON.parse(localStorage.getItem('deviceInfo') || '').subscribed;
+    this.isSubscription = JSON.parse(localStorage.getItem('deviceInfo') || '').subscribed;
   }
 
 
@@ -94,7 +96,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       // Update UI or logic here based on new value
     });
     const jsonData = localStorage.getItem('userDetails');
-    if (jsonData !== null) {
+    const isHoaSubUser = localStorage.getItem('hoa_user');
+    if (jsonData !== null && isHoaSubUser == 'null') {
       try {
         this.usersdetail = JSON.parse(
           localStorage.getItem('userDetails') || ''
@@ -183,13 +186,15 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
           },
           error: (err: any) => {
             this.isLoading = false;
-            if(Array.isArray(err.error.message.password)){err.error.message.password.forEach((element) => {
-              this.ts.error(element);
-            })}
-            if(!Array.isArray(err.error.message.password)){
+            if (Array.isArray(err.error.message.password)) {
+              err.error.message.password.forEach((element) => {
+                this.ts.error(element);
+              })
+            }
+            if (!Array.isArray(err.error.message.password)) {
               this.ts.error(err.error.message);
             }
-            
+
           },
         });
         // }
@@ -214,52 +219,74 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       .subscribe({
         next: (res: any) => {
           try {
-          let planFullName;
-          const plan1st = res?.plan?.nickname;
-          const plan2nd = res?.plan?.currency;
-          const plan3rd = res?.plan?.interval;
-          this.planInterval = plan3rd;
-          this.interval_count = res?.plan?.interval_count;
-          this.userinfo = res?.userinfo;
-          let userData = JSON.parse(localStorage.getItem('userDetails'));
-          userData.name = res?.userinfo?.name
-          localStorage.setItem(
-            'userDetails',
-            JSON.stringify(userData)
-          );
+            let planFullName;
+            const plan1st = res?.plan?.nickname;
+            const plan2nd = res?.plan?.currency;
+            const plan3rd = res?.plan?.interval;
+            this.planInterval = plan3rd;
+            this.interval_count = res?.plan?.interval_count;
+            this.userinfo = res?.userinfo;
+            // this.usersdetail.name = res?.userinfo?.name
+            // this.usersdetail.email = res?.userinfo?.email
+            // this.usersdetail.zipcode = res?.userinfo?.zipcode
+            // update userDetails on local
+            let userData = JSON.parse(localStorage.getItem('userDetails'));
 
-          // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;
+            this.updateuserDetatils.controls['fullname'].setValue(
+              res?.userinfo?.name
+            );
+            this.updateuserDetatils.controls['email'].setValue(
+              res?.userinfo?.email
+            );
+            this.updateuserDetatils.controls['zipcode'].setValue(
+              res?.userinfo?.zipcode
+            );
+            userData.name = res?.userinfo?.name
+            userData.email = res?.userinfo?.email
+            userData.zipcode = res?.userinfo?.zipcode
 
-          this.billingScheme = res?.plan?.billing_scheme;
-          this.invoices = res?.invoices;
-          if(this.invoices){
-            this.invoicesDate = new Date(this.invoices?.created * 1000);
-          }
-          this.renewalDate = res?.subscription.renewaldatetime;
-          this.planName = res.subscription?.name;
-          this.cardDetails = res?.subscription?.payment_method;
-          this.cardDetails1 = res?.card_details;
-          this.tiredPlansDetails = res?.plan.tiers;
-          this.qunantity =
-            res.subscription.plan_type == 'per_unit'
-              ? 1
-              : res.subscription.quantity;
-          this.total_price =
-            res.subscription.plan_type == 'per_unit'
-              ? Math.floor(res.plan.amount / 100)
-              : 0;
+            localStorage.setItem(
+              'userDetails',
+              JSON.stringify(userData)
+            );
 
-          if(res.subscription.plan_type == 'tiered'){
-            this.get_price(this.qunantity, this.tiredPlansDetails);
-          }
+            this.usersdetail = userData;
 
-          console.log('===================>',this.subscribed+ '!(!!cardDetails1) ' + !(!!this.cardDetails1) + '   '+this.cardDetails1)
-          const currentPlanID = JSON.stringify(res.plan?.id);
-          localStorage.setItem('planId',currentPlanID);
-          this.isLoading = false;
+            this.isHoaMainUser = res?.userinfo.is_hoa_main_user
+            this.isHoaSubUser = res?.userinfo.is_hoa_sub_user
+            this.hoaSubUSerSubscription = res?.hoa_sub_user_subscription;
+            // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;
+
+            this.billingScheme = res?.plan?.billing_scheme;
+            this.invoices = res?.invoices;
+            if (this.invoices) {
+              this.invoicesDate = new Date(this.invoices?.created * 1000);
+            }
+            this.renewalDate = res?.subscription.renewaldatetime;
+            this.planName = res.subscription?.name;
+            this.cardDetails = res?.subscription?.payment_method;
+            this.cardDetails1 = res?.card_details;
+            this.tiredPlansDetails = res?.plan.tiers;
+            this.qunantity =
+              res.subscription.plan_type == 'per_unit'
+                ? 1
+                : res.subscription.quantity;
+            this.total_price =
+              res.subscription.plan_type == 'per_unit'
+                ? Math.floor(res.plan.amount / 100)
+                : 0;
+
+            if (res.subscription.plan_type == 'tiered') {
+              this.get_price(this.qunantity, this.tiredPlansDetails);
+            }
+
+            console.log('===================>', this.subscribed + '!(!!cardDetails1) ' + !(!!this.cardDetails1) + '   ' + this.cardDetails1)
+            const currentPlanID = JSON.stringify(res.plan?.id);
+            localStorage.setItem('planId', currentPlanID);
+            this.isLoading = false;
           } catch (error) {
             console.log(error)
-          }finally{
+          } finally {
             this.isLoading = false;
           }
         },
@@ -359,15 +386,15 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.isLoading = false;
-          if(res){
+          if (res) {
             this.showPopConf();
           }
         },
         error: (err) => {
           this.cancelSubscription.get('password').reset();
-          if(err.error?.message.password){
+          if (err.error?.message.password) {
             this.ts.error(err.error?.message.password[0]);
-          }else{
+          } else {
             this.ts.error(err.error?.message);
           }
           this.isLoading = false;
@@ -387,7 +414,7 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
     document.getElementById('btnShowPopDeleteUserAccount').click();
   }
 
-  clearDetails(){
+  clearDetails() {
     this.deleteAccountForm.get('password').reset();
     this.cancelSubscription.get('password').reset();
   }
@@ -400,15 +427,15 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       const timeZoneName = new Intl.DateTimeFormat('en-US', {
         timeZoneName: 'long',
       }).formatToParts(date).find(part => part.type === 'timeZoneName')?.value;
-  
+
       // Return the timezone name or a fallback if not found
       return timeZoneName || 'Timezone not detected';
     } catch (error) {
       return 'Timezone detection failed';
     }
   }
- 
-  
+
+
   ngOnDestroy(): void {
     // Close all open modals on component destroy
     const modals = document.querySelectorAll('.modal.show');
@@ -419,5 +446,5 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       }
     });
   }
-    
+
 }
