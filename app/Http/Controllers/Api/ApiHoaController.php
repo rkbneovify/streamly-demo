@@ -93,9 +93,14 @@ class ApiHoaController extends Controller
             'amount' => 'nullable|numeric',
             'device_limit' => 'required|integer'
         ]);
+
+
+
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
         }
+
+
 
         DB::beginTransaction();
         try {
@@ -106,6 +111,9 @@ class ApiHoaController extends Controller
             }
 
             $hoaUser = HoaUser::where('email', $request->email)->first();
+            if ($hoaUser != null) {
+                return $this->validationErrorResponse("Email already exits !");
+            }
             if ($hoaUser == null) {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
@@ -122,10 +130,6 @@ class ApiHoaController extends Controller
                     $subs->save();
                 }
 
-            } else {
-                $hoaUser->device_limit = $request->device_limit;
-                $hoaUser->email_verified_at = null;
-                $hoaUser->save();
             }
 
             Mail::to($request->email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
