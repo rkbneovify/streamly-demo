@@ -26,46 +26,25 @@ export class TotalaccountComponent {
   deviceId: Array<string> = [];
   isLoading: boolean = false;
   isConnectedDeviceShow: boolean = false;
-  isHoaMainUser: boolean = false;
-  devicePerHouse: Array<number> = [];
   userData: any;
-  housesList: Array<any> = [];
-  addHouseForm: FormGroup;
-  isLoadingAddHomeForm: Boolean = false;
-  isLoadingItemAction: Boolean = false;
-  houseId: number = null;
-  activeHouseCount: number = null;
-  deactiveHouseCount: number = null;
-  deviceLimitPerHouse: number = null;
-  page: number = 1;
-  status: number | null = null;
-  totalHouses: number = 0;
-  txtSearch = new FormControl('');
-  isSearch: boolean = false;
   constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
     this.get_all_device();
 
   }
 
   ngOnInit() {
-    this.initializeForms();
+
     const jsonData = localStorage.getItem('loggedInDeviceDetails');
-    const isHoaMain = localStorage.getItem('is_hoa_main_user');
     const userDetails = localStorage.getItem('userDetails');
     if (userDetails !== null) {
       this.userData = JSON.parse(
         localStorage.getItem('userDetails') || ''
       );
-      this.devicePerHouse = Array.from(
-        { length: Number(this.userData.device_per_house) },
-        (_, i) => i + 1
-      );
+
 
 
     }
-    if (isHoaMain !== null) {
-      this.isHoaMainUser = (isHoaMain === 'true');
-    }
+
     if (jsonData !== null) {
       try {
         let data = JSON.parse(
@@ -85,23 +64,7 @@ export class TotalaccountComponent {
     } else console.log('not getting logged device');
     this.connectedDevice = this.response;
 
-    if (this.isHoaMainUser) {
-      this.getHouseList(this.page, null, null);
-    }
 
-    this.txtSearch.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged()
-    ).subscribe(txt => {
-      this.housesList = [];
-      this.page = 1;
-      this.isSearch = false;
-      if (txt.length > 0) {
-        this.isSearch = true;
-      }
-
-      this.getHouseList(this.page, null, txt);
-    })
 
   }
 
@@ -244,237 +207,12 @@ export class TotalaccountComponent {
   }
 
 
-  getHouseList(page: number = 1, status: number | null, search: string | null) {
-    const houseListUrl: string = 'auth/hoa/house-list';
-    this.isLoading = true;
-    const params = new URLSearchParams();
-
-    params.set('page', String(page));
-
-    if (status === 0 || status === 1) {
-      params.set('status', String(status));
-
-    }
-    if (search != null && search.length > 0) {
-      this.isLoading = false;
-      params.set('q', search);
-
-    }
-    this.apiService.getRequest(`${houseListUrl}?${params.toString()}`).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-
-        this.housesList = [...new Set([...this.housesList, ...res.data])];
-
-        this.activeHouseCount = res.active_house_count;
-        this.deactiveHouseCount = res.deactive_house_count;
-        this.deviceLimitPerHouse = res.device_limit_per_house;
-        this.totalHouses = res.total_houses;
-
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        this.toastr.error(err.error.message);
-      }
-    })
-  }
-  onSortChange(status: number | null) {
-    this.page = 1;
-    this.housesList = [];
-    this.status = status;
-    this.getHouseList(this.page, this.status, null);
-  }
-
-  showHomeAddPopUp() {
-    this.isLoadingAddHomeForm = false;
-    document.getElementById('btnshowPopAddHouse').click();
-
-
-  }
-
-
-
-  private initializeForms() {
-
-
-    this.addHouseForm = this.fb.group({
-
-      email: ['', [Validators.required, Validators.email]],
-      device_limit: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]+$/)
-      ]],
-      plan_in_month: ['', [
-        Validators.required,
-        Validators.pattern(/^[0-9]+$/)
-      ]]
 
 
 
 
-    });
 
 
 
-
-  }
-
-  clearTxtSearch() {
-    this.txtSearch.reset();
-    this.housesList = [];
-    this.getHouseList(1, null, null);
-  }
-
-  addHomeOnSubmit() {
-    this.addHouseForm.markAllAsTouched();
-
-    // console.log("form : ", this.addHouseForm.value)
-    if (this.addHouseForm.valid) {
-      this.isLoadingAddHomeForm = true;
-      const data = {
-        ...this.addHouseForm.value
-      };
-      this.apiService.postRequest("auth/hoa/add-house", data).subscribe({
-        next: (res: any) => {
-
-          this.isLoading = false;
-
-          if (res.success == true) {
-            this.toastr.success(res.message);
-            this.getHouseList(this.page, null, null);
-          }
-          document.getElementById('btnReset').click();
-          document.getElementById('btnshowPopAddHouse').click();
-        },
-        error: (err: any) => {
-          this.isLoading = false;
-          this.toastr.error(err.error?.message);
-        },
-      });
-    }
-  }
-
-  deleteHouse(houseId: number) {
-    this.sweetAlert.confirm("Delete House", "Do you want to delete this house?")
-      .then(result => {
-        if (result.isConfirmed) {
-          this.houseId = houseId;
-          this.sweetAlert.loading();
-          this.apiService.deleteRequest(`auth/hoa/delete-house/${houseId}`).subscribe({
-            next: (res: any) => {
-              this.sweetAlert.close();
-              if (res.success == true) {
-                this.toastr.success(res.message);
-                this.getHouseList(this.page, null, null);
-              }
-
-            },
-            error: (err: any) => {
-              this.sweetAlert.close();
-              this.toastr.error(err.error?.message);
-            }
-          })
-        }
-      });
-
-
-
-  }
-
-  deactiveHouse(houseId: number) {
-    this.sweetAlert.confirm("Deactive House", "Do you want to deactive this house?")
-      .then(result => {
-        if (result.isConfirmed) {
-          this.houseId = houseId;
-          this.sweetAlert.loading();
-
-          this.apiService.putRequest(`auth/hoa/status-change/${houseId}`).subscribe({
-            next: (res: any) => {
-              this.sweetAlert.close();
-              if (res.success == true) {
-                this.toastr.success(res.message);
-                this.getHouseList(this.page, null, null);
-              }
-
-            },
-            error: (err: any) => {
-              this.sweetAlert.close();
-              this.toastr.error(err.error?.message);
-            }
-          })
-        }
-      });
-  }
-
-  activeHouse(houseId: number) {
-    this.sweetAlert.confirm("Active House", "Do you want to active this house?")
-      .then(result => {
-        if (result.isConfirmed) {
-          this.houseId = houseId;
-
-          this.apiService.putRequest(`auth/hoa/status-change/${houseId}`).subscribe({
-            next: (res: any) => {
-              this.sweetAlert.close();
-              if (res.success == true) {
-                this.toastr.success(res.message);
-                this.getHouseList(this.page, null, null);
-              }
-
-            },
-            error: (err: any) => {
-              this.sweetAlert.close();
-              this.toastr.error(err.error?.message);
-            }
-          })
-        }
-      });
-  }
-
-  resendMail(houseId: number) {
-    this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
-      .then(result => {
-        if (result.isConfirmed) {
-          this.houseId = houseId;
-
-          this.apiService.postRequest(`auth/hoa/resend-verification-mail/${houseId}`).subscribe({
-            next: (res: any) => {
-              this.sweetAlert.close();
-              if (res.success == true) {
-                this.toastr.success(res.message);
-                this.getHouseList(this.page, null, null);
-              }
-
-            },
-            error: (err: any) => {
-              this.sweetAlert.close();
-              this.toastr.error(err.error?.message);
-            }
-          })
-        }
-      });
-  }
-
-  onScrollDown() {
-    this.page++;
-    this.getHouseList(this.page, this.status, this.txtSearch.value)
-    console.log("Page count", this.page)
-  }
-
-  getExpiryText(item: any) {
-    if (item.subscription_expire_in < 30 && item.subscription_expire_in > 0) {
-      return `${item.subscription_expire_in} Days left`;
-    }
-
-    if (!item.subscription) return '-';
-
-    const date = new Date(item.subscription.plan_expires_at);
-
-    // Format manually to dd/MM/yyyy
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
-  }
 
 }
