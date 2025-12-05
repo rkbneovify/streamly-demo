@@ -30,6 +30,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
         currentRoute?.includes('user/subscription-expired') ||
         currentRoute?.includes('user/subscription-cancel') ||
         currentRoute?.includes('user/connected-device') ||
+        currentRoute?.includes('user/connected-houses') ||
         currentRoute?.includes('user/downloadapp') ||
         currentRoute?.includes('user/payment-subscription')
       ) {
