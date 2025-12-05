@@ -42,6 +42,7 @@ export class TotalaccountComponent {
   totalHouses: number = 0;
   txtSearch = new FormControl('');
   isSearch: boolean = false;
+  isMoreData: Boolean = true;
   constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
     this.get_all_device();
 
@@ -246,7 +247,7 @@ export class TotalaccountComponent {
 
   getHouseList(page: number = 1, status: number | null, search: string | null) {
     const houseListUrl: string = 'auth/hoa/house-list';
-    this.isLoading = true;
+
     const params = new URLSearchParams();
 
     params.set('page', String(page));
@@ -260,23 +261,28 @@ export class TotalaccountComponent {
       params.set('q', search);
 
     }
-    this.apiService.getRequest(`${houseListUrl}?${params.toString()}`).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
+    if (this.isMoreData) {
+      this.isLoading = true;
+      this.apiService.getRequest(`${houseListUrl}?${params.toString()}`).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
 
-        this.housesList = [...new Set([...this.housesList, ...res.data])];
+          this.housesList = [...new Set([...this.housesList, ...res.data])];
 
-        this.activeHouseCount = res.active_house_count;
-        this.deactiveHouseCount = res.deactive_house_count;
-        this.deviceLimitPerHouse = res.device_limit_per_house;
-        this.totalHouses = res.total_houses;
+          this.activeHouseCount = res.active_house_count;
+          this.deactiveHouseCount = res.deactive_house_count;
+          this.deviceLimitPerHouse = res.device_limit_per_house;
+          this.totalHouses = res.total_houses;
+          this.isMoreData = res.is_more_data;
 
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        this.toastr.error(err.error.message);
-      }
-    })
+        },
+        error: (err: any) => {
+          this.isLoading = false;
+          this.toastr.error(err.error.message);
+        }
+      })
+    }
+
   }
   onSortChange(status: number | null) {
     this.page = 1;
