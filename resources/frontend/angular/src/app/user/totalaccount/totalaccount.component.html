@@ -1,5 +1,5 @@
 <main>
-    <ng-container *ngIf="isConnectedDeviceShow; else elseTemplate">
+    <ng-container *ngIf="isConnectedDeviceShow">
         <div class="remove_Device-Container">
             <h1>Connected Devices</h1>
             <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
@@ -119,6 +119,10 @@
                                     <p>{{item.passcode}}</p>
                                 </div>
                                 <div class="item-row">
+                                    <p>Phone :</p>
+                                    <p>{{item.phone}}</p>
+                                </div>
+                                <div class="item-row">
                                     <p>Devices :</p>
                                     <p>{{item.session.length}} / {{item.device_limit}}</p>
                                 </div>
@@ -180,11 +184,11 @@
 
         </ng-container>
     </div>
-    <ng-template #elseTemplate>
+    <!-- <ng-template #elseTemplate>
         <div class="remove_Device-Container">
             <h1>You Have No Permssion</h1>
         </div>
-    </ng-template>
+    </ng-template> -->
 
 
 
@@ -286,6 +290,6 @@
 </main>
 
 <!-- channels container end -->
-<div *ngIf="isLoading" class="loader-overlay">
+<!-- <div *ngIf="isLoading" class="loader-overlay">
     <div class="loader"></div>
-</div>
+</div> -->
