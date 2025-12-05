@@ -8,28 +8,30 @@ import { StripeModule } from 'stripe-angular';
 
 import { routes } from './app.routes';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule, provideHttpClient,withInterceptors } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { authInterceptor } from './_interceptor/auth.interceptor';
+import { SweetalertService } from './services/SweetAlert/sweetalert.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideRouter(routes,withViewTransitions()),
+    provideRouter(routes, withViewTransitions()),
     provideClientHydration(),
     provideNgxStripe(),
     importProvidersFrom(
       HttpClientModule,
       NgSelectModule,
       NgxStripeModule.forRoot(''),
-      StripeModule.forRoot(environment.stripe.publicKey),      
+      StripeModule.forRoot(environment.stripe.publicKey),
       BrowserAnimationsModule,
       BrowserModule,
+      SweetalertService,
       ToastrModule.forRoot({
         timeOut: 4000,
         positionClass: 'toast-top-right',
         preventDuplicates: true,
         progressBar: true,
-        closeButton:true
+        closeButton: true
       })
     ),
   ],

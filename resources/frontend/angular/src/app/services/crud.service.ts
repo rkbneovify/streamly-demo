@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +11,9 @@ export class CrudService {
   private apiResponseSubject = new BehaviorSubject<any>(null);
   apiResponse$ = this.apiResponseSubject.asObservable();
   constructor(private http: HttpClient) { }
-  
-  getRequest(requestUrl:string,headers?:any){
-    return this.http.get(`${this.baseUrl}/api/${requestUrl}`,{headers});
+
+  getRequest(requestUrl: string, headers?: any) {
+    return this.http.get(`${this.baseUrl}/api/${requestUrl}`, { headers });
   }
   getRequest2(requestUrl: string, typeUrl: string, data?: any, headers?: any): Observable<any> {
     // Initialize an empty options object
@@ -39,19 +39,20 @@ export class CrudService {
   //   return this.http.post(`${this.baseUrl}/api/${requestUrl}`,data)
   // }
 
-  postRequest(requestUrl: string, data: any, headers?: any) {
+
+  postRequest(requestUrl: string, data?: any, headers?: any) {
     return this.http.post(`${this.baseUrl}/api/${requestUrl}`, data, { headers });
   }
 
-  putRequest(requestUrl:string,data:any){
-    return this.http.put(`${this.baseUrl}/api/${requestUrl}`,data)
+  putRequest(requestUrl: string, data?: any) {
+    return this.http.put(`${this.baseUrl}/api/${requestUrl}`, data)
   }
-  deleteRequest(requestUrl:string, headers?: any){
-    return this.http.delete(`${this.baseUrl}/api/${requestUrl}`,{ headers })
+  deleteRequest(requestUrl: string, headers?: any) {
+    return this.http.delete(`${this.baseUrl}/api/${requestUrl}`, { headers })
   }
 
-  postRequest1(requestUrl:string,data:any){
-    return this.http.post(`http://127.0.0.1:8000/api/${requestUrl}`,data)
+  postRequest1(requestUrl: string, data: any) {
+    return this.http.post(`http://127.0.0.1:8000/api/${requestUrl}`, data)
   }
 
   sendResponse(response: any) {
@@ -59,7 +60,23 @@ export class CrudService {
   }
 
   // /filterChannels/Others
-  filterChannelResponse(body?:any,headers?:any){
-    return this.http.post(`${this.baseUrl}/api/auth/all-channel-list`,body);
+  filterChannelResponse(body?: any, headers?: any) {
+    return this.http.post(`${this.baseUrl}/api/auth/all-channel-list`, body);
   }
+
+
+
+
+  // 
+  postRequestWithDetails(url: string, body: any): Observable<any> {
+    return this.http.post(
+      this.baseUrl + url,
+      body,
+      { observe: 'response' }
+    );
+  }
+
+
+
+
 }
