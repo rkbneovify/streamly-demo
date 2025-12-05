@@ -38,6 +38,7 @@ import { environment } from '../../environments/environment';
 import { PlaystreamComponent } from './playstream/playstream.component';
 import { SharedStateService } from '../services/globalState/global-state.service';
 import { UtilsService } from '../services/utils/utils.service';
+
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -87,10 +88,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   navOpen: boolean = false;
   setActivePlanId!: string;
   expandedCardIndex: number | null = null;
-  isMiniPlayer:boolean = null;
+  isMiniPlayer: boolean = null;
   zipcode: any;
   dash_board_link: string = environment.baseUrl;
   isConnectedDeviceShow: boolean = false;
+  isHoaMainUser: boolean = false;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -113,10 +115,10 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.getItem('userDetails')
     ).roles[0].name;
 
-    console.log('shre1 ==>',this.sharedStateService.isMiniPlayer());
-    effect(()=>{
+    console.log('shre1 ==>', this.sharedStateService.isMiniPlayer());
+    effect(() => {
       this.isMiniPlayer = this.sharedStateService.isMiniPlayer();
-      console.log('shre ==>',this.sharedStateService.isMiniPlayer());
+      console.log('shre ==>', this.sharedStateService.isMiniPlayer());
     })
   }
 
@@ -142,7 +144,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
     });
-    console.log('isconn',this.isConnectedDeviceShow)
+    console.log('isconn', this.isConnectedDeviceShow)
     this.zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     // Listen for route changes
@@ -183,6 +185,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!this.setActivePlanId) {
       this.getPlans();
+    }
+
+    const isDataForHoaMain = JSON.parse(localStorage.getItem('is_hoa_main_user'));
+    if (isDataForHoaMain != null) {
+      this.isHoaMainUser = Boolean(isDataForHoaMain);
     }
   }
 
@@ -225,7 +232,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.crud
           .getRequest('auth/channel-sliders', headers)
-          .subscribe((res: any) => {});
+          .subscribe((res: any) => { });
       } catch (error) {
         console.error(error);
       }
@@ -251,9 +258,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       !target.closest('.schedule_details_container') &&
       !target.closest('.schedule_details_container1');
 
-      if (!isExpandable) {
-        this.isExpanded = false;
-      }
+    if (!isExpandable) {
+      this.isExpanded = false;
+    }
 
     // If clicked outside of search container and it's not the close button, hide search modal
     if (isInsideSearch) {
@@ -272,11 +279,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('mouseover', ['$event'])
   onMouseOver(event: MouseEvent) {
     const target = event.target as HTMLElement; // Ensure it's an HTMLElement
-    const parentDiv =target.closest('.onHoverShowMenu') as HTMLElement;
+    const parentDiv = target.closest('.onHoverShowMenu') as HTMLElement;
 
     if (parentDiv) {
       this.isExpanded = true;
-    }else{
+    } else {
       this.isExpanded = false;
     }
   }
@@ -521,7 +528,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     localStorage.setItem('playerId', channelUrl);
     localStorage.setItem('playerChannelId', playerChannelId);
 
-    if(this.searchTerm){
+    if (this.searchTerm) {
       this.searchTerm = '';
     }
 
@@ -599,9 +606,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     )
       .toString()
       .padStart(2, '0')}-${currentDate
-      .getUTCDate()
-      .toString()
-      .padStart(2, '0')} ${timeStr} +0000`;
+        .getUTCDate()
+        .toString()
+        .padStart(2, '0')} ${timeStr} +0000`;
     const localDate = this.convertTZ(dateString);
     const hours = localDate.getHours();
     const minutes = localDate.getMinutes();
