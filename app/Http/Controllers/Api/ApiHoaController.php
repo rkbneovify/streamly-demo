@@ -50,11 +50,12 @@ class ApiHoaController extends Controller
 
             });
             $query->when($request->has('q'), function ($q) use ($request) {
-                $q->where('passcode', 'like', '%' . $request->q . '%')
-                    ->orWhere('name', 'like', '%' . $request->q . '%')
-                    ->orWhere('email', 'like', '%' . $request->q . '%')
-                    ->orWhere('phone', 'like', '%' . $request->q . '%')
-                    ->orWhere('house_no', 'like', '%' . $request->q . '%');
+                $txt = strtolower($request->q);
+                $q->where('passcode', 'like', '%' . $txt . '%')
+                    ->orWhere('name', 'like', '%' . $txt . '%')
+                    ->orWhere('email', 'like', '%' . $txt . '%')
+                    ->orWhere('phone', 'like', '%' . $txt . '%')
+                    ->orWhere('house_no', 'like', '%' . $txt . '%');
             });
             $limit = $request->get('per_page', 10);
             $page = $request->get('page', 1);
