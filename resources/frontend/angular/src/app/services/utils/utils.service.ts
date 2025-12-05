@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class UtilsService {
-  constructor(private router: Router,private apiService: CrudService) {}
+  constructor(private router: Router, private apiService: CrudService) { }
 
   // set the channelID and the channel video URL
   setChannelId(id: string, url: string) {
@@ -84,5 +84,5 @@ export class UtilsService {
       })
     );
   }
-  
+
 }

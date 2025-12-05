@@ -16,6 +16,12 @@ class HoaUser extends Model
         return $this->hasMany(SessionTable::class, 'passcode', 'passcode');
     }
 
+    public function subscription()
+    {
+        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')
+            ->whereNotNull('plan_start_at')
+            ->latest();
+    }
     public function subscriptionLatest()
     {
         return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')->latest();
@@ -141,14 +147,13 @@ class HoaUser extends Model
 
     }
 
-    public static function getCurrentHoaUser($userId)
+    public static function getCurrentHoaUser()
     {
 
 
 
         if (!empty(request()->passcode)) {
-            return HoaUser::where('user_id', $userId)
-                ->where('passcode', request()->passcode)
+            return HoaUser::where('passcode', request()->passcode)
                 ->where('status', 1)
                 ->with('session')
                 ->first();
@@ -245,5 +250,63 @@ class HoaUser extends Model
         return null;
 
     }
+
+    public static function getCurrentSubUserByToken()
+    {
+        $session = SessionTable::where('access_token', request()->bearerToken())
+            ->where("status", 1)->latest("created_on")->first();
+        if ($session != null) {
+            return HoaUser::where('passcode', $session->passcode)
+                ->where('status', 1)
+                ->first();
+        }
+        return null;
+    }
+
+    public static function getSubUserActiveSessions($user)
+    {
+        $uid = $user->user_id;
+        return SessionTable::with([
+            'pdname' => function ($q) use ($uid) {
+                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                    ->where('user_id', '=', $uid);
+            }
+        ])
+            ->where('passcode', $user->passcode)
+            ->where("status", 1)
+            ->select('user_ip', 'logintime')
+            ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+            ->latest("created_on")->get()->makeHidden("pdname")->map(function ($address) {
+                $address['session_id'] = HashUserID($address['id']);
+                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+
+                // ✅ Fix logintime format (remove microseconds)
+                if (!empty($address['logintime'])) {
+                    $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
+                }
+
+                unset($address['pdname'], $address['device'], $address['id']);
+                return $address;
+            });
+
+    }
+
+    public static function activeHouseCount()
+    {
+        $userId = auth()->user()->id;
+        return HoaUser::where('user_id', $userId)
+            ->where('status', 1)
+            ->count();
+    }
+    public static function inactiveHouseCount()
+    {
+        $userId = auth()->user()->id;
+        return HoaUser::where('user_id', $userId)
+            ->where('status', 0)
+            ->count();
+    }
+
+
 
 }

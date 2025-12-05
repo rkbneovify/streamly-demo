@@ -194,13 +194,17 @@
     <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript>
         <link rel="stylesheet" href="styles.css">
     </noscript>
-    <link rel="modulepreload" href="chunk-RY5USBWM.js">
-    <link rel="modulepreload" href="chunk-CBVS4HXQ.js">
-    <link rel="modulepreload" href="chunk-XS3ESRUO.js">
+    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript>
+        <link rel="stylesheet" href="styles.css">
+    </noscript>
+    <link rel="modulepreload" href="chunk-5XHPY2F3.js">
+    <link rel="modulepreload" href="chunk-FJQ2PUZP.js">
+    <link rel="modulepreload" href="chunk-XOKUF6AL.js">
 </head>
 
 <body>
     <app-root></app-root>
+    @include('sweetalert::alert')
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
     <!--Video.js-->
@@ -218,7 +222,10 @@
     <script src="polyfills.js" type="module"></script>
     <script src="scripts.js" defer></script>
     <script src="main.js" type="module"></script>
-    @include('sweetalert::alert')
+
+
+
+
 </body>
 
 </html>

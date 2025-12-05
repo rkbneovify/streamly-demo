@@ -1,0 +1,19 @@
+<div class="dropdown">
+    <div>
+        <button class="dropdown-button" (click)="toggleDropdown()" aria-haspopup="true" aria-expanded="false">
+            Sort By :
+            <svg class="chev" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+
+
+        <div class="menu" *ngIf="isOpen">
+            <div (click)="selectOption(null)" class="menu-item">All Users</div>
+            <div (click)="selectOption(1)" class="menu-item">Active Users</div>
+            <div (click)="selectOption(0)" class="menu-item">Inactive Users</div>
+
+        </div>
+    </div>
+</div>
