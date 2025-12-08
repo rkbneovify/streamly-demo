@@ -243,26 +243,19 @@ class ApiHoaController extends Controller
             ->latest()
             ->first();
 
-
+        $redirectUrl = url('/server-message');
         if ($tokenData == null) {
 
-            Alert::error('Error', 'Invalid link. Please request a new passcode reset.');
-            return redirect('/');
-            // return redirect('/')->with('mainalert', [
-            //     'title' => 'Error !',
-            //     'text' => 'Link expired. Please request again forgot passcode .',
-            //     'icon' => 'error'
-            // ]);
+
+            $redirectUrl .= '?type=error&message=Invalid link. Please request a new passcode reset.';
+            return redirect($redirectUrl);
+
         }
         $expireIn = Carbon::parse($tokenData->created_at)->diffInMinutes(now());
         if ($expireIn >= 30) {
             Alert::error('Error', 'Link expired. Please request a new passcode reset.');
-            return redirect('/');
-            // return redirect('/')->with('mainalert', [
-            //     'title' => 'Error !',
-            //     'text' => 'Link expired. Please request again forgot passcode .',
-            //     'icon' => 'error'
-            // ]);
+            $redirectUrl .= '?type=error&message=Link expired. Please request a new passcode reset.';
+            return redirect($redirectUrl);
         }
 
         $hoaUser = HoaUser::where('email', $request->email)
@@ -270,13 +263,9 @@ class ApiHoaController extends Controller
             ->first();
         if ($hoaUser == null) {
 
-            Alert::error('Error', 'No active account found for the provided email.');
-            return redirect('/');
-            // return redirect('/')->with('mainalert', [
-            //     'title' => 'Error !',
-            //     'text' => 'No active account found for the provided email.',
-            //     'icon' => 'error'
-            // ]);
+
+            $redirectUrl .= '?type=error&message=No active account found for the provided email.';
+            return redirect($redirectUrl);
 
         }
 
@@ -296,27 +285,23 @@ class ApiHoaController extends Controller
             Mail::to($hoaUser->email)
                 ->send(new HoaSubUserPasscodeRegenerate($hoaUser));
 
-            Alert::success('Success', 'Passcode regenerated successfully ! Please check your email.')
-                ->persistent(true)
-                ->autoClose(false);
-            return redirect('/');
-            // return redirect('/')->with('mainalert', [
-            //     'title' => 'Success!',
-            //     'text' => 'Passcode regenerated successfully ! Please check your email.',
-            //     'icon' => 'success'
-            // ]);
+
+            $redirectUrl .= '?type=success&message=Passcode regenerated successfully ! Please check your email.';
+            return redirect($redirectUrl);
 
 
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            Alert::error('Error', $th->getMessage());
-            return redirect('/');
+            // Alert::error('Error', $th->getMessage());
+            // return redirect('/');
             // return redirect('/')->with('mainalert', [
             //     'title' => 'Error !',
             //     'text' => 'Something went wrong ! Please try again later.',
             //     'icon' => 'error'
             // ]);
+            $redirectUrl .= '?type=error&message=Something went wrong ! Please try again later.';
+            return redirect($redirectUrl);
 
         }
 
