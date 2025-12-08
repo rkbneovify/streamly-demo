@@ -43,6 +43,9 @@ export class ConnectedHousesComponent {
   }
 
   ngOnInit() {
+
+
+
     this.initializeForms();
 
     const isHoaMain = JSON.parse(localStorage.getItem('is_hoa_main_user'));
@@ -205,7 +208,8 @@ export class ConnectedHousesComponent {
           document.getElementById('btnshowPopAddHouse').click();
         },
         error: (err: any) => {
-
+          document.getElementById('btnReset').click();
+          document.getElementById('btnshowPopAddHouse').click();
           this.toastr.error(err.error?.message);
         },
       });
