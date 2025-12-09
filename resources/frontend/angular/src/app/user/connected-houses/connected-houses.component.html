@@ -39,7 +39,8 @@
                     </div>
                 </div>
 
-                <div *ngIf="housesList.length > 0" class="content" [class.single]="housesList.length <= 2">
+                <div *ngIf="housesList.length > 0; else elseTemplate" class="content"
+                    [class.single]="housesList.length <= 2">
 
                     <div class="item-box" *ngFor="let item of housesList">
 
@@ -123,7 +124,7 @@
 
                     <!-- content end -->
                 </div>
-                <ng-template *ngIf="housesList.length==0">
+                <ng-template #elseTemplate>
                     <h1>Data not found !</h1>
                 </ng-template>
             </div>
