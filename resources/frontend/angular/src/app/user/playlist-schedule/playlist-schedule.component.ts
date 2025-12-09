@@ -83,8 +83,7 @@ declare let window: Window;
   ],
 })
 export class PlaylistScheduleComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   playlist_details_show: boolean = false;
   isLoading: boolean = false;
   liveCurrentTime: number = 0;
@@ -306,7 +305,7 @@ export class PlaylistScheduleComponent
     private ngZone: NgZone,
     private cacheService: PlaylistCacheService,
     private routeTrackingService: RouteTrackingService
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.getCurrentTimeSlot();
     this.getFavoriteList();
@@ -404,7 +403,7 @@ export class PlaylistScheduleComponent
 
   ngAfterViewInit() {
     // Ensure elements are correctly referenced
-    this.scrollableElements.forEach((element, index) => {});
+    this.scrollableElements.forEach((element, index) => { });
 
     const savedScrollPos = localStorage.getItem('scrollPosition');
     if (savedScrollPos) {
@@ -498,7 +497,7 @@ export class PlaylistScheduleComponent
     this.scrollableContent.nativeElement.scrollLeft += scrollOffset;
     this.scrollableContent1.nativeElement.scrollLeft += scrollOffset;
 
-    test+= scrollOffset;
+    test += scrollOffset;
     console.log('test => ', test);
 
     this.updateCount(position, isNextValue);
@@ -608,10 +607,13 @@ export class PlaylistScheduleComponent
       },
       error: (err: any) => {
         console.error(err);
+
         this.ngZone.run(() => {
           this.isLoading = false;
           this.cdr.detectChanges();
         });
+
+
       },
     });
   }
@@ -873,8 +875,8 @@ export class PlaylistScheduleComponent
           }
           if (this.count == 0) {
             this.count =
-              +this.calculateIntervalsRemaining(this.getClosetTime) -1;
-              console.log('count => ', this.count);
+              +this.calculateIntervalsRemaining(this.getClosetTime) - 1;
+            console.log('count => ', this.count);
             this.isNextDay = true;
             this.scrollContent(this.totalScroll * 150);
           }
