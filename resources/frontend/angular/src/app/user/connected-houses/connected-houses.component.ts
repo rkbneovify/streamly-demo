@@ -327,6 +327,8 @@ export class ConnectedHousesComponent {
   }
 
   getExpiryText(item: any) {
+
+
     if (item.subscription_expire_in < 30 && item.subscription_expire_in > 0) {
       return `${item.subscription_expire_in} Days left`;
     }

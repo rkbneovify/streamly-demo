@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="housesList.length > 0" class="content" [class.single]="housesList.length === 1">
+                <div *ngIf="housesList.length > 0" class="content" [class.single]="housesList.length <= 2">
 
                     <div class="item-box" *ngFor="let item of housesList">
 
@@ -53,7 +53,7 @@
                             <div class="item-body">
                                 <div class="item-row">
                                     <p>House Number :</p>
-                                    <p>{{item.house_no}}</p>
+                                    <p>{{item.house_no??'-'}}</p>
                                 </div>
                                 <div class="item-row">
                                     <p>Email :</p>
@@ -61,11 +61,11 @@
                                 </div>
                                 <div class="item-row">
                                     <p>Passcode :</p>
-                                    <p>{{item.passcode}}</p>
+                                    <p>{{item.passcode??'-'}}</p>
                                 </div>
                                 <div class="item-row">
                                     <p>Phone :</p>
-                                    <p>{{item.phone}}</p>
+                                    <p>{{item.phone??'-'}}</p>
                                 </div>
                                 <div class="item-row">
                                     <p>Devices :</p>
@@ -73,8 +73,9 @@
                                 </div>
                                 <div class="item-row">
                                     <p>Plan :</p>
+
                                     <p [ngClass]="item.subscription_expire_in==0?'text-danger':'text-success'">
-                                        {{item.subscription_expire_in==0?'Expired':(item.subscription === null?'-'
+                                        {{item.subscription === null?'-':(item.subscription_expire_in === 0?'Expired'
                                         :item.subscription.plan_name)}}
                                     </p>
                                 </div>
