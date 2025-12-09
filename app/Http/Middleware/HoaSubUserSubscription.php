@@ -23,22 +23,24 @@ class HoaSubUserSubscription
         }
         if ($token != null) {
             $session = SessionTable::where('access_token', $token)->first();
-            if ($session != null) {
+            if ($session != null && $session->passcode != null) {
                 $hoaUser = HoaUser::where('passcode', $session->passcode)->first();
                 if ($hoaUser != null) {
-                    $subscriptionExpireIn = $hoaUser->subscription_expire_in;
-                    if ($subscriptionExpireIn === null) {
+
+                    if ($hoaUser->subscription_expire_in === null) {
                         return response()->json([
                             'status' => false,
-                            'response_code' => 403,
-                            'message' => 'No active subscription !',
-                        ], 403);
-                    } elseif ($subscriptionExpireIn === 0) {
+                            'response_code' => 410,
+                            'hoa_sub_user' => true,
+                            'message' => "Subscription expired !"
+                        ], 410);
+                    } elseif ($hoaUser->subscription_expire_in === 0) {
                         return response()->json([
                             'status' => false,
-                            'response_code' => 403,
-                            'message' => 'Subscription has expired',
-                        ], 403);
+                            'response_code' => 410,
+                            'hoa_sub_user' => true,
+                            'message' => "Subscription expired !"
+                        ], 410);
                     }
                 }
             }

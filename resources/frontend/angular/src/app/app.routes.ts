@@ -8,6 +8,7 @@ import { authGuarLoginStatus, authGuarRedirectToUser, authguardGuard } from './g
 import { DashjstestComponent } from './dashjstest/dashjstest.component';
 import { SubUserRegisterComponent } from './hoa/sub-user-register/sub-user-register.component';
 import { ForgotPasscodeComponent } from './hoa/forgot-passcode/forgot-passcode.component';
+import { ServerMessageComponent } from './server-message/server-message.component';
 
 export const routes: Routes = [
   { path: '', canActivate: [authGuarRedirectToUser], component: LandingPageComponent, loadChildren: () => import('./landing-page/landing-page.module').then(m => m.LandingPageModule) },
@@ -22,6 +23,10 @@ export const routes: Routes = [
   {
     path: 'hoa/sub-user-forgot-passcode',
     component: ForgotPasscodeComponent
+  },
+  {
+    path: 'server-message',
+    component: ServerMessageComponent
   },
   { path: 'auth', canActivate: [authGuarLoginStatus], loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
   { path: 'user', canActivate: [authguardGuard], loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
