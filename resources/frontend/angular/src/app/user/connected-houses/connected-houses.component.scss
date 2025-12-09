@@ -316,6 +316,7 @@ p {
                 font-weight: 800;
                 line-height: 100%;
                 text-align: center;
+                cursor: pointer;
 
 
 
@@ -342,8 +343,7 @@ p {
         gap: 30px;
 
         &.single {
-
-            width: 400px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 350px));
             justify-content: start;
             align-items: center;
             padding: 30px 30px;
