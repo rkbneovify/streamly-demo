@@ -30,21 +30,29 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
     catchError((err: any) => {
       if (err instanceof HttpErrorResponse) {
         // Handle HTTP errors
-        if (err.error.response_code === 401 && err.error.message == 'Token is Invalid') {   
-            localStorage.clear();
-             route.navigateByUrl('/auth/login');
-            toast.success('You are logged out');
+        if (err.error.response_code === 401 && err.error.message == 'Token is Invalid') {
+          localStorage.clear();
+          route.navigateByUrl('/auth/login');
+          toast.success('You are logged out');
           console.error('HTTP error:', err);
           // You might trigger a re-authentication flow or redirect the user here
-        } else if(err.error.response_code === 410){
+        } else if (err.error.response_code === 410) {
           const deviceInfoData = JSON.parse(localStorage.getItem('deviceInfo') || '');
           if (deviceInfoData !== null) {
             try {
-              // setLocal.setLocalStorage('cancelMessage',err.error.message);    
-              sendData.changeData(err.error.message);          
-              route.navigateByUrl('user/subscription-cancel');
-              deviceInfoData.subscribed = false;
-              localStorage.setItem('deviceInfo',JSON.stringify(deviceInfoData));
+              if (err.error.hoa_sub_user == true) {
+                toast.error(err.error.message);
+
+
+              }
+
+              else {
+                // setLocal.setLocalStorage('cancelMessage',err.error.message);   
+                sendData.changeData(err.error.message);
+                route.navigateByUrl('user/subscription-cancel');
+                deviceInfoData.subscribed = false;
+                localStorage.setItem('deviceInfo', JSON.stringify(deviceInfoData));
+              }
             } catch (error) {
               console.error('Error parsing JSON data:', error);
             }
@@ -59,7 +67,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
       }
 
       // Re-throw the error to propagate it further
-      return throwError(() => err); 
+      return throwError(() => err);
     })
   );
 };
