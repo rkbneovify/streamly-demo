@@ -65,7 +65,7 @@ class UsersController extends Controller
             }
         ]);
 
-
+        $query->withCount('hoaHouses');
         if (!empty($request->selected)) {
             // Put selected IDs first
             $ids = implode(',', $request->selected);
