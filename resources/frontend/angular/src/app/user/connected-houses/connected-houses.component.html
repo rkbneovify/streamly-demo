@@ -143,8 +143,8 @@
         <div class="modal-dialog modal-dialog-centered zipcode_correct">
             <div class="modal-content showPopConf popup_bg margin-left-3">
                 <div class="modal-header p-0 m-0 d-flex justify-content-end">
-                    <div class="btn-cl">
-                        <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close"
+                    <div (click)="modelClose()"  class="btn-cl">
+                        <img loading="lazy" class="pointer"  aria-label="Close"
                             src="../../../assets/dummy-img/x-circle.svg" alt="" />
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                                         }" type="submit">
                                         <span *ngIf="!isLoadingAddHomeForm">Submit</span>
                                     </button>
-                                    <button id="btnReset" class="btn_2 mb-2 w-auto align-self-center btn-bg-gold"
+                                    <button  id="btnReset" class="btn_2 mb-2 w-auto align-self-center btn-bg-gold"
                                         type="reset">
                                         Reset
                                     </button>
