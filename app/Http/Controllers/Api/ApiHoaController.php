@@ -353,9 +353,19 @@ class ApiHoaController extends Controller
 
     }
 
-    public function changeStatus($id)
+    public function changeStatus(Request $request, $id = null)
     {
 
+
+        if ($id == null) {
+            $validator = Validator::make($request->all(), [
+                'house_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return $this->validationErrorResponse(null, $validator->errors());
+
+            }
+        }
 
 
 
@@ -365,9 +375,14 @@ class ApiHoaController extends Controller
             $hoaUser = HoaUser::where('id', $id)
                 ->where('user_id', $user->id)
                 ->first();
+        } elseif ($request->house_id != null) {
+            $hoaUser = HoaUser::where('id', $request->house_id)
+                ->where('user_id', $user->id)
+                ->first();
         }
+
         if ($hoaUser == null) {
-            return $this->notFoundResponse('Passcode not found !');
+            return $this->notFoundResponse('Data not found !');
 
         }
         $message = $hoaUser->status == 1 ? 'deactivated' : 'activated';
