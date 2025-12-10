@@ -254,7 +254,9 @@ class HoaUser extends Model
     public static function getCurrentSubUserByToken()
     {
         $session = SessionTable::where('access_token', request()->bearerToken())
-            ->where("status", 1)->latest("created_on")->first();
+            ->where("status", 1)
+            ->whereNotNull('passcode')
+            ->first();
         if ($session != null) {
             return HoaUser::where('passcode', $session->passcode)
                 ->where('status', 1)
