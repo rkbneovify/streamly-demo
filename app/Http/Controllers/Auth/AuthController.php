@@ -685,12 +685,17 @@ class AuthController extends Controller
             }
         }
 
+        //  HoaUser::getCurrentSubUserByToken();
         // Unhash the user ID
         $id = UnHashUserID($request->id);
 
         // Retrieve the session record
-        $session = SessionTable::where('status', 1)->where('id', $id)->first();
-        $sessionLogout = SessionTable::where('status', 0)->where('id', $id)->first();
+        $session = SessionTable::where('status', 1)
+            ->where('id', $id)
+            ->first();
+        $sessionLogout = SessionTable::where('status', 0)
+            ->where('id', $id)
+            ->first();
 
         // If the device is logged in
         if ($session) {
