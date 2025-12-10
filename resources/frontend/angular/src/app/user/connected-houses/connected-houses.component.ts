@@ -187,7 +187,13 @@ export class ConnectedHousesComponent {
     this.isSearch = false;
 
   }
+  modelClose() {
+    document.getElementById('btnReset').click();
 
+    setTimeout(() => {
+      document.getElementById('btnshowPopAddHouse').click();
+    }, 500); // 500 ms delay
+  }
   addHomeOnSubmit() {
     this.addHouseForm.markAllAsTouched();
 
@@ -204,7 +210,7 @@ export class ConnectedHousesComponent {
 
           if (res.success == true) {
             this.toastr.success(res.message);
-            this.getHouseList(this.page, null, null);
+            this.getHouseList(1, null, null);
           }
           document.getElementById('btnReset').click();
           document.getElementById('btnshowPopAddHouse').click();
