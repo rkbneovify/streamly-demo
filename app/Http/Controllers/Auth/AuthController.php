@@ -140,8 +140,8 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
-
+        // disable session delete for junk clean
+        SessionTable::where('status', 0)->delete();
 
         $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
@@ -596,6 +596,10 @@ class AuthController extends Controller
     public function logout()
     {
         try {
+
+            // disable session delete for junk clean
+            SessionTable::where('status', 0)->delete();
+
             $request = request();
             $token = $request->bearerToken(); //get token from header
 
@@ -605,13 +609,13 @@ class AuthController extends Controller
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table
                 $acctoken = SessionTable::where([
-                    ['status', '=', '1'],
+                    ['status', '=', 1],
                     ['access_token', '=', $token],
                 ])->get()->toArray();
                 $uid = $user['id'];
 
                 $acctokenExists = SessionTable::where([
-                    ['status', '=', '0'],
+                    ['status', '=', 0],
                     ['access_token', '=', $token],
                 ]);
 
