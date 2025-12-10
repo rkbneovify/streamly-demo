@@ -28,7 +28,7 @@ export class RemoveDeviceComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private setToken: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const jsonData = localStorage.getItem('loggedInDeviceDetail');
@@ -41,12 +41,13 @@ export class RemoveDeviceComponent implements OnInit {
         console.error('Error parsing JSON data:', error);
       }
     }
-    
+
     this.current_device = localStorage.getItem('deviceId');
     this.connectedDevice = this.response;
   }
 
   removedevice(id: string): void {
+    console.log("Device Id:", id);
     this.loading[id] = true;
     this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
       next: (res: any) => {
@@ -109,6 +110,8 @@ export class RemoveDeviceComponent implements OnInit {
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             this.setToken.setAuthorizationToken(token);
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
+            localStorage.setItem('is_hoa_main_user', JSON.stringify(res.is_hoa_main_user));
+            localStorage.setItem('hoa_user', JSON.stringify(res.hoa_user));
             this.router.navigateByUrl('/user');
           }
         }

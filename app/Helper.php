@@ -27,15 +27,18 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         ['users_id', '=', $user_id],
     ])->get()->toArray();
     if ($userRole == "hoa") {
-        $active_session = App\SessionTable::where([
-            ['status', '=', '1'],
+        $query1 = App\SessionTable::where([
+            ['status', '=', 1],
             ['users_id', '=', $user_id],
             ['passcode', '=', null],
-        ])
-            ->orWhere([
-                ["passcode", $passcode]
-            ])
-            ->get()->toArray();
+        ])->get()->toArray();
+        $query2 = App\SessionTable::where([
+            ['status', '=', 1],
+            ['users_id', '=', $user_id],
+            ['passcode', '=', $passcode],
+        ])->get()->toArray();
+
+        $active_session = array_merge($query1, $query2);
     }
 
 
@@ -58,8 +61,11 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     ['users_id', '=', $user_id],
                 ])->orderBy('connected_devices', 'desc')
                 ->first();
+            $device = 0;
+            if ($prevConnectDevicecount != null) {
+                $device = number_format($prevConnectDevicecount['connected_devices']);
+            }
 
-            $device = number_format($prevConnectDevicecount['connected_devices']);
             //the number of device previously connected + 1
             sessionTable($user_id, $token, $deviceDetails, $connected_devices = $device + 1);
         }
@@ -125,6 +131,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         } elseif ($userRole == 'hoa') {
 
 
+
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
                     // Query the name field in status table
@@ -132,14 +139,8 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                         ->where('user_id', '=', $uid);
                 }
             ])
-                ->where([
-                    ['status', '=', '1'],
-                    ['users_id', '=', $uid],
-                    ['passcode', '=', null],
-                ])
-                ->orWhere([
-                    ['passcode', '=', $passcode],
-                ])
+                ->where('users_id', $uid)
+                ->where('status', 1)
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
                 ->orderBy('connected_devices', 'asc');
             $s = '';
@@ -156,7 +157,33 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     unset($address['id']);
                     return $address;
                 });
-            // return response()->json(["message" => $prevConnectDevicecount->count()])->send();
+
+            if ($prevConnectDevicecount->count() >= 5) {
+                $numofdevice = $prevConnectDevicecount->count();
+
+                //  dd($s);
+                $response = array('numofdevice' => $numofdevice, 'message' => 'Connected device found successfully', 'data' => $s);
+                //return response()->json($response, 200);
+
+                $resultoffset = $user->zipcode;
+                $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
+                $hrsoffset = $timeZoneData[1];
+                $timezone = $timeZoneData[0];
+
+
+
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 479,
+                    'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+                    'houroffset' => $hrsoffset,
+                    'timezone' => $timezone,
+                    'loggedindeviceinfolist' => $response,
+                ], 479)->withHeaders([
+                            'Access-Control-Allow-Origin' => '*',
+                        ])->send();
+            }
+
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
