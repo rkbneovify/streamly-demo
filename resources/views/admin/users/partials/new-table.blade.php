@@ -60,7 +60,7 @@
         <a href="javascript:void(0)" id="btn-show-selected">
             <h3 id="selected" class="card-title mt-2"></h3>
         </a>
-        
+
     </div>
 
 </div>
@@ -177,9 +177,12 @@
 
                             </td>
                             <td style="vertical-align: middle;">
+                                {{-- @if (optional($user->roles->first())->name == 'hoa')
+                                    {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses ?? 0 }}
+                                @endif
                                 @if ($user->sessions_count == 0)
                                     @if ($user->is_active)
-                                        @if (optional($user->roles->first())->id == 5)
+                                        @if (optional($user->roles->first())->name == 'tieruser')
                                             {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
                                         @else
                                             {{ $user->sessions_count ?? 0 }} / 5
@@ -200,7 +203,51 @@
                                         @endif
 
                                     </a>
-                                @endif
+                                @endif --}}
+
+                                @switch(optional($user->roles->first())->name)
+                                    @case('hoa')
+                                        @if ($user->is_active == 1)
+                                            @if ($user->sessions_count > 0)
+                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                                    {{ $user->sessions_count ?? 0 }} / 5
+                                                </a>
+                                            @else
+                                                {{ $user->sessions_count ?? 0 }} / 5
+                                            @endif
+                                        @else
+                                            0
+                                        @endif
+                                    @break
+
+                                    @case('tieruser')
+                                        @if ($user->is_active == 1)
+                                            @if ($user->sessions_count > 0)
+                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                                    {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+
+                                                </a>
+                                            @else
+                                                {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                            @endif
+                                        @else
+                                            0
+                                        @endif
+                                    @break
+
+                                    @default
+                                        @if ($user->is_active == 1)
+                                            @if ($user->sessions_count > 0)
+                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                                    {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                                </a>
+                                            @else
+                                                {{ $user->sessions_count ?? 0 }} / 5
+                                            @endif
+                                        @else
+                                            0
+                                        @endif
+                                @endswitch
 
 
                             </td>
