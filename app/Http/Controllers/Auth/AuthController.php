@@ -140,8 +140,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // disable session delete for junk clean
-        SessionTable::where('status', 0)->delete();
+
 
         $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
@@ -597,8 +596,7 @@ class AuthController extends Controller
     {
         try {
 
-            // disable session delete for junk clean
-            SessionTable::where('status', 0)->delete();
+
 
             $request = request();
             $token = $request->bearerToken(); //get token from header
