@@ -165,4 +165,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(HotelRoomTable::class, 'user_id', 'id');
     }
+
+    public function hoaHouses()
+    {
+        return $this->hasMany(HoaUser::class, 'user_id', 'id');
+
+    }
 }
