@@ -445,13 +445,13 @@ class StripeController extends Controller
             "timezone" => $timezone,
             "passcode" => HashUserID($userinfo->id),
             "connected_device" => $userinfo->connected_device,
-            "is_hoa_main_user" => $request->user()->roles[0]->id == 7 ? true : false,
-            "is_hoa_sub_user" => false,
+            "is_hoa_main_user" => $request->user()->roles[0]->name == 'hoa' ? true : false,
+            "is_hoa_sub_user" => null,
 
 
         ];
         $response_to_send['hoa_sub_user_subscription'] = null;
-        if ($hoaUser != null) {
+        if ($hoaUser != null && $hoaUser->passcode != null) {
 
             $user_data = [
                 "id" => $hoaUser->id,
