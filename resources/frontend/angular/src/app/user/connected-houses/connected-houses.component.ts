@@ -130,6 +130,8 @@ export class ConnectedHousesComponent {
 
           }
 
+          console.log('House List : ', this.housesList)
+
         },
         error: (err: any) => {
           this.sweetAlert.close();
