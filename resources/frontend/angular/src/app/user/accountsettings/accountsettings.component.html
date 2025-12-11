@@ -126,7 +126,7 @@
 
   </form>
 
-  <ng-container *ngIf="isConnectedDeviceShow && !isHoaSubUser">
+  <ng-container *ngIf="isConnectedDeviceShow && isHoaMainUser">
     <div class="account_details_container account_subscription_container mb-4" *ngIf="subscribed && planName">
       <p class="account-heading mb-4">Subscription</p>
       <div class="accountdetails">
@@ -209,7 +209,7 @@
 
   <!-- Hoa Sub User Subscription Details -->
 
-  <ng-container *ngIf="isHoaSubUser && hoaSubUSerSubscription ">
+  <ng-container *ngIf="isHoaSubUser && hoaSubUSerSubscription">
     <div class="account_details_container account_subscription_container"
       *ngIf="subscribed && cardDetails1?.card_last_four">
       <p class="account-heading mb-4">Subscription</p>
@@ -220,13 +220,31 @@
         </div>
         <div class="acoount_user_email my-4">
           <label>Plan Expire At</label>
-          <p>{{ hoaSubUSerSubscription.plan_expires_at }}</p>
+          <p>{{ hoaSubUSerSubscription.plan_expires_at | localDate}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Hoa Main User Subscription Details -->
+
+  <ng-container *ngIf="isHoaMainUser && hoaMainUserSubscription">
+    <div class="account_details_container account_subscription_container">
+      <p class="account-heading mb-4">Subscription</p>
+      <div class="accountdetails">
+        <div class="acoount_user_name">
+          <label>Plan</label>
+          <p>{{ hoaMainUserSubscription.plan }}</p>
+        </div>
+        <div class="acoount_user_email my-4">
+          <label>Plan Expire At</label>
+          <p>{{ hoaMainUserSubscription.renews_at | localDate }}</p>
         </div>
       </div>
     </div>
   </ng-container>
   <!-- end -->
-  <ng-container *ngIf="isConnectedDeviceShow && !isHoaSubUser ">
+  <ng-container *ngIf="isConnectedDeviceShow && !isHoaMainUser && !isHoaSubUser ">
     <div class="account_details_container account_subscription_container"
       *ngIf="subscribed && cardDetails1?.card_last_four">
       <p class="account-heading mb-4">Card Details</p>
@@ -274,7 +292,7 @@
 
 
   <div class="account_details_container account_subscription_container mt-4"
-    *ngIf="!isHoaSubUser &&  subscribed && !(!!planName) && !(!!cardDetails1?.lenght)">
+    *ngIf="!isHoaMainUser &&  subscribed && !(!!planName) && !(!!cardDetails1?.lenght)">
     <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
       <span class="text-red-500 font-bold text-danger">**</span>
       Other user details are not visible since your account is a test user account, and our site is operating in live
