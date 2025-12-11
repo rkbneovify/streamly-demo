@@ -306,17 +306,13 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
 
             }
+
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)->where("passcode", $request->passcode)->where("status", 1)->count();
             if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
-                return response()->json([
-                    'success' => false,
-                    'response_code' => 479,
-                    'device_limit' => $hoaUser->device_limit,
-                    'sessions_count' => $hoaUserActiveDevices,
-                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login.',
-
-                ], 479);
+                $user = User::find($hoaUser->user_id);
+                hoaSubUserDeviceLimitCheck($user, $hoaUser->device_limit);
+                exit;
             }
 
             $uid = $hoaUser->user_id;
