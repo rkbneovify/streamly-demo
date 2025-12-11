@@ -26,6 +26,7 @@ use Stripe\PaymentMethod;
 use Stripe\Subscription;
 use App\SessionTable;
 use Laravel\Cashier\Cashier;
+use Ratchet\App;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
@@ -451,6 +452,7 @@ class StripeController extends Controller
 
         ];
         $response_to_send['hoa_sub_user_subscription'] = null;
+        $response_to_send['hoa_main_custom_subscription'] = null;
         if ($hoaUser != null && $hoaUser->passcode != null) {
 
             $user_data = [
@@ -541,6 +543,23 @@ class StripeController extends Controller
             $response_to_send['plan'] = [];
             $response_to_send['invoices'] = [];
             $response_to_send['error'] = $e->getMessage();
+
+            if ($user_data['is_hoa_sub_user'] == null && $request->user()->is_custom_user == 1) {
+                $hoaMainSubscription = \App\Models\Subscription::where('user_id', $userinfo->id)
+                    ->where('stripe_status', 'active')
+                    ->first();
+                if ($hoaMainSubscription != null) {
+
+                    $response_to_send['hoa_main_custom_subscription'] =
+                        [
+                            "plan" => getPlanNameForCustomUser($hoaMainSubscription),
+                            "renews_at" => $hoaMainSubscription->renews_at,
+                        ];
+                }
+            }
+
+
+
         }
 
         $card_details = [

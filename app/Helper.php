@@ -2177,6 +2177,35 @@ function getSubscriptionExpireAt($subscription)
     return null;
 }
 
+function getPlanNameForCustomUser($subscription)
+{
+    // If no renews_at date, return 'Never'
+    if ($subscription->renews_at === null) {
+        return 'Never';
+    }
+
+    // Parse dates
+    $updatedAt = Carbon::parse($subscription->updated_at)->startOfDay();
+    $renewsAt = Carbon::parse($subscription->renews_at)->startOfDay();
+
+    // Calculate total months between dates
+    $months = $updatedAt->diffInMonths($renewsAt);
+
+    // Return readable format
+    switch ($months) {
+        case 1:
+            return '1 Month';
+        case 3:
+            return '3 Months';
+        case 6:
+            return '6 Months';
+        case 12:
+            return '12 Months';
+        default:
+            return $months . ' Months';
+    }
+}
+
 
 
 
