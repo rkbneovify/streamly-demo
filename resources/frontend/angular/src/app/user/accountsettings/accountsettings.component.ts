@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
 import { UtilsService } from '../../services/utils/utils.service';
+import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -19,7 +20,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent],
+  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent, LocalDatePipe],
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
@@ -58,6 +59,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   isHoaMainUser: boolean = false;
   isHoaSubUser: boolean = false;
   hoaSubUSerSubscription: any = null;
+  hoaMainUserSubscription: any = null;
+
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -255,6 +258,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
             this.isHoaMainUser = res?.userinfo.is_hoa_main_user
             this.isHoaSubUser = res?.userinfo.is_hoa_sub_user
             this.hoaSubUSerSubscription = res?.hoa_sub_user_subscription;
+            this.hoaMainUserSubscription = res?.hoa_main_custom_subscription;
             // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;
 
             this.billingScheme = res?.plan?.billing_scheme;
