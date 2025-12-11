@@ -17,28 +17,33 @@ use Illuminate\Support\Str;
 function checkLoginLimit($user_id, $token, $deviceDetails)
 {
 
+
+
     $user = User::find($user_id);
     $userRole = $user->roles->first()->name;
     $passcode = HashUserID($user_id);
     $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
-        ['status', '=', '1'],
+        ['status', '=', 1],
         ['users_id', '=', $user_id],
     ])->get()->toArray();
+
+
     if ($userRole == "hoa") {
-        $query1 = App\SessionTable::where([
-            ['status', '=', 1],
-            ['users_id', '=', $user_id],
-            ['passcode', '=', null],
-        ])->get()->toArray();
-        $query2 = App\SessionTable::where([
-            ['status', '=', 1],
-            ['users_id', '=', $user_id],
-            ['passcode', '=', $passcode],
-        ])->get()->toArray();
+
+        $query1 = App\SessionTable::whereNull('passcode')
+            ->where('status', 1)
+            ->where('users_id', $user_id)
+            ->get()->toArray();
+        $query2 = App\SessionTable::whereNotNull('passcode')
+            ->where('passcode', $passcode)
+            ->where('status', 1)
+            ->where('users_id', $user_id)
+            ->get()->toArray();
 
         $active_session = array_merge($query1, $query2);
+
     }
 
 
@@ -71,6 +76,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         }
     } //after iteration we check if the count of logins is still greater than the limit
     if (count($active_session) >= $login_limit) {
+
         //then return a login error that maximum logins reached
         //echo 'you are not allowed to login as you have breeched the maximum session limit.';
         //exit;
@@ -158,31 +164,29 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     return $address;
                 });
 
-            if ($prevConnectDevicecount->count() >= 5) {
-                $numofdevice = $prevConnectDevicecount->count();
+            $numofdevice = $prevConnectDevicecount->count();
 
-                //  dd($s);
-                $response = array('numofdevice' => $numofdevice, 'message' => 'Connected device found successfully', 'data' => $s);
-                //return response()->json($response, 200);
+            //  dd($s);
+            $response = array('numofdevice' => $numofdevice, 'message' => 'Connected device found successfully', 'data' => $s);
+            //return response()->json($response, 200);
 
-                $resultoffset = $user->zipcode;
-                $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
-                $hrsoffset = $timeZoneData[1];
-                $timezone = $timeZoneData[0];
-
+            $resultoffset = $user->zipcode;
+            $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
+            $hrsoffset = $timeZoneData[1];
+            $timezone = $timeZoneData[0];
 
 
-                return response()->json([
-                    'success' => false,
-                    'response_code' => 479,
-                    'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
-                    'houroffset' => $hrsoffset,
-                    'timezone' => $timezone,
-                    'loggedindeviceinfolist' => $response,
-                ], 479)->withHeaders([
-                            'Access-Control-Allow-Origin' => '*',
-                        ])->send();
-            }
+
+            return response()->json([
+                'success' => false,
+                'response_code' => 479,
+                'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+                'houroffset' => $hrsoffset,
+                'timezone' => $timezone,
+                'loggedindeviceinfolist' => $response,
+            ], 479)->withHeaders([
+                        'Access-Control-Allow-Origin' => '*',
+                    ])->send();
 
         } else {
             $prevConnectDevicecount = SessionTable::with([
@@ -874,8 +878,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         $subscriptionStatus = GetSubscriptionStatusOfUser($user_id);
         $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
         // $hoaUserHouses = getHousesOfHoaUser($user_id);
-        return response()->json([
 
+        $response = [
             'success' => true,
             'message' => 'logged in successfully ',
             'passcode' => HoaUser::getCurrentHoaUser() == null ? HashUserID($userInfo->id) : HoaUser::getCurrentHoaUser()->passcode,
@@ -897,14 +901,19 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'termandcondition' => $termAndCondition,
             'rooms' => $rooms,
             'is_hoa_main_user' => HoaUser::isHoaMainUser(),
+            'is_hoa_sub_user' => HoaUser::getCurrentHoaUser() == null ? false : true,
             'houses' => HoaUser::getHoaHouseList(),
             'hoa_user' => HoaUser::getCurrentHoaUser(),
             'userrole' => $userInfo->roles->pluck('name')[0],
             'subscribed' => $subscriptionStatus,
             'subscribedmsgis' => $kindlysubscribemsg
+        ];
 
 
-        ], 200)->withHeaders([
+        return response()->json(
+            $response,
+            200
+        )->withHeaders([
                     'Access-Control-Allow-Origin' => '*',
                 ])->send();
     }
@@ -2204,6 +2213,63 @@ function getPlanNameForCustomUser($subscription)
         default:
             return $months . ' Months';
     }
+}
+
+function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
+{
+
+    $prevConnectDevicecount = SessionTable::with([
+        'pdname' => function ($q) use ($user) {
+            // Query the name field in status table
+            $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                ->where('user_id', '=', $user->id);
+        }
+    ])
+        ->where('users_id', $user->id)
+        ->where('status', 1)
+        ->whereNotNull('passcode')
+        ->where('passcode', request()->passcode)
+        ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
+        ->orderBy('connected_devices', 'asc');
+    $s = '';
+    $numofdevice = '';
+    $s = $prevConnectDevicecount->get()->makeHidden('pdname')
+        ->map(function ($address) {
+
+            $address['session_id'] = HashUserID($address['id']);
+
+            $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+            $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
+            unset($address->pdname);
+            unset($address['device']);
+            unset($address['id']);
+            return $address;
+        });
+
+    $numofdevice = $prevConnectDevicecount->count();
+
+    //  dd($s);
+    $response = array('numofdevice' => $numofdevice, 'message' => 'Connected device found successfully', 'data' => $s);
+    //return response()->json($response, 200);
+
+    $resultoffset = $user->zipcode;
+    $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
+    $hrsoffset = $timeZoneData[1];
+    $timezone = $timeZoneData[0];
+
+
+
+    return response()->json([
+        'success' => false,
+        'response_code' => 479,
+        'message' => 'Your account is in use on ' . $deviceLimit . ' devices. please stop playing on other devices to continue',
+        'houroffset' => $hrsoffset,
+        'timezone' => $timezone,
+        'loggedindeviceinfolist' => $response,
+    ], 479)->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+            ])->send();
+
 }
 
 
