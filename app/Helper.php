@@ -901,6 +901,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'termandcondition' => $termAndCondition,
             'rooms' => $rooms,
             'is_hoa_main_user' => HoaUser::isHoaMainUser(),
+            'is_hoa_sub_user' => HoaUser::getCurrentHoaUser() == null ? false : true,
             'houses' => HoaUser::getHoaHouseList(),
             'hoa_user' => HoaUser::getCurrentHoaUser(),
             'userrole' => $userInfo->roles->pluck('name')[0],
@@ -2226,6 +2227,7 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
     ])
         ->where('users_id', $user->id)
         ->where('status', 1)
+        ->whereNotNull('passcode')
         ->where('passcode', request()->passcode)
         ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
         ->orderBy('connected_devices', 'asc');
