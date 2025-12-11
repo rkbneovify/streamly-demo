@@ -13,7 +13,8 @@ class HoaUser extends Model
     protected $appends = ['subscription_expire_in'];
     public function session()
     {
-        return $this->hasMany(SessionTable::class, 'passcode', 'passcode');
+        return $this->hasMany(SessionTable::class, 'passcode', 'passcode')
+            ->where('status', 1);
     }
 
     public function subscription()

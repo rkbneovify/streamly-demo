@@ -294,7 +294,7 @@ class AuthController extends Controller
             $user = User::find($hoaUser->user_id);
             // hoa main checking
             if ($user == null) {
-                return response()->json(['success' => false, 'response_code' => 404, 'message' => 'User not found !'], 401);
+                return response()->json(['success' => false, 'response_code' => 404, 'message' => 'User not found !'], 404);
             }
             // hoa main user status checking
             if ($user->is_active == 0) {
@@ -312,7 +312,9 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'response_code' => 479,
-                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login 1',
+                    'device_limit' => $hoaUser->device_limit,
+                    'sessions_count' => $hoaUserActiveDevices,
+                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login.',
 
                 ], 479);
             }
