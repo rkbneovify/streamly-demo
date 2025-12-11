@@ -357,6 +357,8 @@ class APIController extends Controller
         $userConnectedDevice = $user->connected_device;
         $hoaUser = HoaUser::getCurrentSubUserByToken();
         if ($hoaUser == null) {
+
+
             if ($userRole == 'tieruser') {
                 $prevConnectDevicecount = SessionTable::with([
                     'hotel:id,hotel_room,session_id',
@@ -388,6 +390,75 @@ class APIController extends Controller
                     unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
                     return $address;
                 });
+
+
+            } elseif ($userRole == 'hoa') {
+                $prevConnectDevicecount1 = SessionTable::with([
+                    'pdname' => function ($q) use ($uid) {
+                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                            ->where('user_id', '=', $uid);
+                    }
+                ])
+                    ->where([
+                        ['status', '=', 1],
+                        ['users_id', '=', $uid],
+                    ])
+                    ->whereNull('passcode')
+                    ->select('user_ip', 'logintime')
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                    ->orderBy('connected_devices', 'asc');
+
+                $prevConnectDevicecount2 = SessionTable::with([
+                    'pdname' => function ($q) use ($uid) {
+                        $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                            ->where('user_id', '=', $uid);
+                    }
+                ])
+                    ->where([
+                        ['status', '=', 1],
+                        ['users_id', '=', $uid],
+                        ['passcode', '=', HashUserID($uid)],
+                    ])
+                    ->whereNotNull('passcode')
+                    ->select('user_ip', 'logintime')
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
+                    ->orderBy('connected_devices', 'asc');
+
+                $prevConnectDevicecount = $prevConnectDevicecount1->get()
+                    ->merge($prevConnectDevicecount2->get())
+                    ->values();
+
+                $sessions = $prevConnectDevicecount
+                    ->makeHidden('pdname')
+                    ->map(function ($address) {
+                        $address['session_id'] = HashUserID($address['id']);
+                        $address['personaldevicename'] = $address->pdname->personal_devicename ?? $address['device']['personaldevicename'] ?? 'empty';
+                        $address['personaldeviceid'] = HashUserID($address->pdname->id ?? $address['id']);
+
+                        if (!empty($address['logintime'])) {
+                            $address['logintime'] = Carbon::parse($address['logintime'])->setTimezone('UTC')->toISOString();
+                        }
+
+                        unset($address['pdname'], $address['device'], $address['id']);
+                        return $address;
+                    });
+
+                $numofdevice = $prevConnectDevicecount->count();
+
+
+
+                // Final response
+                $response = [
+                    'success' => true,
+                    'response_code' => 200,
+                    'numofdevice' => $numofdevice,
+                    'userDeviceLimit' => GetLimitForUser($uid),
+                    'user_connected_device' => $userConnectedDevice,
+                    'message' => 'Connected device found successfully',
+                    'data' => $sessions,
+                ];
+
+                return response()->json($response, 200);
             } else {
                 $prevConnectDevicecount = SessionTable::with([
                     'pdname' => function ($q) use ($uid) {
@@ -419,6 +490,8 @@ class APIController extends Controller
             }
 
             $numofdevice = $prevConnectDevicecount->count();
+
+
 
             // Final response
             $response = [
