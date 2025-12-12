@@ -1759,6 +1759,15 @@ function personaldeviceTableStore($user_id, $deviceDetails)
         ['user_id', '=', $user_id],
         ['device_id', '=', $deviceid],
     ])->get();
+    if (HoaUser::getCurrentHoaUser() != null) {
+        $device_count = PersonalDevice::whereNotNull('passcode')
+            ->where([
+                ['user_id', '=', $user_id],
+                ['device_id', '=', $deviceid],
+                ['passcode', '=', request()->passcode],
+            ])->get();
+
+    }
     if (count($device_count) == 0) {
         $personalDevice = new PersonalDevice();
         $personalDevice->user_id = $user_id;
