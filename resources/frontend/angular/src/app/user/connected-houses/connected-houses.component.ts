@@ -37,6 +37,7 @@ export class ConnectedHousesComponent {
   txtSearch = new FormControl('');
   isSearch: boolean = false;
   isMoreData: Boolean = true;
+  isCopied: Boolean = false;
   constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
@@ -334,11 +335,14 @@ export class ConnectedHousesComponent {
     // console.log("Page count", this.page)
   }
 
-  copyText(event: any) {
+  copyText(event: any, houseId: number) {
+    this.houseId = houseId;
     const text = event.target.innerText;
     navigator.clipboard.writeText(text)
       .then(() => {
         // this.sweetAlert.toast('Copied', 'success')
+        this.isCopied = true;
+        setTimeout(() => this.isCopied = false, 1500);
       })
       .catch(err => {
         this.sweetAlert.toast('Failed to copy', 'success')
