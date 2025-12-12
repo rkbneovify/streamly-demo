@@ -88,7 +88,7 @@ class ApiHoaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             // 'email' => 'required|array',
-            'email' => 'required|email|max:225',
+            'email' => 'nullable|email|max:225',
             'plan_in_month' => 'required|in:1,3,6,12',
             'amount' => 'nullable|numeric',
             'device_limit' => 'required|integer'
@@ -110,17 +110,19 @@ class ApiHoaController extends Controller
                 return $this->validationErrorResponse("Per house device limit exceed !");
             }
 
+
+
             $hoaUser = HoaUser::where('email', $request->email)->first();
             if ($hoaUser != null) {
                 return $this->validationErrorResponse("Email already exits !");
             }
-            if ($hoaUser == null) {
+            if ($hoaUser == null && $request->email != null) {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->save();
-                $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser)->first();
+                $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->first();
                 if ($subscription == null) {
                     $subs = new HoaSubUserSubscription();
                     $subs->user_id = $hoaUser->user_id;
@@ -130,9 +132,37 @@ class ApiHoaController extends Controller
                     $subs->save();
                 }
 
+            } else {
+                $hoaUser = new HoaUser();
+                $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->email = $request->email;
+                $hoaUser->device_limit = $request->device_limit;
+                $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
+                $hoaUser->status = 1;
+                $hoaUser->save();
+                $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->first();
+                if ($subscription == null) {
+                    $subs = new HoaSubUserSubscription();
+                    $subs->user_id = $hoaUser->user_id;
+                    $subs->sub_user_id = $hoaUser->id;
+                    $subs->passcode = $hoaUser->passcode;
+                    $subs->amount = $request->amount;
+                    $subs->plan_name = $request->plan_in_month . ' Month Plan';
+                    $subs->plan_start_at = now();
+                    $subs->plan_expires_at = HoaSubUserSubscription::calcExpiryDate($request->plan_in_month);
+                    $subs->created_at = now();
+                    $subs->updated_at = now();
+                    $subs->save();
+                }
             }
 
-            Mail::to($request->email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
+
+
+
+            if ($request->email != null) {
+                Mail::to($request->email)->send(new VerifyHoaSubUserEmail($hoaUser, $request->plan_in_month, $request->amount));
+            }
+
             DB::commit();
             return $this->successResponse("House added successfully !");
         } catch (\Throwable $th) {

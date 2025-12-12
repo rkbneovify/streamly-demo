@@ -160,7 +160,7 @@ export class ConnectedHousesComponent {
 
     this.addHouseForm = this.fb.group({
 
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
       device_limit: ['', [
         Validators.required,
         Validators.pattern(/^[0-9]+$/)
@@ -334,6 +334,16 @@ export class ConnectedHousesComponent {
     // console.log("Page count", this.page)
   }
 
+  copyText(event: any) {
+    const text = event.target.innerText;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        // this.sweetAlert.toast('Copied', 'success')
+      })
+      .catch(err => {
+        this.sweetAlert.toast('Failed to copy', 'success')
+      });
+  }
   getExpiryText(item: any) {
 
 
