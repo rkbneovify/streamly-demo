@@ -268,11 +268,14 @@ class HoaUser extends Model
 
     public static function getSubUserActiveSessions($user)
     {
+        // here $user as hoa sub user
         $uid = $user->user_id;
         return SessionTable::with([
-            'pdname' => function ($q) use ($uid) {
+            'pdname' => function ($q) use ($uid, $user) {
                 $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->where('user_id', '=', $uid);
+                    ->whereNotNull('passcode')
+                    ->where('user_id', '=', $uid)
+                    ->where('passcode', '=', $user->passcode);
             }
         ])
             ->where('passcode', $user->passcode)
@@ -281,7 +284,7 @@ class HoaUser extends Model
             ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
             ->latest("created_on")->get()->makeHidden("pdname")->map(function ($address) {
                 $address['session_id'] = HashUserID($address['id']);
-                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                 $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
 
                 // ✅ Fix logintime format (remove microseconds)
