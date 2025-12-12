@@ -94,17 +94,17 @@
                             </div>
 
                             <div class="item-footer">
-                                <a *ngIf="item.status==0 && item.email_verified_at !== null"
-                                    (click)="activeHouse(item.id)" class="btn-item btn-active">
+                                <a *ngIf="item.status==0 && item.passcode!==null" (click)="activeHouse(item.id)"
+                                    class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/home-active.svg" alt="icon">
                                     <span>Active</span>
                                 </a>
-                                <a *ngIf="item.status==1" (click)="deactiveHouse(item.id)"
+                                <a *ngIf="item.status==1 && item.passcode!==null" (click)="deactiveHouse(item.id)"
                                     class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
                                     <span>Deactive</span>
                                 </a>
-                                <a *ngIf="item.email_verified_at === null && item.status ==0"
+                                <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
                                     (click)="resendMail(item.id)" class="btn-item btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
                                     <span>Send Email</span>
