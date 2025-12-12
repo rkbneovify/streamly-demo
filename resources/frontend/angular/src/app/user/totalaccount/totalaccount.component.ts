@@ -13,7 +13,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, ɵInternalFormsSharedModule, ReactiveFormsModule],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss',
 })
