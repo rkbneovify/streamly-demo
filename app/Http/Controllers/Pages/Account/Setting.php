@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages\Account;
 
+use App\Traits\ApiResponseTrait;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ use Jenssegers\Agent\Agent;
 
 class Setting extends Controller
 {
+    use ApiResponseTrait;
     public function __construct()
     {
 
@@ -89,7 +91,7 @@ class Setting extends Controller
 
             $plan = \Stripe\Plan::retrieve($stripe_plan);
             // dd($plan);
-            $invoices =  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id, 'expand' => ['data.charge']]);
+            $invoices = \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id, 'expand' => ['data.charge']]);
             //    $invoices = Auth::user()->invoicesIncludingPending();
             //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
             // ch_1HSfl3LqTwOy7LECVmOdkimy
@@ -160,11 +162,12 @@ class Setting extends Controller
             $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
             if ($STRIPE_KEY[0]->type == $userinfo->mode) {
                 $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
-                $invoices =  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id, 'expand' => ['data.charge']]);
+                $invoices = \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id, 'expand' => ['data.charge']]);
             } else {
                 $plan = null;
                 $invoices = '';
-            };
+            }
+            ;
             //    dd($plan);
             //    $invoices = Auth::user()->invoicesIncludingPending();
             //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
@@ -230,11 +233,13 @@ class Setting extends Controller
         //  dump($hasid);
         //  dd(UnHashUserID($hasid));
         $userinfo = User::find($id);
-        $allSession = SessionTable::with(['pdname' => function ($q) use ($id) {
-            // Query the name field in status table
-            $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                ->where('user_id', '=', $id);
-        }])
+        $allSession = SessionTable::with([
+            'pdname' => function ($q) use ($id) {
+                // Query the name field in status table
+                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
+                    ->where('user_id', '=', $id);
+            }
+        ])
             ->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
@@ -251,20 +256,23 @@ class Setting extends Controller
             ->get();
         */
 
-        $userRole =  $userinfo->roles->first()->name;
+        $userRole = $userinfo->roles->first()->name;
         if ($userRole == 'tieruser') {
             /*$allSession=SessionTable::with('hotel')->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
             ])->orderBy('connected_devices', 'asc')->get();
             */
-            $allSession = SessionTable::with(['hotel', 'pdname' => function ($q) use ($id) {
-                // Query the name field in status table
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $id);
-            }])->where([
-                ['status', '=', '1'],
-                ['users_id', '=', $id],
-            ])->orderBy('connected_devices', 'asc')->get();
+            $allSession = SessionTable::with([
+                'hotel',
+                'pdname' => function ($q) use ($id) {
+                    // Query the name field in status table
+                    $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $id);
+                }
+            ])->where([
+                        ['status', '=', '1'],
+                        ['users_id', '=', $id],
+                    ])->orderBy('connected_devices', 'asc')->get();
         }
         // dd($allSession);
 
@@ -369,38 +377,49 @@ class Setting extends Controller
             return redirect()->back()->with('message', 'Password Updated Successfully');
         }
     }
-    
+
     public function updatePersonalDeviceName(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'devicename' => 'required|string|max:20',
-            'device_type' => 'required|string|max:20'  
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
-        }
-        $unhashid = UnHashUserID($id);
-        if ($request->device_type == 'non-web') {
-            $user = PersonalDevice::where('id', $unhashid)->update([
-                'personal_devicename' => $request->devicename
+        try {
+            $validator = Validator::make($request->all(), [
+                'devicename' => 'required|string|max:20',
+                'device_type' => 'required|string|max:20',
+                'passcode' => 'nullable|string|max:20'
             ]);
-        } else {
-            $user = SessionTable::where('id', $unhashid)->update([
-                'device->personaldevicename' => $request->devicename
-            ]);
-        }
-        if ($request->wantsJson()) {
+            if ($validator->fails()) {
+                return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
+            }
+            $unhashid = UnHashUserID($id);
+            if ($request->device_type == 'non-web') {
+                $user = PersonalDevice::where('id', $unhashid)->update([
+                    'personal_devicename' => $request->devicename,
+                    'passcode' => $request->passcode
+                ]);
+            } else {
+                $user = SessionTable::where('id', $unhashid)->update([
+                    'device->personaldevicename' => $request->devicename,
+                    'device->passcode' => $request->passcode
+                ]);
+            }
+            if ($request->wantsJson()) {
 
-            $response = [
-                'success' => true,
-                'data' => ['devicename' => $request->devicename, 'personaldeviceid' => $id],
-                'message' => 'Device name Updated Successfully.',
-                'response_code' => 200,
-            ];
+                $response = [
+                    'success' => true,
+                    'data' => ['devicename' => $request->devicename, 'personaldeviceid' => $id],
+                    'message' => 'Device name Updated Successfully.',
+                    'response_code' => 200,
+                ];
 
-            return response()->json($response, 200);
+                return response()->json($response, 200);
+            }
+            return redirect()->back()->with('message', 'Device name Updated Successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            if ($request->wantsJson()) {
+                return $this->exceptionResponse($th);
+            }
+            return redirect()->back()->with('message', 'Something went wrong! Please try again later.');
         }
-        return redirect()->back()->with('message', 'Device name Updated Successfully');
     }
 
 
@@ -429,7 +448,7 @@ class Setting extends Controller
     {
         if ($request->has('name')) {
 
-            if (strlen(trim($request['name'])) <  1) {
+            if (strlen(trim($request['name'])) < 1) {
                 return redirect()->back()->with('errormsgname', 'Please enter correct name');
             }
 
@@ -576,7 +595,7 @@ class Setting extends Controller
     public function userAskedtoRefreshToken()
     {
         $user = Auth::user();
-        $user_id =  $user['id'];
+        $user_id = $user['id'];
         $token = JWTAuth::fromUser($user);
 
         $deviceDetails = getDeviceIdforWeb();
@@ -591,7 +610,8 @@ class Setting extends Controller
             //new entry of sessionTable
             if (sessionTableForWeb($user_id, $token, $deviceDetails, $connected_devices = 1)) {
                 return redirect()->back();
-            };
+            }
+            ;
         } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
             //check if device id is same
 
