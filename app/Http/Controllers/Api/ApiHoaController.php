@@ -389,7 +389,7 @@ class ApiHoaController extends Controller
 
         if ($id == null) {
             $validator = Validator::make($request->all(), [
-                'house_id' => 'required',
+                'passcode' => 'required|string|max:20',
             ]);
             if ($validator->fails()) {
                 return $this->validationErrorResponse(null, $validator->errors());
@@ -405,8 +405,9 @@ class ApiHoaController extends Controller
             $hoaUser = HoaUser::where('id', $id)
                 ->where('user_id', $user->id)
                 ->first();
-        } elseif ($request->house_id != null) {
-            $hoaUser = HoaUser::where('id', $request->house_id)
+        } elseif ($request->passcode != null) {
+            $hoaUser = HoaUser::whereNotNull('passcode')
+                ->where('passcode', $request->passcode)
                 ->where('user_id', $user->id)
                 ->first();
         }
