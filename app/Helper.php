@@ -2247,7 +2247,7 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
 
             $address['session_id'] = HashUserID($address['id']);
 
-            $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+            $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'];
             $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
             unset($address->pdname);
             unset($address['device']);
