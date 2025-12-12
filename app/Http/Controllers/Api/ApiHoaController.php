@@ -112,7 +112,7 @@ class ApiHoaController extends Controller
 
 
 
-            $hoaUser = HoaUser::where('email', $request->email)->first();
+            $hoaUser = HoaUser::whereNotNull('email')->where('email', $request->email)->first();
             if ($hoaUser != null) {
                 return $this->validationErrorResponse("Email already exits !");
             }
