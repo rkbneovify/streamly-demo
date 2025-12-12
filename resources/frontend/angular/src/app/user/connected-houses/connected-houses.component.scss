@@ -149,6 +149,36 @@ main {
     color: #EB5757;
 }
 
+.copy-text {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px;
+
+    .hint {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #000;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        opacity: 0;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+
+        &.show {
+            opacity: 1;
+        }
+    }
+
+    &:hover .hint {
+        opacity: 1;
+    }
+}
+
+
 .scroll-container {
     width: 100% !important;
 }

@@ -398,7 +398,8 @@ class Setting extends Controller
             } else {
                 $user = SessionTable::where('id', $unhashid)->update([
                     'device->personaldevicename' => $request->devicename,
-                    'device->passcode' => $request->passcode
+                    'device->passcode' => $request->passcode,
+
                 ]);
             }
             if ($request->wantsJson()) {
