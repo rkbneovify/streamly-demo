@@ -62,7 +62,14 @@
                                 </div>
                                 <div class="item-row">
                                     <p>Passcode :</p>
-                                    <p class="pointer" (click)="copyText($event)">{{item.passcode??'-'}}</p>
+                                    <p class="pointer copy-text" (click)="copyText($event,item.id)">
+                                        {{item.passcode??'-'}}
+                                        <!-- <span class="hint" [class.show]="isCopied && houseId==item.id">{{ isCopied ?
+                                            'Copied!' :
+                                            'Click to
+                                            copy'
+                                            }}</span> -->
+                                    </p>
                                 </div>
                                 <div class="item-row">
                                     <p>Phone :</p>
