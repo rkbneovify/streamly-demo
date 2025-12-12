@@ -432,7 +432,7 @@ class APIController extends Controller
                     ->makeHidden('pdname')
                     ->map(function ($address) {
                         $address['session_id'] = HashUserID($address['id']);
-                        $address['personaldevicename'] = $address->pdname->personal_devicename ?? $address['device']['personaldevicename'] ?? 'empty';
+                        $address['personaldevicename'] = $address->pdname->personal_devicename ?? $address['device']['personaldevicename'];
                         $address['personaldeviceid'] = HashUserID($address->pdname->id ?? $address['id']);
 
                         if (!empty($address['logintime'])) {
