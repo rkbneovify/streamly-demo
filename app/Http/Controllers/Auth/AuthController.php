@@ -298,7 +298,7 @@ class AuthController extends Controller
             }
             // hoa main user status checking
             if ($user->is_active == 0) {
-                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin 1.'], 401);
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin'], 401);
 
             }
             // hoa sub user checking
@@ -308,7 +308,10 @@ class AuthController extends Controller
             }
 
             //hoa sub user device limit check
-            $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)->where("passcode", $request->passcode)->where("status", 1)->count();
+            $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
+                ->where("passcode", $request->passcode)
+                ->whereNotNull('passcode')
+                ->where("status", 1)->count();
             if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
                 $user = User::find($hoaUser->user_id);
                 hoaSubUserDeviceLimitCheck($user, $hoaUser->device_limit);
