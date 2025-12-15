@@ -239,7 +239,7 @@ export class ConnectedHousesComponent {
               this.sweetAlert.close();
 
               if (res.success == true) {
-                this.removeHouseById(houseId)
+                this.getHouseList(1, null, null);
                 this.toastr.success(res.message);
               }
 
