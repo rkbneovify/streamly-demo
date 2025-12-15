@@ -300,6 +300,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::post('/ajax-sendmail', 'Admin\SendMailController@handleRequest')->name('admin.sendmail');
 
     Route::post('/ajax-reply-data', 'Admin\SendMailController@AnswerHistory');
+
+    // Hoa Routes
+    Route::get('/hoa/sub-users/{id}', 'Admin\AdminHoaController@index')->name('hoa.sub-users');
+    Route::get('/hoa/sub-users-session/{passcode}', 'Admin\AdminHoaController@sessionByPasscode')->name('hoa.sub-users-session');
 });
 
 /*Prev Next channel*/
