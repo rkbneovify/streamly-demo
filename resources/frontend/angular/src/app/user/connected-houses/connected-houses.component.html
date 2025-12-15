@@ -8,8 +8,11 @@
                 <h1>Connected Houses</h1>
                 <div class="home-total">
                     <div class="item-left">
-                        <p>Total Houses : {{totalHouses}} | {{activeHouseCount}} Active | <span>{{deactiveHouseCount}}
-                                Inactive</span></p>
+                        <p>Total Houses : {{(activeHouseCount+deactiveHouseCount)}}/{{totalHouses}} |
+                            <span class="text-success">{{activeHouseCount}} Active</span> |
+                            <span class="text-danger">{{deactiveHouseCount}}
+                                Inactive</span>
+                        </p>
                     </div>
                     <div class="item-right">
                         <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
