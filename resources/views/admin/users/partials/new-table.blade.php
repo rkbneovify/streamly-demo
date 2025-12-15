@@ -209,7 +209,7 @@
                                     @case('hoa')
                                         @if ($user->is_active == 1)
                                             @if ($user->hoa_houses_count > 0)
-                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                                <a href="{{ route('admin.hoa.sub-users', $user->id) }}">
                                                     {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses }}
                                                 </a>
                                             @else
