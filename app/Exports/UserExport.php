@@ -32,6 +32,7 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
         $query->with('roles');
         $query->withCount('sessions');
         $query->withCount('rooms');
+        $query->withCount('hoaHouses');
         if (!empty($this->filters['role'])) {
             $query->whereHas('roles', function ($q) {
                 $q->where('name', $this->filters['role']);
@@ -88,6 +89,20 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
         }
 
         return $query->get()->map(function ($user, $key) {
+
+            $activeDevice = null;
+            switch (optional($user->roles->first())->name) {
+                case 'hoa':
+                    $activeDevice = ($user->hoa_houses_count ?? 0) . '/' . $user->num_of_houses;
+                    break;
+                case 'tieruser':
+                    $activeDevice = ($user->sessions_count ?? 0) . '/' . $user->rooms_count;
+                    break;
+
+                default:
+                    $activeDevice = ($user->sessions_count ?? 0) . '/5';
+                    break;
+            }
             return [
                 "Sl.No." => $key + 1,
                 "Name" => $user->name,
@@ -95,7 +110,7 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
                 "Role" => $user->roles->first() != null ? $user->roles->first()->display_name : "N/A",
                 "User Type" => $user->mode == 'Live' ? 'Live' : 'Testing',
                 "Status" => $user->is_active == 1 ? 'Active' : 'Inactive',
-                "Active Devices" => ($user->sessions_count ?? 0) . ' / ' . ($user->rooms_count > 0 ? $user->rooms_count : 5),
+                "Active Devices" => $activeDevice,
                 "Created At" => $user->created_at->format('d/m/Y'),
 
             ];
