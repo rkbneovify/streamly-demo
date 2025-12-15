@@ -749,7 +749,7 @@ class UsersController extends Controller
 
         // Step 6: Update subscription if tier user
         // Step 6: Subscription logic
-        $isNowTierUser = in_array($tieruserId, $request->input('roles'));
+        /*$isNowTierUser = in_array($tieruserId, $request->input('roles'));
 
         if ($isNowTierUser) {
             // If user is a tier user, insert or update subscription with new quantity
@@ -772,7 +772,21 @@ class UsersController extends Controller
                     'quantity' => 1,
                     'updated_at' => now(),
                 ]);
-        }
+        }*/
+
+        // new subscription logic
+
+        DB::table('subscriptions')->updateOrInsert(
+            ['user_id' => $user->id],
+            [
+                'name' => 'main',
+                'stripe_status' => 'active',
+                'ends_at' => null,
+                'renews_at' => $endsAt,
+                'quantity' => $newDeviceCount,
+                'updated_at' => now(),
+            ]
+        );
 
         // Hoa update logic
         if (in_array(7, $request->input('roles'))) {

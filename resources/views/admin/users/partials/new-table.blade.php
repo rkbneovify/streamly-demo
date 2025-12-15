@@ -208,12 +208,12 @@
                                 @switch(optional($user->roles->first())->name)
                                     @case('hoa')
                                         @if ($user->is_active == 1)
-                                            @if ($user->sessions_count > 0)
-                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
-                                                    {{ $user->sessions_count ?? 0 }} / 5
+                                            @if ($user->hoa_houses_count > 0)
+                                                <a href="{{ route('admin.hoa.sub-users', $user->id) }}">
+                                                    {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses }}
                                                 </a>
                                             @else
-                                                {{ $user->sessions_count ?? 0 }} / 5
+                                                {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses }}
                                             @endif
                                         @else
                                             0
@@ -239,7 +239,7 @@
                                         @if ($user->is_active == 1)
                                             @if ($user->sessions_count > 0)
                                                 <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
-                                                    {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                                    {{ $user->sessions_count }} / {{ $user->rooms_count ?? 0 }}
                                                 </a>
                                             @else
                                                 {{ $user->sessions_count ?? 0 }} / 5
