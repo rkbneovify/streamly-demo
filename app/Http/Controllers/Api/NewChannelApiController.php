@@ -954,6 +954,7 @@ class NewChannelApiController extends Controller
                     ->get();
 
                 $stationName = $programs[0]->stationName;
+                $channelId = $programs[0]->channel_id;
                 $image = $this->getURIFromAssetForProgram($program->assets);
 
                 // Replace logic for TV Guide / TVGN
@@ -971,6 +972,13 @@ class NewChannelApiController extends Controller
                     $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
                     $programs[0]->title = 'FanDuel'; // Replace title also
                 }
+
+                if ($channelId == 6) {
+                    $stationName = 'Trinity Broadcasting Network';
+                    $image = env('APP_URL') . '/uploads/tbn-6.png'; // your custom FanDuel logo
+
+                }
+
 
 
                 $data = [
