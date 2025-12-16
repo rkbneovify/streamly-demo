@@ -64,7 +64,7 @@
             width: 100%;
             display: inline-flex;
             align-items: center;
-            padding: 7px 15px;
+            padding: 10px 15px;
             border: 1px solid #ccc;
             border-radius: 6px;
             /* background-color: #fff; */
@@ -73,6 +73,7 @@
             gap: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            justify-content: center;
         }
 
         .btn-wrapper span {
@@ -361,7 +362,7 @@
                             <div class="row justify-content-end">
                                 <div class="col-md-4 mb-3">
                                     <a
-                                        href="{{ route('admin.users.session.device.export', ['id' => $user->id, 'type' => 'xlsx'] + request()->query()) }}">
+                                        href="{{ route('admin.hoa.sub-users-export', ['id' => $user->id] + request()->query()) }}">
                                         <div class="btn-wrapper">
                                             <img src="{{ asset('images/export.png') }}" alt="status icon">
                                             <span> Export</span>
