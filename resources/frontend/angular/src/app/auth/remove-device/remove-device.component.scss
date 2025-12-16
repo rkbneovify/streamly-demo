@@ -31,33 +31,38 @@ main {
   margin-bottom: 2rem;
   letter-spacing: 0em;
   font-family: Poppins;
+
   input[type="checkbox"],
   .dots_v {
     width: 24px;
     height: 24px;
   }
-  input[type="checkbox"]{
+
+  input[type="checkbox"] {
     border: 1px solid #ffffff;
   }
+
   input[type="checkbox"]:checked {
     border: 2px solid #ffffff;
-    
+
   }
+
   h1 {
     font-size: 32px;
     font-weight: 700;
     line-height: 48px;
     text-align: center;
-    @media screen and (max-width:'500px'){
+
+    @media screen and (max-width:'500px') {
       font-size: 22px;
 
-      .btnBackToLogin{
-        padding: 5px 11px 5px 11px; 
+      .btnBackToLogin {
+        padding: 5px 11px 5px 11px;
         font-size: 14px;
       }
     }
   }
-  
+
   .toatlcheck-device {
     p {
       font-size: 14px;
@@ -67,43 +72,49 @@ main {
     }
   }
 
-  .btnBackToLogin{
-    @media screen and (max-width:'500px'){
-        padding: 5px 11px 5px 11px; 
-        font-size: 14px;
-      }
+  .btnBackToLogin {
+    @media screen and (max-width:'500px') {
+      padding: 5px 11px 5px 11px;
+      font-size: 14px;
+    }
   }
 }
 
 .devices-container {
   .card_device {
     width: 350px;
-    height: 285px;
+    // height: 285px;
     border: 1px solid #ffffff;
     border-radius: 8px;
     padding: 18px;
+
     .devi_top {
       text-align: -webkit-center;
       position: relative;
+
       input {
         position: absolute;
         top: 1rem;
         left: 0;
       }
+
       .dots_v {
         position: absolute;
         top: 1rem;
         right: 0;
       }
+
       .device_img {
         width: 169.04px;
         height: 108px;
       }
+
       .device_imgpar {
         img {
           width: 20px;
           height: 20px;
         }
+
         p {
           font-size: 14px;
           font-weight: 500;
@@ -112,6 +123,7 @@ main {
         }
       }
     }
+
     .devi_bottom {
       .remove_dev_con {
         font-family: Poppins;
@@ -120,8 +132,9 @@ main {
         line-height: 21px;
         letter-spacing: 0em;
         text-align: left;
-        .dev_heading{
-        font-weight: 400;
+
+        .dev_heading {
+          font-weight: 400;
         }
       }
     }
@@ -129,7 +142,7 @@ main {
 }
 
 
-.min75-h40{
+.min75-h40 {
   min-width: 75px;
-    min-height: 40px;
+  min-height: 40px;
 }
