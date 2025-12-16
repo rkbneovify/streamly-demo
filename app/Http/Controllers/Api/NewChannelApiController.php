@@ -165,8 +165,8 @@ class NewChannelApiController extends Controller
                 }
                 if ($channel->id == 45) {
                     $channel->stationName = 'Fuse Music';
-                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-6.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-6.png';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
                 }
 
 
