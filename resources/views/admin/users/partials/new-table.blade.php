@@ -228,7 +228,7 @@
 
                                                 </a>
                                             @else
-                                                {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
+                                                0 / {{ $user->rooms_count ?? 0 }}
                                             @endif
                                         @else
                                             0
@@ -239,10 +239,10 @@
                                         @if ($user->is_active == 1)
                                             @if ($user->sessions_count > 0)
                                                 <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
-                                                    {{ $user->sessions_count }} / {{ $user->rooms_count ?? 0 }}
+                                                    {{ $user->sessions_count }} / 5
                                                 </a>
                                             @else
-                                                {{ $user->sessions_count ?? 0 }} / 5
+                                                0 / 5
                                             @endif
                                         @else
                                             0
