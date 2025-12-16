@@ -304,6 +304,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Hoa Routes
     Route::get('/hoa/sub-users/{id}', 'Admin\AdminHoaController@index')->name('hoa.sub-users');
     Route::get('/hoa/sub-users-session/{passcode}', 'Admin\AdminHoaController@sessionByPasscode')->name('hoa.sub-users-session');
+    Route::get('/hoa/sub-users-export/{id}', 'Admin\AdminHoaController@exportIntoExcel')->name('hoa.sub-users-export');
 });
 
 /*Prev Next channel*/
