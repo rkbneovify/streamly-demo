@@ -32,17 +32,11 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
     if ($userRole == "hoa") {
 
-        $query1 = App\SessionTable::whereNull('passcode')
-            ->where('status', 1)
-            ->where('users_id', $user_id)
-            ->get()->toArray();
-        $query2 = App\SessionTable::whereNotNull('passcode')
-            ->where('passcode', $passcode)
+        $active_session = SessionTable::where('is_main_account', 1)
             ->where('status', 1)
             ->where('users_id', $user_id)
             ->get()->toArray();
 
-        $active_session = array_merge($query1, $query2);
 
     }
 
@@ -146,6 +140,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                 }
             ])
                 ->where('users_id', $uid)
+                ->where('is_main_account', 1)
                 ->where('status', 1)
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
                 ->orderBy('connected_devices', 'asc');
@@ -1197,7 +1192,18 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->status = 1;
     $session_tab->created_on = $date;
     $session_tab->modified_on = Carbon::now();
+
+    // difference between hoa main and sub user
+    if (request()->has('passcode')) {
+        $hoaUser = HoaUser::where('passcode', request()->passcode)->first();
+        if ($hoaUser != null) {
+            $session_tab->is_main_account = 0;
+        }
+
+    }
     $result = $session_tab->save();
+
+
 
     $LastInsertId = $session_tab->id;
     return ['result' => $result, 'LastInsertId' => $LastInsertId];
