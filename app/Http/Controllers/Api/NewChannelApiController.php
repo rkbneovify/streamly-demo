@@ -163,10 +163,10 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                 }
-                if ($channel->id == 6) {
-                    $channel->stationName = 'Trinity Broadcasting Network';
-                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-6.png';
                 }
 
 
@@ -954,6 +954,7 @@ class NewChannelApiController extends Controller
                     ->get();
 
                 $stationName = $programs[0]->stationName;
+                $channelId = $programs[0]->channel_id;
                 $image = $this->getURIFromAssetForProgram($program->assets);
 
                 // Replace logic for TV Guide / TVGN
@@ -971,6 +972,13 @@ class NewChannelApiController extends Controller
                     $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
                     $programs[0]->title = 'FanDuel'; // Replace title also
                 }
+
+                if ($channelId == 6) {
+                    $stationName = 'Trinity Broadcasting Network';
+                    $image = env('APP_URL') . '/uploads/tbn-6.png'; // your custom FanDuel logo
+
+                }
+
 
 
                 $data = [
