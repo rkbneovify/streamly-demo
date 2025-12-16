@@ -148,6 +148,11 @@ class NewChannelApiController extends Controller
                 if ($channel->roku_image == null) {
                     $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+                }
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
@@ -158,7 +163,11 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                 }
-
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+                }
 
 
                 if ($channel->id == 134) {
@@ -240,10 +249,15 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
                 }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+                }
                 if ($channel->id == 11) {
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
-
+                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
 
                 }
                 if ($channel->id == 19) {
@@ -252,7 +266,11 @@ class NewChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
 
                 }
-
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                }
                 if ($channel->id == 134) {
                     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
@@ -555,12 +573,18 @@ class NewChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
-
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                 }
-
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                }
 
                 if ($channel->id == 134) {
                     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
@@ -762,10 +786,22 @@ class NewChannelApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                 }
 
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+
+                }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+
+                }
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
 
                 }
                 if ($channel->id == 134) {
@@ -1041,9 +1077,19 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
 
                 }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+
+                }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+
+                }
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
 
                 }
                 if ($channel->id == 134) {
@@ -1082,9 +1128,19 @@ class NewChannelApiController extends Controller
                     $channel->image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
 
                 }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+
+                }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+
+                }
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
 
                 }
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\HoaSubUserExport;
 use App\HoaUser;
 use App\HotelRoomTable;
 use App\Http\Controllers\Controller;
 use App\SessionTable;
 use App\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminHoaController extends Controller
@@ -146,5 +148,11 @@ class AdminHoaController extends Controller
         }
 
 
+    }
+
+    public function exportIntoExcel(Request $request, $id)
+    {
+        $filename = 'hoa_sub-users_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
+        return Excel::download(new HoaSubUserExport($request, $id), $filename);
     }
 }
