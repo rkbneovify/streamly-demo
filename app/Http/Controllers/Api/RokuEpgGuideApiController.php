@@ -227,11 +227,22 @@ class RokuEpgGuideApiController extends Controller
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
 
+                }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam.png';
+
+                }
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
 
                 }
                 if ($channel->id == 134) {
