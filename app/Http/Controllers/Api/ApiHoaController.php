@@ -40,6 +40,7 @@ class ApiHoaController extends Controller
 
             $user = Auth::user();
             $query = HoaUser::query();
+
             $query->with('session');
             $query->withCount('session');
             $query->with('subscription');
@@ -57,8 +58,22 @@ class ApiHoaController extends Controller
                     ->orWhere('phone', 'like', '%' . $txt . '%')
                     ->orWhere('house_no', 'like', '%' . $txt . '%');
             });
+
+            $query->when($request->has('sort'), function ($q) use ($request) {
+                if ($request->sort == 'latest') {
+                    $q->latest();
+                } elseif ($request->sort == 'oldest') {
+                    $q->orderBy('created_at', 'asc');
+                }
+
+
+            });
+            if ($request->sort == null) {
+                $query->latest();
+            }
             $limit = $request->get('per_page', 10);
             $page = $request->get('page', 1);
+
             $data = $query->paginate($limit, ['*'], 'page', $page);
             return response()->json([
                 'success' => true,
@@ -880,6 +895,39 @@ class ApiHoaController extends Controller
             DB::commit();
             return $this->successResponse("Please check your email for regenerate passcode link !");
         } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
+    public function deleteAll(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'house_ids' => 'nullable|array',
+            'house_ids.*' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+
+        }
+
+        DB::beginTransaction();
+        try {
+            $houseList = HoaUser::where('user_id', auth()->user()->id)->get();
+            if (!empty($request->house_ids)) {
+                $houseList = HoaUser::whereIn('id', $request->house_ids)->get();
+            }
+            if (count($houseList) <= 0) {
+                return $this->notFoundResponse("Data not found !");
+            }
+            foreach ($houseList as $item) {
+                HoaSubUserSubscription::where('sub_user_id', $item->id)->delete();
+                $item->delete();
+            }
+            DB::commit();
+            return $this->successResponse("Houses deleted successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
