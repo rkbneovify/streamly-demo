@@ -900,6 +900,37 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function deleteAll(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'house_ids' => 'nullable|array',
+            'house_ids.*' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+
+        }
+
+        DB::beginTransaction();
+        try {
+            $houseList = HoaUser::where('user_id', auth()->user()->id)->get();
+            if (!empty($request->house_ids)) {
+                $houseList = HoaUser::whereIn('id', $request->house_ids)->get();
+            }
+
+            foreach ($houseList as $item) {
+                HoaSubUserSubscription::where('sub_user_id', $item->id)->delete();
+                $item->delete();
+            }
+            DB::commit();
+            return $this->successResponse("Houses deleted successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
 
 
 
