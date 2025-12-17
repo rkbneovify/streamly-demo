@@ -22,7 +22,7 @@
     border-radius: 12px;
     background: transparent;
     color: #ffffff;
-    font-weight: 600;
+    font-weight: 800;
     font-size: 18px;
     display: inline-flex;
     align-items: center;
@@ -90,9 +90,10 @@
 
 }
 
-.menu-item:nth-child(-n+2) {
+.menu-item:not(:last-child) {
     border-bottom: 1px solid #000;
 }
+
 
 .menu-item:hover,
 .menu-item[aria-selected="true"] {
