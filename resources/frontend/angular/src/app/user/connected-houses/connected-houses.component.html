@@ -39,7 +39,11 @@
                             </app-sort-by-dropdown>
 
                         </div>
+
                     </div>
+                </div>
+                <div class="flex-area">
+                    <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
                 </div>
 
                 <div *ngIf="housesList.length > 0; else elseTemplate" class="content"
@@ -47,13 +51,23 @@
 
                     <div class="item-box" *ngFor="let item of housesList">
 
-                        <div [ngClass]="item.status==1?'item item-active':'item item-inactive'">
+                        <div (click)="houseSelected(item.id)" [ngClass]="[
+                            item.status==1?'item item-active':'item item-inactive',
+                            item.isSelected==true?'item-selected':'item-not-selected'
+
+                            ]">
+
                             <div class="item-header">
+
                                 <p>{{item.name}}</p>
                                 <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
                                     <span>{{item.status===1?'Active':'Inactive'}}</span>
                                 </div>
+                                <span *ngIf="item.isSelected" class="yes">
+                                    <img width="20" height="20" src="../../../assets/dummy-img/yes.svg" alt="">
+                                </span>
                             </div>
+
                             <div class="item-body">
                                 <div class="item-row">
                                     <p>House Number :</p>
@@ -101,23 +115,23 @@
                             </div>
 
                             <div class="item-footer">
-                                <a *ngIf="item.status==0 && item.passcode!==null" (click)="activeHouse(item.id)"
+                                <a *ngIf="item.status==0 && item.passcode!==null" (click)="activeHouse(item.id,$event)"
                                     class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/home-active.svg" alt="icon">
                                     <span>Active</span>
                                 </a>
-                                <a *ngIf="item.status==1 && item.passcode!==null" (click)="deactiveHouse(item.id)"
-                                    class="btn-item btn-deactive">
+                                <a *ngIf="item.status==1 && item.passcode!==null"
+                                    (click)="deactiveHouse(item.id,$event)" class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
                                     <span>Deactive</span>
                                 </a>
                                 <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
-                                    (click)="resendMail(item.id)" class="btn-item btn-send">
+                                    (click)="resendMail(item.id, $event)" class="btn-item btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
                                     <span>Send Email</span>
                                 </a>
                                 <a *ngIf="item.email_verified_at === null || item.status ===0"
-                                    (click)="deleteHouse(item.id)" class="btn-item btn-deactive">
+                                    (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
                                     <span>Delete</span>
 
