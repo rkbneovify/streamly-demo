@@ -917,7 +917,9 @@ class ApiHoaController extends Controller
             if (!empty($request->house_ids)) {
                 $houseList = HoaUser::whereIn('id', $request->house_ids)->get();
             }
-
+            if (count($houseList) <= 0) {
+                return $this->notFoundResponse("Data not found !");
+            }
             foreach ($houseList as $item) {
                 HoaSubUserSubscription::where('sub_user_id', $item->id)->delete();
                 $item->delete();
