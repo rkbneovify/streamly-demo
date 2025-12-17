@@ -58,6 +58,16 @@ class ApiHoaController extends Controller
                     ->orWhere('phone', 'like', '%' . $txt . '%')
                     ->orWhere('house_no', 'like', '%' . $txt . '%');
             });
+
+            $query->when($request->has('sort'), function ($q) use ($request) {
+                if ($request->sort == 'latest') {
+                    $q->latest();
+                } elseif ($request->sort == 'oldest') {
+                    $q->orderBy();
+                }
+
+
+            });
             $limit = $request->get('per_page', 10);
             $page = $request->get('page', 1);
 
