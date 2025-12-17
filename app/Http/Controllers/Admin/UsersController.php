@@ -469,8 +469,9 @@ class UsersController extends Controller
                 'stripe_id' => 'sub_custom_' . Str::random(16),
                 'stripe_status' => 'active',
                 'stripe_plan' => $stripePlanId,
+                'plan_duration' => $request->plan_duration,
                 'quantity' => $request->number_of_devices ?? 1,
-                'ends_at' => null,
+                'ends_at' => $endsAt,
                 'renews_at' => $endsAt,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -781,6 +782,7 @@ class UsersController extends Controller
             [
                 'name' => 'main',
                 'stripe_status' => 'active',
+                'plan_duration' => $request->plan_duration,
                 'ends_at' => null,
                 'renews_at' => $endsAt,
                 'quantity' => $newDeviceCount,
@@ -846,6 +848,10 @@ class UsersController extends Controller
             } else {
                 $planDuration = '';
             }
+        }
+
+        if ($subscription->plan_duration != null) {
+            $planDuration = $subscription->plan_duration;
         }
 
         $currentDeviceCount = 0;
