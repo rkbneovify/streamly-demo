@@ -10,11 +10,12 @@ import { SweetalertService } from '../../services/SweetAlert/sweetalert.service'
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, LocalDatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
@@ -91,15 +92,20 @@ export class ConnectedHousesComponent {
 
 
 
-  getHouseList(page: number = 1, status: number | null, search: string | null) {
+  getHouseList(page: number = 1, sortBy: number | string | null, search: string | null) {
     const houseListUrl: string = 'auth/hoa/house-list';
 
     const params = new URLSearchParams();
     this.page = page;
     params.set('page', String(page));
 
-    if (status !== null) {
-      params.set('status', String(status));
+    if (sortBy !== null) {
+
+      if (typeof sortBy === 'string') {
+        params.set('sort', String(sortBy));
+      } else if (typeof sortBy === 'number') {
+        params.set('status', String(sortBy));
+      }
 
     }
     if (search !== null && search.length > 0) {
@@ -143,8 +149,8 @@ export class ConnectedHousesComponent {
     }
 
   }
-  onSortChange(status: number | null) {
-    this.getHouseList(1, status, null);
+  onSortChange(shortBy: number | string | null) {
+    this.getHouseList(1, shortBy, null);
   }
 
   showHomeAddPopUp() {
@@ -228,7 +234,8 @@ export class ConnectedHousesComponent {
   removeHouseById(id: number) {
     this.housesList = this.housesList.filter(item => item.id !== id);
   }
-  deleteHouse(houseId: number) {
+  deleteHouse(houseId: number, event: any) {
+    event.stopPropagation();
     this.sweetAlert.confirm("Delete House", "Do you want to delete this house?")
       .then(result => {
         if (result.isConfirmed) {
@@ -256,7 +263,8 @@ export class ConnectedHousesComponent {
 
   }
 
-  deactiveHouse(houseId: number) {
+  deactiveHouse(houseId: number, event: any) {
+    event.stopPropagation();
     this.sweetAlert.confirm("Deactive House", "Do you want to deactive this house?")
       .then(result => {
         if (result.isConfirmed) {
@@ -281,7 +289,8 @@ export class ConnectedHousesComponent {
       });
   }
 
-  activeHouse(houseId: number) {
+  activeHouse(houseId: number, event: any) {
+    event.stopPropagation();
     this.sweetAlert.confirm("Active House", "Do you want to active this house?")
       .then(result => {
         if (result.isConfirmed) {
@@ -305,7 +314,8 @@ export class ConnectedHousesComponent {
       });
   }
 
-  resendMail(houseId: number) {
+  resendMail(houseId: number, event: any) {
+    event.stopPropagation();
     this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
       .then(result => {
         if (result.isConfirmed) {
@@ -334,8 +344,48 @@ export class ConnectedHousesComponent {
     this.getHouseList(this.page, this.status, this.txtSearch.value)
     // console.log("Page count", this.page)
   }
+  getSelectedHouseIds(): number[] {
+    return this.housesList
+      .filter(house => house.isSelected)
+      .map(house => house.id);
+  }
+  deleteAll() {
+    this.sweetAlert.confirm("Delete All", "Do you want to delete all houses?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.sweetAlert.loading();
+          // console.log("Selected Houses id:", this.getSelectedHouseIds());
+          this.apiService.postRequest(`auth/hoa/delete-all-houses`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+                this.getHouseList(1, null, null);
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
+        }
+      })
+
+  }
+
+  houseSelected(houseId: number) {
+    // this.housesList = this.housesList.map(house =>
+    //   house.id === houseId
+    //     ? { ...house, isSelected: !house.isSelected }
+    //     : house
+    // );
+  }
+
+
 
   copyText(event: any, houseId: number) {
+    event.stopPropagation();
     this.houseId = houseId;
     const text = event.target.innerText;
     navigator.clipboard.writeText(text)
@@ -364,7 +414,7 @@ export class ConnectedHousesComponent {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
 
-    return `${day}/${month}/${year}`;
+    return `${day} / ${month} / ${year}`;
   }
 
 }
