@@ -15,7 +15,7 @@ import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, LocalDatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, LocalDatePipe, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
