@@ -8,7 +8,7 @@ import { Component, ElementRef, HostListener, EventEmitter, Output } from '@angu
   styleUrl: './sort-by-dropdown.component.css'
 })
 export class SortByDropdownComponent {
-  @Output() sortChanged = new EventEmitter<number>();
+  @Output() sortChanged = new EventEmitter<number | string>();
   isOpen = false;
   constructor(private eRef: ElementRef) { }
 
@@ -22,7 +22,7 @@ export class SortByDropdownComponent {
       this.isOpen = false;
     }
   }
-  selectOption(option: number | null) {
+  selectOption(option: number | string | null) {
     this.sortChanged.emit(option)
     this.isOpen = false;
   }
