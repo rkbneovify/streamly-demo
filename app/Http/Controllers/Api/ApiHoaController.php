@@ -40,6 +40,7 @@ class ApiHoaController extends Controller
 
             $user = Auth::user();
             $query = HoaUser::query();
+            $query->latest();
             $query->with('session');
             $query->withCount('session');
             $query->with('subscription');
@@ -59,6 +60,7 @@ class ApiHoaController extends Controller
             });
             $limit = $request->get('per_page', 10);
             $page = $request->get('page', 1);
+
             $data = $query->paginate($limit, ['*'], 'page', $page);
             return response()->json([
                 'success' => true,
