@@ -10,11 +10,12 @@ import { SweetalertService } from '../../services/SweetAlert/sweetalert.service'
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, LocalDatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
@@ -91,15 +92,20 @@ export class ConnectedHousesComponent {
 
 
 
-  getHouseList(page: number = 1, status: number | null, search: string | null) {
+  getHouseList(page: number = 1, sortBy: number | string | null, search: string | null) {
     const houseListUrl: string = 'auth/hoa/house-list';
 
     const params = new URLSearchParams();
     this.page = page;
     params.set('page', String(page));
 
-    if (status !== null) {
-      params.set('status', String(status));
+    if (sortBy !== null) {
+
+      if (typeof sortBy === 'string') {
+        params.set('sort', String(sortBy));
+      } else if (typeof sortBy === 'number') {
+        params.set('status', String(sortBy));
+      }
 
     }
     if (search !== null && search.length > 0) {
@@ -143,8 +149,8 @@ export class ConnectedHousesComponent {
     }
 
   }
-  onSortChange(status: number | null) {
-    this.getHouseList(1, status, null);
+  onSortChange(shortBy: number | string | null) {
+    this.getHouseList(1, shortBy, null);
   }
 
   showHomeAddPopUp() {

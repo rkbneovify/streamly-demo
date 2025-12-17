@@ -94,6 +94,10 @@
                                     <p>Expired At :</p>
                                     <p>{{ getExpiryText(item) }}</p>
                                 </div>
+                                <div class="item-row">
+                                    <p>Created At :</p>
+                                    <p>{{ (item.created_at | localDate) }}</p>
+                                </div>
                             </div>
 
                             <div class="item-footer">
