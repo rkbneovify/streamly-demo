@@ -474,6 +474,15 @@ p {
                 display: flex;
                 justify-content: space-between;
                 padding: 2.5px 0px;
+
+                p {
+                    text-align: end;
+
+                    span {
+                        font-size: 14px;
+                    }
+                }
+
             }
 
             .item-footer {
