@@ -471,7 +471,7 @@ class UsersController extends Controller
                 'stripe_plan' => $stripePlanId,
                 'plan_duration' => $request->plan_duration,
                 'quantity' => $request->number_of_devices ?? 1,
-                'ends_at' => $endsAt,
+                'ends_at' => null,
                 'renews_at' => $endsAt,
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -191,7 +191,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
-        Route::get("house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::match(['post', 'get'], "house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("add-house", "Api\ApiHoaController@addHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("resend-verification-mail/{id}", "Api\ApiHoaController@resendMail")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::delete("delete-house/{id}", "Api\ApiHoaController@deleteHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
@@ -203,7 +203,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("remove-all-sessions", "Api\ApiHoaController@removeAllSessions")->middleware(['jwt.verify']);
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
-
+        Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
     });
 });
 
