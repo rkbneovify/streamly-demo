@@ -72,10 +72,10 @@ class HoaSubUserExport implements FromCollection, WithHeadings, WithStyles, Shou
             }
             return [
                 "Sr. No." => $key + 1,
-                "Name" => $item->name,
-                "Email" => $item->email,
-                "Phone" => $item->phone,
-                "House No." => $item->house_no,
+                "Name" => $item->name ?? 'N/A',
+                "Email" => $item->email ?? 'N/A',
+                "Phone" => $item->phone ?? 'N/A',
+                "House No." => $item->house_no ?? 'H/' . $item->ordering,
                 "Passcode" => $item->passcode,
                 "Status" => $item->status == 1 ? 'Active' : 'Inactive',
                 "Active Devices" => $activeDevices,

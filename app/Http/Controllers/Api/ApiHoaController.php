@@ -136,6 +136,7 @@ class ApiHoaController extends Controller
             if ($hoaUser == null && $request->email != null) {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->ordering = HoaUser::where('user_id', auth()->user()->id)->max('ordering') + 1;
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->save();
@@ -152,6 +153,7 @@ class ApiHoaController extends Controller
             } else {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->ordering = HoaUser::where('user_id', auth()->user()->id)->max('ordering') + 1;
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
@@ -696,6 +698,7 @@ class ApiHoaController extends Controller
                 return $this->notFoundResponse("Data not found !");
             }
 
+            $hoaUser->ordering = HoaUser::where('user_id', $hoaUser->user_id)->max('ordering') + 1;
             $hoaUser->name = $request->name;
             $hoaUser->house_no = $request->house_no;
             $hoaUser->phone = $request->phone;
