@@ -362,6 +362,15 @@
                             <div class="row justify-content-end">
                                 <div class="col-md-4 mb-3">
                                     <a
+                                        href="{{ route('admin.hoa.sub-users-ordering', ['id' => $user->id] + request()->query()) }}">
+                                        <div class="btn-wrapper">
+
+                                            <span> Ordering </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <a
                                         href="{{ route('admin.hoa.sub-users-export', ['id' => $user->id] + request()->query()) }}">
                                         <div class="btn-wrapper">
                                             <img src="{{ asset('images/export.png') }}" alt="status icon">
