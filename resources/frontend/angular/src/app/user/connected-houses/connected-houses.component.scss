@@ -370,6 +370,64 @@ p {
         }
     }
 
+    .action-area {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+        justify-content: space-between;
+        padding: 5px 30px;
+
+        .btn-select-all {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 45px;
+            color: #fff;
+            border: 1px solid #fff;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 100%;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete-all {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 45px;
+            color: #EB5757;
+            border: 1px solid #EB5757;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 100%;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-export-all {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 45px;
+            color: #219653;
+            border: 1px solid #219653;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 100%;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+    }
 
     .content {
         display: grid;
@@ -404,8 +462,10 @@ p {
         }
 
         .item-selected {
-            opacity: 0.8;
-            border: 1px solid #fff;
+            // opacity: 0.8;
+            // border: 1px solid #fff;
+            background: #02203B;
+
         }
 
         .item-not-selected {
@@ -428,11 +488,23 @@ p {
             .item-header {
                 display: flex;
                 gap: 10px;
+                justify-content: space-between;
 
+                .header-item-left {
+                    display: flex;
+                    gap: 10px;
+                    justify-content: end;
+                }
 
                 p {
                     font-size: 22px;
                     font-weight: 600;
+                }
+
+                .checkbox {
+                    width: 25px;
+                    height: 25px;
+
                 }
 
                 .status {

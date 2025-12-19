@@ -80,7 +80,9 @@
                         <th>
                             Email
                         </th>
-
+                        <th>
+                            House No
+                        </th>
                         <th>
                             Passcode
                         </th>
@@ -133,6 +135,9 @@
                                 <span> {{ ucwords(Str::limit($item->name, 10, '...')) }}</span>
                             </td>
                             <td style="vertical-align:middle;">{{ $item->email ?? 'N/A' }}</td>
+                            <td style="vertical-align:middle;">
+                                {{ $item->house_no == null ? 'House' . $item->ordering ?? 'N/A' : 'N/A' }}
+                            </td>
                             <td style="vertical-align:middle;">{{ $item->passcode ?? 'N/A' }}</td>
                             <td style="vertical-align:middle;">
                                 @if ($item->status == 1)

@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
 import { SortByDropdownComponent } from "../../components/sort-by-dropdown/sort-by-dropdown.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
@@ -15,7 +15,7 @@ import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, TimeAgoPipe, LocalDatePipe, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
@@ -39,7 +39,7 @@ export class ConnectedHousesComponent {
   isSearch: boolean = false;
   isMoreData: Boolean = true;
   isCopied: Boolean = false;
-  constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+  constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
   }
@@ -374,12 +374,69 @@ export class ConnectedHousesComponent {
 
   }
 
-  houseSelected(houseId: number) {
-    // this.housesList = this.housesList.map(house =>
-    //   house.id === houseId
-    //     ? { ...house, isSelected: !house.isSelected }
-    //     : house
-    // );
+  exportIntoExcel() {
+    this.sweetAlert.confirm("Export", "Do you want to export data into excel?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.sweetAlert.loading();
+          this.apiService.exportIntoExcel('auth/hoa/export-into-excel').subscribe({
+            next: (data: Blob) => {
+              this.sweetAlert.close();
+              const blob = new Blob([data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+              });
+
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'hoa-house-list.xlsx';
+              a.click();
+
+              window.URL.revokeObjectURL(url);
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          });
+        }
+      });
+  }
+
+
+
+
+
+  // houseSelected(houseId: number, event: any) {
+  //   this.housesList = this.housesList.map(house =>
+  //     house.id === houseId
+  //       ? { ...house, isSelected: !house.isSelected }
+  //       : house
+  //   );
+
+  // }
+
+  selectAll() {
+    this.housesList = [];
+
+  }
+
+  houseSelected(houseId: number, event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.housesList = this.housesList.map(house =>
+        house.id === houseId
+          ? { ...house, isSelected: true }
+          : house
+      );
+    } else {
+      this.housesList = this.housesList.map(house =>
+        house.id === houseId
+          ? { ...house, isSelected: false }
+          : house
+      );
+    }
+
   }
 
 
