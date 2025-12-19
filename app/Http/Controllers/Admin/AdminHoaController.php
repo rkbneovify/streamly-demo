@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\SessionTable;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -150,9 +151,33 @@ class AdminHoaController extends Controller
 
     }
 
+    public function houseListOrdering($id)
+    {
+        DB::beginTransaction();
+        try {
+            $houseList = HoaUser::where('user_id', $id)->get();
+            foreach ($houseList as $key => $item) {
+                $item->ordering = $key + 1;
+                $item->save();
+            }
+            DB::commit();
+            toast('Ordering successfully !', 'success')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            // toast('Something went wrong ! try again later.', 'error')
+            //     ->timerProgressBar()
+            //     ->autoClose(3000);
+            Alert::error('Oops !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
     public function exportIntoExcel(Request $request, $id)
     {
-        $filename = 'hoa_sub-users_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
+
+        $filename = 'hoa_house_list_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
         return Excel::download(new HoaSubUserExport($request, $id), $filename);
     }
 }

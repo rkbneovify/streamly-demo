@@ -166,6 +166,7 @@
 
                                     <select name="roles" id="roles" class="form-control"
                                         onchange="handleRoleChange()">
+                                        <option value="">Select Role</option>
                                         @foreach ($roles as $id => $pack)
                                             <option value="{{ $id }}" {{ old('roles') == $id ? 'selected' : '' }}>
                                                 {{ $pack }}
@@ -404,9 +405,8 @@
                                         <!-- Show All Channels -->
                                         <label
                                             style="display: flex; align-items: center; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; cursor: pointer;">
-                                            <input type="radio" name="channel_availability" value=1
-                                                class="channel-check" id="all_channel" style="margin-right: 8px;"
-                                                checked>
+                                            <input type="radio" name="channel_availability" value=1 checked
+                                                class="channel-check" id="all_channel" style="margin-right: 8px;">
                                             Show All Channels
                                         </label>
 
@@ -785,9 +785,9 @@
             if (!zipInput) return;
 
             const userZip = zipInput.value.trim();
-            if (this.checked && localZipcodes.includes(userZip)) {
-                document.getElementById('local_channel').checked = true;
-            }
+            // if (this.checked && localZipcodes.includes(userZip)) {
+            //     document.getElementById('local_channel').checked = true;
+            // }
         });
 
 
@@ -800,15 +800,16 @@
         ]; // example
 
         document.getElementById("zipcode").addEventListener("input", function() {
+
             let zip = this.value.trim();
 
-            if (localZipcodes.includes(zip)) {
-                // Auto-select Local Channel
-                document.getElementById("local_channel").checked = true;
-            } else {
-                // If not a local zip, uncheck Local (optional)
-                document.getElementById("local_channel").checked = false;
-            }
+            // if (localZipcodes.includes(zip)) {
+            //     // Auto-select Local Channel
+            //     document.getElementById("local_channel").checked = true;
+            // } else {
+            //     // If not a local zip, uncheck Local (optional)
+            //     document.getElementById("local_channel").checked = false;
+            // }
         });
     </script>
     <script>
