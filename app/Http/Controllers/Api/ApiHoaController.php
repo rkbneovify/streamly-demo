@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Stripe\ApiOperations\All;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -35,6 +37,8 @@ class ApiHoaController extends Controller
 
     public function index(Request $request)
     {
+
+
         try {
 
 
@@ -71,8 +75,8 @@ class ApiHoaController extends Controller
             if ($request->sort == null) {
                 $query->latest();
             }
-            $limit = $request->get('per_page', 10);
-            $page = $request->get('page', 1);
+            $limit = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
 
             $data = $query->paginate($limit, ['*'], 'page', $page);
             return response()->json([
@@ -134,6 +138,7 @@ class ApiHoaController extends Controller
             if ($hoaUser == null && $request->email != null) {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->ordering = HoaUser::where('user_id', auth()->user()->id)->max('ordering') + 1;
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->save();
@@ -150,6 +155,7 @@ class ApiHoaController extends Controller
             } else {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
+                $hoaUser->ordering = HoaUser::where('user_id', auth()->user()->id)->max('ordering') + 1;
                 $hoaUser->email = $request->email;
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
@@ -694,6 +700,7 @@ class ApiHoaController extends Controller
                 return $this->notFoundResponse("Data not found !");
             }
 
+            $hoaUser->ordering = HoaUser::where('user_id', $hoaUser->user_id)->max('ordering') + 1;
             $hoaUser->name = $request->name;
             $hoaUser->house_no = $request->house_no;
             $hoaUser->phone = $request->phone;
@@ -933,7 +940,17 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function exportIntoExcel(Request $request)
+    {
 
+        try {
+            $filename = 'hoa_house_list_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
+            return Excel::download(new HoaSubUserExport($request, auth()->user()->id), $filename);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
 
 
 }
