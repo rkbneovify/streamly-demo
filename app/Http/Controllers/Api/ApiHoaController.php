@@ -37,6 +37,8 @@ class ApiHoaController extends Controller
 
     public function index(Request $request)
     {
+
+
         try {
 
 
@@ -73,8 +75,8 @@ class ApiHoaController extends Controller
             if ($request->sort == null) {
                 $query->latest();
             }
-            $limit = $request->get('per_page', 10);
-            $page = $request->get('page', 1);
+            $limit = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
 
             $data = $query->paginate($limit, ['*'], 'page', $page);
             return response()->json([
