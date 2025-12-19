@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Stripe\ApiOperations\All;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -933,7 +935,17 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function exportIntoExcel(Request $request)
+    {
 
+        try {
+            $filename = 'hoa_house_list_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
+            return Excel::download(new HoaSubUserExport($request, auth()->user()->id), $filename);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
 
 
 }

@@ -74,6 +74,8 @@ class HoaSubUserExport implements FromCollection, WithHeadings, WithStyles, Shou
                 "Sr. No." => $key + 1,
                 "Name" => $item->name,
                 "Email" => $item->email,
+                "Phone" => $item->phone,
+                "House No." => $item->house_no,
                 "Passcode" => $item->passcode,
                 "Status" => $item->status == 1 ? 'Active' : 'Inactive',
                 "Active Devices" => $activeDevices,
@@ -86,7 +88,7 @@ class HoaSubUserExport implements FromCollection, WithHeadings, WithStyles, Shou
 
     public function headings(): array
     {
-        return ["Sr. No.", "Name", "Email", "Passcode", "Status", "Active Devices", "Created At"];
+        return ["Sr. No.", "Name", "Email", "Phone", "House No", "Passcode", "Status", "Active Devices", "Created At"];
     }
 
     public function styles(Worksheet $sheet)
