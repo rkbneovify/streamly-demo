@@ -203,7 +203,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("remove-all-sessions", "Api\ApiHoaController@removeAllSessions")->middleware(['jwt.verify']);
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
-
+        Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
     });
 });
 

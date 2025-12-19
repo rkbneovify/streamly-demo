@@ -65,7 +65,11 @@ export class CrudService {
   }
 
 
-
+  exportIntoExcel(requestUrl: string) {
+    return this.http.get(`${this.baseUrl}/api/${requestUrl}`, {
+      responseType: 'blob'
+    });
+  }
 
   // 
   postRequestWithDetails(url: string, body: any): Observable<any> {

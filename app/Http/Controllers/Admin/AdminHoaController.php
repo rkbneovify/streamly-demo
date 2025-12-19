@@ -152,7 +152,8 @@ class AdminHoaController extends Controller
 
     public function exportIntoExcel(Request $request, $id)
     {
-        $filename = 'hoa_sub-users_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
+
+        $filename = 'hoa_house_list_' . now()->format('d-m-Y_H-i-s') . '.xlsx';
         return Excel::download(new HoaSubUserExport($request, $id), $filename);
     }
 }
