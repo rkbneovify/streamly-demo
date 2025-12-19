@@ -562,7 +562,8 @@ class UsersController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'confirmed',
+
+            'password' => $request->password_field ? 'required|confirmed' : '',
             'roles' => 'required|array',
             'number_of_devices' => 'nullable|integer|min:1',
             'plan_duration' => 'nullable|string',
