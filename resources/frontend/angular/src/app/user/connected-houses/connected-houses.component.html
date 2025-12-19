@@ -42,16 +42,20 @@
 
                     </div>
                 </div>
-                <div class="flex-area">
+                <!-- <div class="flex-area">
                     <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
+                </div> -->
+                <div class="action-area">
+                    <!-- <button class="btn-select-all">Select All</button> -->
+                    <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
+                    <button (click)="exportIntoExcel()" class="btn-export-all">Export into Excel</button>
                 </div>
-
                 <div *ngIf="housesList.length > 0; else elseTemplate" class="content"
                     [class.single]="housesList.length <= 2">
 
                     <div class="item-box" *ngFor="let item of housesList">
 
-                        <div (click)="houseSelected(item.id)" [ngClass]="[
+                        <div [ngClass]="[
                             item.status==1?'item item-active':'item item-inactive',
                             item.isSelected==true?'item-selected':'item-not-selected'
 
@@ -60,12 +64,14 @@
                             <div class="item-header">
 
                                 <p>{{item.name}}</p>
-                                <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
-                                    <span>{{item.status===1?'Active':'Inactive'}}</span>
+                                <div class="header-item-left">
+                                    <div [ngClass]="item.status===1?'status status-success':'status status-danger'">
+                                        <span>{{item.status===1?'Active':'Inactive'}}</span>
+                                    </div>
+
+                                    <!-- <input class="checkbox" type="checkbox" [(ngModel)]="item.isSelected"
+                                        [value]="item.id" (click)="houseSelected(item.id,$event)" /> -->
                                 </div>
-                                <span *ngIf="item.isSelected" class="yes">
-                                    <img width="20" height="20" src="../../../assets/dummy-img/yes.svg" alt="">
-                                </span>
                             </div>
 
                             <div class="item-body">
