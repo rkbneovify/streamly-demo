@@ -136,7 +136,7 @@
                             </td>
                             <td style="vertical-align:middle;">{{ $item->email ?? 'N/A' }}</td>
                             <td style="vertical-align:middle;">
-                                {{ $item->house_no == null ? 'House' . $item->ordering ?? 'N/A' : 'N/A' }}
+                                {{ $item->house_no == null ? 'House' . $item->ordering : $item->house_no }}
                             </td>
                             <td style="vertical-align:middle;">{{ $item->passcode ?? 'N/A' }}</td>
                             <td style="vertical-align:middle;">
