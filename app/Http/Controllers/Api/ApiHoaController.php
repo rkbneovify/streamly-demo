@@ -44,7 +44,7 @@ class ApiHoaController extends Controller
 
             $user = Auth::user();
             $query = HoaUser::query();
-
+            $query->where('user_id', auth()->user()->id);
             $query->with('session');
             $query->withCount('session');
             $query->with('subscription');
