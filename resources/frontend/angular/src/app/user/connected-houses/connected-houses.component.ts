@@ -40,7 +40,7 @@ export class ConnectedHousesComponent {
   isMoreData: Boolean = true;
   isCopied: Boolean = false;
   isAllSelected: Boolean = false;
-  selectedCount: Number | null = null;
+  selectedCount: number | null = null;
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
