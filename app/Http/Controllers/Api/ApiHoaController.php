@@ -42,25 +42,29 @@ class ApiHoaController extends Controller
         try {
 
 
-            $user = Auth::user();
-            $query = HoaUser::query();
-            $query->where('user_id', auth()->user()->id);
-            $query->with('session');
-            $query->withCount('session');
-            $query->with('subscription');
-            $query->where('user_id', $user->id);
+
+            $query = HoaUser::query()
+                ->with(['session', 'subscription'])
+                ->withCount('session')
+                ->where('user_id', auth()->id());
+
+
 
             $query->when($request->has('status'), function ($q) use ($request) {
                 $q->where('status', $request->status);
 
             });
             $query->when($request->has('q'), function ($q) use ($request) {
-                $txt = strtolower($request->q);
-                $q->where('passcode', 'like', '%' . $txt . '%')
-                    ->orWhere('name', 'like', '%' . $txt . '%')
-                    ->orWhere('email', 'like', '%' . $txt . '%')
-                    ->orWhere('phone', 'like', '%' . $txt . '%')
-                    ->orWhere('house_no', 'like', '%' . $txt . '%');
+                $txt = $request->q;
+
+                $q->where(function ($subQuery) use ($txt) {
+                    $subQuery->where('id', 'like', "%{$txt}%")
+                        ->orWhere('passcode', 'like', "%{$txt}%")
+                        ->orWhere('name', 'like', "%{$txt}%")
+                        ->orWhere('email', 'like', "%{$txt}%")
+                        ->orWhere('phone', 'like', "%{$txt}%")
+                        ->orWhere('house_no', 'like', "%{$txt}%");
+                });
             });
 
             $query->when($request->has('sort'), function ($q) use ($request) {
@@ -73,7 +77,9 @@ class ApiHoaController extends Controller
 
             });
             if ($request->sort == null) {
+
                 $query->latest();
+
             }
             $limit = $request->input('per_page', 10);
             $page = $request->input('page', 1);
