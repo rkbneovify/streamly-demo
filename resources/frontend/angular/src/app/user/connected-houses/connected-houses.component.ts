@@ -39,6 +39,8 @@ export class ConnectedHousesComponent {
   isSearch: boolean = false;
   isMoreData: Boolean = true;
   isCopied: Boolean = false;
+  isAllSelected: Boolean = false;
+  selectedCount: number | null = null;
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
@@ -137,8 +139,8 @@ export class ConnectedHousesComponent {
 
           }
 
-          console.log('House List : ', this.housesList)
-
+          // console.log('House List : ', this.housesList)
+          this.updateHouseCount();
         },
         error: (err: any) => {
           this.sweetAlert.close();
@@ -349,18 +351,32 @@ export class ConnectedHousesComponent {
       .filter(house => house.isSelected)
       .map(house => house.id);
   }
+  updateHouseCount() {
+    this.selectedCount = this.housesList
+      .filter(house => house.isSelected)
+      .map(house => house.id).length;
+  }
   deleteAll() {
+    const houseIds = this.getSelectedHouseIds();
+    if (houseIds.length <= 0) {
+      this.toastr.error("Please select any one");
+      return;
+    }
     this.sweetAlert.confirm("Delete All", "Do you want to delete all houses?")
       .then(result => {
         if (result.isConfirmed) {
           this.sweetAlert.loading();
           // console.log("Selected Houses id:", this.getSelectedHouseIds());
-          this.apiService.postRequest(`auth/hoa/delete-all-houses`).subscribe({
+          this.apiService.postRequest(`auth/hoa/delete-all-houses`, {
+            house_ids: houseIds
+          }).subscribe({
             next: (res: any) => {
+
               this.sweetAlert.close();
               if (res.success == true) {
                 this.toastr.success(res.message);
                 this.getHouseList(1, null, null);
+
               }
 
             },
@@ -416,9 +432,14 @@ export class ConnectedHousesComponent {
 
   // }
 
-  selectAll() {
-    this.housesList = [];
+  selectAll(event: Event) {
+    this.isAllSelected = !this.isAllSelected;
 
+    this.housesList = this.housesList.map(house => ({
+      ...house,
+      isSelected: this.isAllSelected
+    }));
+    this.updateHouseCount();
   }
 
   houseSelected(houseId: number, event: Event) {
@@ -436,8 +457,10 @@ export class ConnectedHousesComponent {
           : house
       );
     }
-
+    this.updateHouseCount();
   }
+
+
 
 
 

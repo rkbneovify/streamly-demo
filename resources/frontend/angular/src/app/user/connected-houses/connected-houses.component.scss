@@ -377,39 +377,48 @@ p {
         justify-content: space-between;
         padding: 5px 30px;
 
-        .btn-select-all {
+        .left-box {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 200px;
-            height: 45px;
-            color: #fff;
-            border: 1px solid #fff;
-            background: transparent;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 100%;
-            gap: 8px;
-            transition: all 0.2s ease;
+            gap: 10px;
+            justify-content: space-between;
+
+            .btn-select-all {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 200px;
+                height: 45px;
+                color: #fff;
+                border: 1px solid #fff;
+                background: transparent;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: bold;
+                line-height: 100%;
+                gap: 8px;
+                transition: all 0.2s ease;
+            }
+
+            .btn-delete-all {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 200px;
+                height: 45px;
+                color: #EB5757;
+                border: 1px solid #EB5757;
+                background: transparent;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: bold;
+                line-height: 100%;
+                gap: 8px;
+                transition: all 0.2s ease;
+            }
+
+
         }
 
-        .btn-delete-all {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 200px;
-            height: 45px;
-            color: #EB5757;
-            border: 1px solid #EB5757;
-            background: transparent;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 100%;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
 
         .btn-export-all {
             display: flex;
@@ -853,6 +862,19 @@ p {
             justify-content: center;
         }
 
+        .action-area {
+            width: 100%;
+            flex-direction: column;
+            padding: 20px 20px;
+            justify-content: center;
+
+            .left-box {
+                width: 100%;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+
     }
 
 
@@ -875,6 +897,19 @@ p {
             input {
                 width: 16px;
                 height: 16px;
+            }
+        }
+
+        .action-area {
+            width: 100%;
+            flex-direction: column;
+            padding: 20px 20px;
+            justify-content: center;
+
+            .left-box {
+                width: 100%;
+                flex-direction: column;
+                justify-content: center;
             }
         }
     }
@@ -917,6 +952,17 @@ p {
         }
     }
 
+    .action-area {
+        width: 100%;
+        flex-direction: column;
+        padding: 20px 20px;
+        justify-content: center;
 
+        .left-box {
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
 
 }
