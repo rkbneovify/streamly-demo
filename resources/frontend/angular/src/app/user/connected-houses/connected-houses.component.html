@@ -46,8 +46,17 @@
                     <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
                 </div> -->
                 <div class="action-area">
-                    <!-- <button class="btn-select-all">Select All</button> -->
-                    <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
+                    <div class="left-box">
+                        <button (click)="selectAll($event)" class="btn-select-all">Select All
+                            <span *ngIf="selectedCount > 0" class="text-mute">
+
+                                {{ selectedCount === null ? '' : '(' + selectedCount + ')' }}
+                            </span>
+
+
+                        </button>
+                        <button (click)="deleteAll()" class="btn-delete-all">Delete All</button>
+                    </div>
                     <button (click)="exportIntoExcel()" class="btn-export-all">Export into Excel</button>
                 </div>
                 <div *ngIf="housesList.length > 0; else elseTemplate" class="content"
@@ -69,8 +78,8 @@
                                         <span>{{item.status===1?'Active':'Inactive'}}</span>
                                     </div>
 
-                                    <!-- <input class="checkbox" type="checkbox" [(ngModel)]="item.isSelected"
-                                        [value]="item.id" (click)="houseSelected(item.id,$event)" /> -->
+                                    <input class="checkbox" type="checkbox" [(ngModel)]="item.isSelected"
+                                        [value]="item.id" (click)="houseSelected(item.id,$event)" />
                                 </div>
                             </div>
 
