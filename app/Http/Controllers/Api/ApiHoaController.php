@@ -62,7 +62,7 @@ class ApiHoaController extends Controller
                 $txt = $request->q;
                 if ($txt != '') {
                     $q->where(function ($subQuery) use ($txt) {
-                        $subQuery->where('id', 'like', "%{$txt}%")
+                        $subQuery->where('ordering', 'like', "%{$txt}%")
                             ->orWhere('passcode', 'like', "%{$txt}%")
                             ->orWhere('name', 'like', "%{$txt}%")
                             ->orWhere('email', 'like', "%{$txt}%")
