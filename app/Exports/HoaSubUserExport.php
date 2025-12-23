@@ -43,21 +43,52 @@ class HoaSubUserExport implements FromCollection, WithHeadings, WithStyles, Shou
 
         });
 
-        $query->when($this->request->status, function ($q, $status) {
-            if ($status == 1) {
+        $query->when($this->request->has('status'), function ($q) {
+            if ($this->request->status == 1) {
                 $q->where('status', 1);
             } else {
                 $q->where('status', 0);
             }
 
         });
+        $query->when($this->request->has('sort'), function ($q) {
+
+
+            if ($this->request->sort == 'latest') {
+                $q->latest();
+            } elseif ($this->request->sort == 'oldest') {
+                $q->orderBy('created_at', 'asc');
+            }
+
+        });
         // search 
-        $query->when($this->request->search, function ($q, $search) {
-            $q->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('passcode', 'like', "%{$search}%");
-            });
+        $query->when($this->request->has('search'), function ($q) {
+            $txt = $this->request->search;
+            if ($txt != '') {
+                $q->where(function ($subQuery) use ($txt) {
+                    $subQuery->where('ordering', 'like', "%{$txt}%")
+                        ->orWhere('passcode', 'like', "%{$txt}%")
+                        ->orWhere('name', 'like', "%{$txt}%")
+                        ->orWhere('email', 'like', "%{$txt}%")
+                        ->orWhere('phone', 'like', "%{$txt}%")
+                        ->orWhere('house_no', 'like', "%{$txt}%");
+                });
+            }
+        });
+
+        // search 
+        $query->when($this->request->has('q'), function ($q) {
+            $txt = $this->request->q;
+            if ($txt != '') {
+                $q->where(function ($subQuery) use ($txt) {
+                    $subQuery->where('ordering', 'like', "%{$txt}%")
+                        ->orWhere('passcode', 'like', "%{$txt}%")
+                        ->orWhere('name', 'like', "%{$txt}%")
+                        ->orWhere('email', 'like', "%{$txt}%")
+                        ->orWhere('phone', 'like', "%{$txt}%")
+                        ->orWhere('house_no', 'like', "%{$txt}%");
+                });
+            }
         });
 
 
