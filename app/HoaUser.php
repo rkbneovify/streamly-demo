@@ -119,8 +119,8 @@ class HoaUser extends Model
             $uid = UnHashUserID(request()->passcode);
             $user = User::find($uid);
             if ($user != null) {
-                $roleId = $user->roles->pluck('id')[0];
-                if ($roleId == 7) {
+                $role = $user->roles->pluck('name')[0];
+                if ($role == 'hoa') {
                     return HoaUser::where('user_id', $uid)
                         ->with('session')
                         ->get();
@@ -132,8 +132,8 @@ class HoaUser extends Model
         if (request()->has('email')) {
             $user = User::where('email', request()->email)->first();
             if ($user != null) {
-                $roleId = $user->roles->pluck('id')[0];
-                if ($roleId == 7) {
+                $role = $user->roles->pluck('name')[0];
+                if ($role == 'hoa') {
                     return HoaUser::where('user_id', $user->id)
                         ->with('session')
                         ->get();
@@ -173,9 +173,9 @@ class HoaUser extends Model
             $uid = UnHashUserID(request()->passcode);
             $user = User::find($uid);
             if ($user != null) {
-                $roleId = $user->roles->pluck('id')[0];
+                $role = $user->roles->pluck('name')[0];
 
-                if ($roleId == 7) {
+                if ($role == 'hoa') {
                     return true;
                 }
             }
@@ -185,9 +185,9 @@ class HoaUser extends Model
             $user = User::where('email', request()->email)
                 ->first();
             if ($user != null) {
-                $roleId = $user->roles->pluck('id')[0];
+                $role = $user->roles->pluck('name')[0];
 
-                if ($roleId == 7) {
+                if ($role == 'hoa') {
                     return true;
                 }
             }
