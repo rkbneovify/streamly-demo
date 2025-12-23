@@ -41,6 +41,7 @@ export class ConnectedHousesComponent {
   isCopied: Boolean = false;
   isAllSelected: Boolean = false;
   selectedCount: number | null = null;
+  shortBy: number | string | null = null;
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
@@ -152,6 +153,7 @@ export class ConnectedHousesComponent {
 
   }
   onSortChange(shortBy: number | string | null) {
+    this.shortBy = shortBy;
     this.getHouseList(1, shortBy, null);
   }
 
@@ -391,11 +393,30 @@ export class ConnectedHousesComponent {
   }
 
   exportIntoExcel() {
+
+    const params = new URLSearchParams();
+
+    const search: string = this.txtSearch.value;
+    if (this.shortBy !== null) {
+
+      if (typeof this.shortBy === 'string') {
+        params.set('sort', String(this.shortBy));
+      } else if (typeof this.shortBy === 'number') {
+        params.set('status', String(this.shortBy));
+      }
+
+    }
+    if (search !== null && search.length > 0) {
+
+      params.set('q', search);
+
+    }
     this.sweetAlert.confirm("Export", "Do you want to export data into excel?")
       .then(result => {
         if (result.isConfirmed) {
           this.sweetAlert.loading();
-          this.apiService.exportIntoExcel('auth/hoa/export-into-excel').subscribe({
+
+          this.apiService.exportIntoExcel(`auth/hoa/export-into-excel` + `?${params.toString()}`).subscribe({
             next: (data: Blob) => {
               this.sweetAlert.close();
               const blob = new Blob([data], {
