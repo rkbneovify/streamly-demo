@@ -185,7 +185,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             return response()->json([
                 'success' => false,
                 'response_code' => 479,
-                'message' => '1 Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+                'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
                 'houroffset' => $hrsoffset,
                 'timezone' => $timezone,
                 'loggedindeviceinfolist' => $response,
@@ -240,7 +240,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         return response()->json([
             'success' => false,
             'response_code' => 479,
-            'message' => '0 Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+            'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
             'houroffset' => $hrsoffset,
             'timezone' => $timezone,
             'loggedindeviceinfolist' => $response,
