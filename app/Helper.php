@@ -2289,7 +2289,7 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
     return response()->json([
         'success' => false,
         'response_code' => 479,
-        'message' => '1 Your account is in use on ' . $deviceLimit . ' devices. please stop playing on other devices to continue',
+        'message' => 'Your account is in use on ' . $deviceLimit . ' devices. please stop playing on other devices to continue',
         'houroffset' => $hrsoffset,
         'timezone' => $timezone,
         'loggedindeviceinfolist' => $response,
