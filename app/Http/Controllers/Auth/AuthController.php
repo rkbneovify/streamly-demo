@@ -292,6 +292,7 @@ class AuthController extends Controller
 
         if ($hoaUser != null) {
             $user = User::find($hoaUser->user_id);
+
             // hoa main checking
             if ($user == null) {
                 return response()->json(['success' => false, 'response_code' => 404, 'message' => 'User not found !'], 404);
@@ -309,9 +310,10 @@ class AuthController extends Controller
 
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
-                ->where("passcode", $request->passcode)
                 ->whereNotNull('passcode')
+                ->where("passcode", $hoaUser->passcode)
                 ->where("status", 1)->count();
+
             if ($hoaUserActiveDevices >= $hoaUser->device_limit) {
                 $user = User::find($hoaUser->user_id);
                 hoaSubUserDeviceLimitCheck($user, $hoaUser->device_limit);
@@ -348,10 +350,12 @@ class AuthController extends Controller
 
         $userRole = $user->roles->pluck('name');
         //todo hotel check
+
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
 
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
+
         }
         //  hoa main login limit
 
