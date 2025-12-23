@@ -30,9 +30,19 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
     ])->get()->toArray();
 
 
-    if ($userRole == "hoa") {
+    if ($userRole == "hoa" && HoaUser::isHoaMainUser()) {
 
         $active_session = SessionTable::where('is_main_account', 1)
+            ->where('status', 1)
+            ->where('users_id', $user_id)
+            ->get()->toArray();
+
+
+    } elseif ($userRole == "hoa" && HoaUser::getCurrentHoaUser()) {
+        // Hoa sub user session count
+
+        $active_session = SessionTable::where('passcode', request()->passcode)
+            ->where('is_main_account', 0)
             ->where('status', 1)
             ->where('users_id', $user_id)
             ->get()->toArray();
@@ -128,7 +138,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
                     return $address;
                 });
-        } elseif ($userRole == 'hoa') {
+        } elseif ($userRole == 'hoa' && HoaUser::isHoaMainUser()) {
 
 
 
@@ -175,7 +185,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             return response()->json([
                 'success' => false,
                 'response_code' => 479,
-                'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+                'message' => '1 Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
                 'houroffset' => $hrsoffset,
                 'timezone' => $timezone,
                 'loggedindeviceinfolist' => $response,
@@ -191,8 +201,9 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                         ->where('user_id', '=', $uid);
                 }
             ])
+                ->where('is_main_account', 1)
                 ->where([
-                    ['status', '=', '1'],
+                    ['status', '=', 1],
                     ['users_id', '=', $uid],
                 ])
                 ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
@@ -211,6 +222,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     unset($address['id']);
                     return $address;
                 });
+
         }
         $numofdevice = $prevConnectDevicecount->count();
 
@@ -228,7 +240,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
         return response()->json([
             'success' => false,
             'response_code' => 479,
-            'message' => 'Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
+            'message' => '0 Your account is in use on ' . $login_limit . ' devices. please stop playing on other devices to continue',
             'houroffset' => $hrsoffset,
             'timezone' => $timezone,
             'loggedindeviceinfolist' => $response,
@@ -2277,7 +2289,7 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
     return response()->json([
         'success' => false,
         'response_code' => 479,
-        'message' => 'Your account is in use on ' . $deviceLimit . ' devices. please stop playing on other devices to continue',
+        'message' => '1 Your account is in use on ' . $deviceLimit . ' devices. please stop playing on other devices to continue',
         'houroffset' => $hrsoffset,
         'timezone' => $timezone,
         'loggedindeviceinfolist' => $response,
