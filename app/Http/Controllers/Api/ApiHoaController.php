@@ -116,6 +116,80 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function index2(Request $request)
+    {
+
+
+        try {
+
+
+
+            $query = HoaUser::query()
+                ->with(['session', 'subscription'])
+                ->withCount('session')
+                ->where('user_id', auth()->id());
+
+
+
+
+            $query->when($request->has('status'), function ($q) use ($request) {
+                if ($request->status != '') {
+                    $q->where('status', $request->status);
+                }
+            });
+
+
+            $query->when($request->has('q'), function ($q) use ($request) {
+                $txt = $request->q;
+                if ($txt != '') {
+                    $q->where(function ($subQuery) use ($txt) {
+                        $subQuery->where('ordering', 'like', "%{$txt}%")
+                            ->orWhere('passcode', 'like', "%{$txt}%")
+                            ->orWhere('name', 'like', "%{$txt}%")
+                            ->orWhere('email', 'like', "%{$txt}%")
+                            ->orWhere('phone', 'like', "%{$txt}%")
+                            ->orWhere('house_no', 'like', "%{$txt}%");
+                    });
+                }
+            });
+
+
+
+            $query->when($request->has('sort'), function ($q) use ($request) {
+                if ($request->sort == 'latest') {
+                    $q->latest();
+                } elseif ($request->sort == 'oldest') {
+                    $q->orderBy('created_at', 'asc');
+                }
+
+
+            });
+            if ($request->sort == null) {
+
+                $query->latest();
+
+            }
+
+            return response()->json([
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Data fetched successfully !',
+                'total_houses' => auth()->user()->num_of_houses,
+                'device_limit_per_house' => auth()->user()->device_per_house,
+                'active_house_count' => HoaUser::activeHouseCount(),
+                'deactive_house_count' => HoaUser::inactiveHouseCount(),
+                'data' => $query->get(),
+
+            ], 200);
+
+
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function addHouse(Request $request)
     {
         $validator = Validator::make($request->all(), [
