@@ -53,8 +53,8 @@ export class TotalaccountComponent {
 
         data = data.sort((a: any, b: any) => {
           // If the session ID matches the current user's device ID, move it to the top
-          if (a.personaldeviceid === this.current_device) return -1;
-          if (b.personaldeviceid === this.current_device) return 1;
+          if (a.session_id === this.current_device) return -1;
+          if (b.session_id === this.current_device) return 1;
           return 0;
         });
         this.response = data;
@@ -77,11 +77,12 @@ export class TotalaccountComponent {
           localStorage.getItem('deviceInfo') || ''
         );
         const tokenData = this.access_Token?.access_token;
-        this.current_device = this.access_Token?.personaldeviceid;
+        this.current_device = this.access_Token?.sessionid;
         const headers = new HttpHeaders({
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
+        console.log("Current session Id:", this.current_device)
         this.apiService
           .getRequest('auth/newconnecteddevice', headers)
           .subscribe((res: any) => {
@@ -91,8 +92,8 @@ export class TotalaccountComponent {
               this.isConnectedDeviceShow = res.user_connected_device
               data = data.sort((a: any, b: any) => {
                 // If the session ID matches the current user's device ID, move it to the top
-                if (a.personaldeviceid === this.current_device) return -1;
-                if (b.personaldeviceid === this.current_device) return 1;
+                if (a.session_id === this.current_device) return -1;
+                if (b.session_id === this.current_device) return 1;
                 return 0;
               });
               this.connectedDevice = data;
