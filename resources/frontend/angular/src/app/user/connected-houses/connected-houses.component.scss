@@ -207,6 +207,7 @@ p {
     align-items: center;
     gap: 20px;
     padding: 10px 30px;
+    padding-bottom: 10px;
 
 
 
@@ -448,6 +449,7 @@ p {
         gap: 30px;
 
         &.single {
+            width: 100%;
             grid-template-columns: repeat(auto-fit, minmax(350px, 350px));
             justify-content: start;
             align-items: center;
@@ -805,7 +807,8 @@ p {
 
 
     .home-area {
-        gap: 0px;
+        gap: 5px;
+
 
         h1 {
             font-size: 22px;
@@ -841,6 +844,13 @@ p {
             }
         }
 
+        .item-header {
+            p {
+
+                font-size: 16px !important;
+            }
+        }
+
         .search-and-btns {
             flex-direction: column;
             padding: 20px 20px;
@@ -853,9 +863,25 @@ p {
         }
 
         .content {
+            width: 100%;
             grid-template-columns: repeat(1, 1fr);
             justify-content: center;
             align-items: center;
+
+            &.single {
+                grid-template-columns: repeat(auto-fit, minmax(100%, 100%));
+                justify-content: start;
+                align-items: center;
+                padding: 30px 30px;
+                gap: 30px;
+            }
+
+            .item-row {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
         }
 
         .flex-area {
@@ -867,11 +893,13 @@ p {
             flex-direction: column;
             padding: 20px 20px;
             justify-content: center;
+            align-items: center;
 
             .left-box {
                 width: 100%;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
             }
         }
 
@@ -897,6 +925,13 @@ p {
             input {
                 width: 16px;
                 height: 16px;
+            }
+        }
+
+        .item-header {
+            p {
+
+                font-size: 16px !important;
             }
         }
 
@@ -949,6 +984,13 @@ p {
     .remove_Device-Container {
         .toatlcheck-device {
             flex-direction: column;
+        }
+    }
+
+    .item-header {
+        p {
+
+            font-size: 16px !important;
         }
     }
 
