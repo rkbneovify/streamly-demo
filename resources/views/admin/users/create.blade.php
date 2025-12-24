@@ -136,11 +136,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">General</h3>
 
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        data-toggle="tooltip" title="Collapse">
-                                        <i class="fas fa-minus"></i></button>
-                                </div>
+
                             </div>
                             <div class="card-body">
                                 <div class="panel-body">
@@ -304,11 +300,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Info</h3>
 
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        data-toggle="tooltip" title="Collapse">
-                                        <i class="fas fa-minus"></i></button>
-                                </div>
+
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
