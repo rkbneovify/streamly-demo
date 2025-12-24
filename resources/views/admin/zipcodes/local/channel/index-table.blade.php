@@ -57,7 +57,7 @@
                                   ]) }}"
                                   class="text-primary ms-1">↑↓</a>
                           </th>
-                          <th>Action</th>
+                          {{-- <th>Action</th> --}}
                       </tr>
                   </thead>
                   <tbody>
@@ -90,11 +90,11 @@
                               </td>
 
 
-                              <td>
+                              {{-- <td>
                                   <a class="btn btn-xs btn-danger fs-bold" id="btn-delete-zipcode"
                                       href="{{ route('admin.zipcode.local.channel.delete', $item->id) }}"
                                       data-url="{{ route('admin.zipcode.local.channel.delete', $item->id) }}">Delete</a>
-                              </td>
+                              </td> --}}
 
 
                           </tr>
