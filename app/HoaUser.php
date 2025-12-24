@@ -227,26 +227,27 @@ class HoaUser extends Model
         $houseCount = ($user->num_of_houses - $request->num_of_houses);
         $deviceLimitCountPerHouse = ($user->device_per_house - $request->device_per_house);
 
-        $activeHouseCount = HoaUser::where('user_id', $user->id)
+        $addedHouseCount = HoaUser::where('user_id', $user->id)
             ->count();
 
-        if ($request->num_of_houses <= $activeHouseCount) {
+        if ((int) $request->num_of_houses <= 0) {
             return [
                 'status' => false,
-                'message' => 'Cannot reduce houses below active houses: ' . $activeHouseCount
+                'message' => 'Invalid number of houses'
             ];
         }
 
-        if ($houseCount <= 0) {
-
-            $user->num_of_houses = (abs($houseCount) + $user->num_of_houses);
+        if ((int) $request->num_of_houses < $addedHouseCount) {
+            return [
+                'status' => false,
+                'message' => 'Cannot reduce houses below added House count: ' . $addedHouseCount
+            ];
         }
 
-        if ($activeHouseCount <= 0 && $deviceLimitCountPerHouse <= 0) {
-
-            $user->device_per_house = (abs($deviceLimitCountPerHouse) + $user->device_per_house);
+        if ($addedHouseCount <= 0) {
+            $user->device_per_house = $request->device_per_house;
         }
-
+        $user->num_of_houses = $request->num_of_houses;
         $user->save();
         return null;
 
