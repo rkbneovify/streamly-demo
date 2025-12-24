@@ -164,6 +164,42 @@
             -moz-appearance: none;
             background: none;
         }
+
+        .btn-with-img {
+            display: inline-flex;
+            width: 100%;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            padding: 10px 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 6px 15px rgba(187, 186, 219, 0.4);
+            transition: transform 0.15s ease;
+            text-decoration: none;
+            color: inherit;
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+
+            &:hover {
+                outline: none;
+                color: #007bff;
+                transform: scale(0.95);
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+
+        }
     </style>
 @endsection
 @section('content')
@@ -194,103 +230,7 @@
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    {{-- <h3 class="card-title">Users</h3> --}}
 
-
-
-                    {{-- <div class="row justify-content-between mt-3 mb-0 mb-3">
-                        <div class="col-md-9">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <select name="bulk_action" id="sel_bulk_action" class="form-control">
-                                        <option value="">Bulk Action</option>
-                                        <option value="activate">Activate</option>
-                                        <option value="inactivate">Inactivate</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
-
-
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-
-                                        <select name="roles" id="sel_roles" class="form-control">
-                                            <option value="">Select Role</option>
-                                            @foreach ($roles as $id => $pack)
-                                                <option value="{{ $pack }}"
-                                                    {{ request('role') == $pack ? 'selected' : '' }}>
-                                                    {{ ucfirst($pack) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <select name="mode" id="sel_mode" class="form-control">
-                                        <option value="">Select Mode</option>
-                                        <option value="Live" {{ request('mode') == 'Live' ? 'selected' : '' }}>Live
-                                        </option>
-                                        <option value="Testing" {{ request('mode') == 'Testing' ? 'selected' : '' }}>Testing
-                                        </option>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <select name="status" id="sel_status" class="form-control">
-                                        <option value="">Select Status</option>
-                                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active
-                                        </option>
-                                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
-                                            Inactive</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" name="daterange"
-                                        value="{{ formatDaterange(request('daterange')) }}">
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="input-conatiner">
-                                        <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                            class="form-control" placeholder="Search by name, email">
-                                        <span class="btn-clear" id="btnClear">×</span>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 text-center text-lg-right">
-                            <a class="btn btn-primary btn-sm mb-2 w-50" href="{{ url('admin/users/create') }} ">
-                                Add New User
-                            </a>
-
-                            <div class="dropdown">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle w-50" type="button"
-                                    id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Export
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                                    <a class="dropdown-item export-link"
-                                        href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}">Export
-                                        to Excel</a>
-                                    <a class="dropdown-item export-link"
-                                        href="{{ route('admin.users.export', ['type' => 'csv'] + request()->query()) }}">Export
-                                        to CSV</a>
-
-                                </div>
-                            </div>
-
-
-
-                        </div>
-
-
-                    </div> --}}
 
 
                     <div class="row  mt-3 mb-0 mb-3">
@@ -346,17 +286,17 @@
                             </div>
                         </div>
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
+                            <a href="{{ url('admin/users/create') }} " class="btn-with-img">
                                 <img src="{{ asset('images/add-user.png') }}" alt="status icon">
-                                <a href="{{ url('admin/users/create') }} " class="btn-add-user">Add New User</a>
-                            </div>
+                                Add New User</a>
                         </div>
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
+
+                            <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                class="btn-with-img">
                                 <img src="{{ asset('images/export.png') }}" alt="status icon">
-                                <a href="{{ route('admin.users.export', ['type' => 'xlsx'] + request()->query()) }}"
-                                    class="btn-add-user">Export</a>
-                            </div>
+                                Export into Excel</a>
+
                         </div>
                         <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
@@ -374,11 +314,12 @@
                             </div>
                         </div>
 
+
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
+                            <button id="btnResetFilter" type="button" class="btn-with-img">
                                 <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
-                            </div>
+                                Reset filters
+                            </button>
                         </div>
 
                     </div>
@@ -842,7 +783,7 @@
             loadSelected();
         })
 
-        $(document).on('click', '.btn-reset-all', function(e) {
+        $(document).on('click', '#btnResetFilter', function(e) {
             e.preventDefault();
             removeAll();
             location.href = "{{ url()->current() }}"
