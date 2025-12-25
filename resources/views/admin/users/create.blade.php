@@ -451,28 +451,20 @@
                             <!-- /.card -->
                         </div>
                     </div>
-                    {{-- <div class="form-group">
-                        <div class="col-md-8 col-md-offset-4">
-                            <input class="btn btn-primary" type="submit" value="Save">
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-4">
+                            <input class="btn btn-primary" type="submit" value="Save" onclick="formSubmit(event)">
 
                             <a class="btn btn-link" href="{{ url('admin/users') }}">
                                 Cancel
                             </a>
                         </div>
-                    </div> --}}
-
+                    </div>
 
 
 
             </section>
-            <div class="row justify-content-center mt-5 mb-3">
-                <button type="submit" class="btn btn-primary mr-5" onclick="formSubmit(event)">
-                    Submit
-                </button>
-                <a class="btn btn-info" href="{{ url('admin/users') }}">
-                    Cancel
-                </a>
-            </div>
+
         </form>
 
         <!-- /.content -->
