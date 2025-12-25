@@ -73,7 +73,7 @@
             background: #f4f4f4;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: 0.3s ease;
         }
 
         .device-counter button:hover {
@@ -83,9 +83,13 @@
         .device-counter button:focus {
             outline: none;
         }
+
+        .invalid {
+            border-color: red;
+        }
     </style>
 
-    </style>
+
 @stop
 @section('content')
 
@@ -132,25 +136,11 @@
                             <div class="card-header">
                                 <h3 class="card-title">General</h3>
 
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        data-toggle="tooltip" title="Collapse">
-                                        <i class="fas fa-minus"></i></button>
-                                </div>
+
                             </div>
                             <div class="card-body">
                                 <div class="panel-body">
-                                    <!-- Display Validation Errors -->
-                                    @if (count($errors) > 0)
-                                        <div class="alert alert-danger">
-                                            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                                            <ul>
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endif
+
 
 
 
@@ -161,10 +151,13 @@
                                 </div>
                                 <!-- Roles dropdown -->
 
-                                <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="roles">Roles</label>
 
-                                    <select name="roles" id="roles" class="form-control"
+                                    <select name="roles" id="roles"
+                                        class="form-control @error('roles')
+                                        is-invalid
+                                    @enderror"
                                         onchange="handleRoleChange()">
                                         <option value="">Select Role</option>
                                         @foreach ($roles as $id => $pack)
@@ -173,11 +166,9 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('roles'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('roles') }}</strong>
-                                        </span>
-                                    @endif
+                                    @error('roles')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
@@ -189,14 +180,15 @@
                                         <div class="device-counter">
                                             <button type="button" onclick="decreaseDevices()">−</button>
                                             <input type="text" id="number_of_devices" name="number_of_devices"
-                                                value="{{ old('number_of_devices', 1) }}">
+                                                value="{{ old('number_of_devices', 5) }}"
+                                                class="@error('number_of_devices')
+                                                    is-invalid
+                                                @enderror">
                                             <button type="button" onclick="increaseDevices()">+</button>
                                         </div>
-                                        @if ($errors->has('number_of_devices'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('number_of_devices') }}</strong>
-                                            </span>
-                                        @endif
+                                        @error('number_of_devices')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -204,39 +196,40 @@
                                 <div class="" id="housesDiv" style="display: none;">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="form-group{{ $errors->has('num_of_houses') ? ' has-error' : '' }}">
+                                            <div class="form-group">
                                                 <label for="number_of_devices">Number of Houses</label>
                                                 <div class="device-counter">
                                                     <button type="button" onclick="decreaseHouses()">−</button>
                                                     <input type="text" id="num_of_houses" name="num_of_houses"
-                                                        value="{{ old('num_of_houses', 1) }}">
+                                                        value="{{ old('num_of_houses', 1) }}"
+                                                        class="@error('num_of_houses')
+                                                            is-invalid
+                                                        @enderror">
                                                     <button type="button" onclick="increaseHouses()">+</button>
                                                 </div>
-                                                @if ($errors->has('num_of_houses'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('num_of_houses') }}</strong>
-                                                    </span>
-                                                @endif
+                                                @error('num_of_houses')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
 
 
                                         </div>
                                         <div class="col">
-                                            <div
-                                                class="form-group{{ $errors->has('device_per_house') ? ' has-error' : '' }}">
+                                            <div class="form-group">
                                                 <label for="number_of_devices">Device Per House</label>
                                                 <div class="device-counter">
                                                     <button type="button" onclick="decreaseDevicePerUnit()">−</button>
                                                     <input min="1" type="number" id="device_per_house"
                                                         name="device_per_house" readonly
+                                                        class="@error('device_per_house')
+                                                            is-invalid
+                                                        @enderror"
                                                         value="{{ old('device_per_house', 5) }}">
                                                     <button type="button" onclick="increaseDevicePerUnit()">+</button>
                                                 </div>
-                                                @if ($errors->has('device_per_house'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('device_per_house') }}</strong>
-                                                    </span>
-                                                @endif
+                                                @error('device_per_house')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -246,59 +239,54 @@
 
 
 
-                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="name" class="col-md-4 control-label">Name</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        name="name" value="{{ old('name') }}" autofocus>
+                                    @error('name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
 
-
-                                    <input type="text" class="form-control" name="name" required autofocus>
-
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                    @endif
 
                                 </div>
                                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                     <label for="email" class="col-md-4 control-label">E-Mail</label>
-
-
-                                    <input id="email" type="text" class="form-control" name="email" required
-                                        autofocus>
-
-                                    @if ($errors->has('email'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('email') }}</strong>
-                                        </span>
-                                    @endif
+                                    <input id="email" type="text"
+                                        class="form-control @error('email')
+                                        is-invalid
+                                    @enderror"
+                                        name="email">
+                                    @error('email')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
 
                                 </div>
-                                <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="password" class="col-md-4 control-label">Password</label>
-
-
-                                    <input id="password" type="password" class="form-control" name="password"
-                                        autofocus>
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                    @endif
+                                    <input id="password" type="password"
+                                        class="form-control @error('password')
+                                        is-invalid
+                                    @enderror"
+                                        name="password" autofocus>
+                                    @error('password')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
 
                                 </div>
 
-                                <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="password_confirmation" class="col-md-4 control-label">Confirm
                                         Password</label>
 
 
-                                    <input id="password_confirmation" type="password" class="form-control"
+                                    <input id="password_confirmation" type="password"
+                                        class="form-control @error('password_confirmation')
+                                        is-invalid
+                                    @enderror"
                                         name="password_confirmation" autofocus>
-                                    @if ($errors->has('password_confirmation'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                        </span>
-                                    @endif
+                                    @error('password_confirmation')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
 
                                 </div>
 
@@ -312,41 +300,38 @@
                             <div class="card-header">
                                 <h3 class="card-title">Info</h3>
 
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                        data-toggle="tooltip" title="Collapse">
-                                        <i class="fas fa-minus"></i></button>
-                                </div>
+
                             </div>
                             <div class="card-body">
-                                <div class="form-group{{ $errors->has('dob') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="dob">Date of birth</label>
 
-                                    <input type="date" name="dob" placehoder="dob" class="form-control" />
-                                    <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                                    @if ($errors->has('dob'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('dob') }}</strong>
-                                        </span>
-                                    @endif
+                                    <input type="date" name="dob" placehoder="dob" value="{{ old('dob') }}"
+                                        class="form-control @error('dob')
+                                      is-invalid
+                                    @enderror" />
+                                    @error('dob')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
-                                <div class="form-group{{ $errors->has('zipcode') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
                                     <div id="zipErrorMsg" style="color: red; font-size: 14px; display: none;"></div>
 
                                     <!-- <input id="zipcode"  class="form-control" name="zipcode" autofocus type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" > -->
 
-                                    <input id="zipcode" name="zipcode" class="form-control" list="zipcodeList"
-                                        type="number">
+                                    <input id="zipcode" name="zipcode" value="{{ old('zipcode') }}"
+                                        class="form-control @error('zipcode')
+                                        is-invalid
+                                    @enderror"
+                                        list="zipcodeList" type="number">
                                     <datalist id="zipcodeList"></datalist>
-                                    @if ($errors->has('zipcode'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('zipcode') }}</strong>
-                                        </span>
-                                    @endif
+                                    @error('zipcode')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
 
                                 </div>
 
@@ -354,45 +339,59 @@
 
 
 
-                                <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="city">City</label>
-                                    <input type="text" id="city" name="city" class="form-control">
-                                    @if ($errors->has('city'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('city') }}</strong>
-                                        </span>
-                                    @endif
+                                    <input type="text" id="city" name="city" value="{{ old('city') }}"
+                                        class="form-control @error('city')
+                                        is-invalid
+                                    @enderror">
+                                    @error('city')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
 
-                                <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="state">State</label>
-                                    <input type="text" id="state" name="state" class="form-control">
-                                    @if ($errors->has('state'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('state') }}</strong>
-                                        </span>
-                                    @endif
+                                    <input type="text" id="state" name="state" value="{{ old('state') }}"
+                                        class="form-control @error('state')
+                                        is-invalid
+                                    @enderror">
+                                    @error('state')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
 
-                                <div class="form-group{{ $errors->has('plan_duration') ? ' has-error' : '' }}">
+                                <div class="form-group">
                                     <label for="plan_duration">Plan Duration</label>
-                                    <select name="plan_duration" class="form-control">
+                                    <select name="plan_duration"
+                                        class="form-control @error('plan_duration')
+                                        is-invalid
+                                    @enderror">
                                         <option value="">Select Duration</option>
-                                        <option value="1 Month">1 Month</option>
-                                        <option value="3 Months">3 Months</option>
-                                        <option value="6 Months">6 Months</option>
-                                        <option value="12 Months">12 Months</option>
-                                        <option value="Never">Never</option>
+                                        <option {{ old('plan_duration') == '1 Month' ? 'selected' : '' }} value="1 Month">
+                                            1
+                                            Month</option>
+                                        <option {{ old('plan_duration') == '3 Months' ? 'selected' : '' }}
+                                            value="3 Months">3
+                                            Months</option>
+                                        <option {{ old('plan_duration') == '6 Months' ? 'selected' : '' }}
+                                            value="6 Months">6
+                                            Months</option>
+                                        <option {{ old('plan_duration') == '12 Months' ? 'selected' : '' }}
+                                            value="12 Months">
+                                            12 Months
+                                        </option>
+                                        <option {{ old('plan_duration') == 'Never' ? 'selected' : '' }} value="Never">
+                                            Never
+                                        </option>
                                     </select>
-                                    @if ($errors->has('plan_duration'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('plan_duration') }}</strong>
-                                        </span>
-                                    @endif
+                                    @error('plan_duration')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
@@ -452,7 +451,7 @@
                             <!-- /.card -->
                         </div>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="col-md-8 col-md-offset-4">
                             <input class="btn btn-primary" type="submit" value="Save">
 
@@ -460,11 +459,22 @@
                                 Cancel
                             </a>
                         </div>
-                    </div>
+                    </div> --}}
+
+
 
 
             </section>
+            <div class="row justify-content-center mt-5 mb-3">
+                <button type="submit" class="btn btn-primary mr-5" onclick="formSubmit(event)">
+                    Submit
+                </button>
+                <a class="btn btn-info" href="{{ url('admin/users') }}">
+                    Cancel
+                </a>
+            </div>
         </form>
+
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -472,7 +482,24 @@
 
 @section('scripts')
 
+    <script>
+        function loading() {
+            Swal.fire({
+                title: 'Please wait...',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
 
+        function formSubmit(event) {
+            event.preventDefault();
+            loading();
+            event.target.closest('form').submit();
+        }
+    </script>
 
 
     <script type="text/javascript">
@@ -485,7 +512,7 @@
                 deviceSection.style.display = 'block';
             } else {
                 deviceSection.style.display = 'none';
-                document.getElementById('number_of_devices').value = 1;
+                document.getElementById('number_of_devices').value = 5;
             }
 
             if (selectedRole === '7') { // role ID for 'hoa'

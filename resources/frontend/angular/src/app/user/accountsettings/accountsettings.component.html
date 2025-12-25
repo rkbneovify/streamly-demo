@@ -17,7 +17,8 @@
         <!-- <input class="input_plane" formControlName="email" type="text"> -->
         <p>{{ updateuserDetatils.get("email")?.value }}</p>
       </div>
-      <ng-component *ngIf="!isHoaSubUser">
+      <!-- password area -->
+      <ng-container *ngIf="isHoaSubUser === null">
         <div [ngClass]="{ acoount_user_password: true, 'h-auto': editMode }">
           <label for="">Password</label>
           <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
@@ -51,19 +52,7 @@
             <p>*********</p>
           </ng-template>
         </div>
-      </ng-component>
-
-      <!-- <div *ngIf="editMode;" class="d-flex justify-content-end old-password mt-2">
-        <ng-container *ngIf="editMode;" >
-          <input
-          required
-          class="input_standred"
-          formControlName="newpassword"
-          placeholder="Enter new Password"
-          type="text"
-          />
-        </ng-container>
-      </div> -->
+      </ng-container>
 
       <div class="acoount_user_timezone my-3">
         <label for="">Home Timezone</label>
