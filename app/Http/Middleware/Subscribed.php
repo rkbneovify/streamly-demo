@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 // use JWTAuth;
 
 // use Tymon\JWTAuth\JWTAuth;
+
+use Carbon\Carbon;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Closure;
@@ -58,6 +60,25 @@ class Subscribed
             } else {
                 return redirect('/selectplan');
             }
+        }
+
+
+        if ($user->subscription('main')->stripe_status == 'trialing') {
+            $trialEndsAt = Carbon::parse(
+                $user->subscription('main')->trial_ends_at,
+
+            );
+
+            if ($trialEndsAt && $trialEndsAt->isPast()) {
+                if ($request->wantsJson()) {
+                    $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                    return response()->json($response, 410);
+                } else {
+                    return redirect('/selectplan');
+                }
+            }
+
+
         }
 
 
