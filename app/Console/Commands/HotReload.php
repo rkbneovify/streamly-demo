@@ -52,6 +52,8 @@ class HotReload extends Command
          * ================================
          * This runs:
          * php artisan serve --host=127.0.0.1 --port=8000
+         * php artisan serve:hot --host=localhost --laravel-port=8001 --bs-port=3001
+         * * php artisan serve:hot --host=127.0.0.1 --laravel-port=8001 --bs-port=3001
          */
         $laravelProcess = new Process([
             'php',
