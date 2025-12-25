@@ -57,7 +57,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   isSubscription: boolean = false;
   isHoaMainUser: boolean = false;
-  isHoaSubUser: boolean = false;
+  isHoaSubUser: boolean | null = false;
   hoaSubUSerSubscription: any = null;
   hoaMainUserSubscription: any = null;
 
@@ -99,8 +99,9 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       // Update UI or logic here based on new value
     });
     const jsonData = localStorage.getItem('userDetails');
-    const isHoaSubUser = localStorage.getItem('hoa_user');
-    if (jsonData !== null && isHoaSubUser == 'null') {
+    this.isHoaSubUser = JSON.parse(localStorage.getItem('hoa_user'));
+    console.log("Hoa sub user :", this.isHoaSubUser);
+    if (jsonData !== null) {
       try {
         this.usersdetail = JSON.parse(
           localStorage.getItem('userDetails') || ''
