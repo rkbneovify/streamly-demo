@@ -63,23 +63,9 @@ class Subscribed
         }
 
 
-        if ($user->subscription('main')->stripe_status == 'trialing') {
-            $trialEndsAt = Carbon::parse(
-                $user->subscription('main')->trial_ends_at,
-
-            );
-
-            if ($trialEndsAt && $trialEndsAt->isPast()) {
-                if ($request->wantsJson()) {
-                    $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                    return response()->json($response, 410);
-                } else {
-                    return redirect('/selectplan');
-                }
-            }
 
 
-        }
+
 
 
         return $next($request);
