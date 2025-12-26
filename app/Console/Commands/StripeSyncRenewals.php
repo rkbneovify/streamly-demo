@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Console\Commands;
-use DB;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-
+use Illuminate\Support\Facades\DB;
 use Laravel\Cashier\Subscription;
 
 class StripeSyncRenewals extends Command
@@ -50,7 +49,7 @@ class StripeSyncRenewals extends Command
                 $this->updateSubscription($subscription);
             }
 
-            if (! $response->has_more) {
+            if (!$response->has_more) {
                 break;
             }
 
@@ -58,7 +57,7 @@ class StripeSyncRenewals extends Command
         }
 
         $this->info('Successfully updated ' . $this->updatedCount . ' subscriptions.');
-   
+
     }
 
     protected function updateSubscription($subscription)
@@ -66,6 +65,10 @@ class StripeSyncRenewals extends Command
         $updated = DB::table('subscriptions')
             ->where('stripe_id', $subscription->id)
             ->update([
+                'stripe_plan' => $subscription->plan->id,
+                'stripe_status' => $subscription->status,
+                'quantity' => $subscription->quantity,
+                'livemode' => $subscription->livemode == true ? 1 : 0,
                 'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
             ]);
 

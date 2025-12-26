@@ -621,7 +621,7 @@ class ReportController extends Controller
             // ]);
 
 
-            // return response()->json($customer);
+            return response()->json($subscription);
             return view("admin.reports.subscription-detail", compact("subscription", 'user', 'invoices', 'customer'));
         } catch (InvalidRequestException $th) {
             Alert::error('Oops !', "Subscription not found !");
