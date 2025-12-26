@@ -356,23 +356,30 @@ class StripeController extends Controller
             case 'customer.subscription.updated':
                 $subscription = $event->data->object;
                 Log::info("event : customer.subscription.updated");
+                Log::info("subscription object : " . $subscription);
                 $user = DB::table('users')
-                    ->where('stripe_id', $subscription->customer)
+                    // ->where('stripe_id', $subscription->customer)
+                    ->where('stripe_id', 'cus_TcZHZfuEDADndv')
                     ->first();
                 if ($user == null) {
                     Log::info("customer.subscription.updated: User not found");
                     exit;
                 }
+                $updateData = [
+                    'stripe_status' => $subscription->status,
+                    'stripe_plan' => $subscription->plan->id,
+                    'quantity' => $subscription->quantity,
+                    'livemode' => (int) $subscription->livemode,
+                    'updated_at' => now(),
+                ];
+
+                if ($subscription->status === 'active') {
+                    $updateData['trial_ends_at'] = null;
+                }
+
                 DB::table('subscriptions')
                     ->where('user_id', $user->id)
-                    ->update([
-                        'stripe_status' => $subscription->status,
-                        'stripe_plan' => $subscription->plan->id,
-                        'quantity' => $subscription->quantity,
-                        'livemode' => $subscription->livemode == true ? 1 : 0,
-                        'trial_ends_at' => null,
-                        'updated_at' => now(),
-                    ]);
+                    ->update($updateData);
 
 
                 $plan = $subscription->plan;
