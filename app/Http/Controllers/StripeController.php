@@ -358,8 +358,7 @@ class StripeController extends Controller
                 Log::info("event : customer.subscription.updated");
                 Log::info("subscription object : " . $subscription);
                 $user = DB::table('users')
-                    // ->where('stripe_id', $subscription->customer)
-                    ->where('stripe_id', 'cus_TcZHZfuEDADndv')
+                    ->where('stripe_id', $subscription->customer)
                     ->first();
                 if ($user == null) {
                     Log::info("customer.subscription.updated: User not found");
