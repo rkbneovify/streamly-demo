@@ -68,7 +68,7 @@ class StripeSyncRenewals extends Command
                 'stripe_plan' => $subscription->plan->id,
                 'stripe_status' => $subscription->status,
                 'quantity' => $subscription->quantity,
-                'livemode' => $subscription->livemode == true ? 1 : 0,
+                'livemode' => (int) $subscription->livemode,
                 'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
             ]);
 
