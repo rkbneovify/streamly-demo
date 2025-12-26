@@ -92,6 +92,12 @@ class ApiHoaController extends Controller
             $page = $request->input('page', 1);
 
             $data = $query->paginate($limit, ['*'], 'page', $page);
+            $data->getCollection()->transform(function ($item) {
+                $item->house_no = $item->house_no ?? "house" . $item->ordering;
+                return $item;
+            });
+
+
             return response()->json([
                 'success' => true,
                 'response_code' => 200,
@@ -169,7 +175,10 @@ class ApiHoaController extends Controller
                 $query->latest();
 
             }
-
+            $data = $query->get()->map(function ($item) {
+                $item->house_no = $item->house_no ?? "house" . $item->ordering;
+                return $item;
+            });
             return response()->json([
                 'success' => true,
                 'response_code' => 200,
@@ -178,7 +187,7 @@ class ApiHoaController extends Controller
                 'device_limit_per_house' => auth()->user()->device_per_house,
                 'active_house_count' => HoaUser::activeHouseCount(),
                 'deactive_house_count' => HoaUser::inactiveHouseCount(),
-                'data' => $query->get(),
+                'data' => $data,
 
             ], 200);
 
