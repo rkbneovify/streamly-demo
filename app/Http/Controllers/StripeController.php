@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Models\Subscription;
-use Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use JWTAuth;
 // use App\Http\Controllers\Controller;
 // use App\Models\Route;
@@ -53,7 +54,8 @@ class StripeController extends Controller
                     $fcmResults = [];
                     foreach ($fcm_token as $tokens) {
                         array_push($fcmResults, $tokens->fcm_token);
-                    };
+                    }
+                    ;
 
                     $website_link = env('WEBSITE_URL');
 
@@ -81,7 +83,8 @@ class StripeController extends Controller
                         ));
                         $response = curl_exec($curl);
                         curl_close($curl);
-                    };
+                    }
+                    ;
 
                     $userplanCanceled = DB::table('subscriptions')
                         ->where('stripe_id', $paymentIntent->id)
@@ -91,7 +94,7 @@ class StripeController extends Controller
                         ));
 
                     $html = '<html>
-                    Hi, ' . ucwords($user[0]->name)  . '<br><br>
+                    Hi, ' . ucwords($user[0]->name) . '<br><br>
                     Your StreamlyTV subscription is now canceled.<br>
                     To renew your subscription, please visit: ' . $website_link . ', login, and select a plan!.
                     <br><br>
@@ -115,14 +118,14 @@ class StripeController extends Controller
                     $user = DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
                     $amount = $paymentIntent->object->amount / 100;
                     $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
-                    $subscriptionId  = $paymentIntent->object->invoice;
+                    $subscriptionId = $paymentIntent->object->invoice;
 
                     $subscription = \Stripe\Invoice::retrieve($subscriptionId);
                     $upcomingInvoice = \Stripe\Invoice::upcoming([
                         'subscription' => $subscription->subscription, // Use the subscription ID
                     ]);
 
-                    $nextBillingDate = $upcomingInvoice->next_payment_attempt ?  date('Y-m-d H:i',  $upcomingInvoice->next_payment_attempt) :  'N/A';
+                    $nextBillingDate = $upcomingInvoice->next_payment_attempt ? date('Y-m-d H:i', $upcomingInvoice->next_payment_attempt) : 'N/A';
 
                     $fcm_token = DB::table('session_table')
                         ->where('users_id', $user[0]->id)
@@ -133,7 +136,8 @@ class StripeController extends Controller
                     $fcmResults = [];
                     foreach ($fcm_token as $tokens) {
                         array_push($fcmResults, $tokens->fcm_token);
-                    };
+                    }
+                    ;
 
                     if (count($fcm_token) == 0) {
                     } else {
@@ -151,7 +155,7 @@ class StripeController extends Controller
                             CURLOPT_POSTFIELDS => '{
                           "registration_ids": ' . json_encode($fcmResults) . ',
                           "title": "Subscription Renewed",
-                          "body": "HI ' . ucwords($user[0]->name)  . ' your subscription is renewed."
+                          "body": "HI ' . ucwords($user[0]->name) . ' your subscription is renewed."
                          }',
                             CURLOPT_HTTPHEADER => array(
                                 'Content-Type: application/json'
@@ -159,7 +163,8 @@ class StripeController extends Controller
                         ));
                         $response = curl_exec($curl);
                         curl_close($curl);
-                    };
+                    }
+                    ;
 
                     //  $userplanRenewed = DB::table('subscriptions')
                     //  ->where('stripe_id', $paymentIntent->id)
@@ -225,7 +230,8 @@ class StripeController extends Controller
                     $fcmResults = [];
                     foreach ($fcm_token as $tokens) {
                         array_push($fcmResults, $tokens->fcm_token);
-                    };
+                    }
+                    ;
 
                     if (count($fcm_token) == 0) {
                     } else {
@@ -243,7 +249,7 @@ class StripeController extends Controller
                             CURLOPT_POSTFIELDS => '{
                           "registration_ids": ' . json_encode($fcmResults) . ',
                           "title": "Payment Failed",
-                          "body": "HI ' . ucwords($user[0]->name)  . ' please renew your card to enjoy streamlytv continously."
+                          "body": "HI ' . ucwords($user[0]->name) . ' please renew your card to enjoy streamlytv continously."
                          }',
                             CURLOPT_HTTPHEADER => array(
                                 'Content-Type: application/json'
@@ -251,7 +257,8 @@ class StripeController extends Controller
                         ));
                         $response = curl_exec($curl);
                         curl_close($curl);
-                    };
+                    }
+                    ;
 
                     $website_link = env('WEBSITE_URL');
 
@@ -293,7 +300,8 @@ class StripeController extends Controller
                     $fcmResults = [];
                     foreach ($fcm_token as $tokens) {
                         array_push($fcmResults, $tokens->fcm_token);
-                    };
+                    }
+                    ;
 
                     if (count($fcm_token) == 0) {
                     } else {
@@ -311,7 +319,7 @@ class StripeController extends Controller
                             CURLOPT_POSTFIELDS => '{
                           "registration_ids": ' . json_encode($fcmResults) . ',
                           "title": "Trial period is ending soon",
-                          "body": "HI ' . ucwords($user[0]->name)  . ' your trail period is ending on ' . date("Y-m-d", $paymentIntent->trial_end) . '"
+                          "body": "HI ' . ucwords($user[0]->name) . ' your trail period is ending on ' . date("Y-m-d", $paymentIntent->trial_end) . '"
                          }',
                             CURLOPT_HTTPHEADER => array(
                                 'Content-Type: application/json'
@@ -319,7 +327,8 @@ class StripeController extends Controller
                         ));
                         $response = curl_exec($curl);
                         curl_close($curl);
-                    };
+                    }
+                    ;
 
                     $website_link = env('WEBSITE_URL');
 
@@ -345,42 +354,38 @@ class StripeController extends Controller
                 break;
 
             case 'customer.subscription.updated':
-                $paymentIntent = $event->data->object;
+                $subscription = $event->data->object;
+                Log::info("event : customer.subscription.updated");
+                $user = DB::table('users')
+                    ->where('stripe_id', $subscription->customer)
+                    ->first();
+                if ($user == null) {
+                    Log::info("customer.subscription.updated: User not found");
+                    exit;
+                }
+                DB::table('subscriptions')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'stripe_status' => $subscription->status,
+                        'stripe_plan' => $subscription->plan->id,
+                        'quantity' => $subscription->quantity,
+                        'livemode' => $subscription->livemode == true ? 1 : 0,
+                        'trial_ends_at' => null,
+                        'updated_at' => now(),
+                    ]);
 
-                if ($paymentIntent->status == "active") {
-                    $user = DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
-                    $subscriptions = Subscription::where([
-                        ['user_id', '=', $user[0]->id],
-                        ['stripe_status', '=', 'trialing'],
-                        ['ends_at', '=', null],
-                    ])->get();
+                $plan = $subscription->plan;
+                $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
+                $interval = $plan->interval; // e.g., "month", "year"
+                $quantity = $subscription->quantity; // Subscription quantity
+                $planName = $plan->nickname ?: 'Default Plan';
 
-                    if ($subscriptions) {
-                        $subscriptionDetails = $subscriptions[0];
+                $website_link = env('WEBSITE_URL');
 
-                        // Fetch subscription details from Stripe
-                        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-                        $stripeSubscription = \Stripe\Subscription::retrieve($paymentIntent->id);
-
-                        $plan = $stripeSubscription->items->data[0]->plan;
-                        $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
-                        $interval = $plan->interval; // e.g., "month", "year"
-                        $quantity = $stripeSubscription->items->data[0]->quantity; // Subscription quantity
-                        $planName = $plan->nickname ?: 'Default Plan'; // Assuming the plan has a nickname
-
-                        DB::table('subscriptions')
-                            ->where('id', $subscriptionDetails->id)
-                            ->update([
-                                'stripe_status' => 'active',
-                                'updated_at' => date("Y/m/d h:i:s"),
-                            ]);
-
-                        $website_link = env('WEBSITE_URL');
-
-                        $html = '
+                $html = '
                                 <html>
-                                    Hi, ' . ucwords($user[0]->name) . '<br><br>
+                                    Hi, ' . ucwords($user->name) . '<br><br>
                                     Your trial period has ended, and your subscription is now active. You have been charged as per the following details:<br><br>
                                     <b>Subscription Details:</b><br>
                                     Plan: ' . htmlspecialchars($planName) . '<br>
@@ -393,13 +398,13 @@ class StripeController extends Controller
                                     Team Streamly</b>
                                 </html>';
 
-                        Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-                            $message->to($user[0]->email, $user[0]->name)
-                                ->bcc('annu.sehrawat@oodles.io')
-                                ->subject('Subscription Activated - ' . env('APP_NAME'));
-                        });
-                    }
-                }
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                    $message->to($user->email, $user->name)
+                        ->bcc('annu.sehrawat@oodles.io')
+                        ->subject('Subscription Activated - ' . env('APP_NAME'));
+                });
+
+
         }
     }
 }
