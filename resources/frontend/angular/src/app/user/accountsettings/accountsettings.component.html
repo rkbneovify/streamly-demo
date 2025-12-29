@@ -22,7 +22,7 @@
         <div [ngClass]="{ acoount_user_password: true, 'h-auto': editMode }">
           <label for="">Password</label>
           <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
-          <ng-container *ngIf="editMode; else displayModePassword">
+          <ng-container *ngIf="editMode && isConnectedDeviceShow; else displayModePassword">
             <div *ngIf="editMode" [ngClass]="{
               'd-flex flex-column  old-password mt-2 gap-2': true,
               'password-height': editMode
