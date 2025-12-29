@@ -576,235 +576,259 @@ class UsersController extends Controller
         ]);
 
 
-        $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
+        try {
+            $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
 
-        $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
+            $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
 
-        // Handle password
-        if (!empty($input['password'])) {
-            $input['password'] = Hash::make($input['password']);
-        } else {
-            $input = Arr::except($input, ['password']);
-        }
-
-
-        $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
-
-        // $localZipcodes = DB::table('channels')
-        //     ->whereBetween('id', [134, 140])
-        //     ->pluck('zip_code')
-        //     ->toArray();
-
-        $predefinedLocalZipcodes = [
-            "85120",
-            "85215",
-            "85205",
-            "75662",
-            "08872",
-            "08904",
-            "18344",
-            "18438",
-            "18302",
-            "18326"
-        ];
-        //  channels
-        $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
-
-        $newZip = $request->zipcode;
-
-        // 1. If not a valid zipcode
-        if (!$zipcodeExists) {
-            Log::warning("Invalid zipcode entered: " . $newZip);
-            return response()->json([
-                'status' => 'invalid_zip',
-                'message' => 'Invalid Zipcode. User not created'
-            ], 421);
-        }
-
-        // 2. If it's a local channel but ZIP not in predefined and force_add not present
-        if (
-            $request->channel_availability == "2" &&
-            !in_array($newZip, $predefinedLocalZipcodes) &&
-            (!$request->has('force_add') || $request->force_add != 1)
-        ) {
-            Log::info("ZIP not in local and force_add not set: " . $newZip);
-
-            // Force JSON response manually for AJAX call
-            return response()->json([
-                'status' => 'zipcode_not_in_local',
-                'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
-            ], 422);
-        }
+            // Handle password
+            if (!empty($input['password'])) {
+                $input['password'] = Hash::make($input['password']);
+            } else {
+                $input = Arr::except($input, ['password']);
+            }
 
 
+            $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();
 
-        // 3. Add zip to local channels if needed
-        if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
-            foreach ($localChannelIds as $channelId) {
-                $channel = DB::table('channels')->where('id', $channelId)->first();
-                if ($channel) {
-                    $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
-                    if (!in_array($newZip, $existingZipcodes)) {
-                        $existingZipcodes[] = $newZip;
+            // $localZipcodes = DB::table('channels')
+            //     ->whereBetween('id', [134, 140])
+            //     ->pluck('zip_code')
+            //     ->toArray();
 
-                        DB::table('channels')->where('id', $channelId)->update([
-                            'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
-                        ]);
+            $predefinedLocalZipcodes = [
+                "85120",
+                "85215",
+                "85205",
+                "75662",
+                "08872",
+                "08904",
+                "18344",
+                "18438",
+                "18302",
+                "18326"
+            ];
+            //  channels
+            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
 
-                        Log::info("ZIP $newZip added to channel $channelId");
+            $newZip = $request->zipcode;
+
+            // 1. If not a valid zipcode
+            if (!$zipcodeExists) {
+                Log::warning("Invalid zipcode entered: " . $newZip);
+                return response()->json([
+                    'status' => 'invalid_zip',
+                    'message' => 'Invalid Zipcode. User not created'
+                ], 421);
+            }
+
+            // 2. If it's a local channel but ZIP not in predefined and force_add not present
+            if (
+                $request->channel_availability == "2" &&
+                !in_array($newZip, $predefinedLocalZipcodes) &&
+                (!$request->has('force_add') || $request->force_add != 1)
+            ) {
+                Log::info("ZIP not in local and force_add not set: " . $newZip);
+
+                // Force JSON response manually for AJAX call
+                return response()->json([
+                    'status' => 'zipcode_not_in_local',
+                    'message' => "This zipcode isn't available in your local channels. Do you want to add it?"
+                ], 422);
+            }
+
+
+
+            // 3. Add zip to local channels if needed
+            if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
+                foreach ($localChannelIds as $channelId) {
+                    $channel = DB::table('channels')->where('id', $channelId)->first();
+                    if ($channel) {
+                        $existingZipcodes = json_decode($channel->zip_code ?? '[]', true); // Make sure this matches your DB column
+                        if (!in_array($newZip, $existingZipcodes)) {
+                            $existingZipcodes[] = $newZip;
+
+                            DB::table('channels')->where('id', $channelId)->update([
+                                'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
+                            ]);
+
+                            Log::info("ZIP $newZip added to channel $channelId");
+                        }
                     }
                 }
             }
-        }
 
 
 
-        $user = User::find($id);
-
-        if ($request->has('connected_device')) {
-            $input['connected_device'] = $request->connected_device; // use new value
-        } else {
-            $input['connected_device'] = $user->connected_device; // keep old value
-        }
-
-        $user->update($input);
-
-        $tieruserId = 5;
-
-        // Step 1: Get previous roles
-        $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
-        $wasTierUser = in_array($tieruserId, $previousRoles);
-
-        // Step 2: Update roles
-        DB::table('role_user')->where('user_id', $id)->delete();
-        foreach ($request->input('roles') as $value) {
-            $user->attachRole($value);
-        }
-
-        // Step 3: Device & hotel room handling
-        $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
-
-        if (in_array($tieruserId, $request->input('roles'))) {
-            $existingRooms = DB::table('hotel_rooms')->where('user_id', $user->id)->orderBy('id')->get();
-            $existingCount = $existingRooms->count();
-
-            if ($newDeviceCount > $existingCount) {
-                // Add only the difference
-                $roomsToAdd = $newDeviceCount - $existingCount;
-                for ($i = 0; $i < $roomsToAdd; $i++) {
-                    DB::table('hotel_rooms')->insert([
-                        'user_id' => $user->id,
-                        'hotel_room' => 'Room' . ($existingCount + $i),
-                        'session_id' => null,
-                        'created_on' => now(),
-                        'modified_on' => now(),
-                    ]);
-                }
-            } elseif ($newDeviceCount < $existingCount) {
-                // Delete extra rooms from the end
+            $user = User::find($id);
+            $roleId = $user->roles[0]->id;
+            $roleName = $user->roles[0]->name;
 
 
-                $extraRooms = $existingRooms->slice($newDeviceCount);
-                foreach ($extraRooms as $room) {
-                    DB::table('hotel_rooms')->where('id', $room->id)->delete();
-                }
+
+
+            if ($request->has('connected_device')) {
+                $input['connected_device'] = $request->connected_device; // use new value
+            } else {
+                $input['connected_device'] = $user->connected_device; // keep old value
             }
-        } else {
-            // Not a tier user — delete all hotel rooms
-            DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
-        }
 
-        // Step 4: Update zipcode rule
-        DB::table('user_zipcode_rules')
-            ->updateOrInsert(
-                ['email' => $user->email],
-                [
-                    'validate' => $request->channel_availability,
-                    'zipcode' => $request->zipcode
-                ]
-            );
-        // ->update([
-        //     'validate' => $request->channel_availability,
-        //     'zipcode' => $request->zipcode
-        // ]);
+            $user->update($input);
 
-        // Step 5: Calculate subscription end date
-        $endsAt = null;
-        switch ($request->plan_duration) {
-            case '1 Month':
-                $endsAt = Carbon::now()->addMonth();
-                break;
-            case '3 Months':
-                $endsAt = Carbon::now()->addMonths(3);
-                break;
-            case '6 Months':
-                $endsAt = Carbon::now()->addMonths(6);
-                break;
-            case '12 Months':
-                $endsAt = Carbon::now()->addMonths(12);
-                break;
-            case 'Never':
-            default:
-                $endsAt = null;
-                break;
-        }
+            $tieruserId = 5;
 
-        // Step 6: Update subscription if tier user
-        // Step 6: Subscription logic
-        /*$isNowTierUser = in_array($tieruserId, $request->input('roles'));
+            // Step 1: Get previous roles
+            $previousRoles = DB::table('role_user')->where('user_id', $user->id)->pluck('role_id')->toArray();
+            $wasTierUser = in_array($tieruserId, $previousRoles);
 
-        if ($isNowTierUser) {
-            // If user is a tier user, insert or update subscription with new quantity
+
+
+
+            // If role try to change/ remove old session and device
+            if ($roleId != $request->roles[0]) {
+                SessionTable::where('users_id', $user->id)->delete();
+                HoaUser::where('user_id', $user->id)->delete();
+                HotelRoomTable::where('user_id', $user->id)->delete();
+
+            }
+
+            // Step 2: Update roles
+            DB::table('role_user')->where('user_id', $id)->delete();
+            foreach ($request->input('roles') as $value) {
+                $user->attachRole($value);
+            }
+
+
+
+            // Step 3: Device & hotel room handling
+            $newDeviceCount = $request->filled('number_of_devices') ? (int) $request->number_of_devices : 0;
+
+            if (in_array($tieruserId, $request->input('roles'))) {
+                $existingRooms = DB::table('hotel_rooms')->where('user_id', $user->id)->orderBy('id')->get();
+                $existingCount = $existingRooms->count();
+
+                if ($newDeviceCount > $existingCount) {
+                    // Add only the difference
+                    $roomsToAdd = $newDeviceCount - $existingCount;
+                    for ($i = 0; $i < $roomsToAdd; $i++) {
+                        DB::table('hotel_rooms')->insert([
+                            'user_id' => $user->id,
+                            'hotel_room' => 'Room' . ($existingCount + $i),
+                            'session_id' => null,
+                            'created_on' => now(),
+                            'modified_on' => now(),
+                        ]);
+                    }
+                } elseif ($newDeviceCount < $existingCount) {
+                    // Delete extra rooms from the end
+
+
+                    $extraRooms = $existingRooms->slice($newDeviceCount);
+                    foreach ($extraRooms as $room) {
+                        DB::table('hotel_rooms')->where('id', $room->id)->delete();
+                    }
+                }
+            } else {
+                // Not a tier user — delete all hotel rooms
+                DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
+            }
+
+            // Step 4: Update zipcode rule
+            DB::table('user_zipcode_rules')
+                ->updateOrInsert(
+                    ['email' => $user->email],
+                    [
+                        'validate' => $request->channel_availability,
+                        'zipcode' => $request->zipcode
+                    ]
+                );
+            // ->update([
+            //     'validate' => $request->channel_availability,
+            //     'zipcode' => $request->zipcode
+            // ]);
+
+            // Step 5: Calculate subscription end date
+            $endsAt = null;
+            switch ($request->plan_duration) {
+                case '1 Month':
+                    $endsAt = Carbon::now()->addMonth();
+                    break;
+                case '3 Months':
+                    $endsAt = Carbon::now()->addMonths(3);
+                    break;
+                case '6 Months':
+                    $endsAt = Carbon::now()->addMonths(6);
+                    break;
+                case '12 Months':
+                    $endsAt = Carbon::now()->addMonths(12);
+                    break;
+                case 'Never':
+                default:
+                    $endsAt = null;
+                    break;
+            }
+
+            // Step 6: Update subscription if tier user
+            // Step 6: Subscription logic
+            /*$isNowTierUser = in_array($tieruserId, $request->input('roles'));
+
+            if ($isNowTierUser) {
+                // If user is a tier user, insert or update subscription with new quantity
+                DB::table('subscriptions')->updateOrInsert(
+                    ['user_id' => $user->id],
+                    [
+                        'name' => 'main',
+                        'stripe_status' => 'active',
+                        'ends_at' => null,
+                        'renews_at' => $endsAt,
+                        'quantity' => $newDeviceCount,
+                        'updated_at' => now(),
+                    ]
+                );
+            } elseif ($wasTierUser && !$isNowTierUser) {
+                // If user was a tier user and is no longer => update quantity to 1
+                DB::table('subscriptions')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'quantity' => 1,
+                        'updated_at' => now(),
+                    ]);
+            }*/
+
+            // new subscription logic
+
             DB::table('subscriptions')->updateOrInsert(
                 ['user_id' => $user->id],
                 [
                     'name' => 'main',
                     'stripe_status' => 'active',
+                    'plan_duration' => $request->plan_duration,
                     'ends_at' => null,
                     'renews_at' => $endsAt,
                     'quantity' => $newDeviceCount,
                     'updated_at' => now(),
                 ]
             );
-        } elseif ($wasTierUser && !$isNowTierUser) {
-            // If user was a tier user and is no longer => update quantity to 1
-            DB::table('subscriptions')
-                ->where('user_id', $user->id)
-                ->update([
-                    'quantity' => 1,
-                    'updated_at' => now(),
-                ]);
-        }*/
 
-        // new subscription logic
+            // Hoa update logic
+            if (in_array(7, $request->input('roles'))) {
 
-        DB::table('subscriptions')->updateOrInsert(
-            ['user_id' => $user->id],
-            [
-                'name' => 'main',
-                'stripe_status' => 'active',
-                'plan_duration' => $request->plan_duration,
-                'ends_at' => null,
-                'renews_at' => $endsAt,
-                'quantity' => $newDeviceCount,
-                'updated_at' => now(),
-            ]
-        );
+                $updateStatus = HoaUser::updateDevice($user, $request);
+                if ($updateStatus != null && $updateStatus['status'] === false) {
+                    return redirect('admin/users')->with('info', $updateStatus['message']);
+                }
 
-        // Hoa update logic
-        if (in_array(7, $request->input('roles'))) {
-
-            $updateStatus = HoaUser::updateDevice($user, $request);
-            if ($updateStatus != null && $updateStatus['status'] === false) {
-                return redirect('admin/users')->with('info', $updateStatus['message']);
             }
 
+
+
+
+            return redirect('admin/users')->with('info', 'User Updated Successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect('admin/users')
+                ->with('info', $th->getMessage());
         }
-
-
-
-
-        return redirect('admin/users')->with('info', 'User Updated Successfully');
     }
 
 
