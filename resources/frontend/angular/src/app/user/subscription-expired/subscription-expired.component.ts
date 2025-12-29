@@ -3,38 +3,56 @@ import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { DataSharingService } from '../../services/data-sharing.service';
 import { AuthService } from '../../services/authService/authservice.service';
+import { NgIf } from '@angular/common';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
+
 
 @Component({
   selector: 'app-subscription-expired',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgIf],
   templateUrl: './subscription-expired.component.html',
   styleUrl: './subscription-expired.component.scss'
 })
 export class SubscriptionExpiredComponent implements OnInit {
 
   access_Token: any;
+  error: any;
 
 
-  constructor(private route:Router,private crud: CrudService, private currentData:DataSharingService,private setLocalData:AuthService,){
+  constructor(private route: Router,
+    private crud: CrudService,
+    private currentData: DataSharingService,
+    private setLocalData: AuthService,
+    private sweetAlert: SweetalertService
+  ) {
   }
-  
+
   ngOnInit(): void {
     this.loginSliders();
   }
 
   loginSliders() {
+    this.sweetAlert.loading();
     this.crud.getRequest('auth/channel-sliders')
-    .subscribe({
-      next:()=>{
-        let info = JSON.parse(localStorage.getItem('deviceInfo'));
-        // console.log(info);
-        info.subscribed = true;
-        localStorage.setItem('deviceInfo', JSON.stringify(info));
-        setTimeout(() => {
-          this.route.navigateByUrl('/user');
-        }, 1000);
-      }
-    });
+      .subscribe({
+        next: (res) => {
+          this.sweetAlert.close();
+          let info = JSON.parse(localStorage.getItem('deviceInfo'));
+          // console.log(info);
+          info.subscribed = true;
+          localStorage.setItem('deviceInfo', JSON.stringify(info));
+          setTimeout(() => {
+            this.route.navigateByUrl('/user');
+          }, 1000);
+
+        },
+        error: (err) => {
+          this.sweetAlert.close();
+          this.error = err.error;
+          // console.log('subscription Error : ', err.error)
+
+        }
+      });
   }
 }
