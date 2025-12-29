@@ -13,6 +13,7 @@ class StripeService
         $stripe = new StripeClient($key);
 
         return $stripe->prices->all([
+            'active' => true,
             'expand' => ['data.product'],
             'limit' => 100,
         ]);
@@ -197,6 +198,25 @@ class StripeService
 
 
         return $allInvoices->sortByDesc('created')->values();
+    }
+
+    public function getLatestInvoiceByCustomerId(string $customerId, $mode = 'Live')
+    {
+
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
+
+
+
+
+        $invoices = $stripe->invoices->all([
+            'customer' => $customerId,
+            'status' => 'open',
+            'limit' => 1, // get more from Stripe so we can paginate locally
+        ]);
+
+
+        return $invoices;
     }
 
 

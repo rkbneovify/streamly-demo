@@ -50,6 +50,8 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
                 // setLocal.setLocalStorage('cancelMessage',err.error.message);   
                 sendData.changeData(err.error.message);
                 route.navigateByUrl('user/subscription-cancel');
+                // with due bill url
+
                 deviceInfoData.subscribed = false;
                 localStorage.setItem('deviceInfo', JSON.stringify(deviceInfoData));
               }
