@@ -10,6 +10,7 @@
 |
 */
 
+use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -307,23 +308,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/hoa/sub-users-export/{id}', 'Admin\AdminHoaController@exportIntoExcel')->name('hoa.sub-users-export');
     Route::get('/hoa/sub-users-ordering/{id}', 'Admin\AdminHoaController@houseListOrdering')->name('hoa.sub-users-ordering');
 
-    // logs route for log checking
-    Route::get('/logs', function () {
-        $files = glob(storage_path('logs/*.log'));
-
-        if (empty($files)) {
-            return 'No logs found';
-        }
-
-        $content = '';
-
-        foreach ($files as $file) {
-            $content .= "\n\n===== " . basename($file) . " =====\n\n";
-            $content .= file_get_contents($file);
-        }
-
-        return response("<pre>{$content}</pre>");
-    });
+    // logs route for log checking and clear
+    Route::get('/logs', [AdminServerLogController::class, 'index']);
+    Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
 });
 
 /*Prev Next channel*/
