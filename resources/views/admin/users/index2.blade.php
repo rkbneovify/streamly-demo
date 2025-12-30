@@ -1,5 +1,6 @@
 @extends('master')
 @section('stylesheets')
+    <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <style>
         .custom-switch {
@@ -163,42 +164,6 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             background: none;
-        }
-
-        .btn-with-img {
-            display: inline-flex;
-            width: 100%;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            background: #fff;
-            padding: 10px 10px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 6px 15px rgba(187, 186, 219, 0.4);
-            transition: transform 0.15s ease;
-            text-decoration: none;
-            color: inherit;
-
-            img {
-                width: 18px;
-                height: 18px;
-            }
-
-            &:hover {
-                outline: none;
-                color: #007bff;
-                transform: scale(0.95);
-            }
-
-            &:focus {
-                outline: none;
-            }
-
-
         }
     </style>
 @endsection
