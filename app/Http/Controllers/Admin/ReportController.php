@@ -1041,6 +1041,7 @@ class ReportController extends Controller
                 ['path' => $request->url(), 'query' => $request->query()]
             );
 
+            // return response()->json($paginatedInvoices);
             return view('admin.reports.subscription-invoices', [
                 'invoices' => $paginatedInvoices,
 
