@@ -224,7 +224,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('local-zipcode/delete/{id}', 'Admin\LocalZipcodeController@delete')->name('zipcode.local.channel.delete');
     Route::get('local-zipcode/disable/{zipcode}', 'Admin\LocalZipcodeController@statusDisableForAllLocalChannel')->name('zipcode.local.channel.disable');
     Route::get('local-zipcode/enable/{zipcode}', 'Admin\LocalZipcodeController@statusEnableForAllLocalChannel')->name('zipcode.local.channel.enable');
-
+    Route::get('local-zipcode/export/data', 'Admin\LocalZipcodeController@export')->name('zipcode.local.export');
 
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
     Route::get('localzipcode', 'Admin\ZipcodeController@localZipcodes');
@@ -308,7 +308,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/hoa/sub-users-export/{id}', 'Admin\AdminHoaController@exportIntoExcel')->name('hoa.sub-users-export');
     Route::get('/hoa/sub-users-ordering/{id}', 'Admin\AdminHoaController@houseListOrdering')->name('hoa.sub-users-ordering');
 
-    // logs route for log checking and clear
+    // logs route for log checking and
     Route::get('/logs', [AdminServerLogController::class, 'index']);
     Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
 });
