@@ -370,9 +370,10 @@ class APIController extends Controller
                     ->select('user_ip', 'logintime')
                     ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id, SUBSTRING_INDEX(mac_address, '#~', 1) device_name, device")
                     ->where([
-                        ['status', '=', '1'],
+
                         ['users_id', '=', $uid],
                     ])
+                    ->where('status', 1)
                     ->orderBy('connected_devices', 'asc');
 
                 $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
