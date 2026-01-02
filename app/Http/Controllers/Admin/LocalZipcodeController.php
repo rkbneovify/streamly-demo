@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\LocalZipcodeExport;
 use App\LocalZipcode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Zipcode;
 use Illuminate\Support\Facades\DB;
-use League\Flysystem\Adapter\Local;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class LocalZipcodeController extends Controller
@@ -16,39 +17,23 @@ class LocalZipcodeController extends Controller
     public function index(Request $request)
     {
         $query = LocalZipcode::query();
+        $query->groupBy('zipcode')
+            ->search($request->search)
+            ->status($request->status)
+            ->orderByCreated($request->created);
 
 
-
-        $query->groupBy('zipcode');
-
-        $query->when($request->has('search'), function ($q) use ($request) {
-            $search = $request->input('search');
-            $q->where('zipcode', 'like', "%$search%")
-                ->orWhere('city', 'like', "%$search%")
-                ->orWhere('state', 'like', "%$search%");
-        });
-        $query->when($request->has('status'), function ($q) use ($request) {
-            $status = $request->input('status');
-            if ($status == '1' || $status == '0') {
-                $q->where('status', $status);
-            }
-        });
-        $query->when($request->has('created'), function ($q) use ($request) {
-            if ($request->input('created') === 'asc') {
-                $q->orderBy('created_at', 'asc');
-            } else {
-                $q->orderBy('created_at', 'desc');
-            }
-
-        });
+        if (!$request->has('created')) {
+            $query->orderByDesc('created_at');
+        }
         $limit = $request->input('limit', 10);
         $zipcodes = $query->paginate($limit);
-        $transformed = $zipcodes->getCollection()->map(function ($item) {
+        $zipcodes->getCollection()->transform(function ($item) {
             $item->channel_count = LocalZipcode::zipcodeStatusCountByUse($item->zipcode);
             return $item;
         });
-        $zipcodes->setCollection($transformed);
-        // return response()->json($zipcodes);
+
+
         if ($request->ajax()) {
             return view('admin.zipcodes.local.index-table', compact('zipcodes'));
         }
@@ -396,6 +381,12 @@ class LocalZipcodeController extends Controller
             Alert::error('Error', 'Something went wrong ! Please try again .');
             return redirect()->back();
         }
+    }
+
+
+    public function export(Request $request)
+    {
+        return Excel::download(new LocalZipcodeExport($request), 'local-zipcode-list' . now()->format('d-m-Y_H-i-s') . '.xlsx');
     }
 
 
