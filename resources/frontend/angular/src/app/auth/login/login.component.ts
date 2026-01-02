@@ -265,6 +265,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleDeviceLimitError(err: any, formData: any) {
+    localStorage.setItem('role', JSON.stringify(err.error.role));
     localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
     localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
     localStorage.setItem('loginDetails', JSON.stringify(formData));
