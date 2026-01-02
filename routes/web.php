@@ -10,6 +10,7 @@
 |
 */
 
+use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
@@ -311,6 +312,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // logs route for log checking and
     Route::get('/logs', [AdminServerLogController::class, 'index']);
     Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
+    // Gracenote sync 
+    Route::get('/gracenote/channel/{prgSvcId}', [AdminGracenoteController::class, 'channelByPrgSvcId']);
 });
 
 /*Prev Next channel*/
