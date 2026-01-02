@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
 import { AuthService } from '../../services/authService/authservice.service';
+import { json } from 'node:stream/consumers';
 
 @Component({
   selector: 'app-remove-device',
@@ -22,6 +23,7 @@ export class RemoveDeviceComponent implements OnInit {
   deviceId: Array<string> = [];
   totalDevices: number;
   loading: { [key: string]: boolean } = {};
+  isTierRole: boolean | null;
 
   constructor(
     private apiService: CrudService,
@@ -31,6 +33,8 @@ export class RemoveDeviceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isTierRole = ('tieruser' == JSON.parse(localStorage.getItem('role')));
+    console.log("User role :  ", this.isTierRole);
     const jsonData = localStorage.getItem('loggedInDeviceDetail');
     this.totalDevices = Number(localStorage.getItem('numberOfDevices') || 0);
 
