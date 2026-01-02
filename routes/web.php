@@ -10,6 +10,8 @@
 |
 */
 
+use App\Http\Controllers\Admin\AdminGracenoteController;
+use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -223,7 +225,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('local-zipcode/delete/{id}', 'Admin\LocalZipcodeController@delete')->name('zipcode.local.channel.delete');
     Route::get('local-zipcode/disable/{zipcode}', 'Admin\LocalZipcodeController@statusDisableForAllLocalChannel')->name('zipcode.local.channel.disable');
     Route::get('local-zipcode/enable/{zipcode}', 'Admin\LocalZipcodeController@statusEnableForAllLocalChannel')->name('zipcode.local.channel.enable');
-
+    Route::get('local-zipcode/export/data', 'Admin\LocalZipcodeController@export')->name('zipcode.local.export');
 
     Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
     Route::get('localzipcode', 'Admin\ZipcodeController@localZipcodes');
@@ -307,23 +309,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/hoa/sub-users-export/{id}', 'Admin\AdminHoaController@exportIntoExcel')->name('hoa.sub-users-export');
     Route::get('/hoa/sub-users-ordering/{id}', 'Admin\AdminHoaController@houseListOrdering')->name('hoa.sub-users-ordering');
 
-    // logs route for log checking
-    Route::get('/logs', function () {
-        $files = glob(storage_path('logs/*.log'));
-
-        if (empty($files)) {
-            return 'No logs found';
-        }
-
-        $content = '';
-
-        foreach ($files as $file) {
-            $content .= "\n\n===== " . basename($file) . " =====\n\n";
-            $content .= file_get_contents($file);
-        }
-
-        return response("<pre>{$content}</pre>");
-    });
+    // logs route for log checking and
+    Route::get('/logs', [AdminServerLogController::class, 'index']);
+    Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
+    // Gracenote sync 
+    Route::get('/gracenote/channel/{prgSvcId}', [AdminGracenoteController::class, 'channelByPrgSvcId']);
 });
 
 /*Prev Next channel*/
