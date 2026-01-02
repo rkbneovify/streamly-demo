@@ -70,6 +70,10 @@
               <p class="dev_heading">Device Name</p>
               <p>{{(data?.personaldevicename=='empty'?'-':data?.personaldevicename??'-')}}</p>
             </div>
+            <div class="remove_dev_con my-3 d-flex justify-content-between">
+              <p class="dev_heading">Room No.</p>
+              <p>{{(data?.hotel_room??'-')}}</p>
+            </div>
 
             <div class="remove_dev_con d-flex justify-content-between">
               <p class="dev_heading">{{data.device_type}}</p>
