@@ -1,5 +1,6 @@
 @extends('master')
 @section('stylesheets')
+    <link rel="stylesheet" href="{{ asset('dist/css/custom.css') }}">
     <style>
         video {
             width: 100%;
@@ -227,10 +228,16 @@
                             </div>
                         </div> --}}
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
+                            <a href="javascript:void(0)" class="btn-with-img btn-reset-all">
                                 <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
-                            </div>
+                                Reset filters</a>
+
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <a id="btnExport" href="{{ route('admin.zipcode.local.export') }}" class="btn-with-img">
+                                <img src="{{ asset('images/export.png') }}" alt="status icon">
+                                Export into Excel
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -349,22 +356,40 @@
 
         }
 
+        function updateExportUrl() {
+            let params = new URLSearchParams(window.location.search);
+
+            document.getElementById('btnExport').href =
+                "{{ route('admin.zipcode.local.export') }}" +
+                (params.toString() ? '?' + params.toString() : '');
+        }
+
         function fetchData(page = 1) {
 
             let search = $('input[name="search"]').val();
 
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+
+            // ✅ merge search into URL
+            if (search) {
+                params.set('search', search);
+            } else {
+                params.delete('search');
+            }
+
+            params.set('page', page);
+            // ✅ update browser URL (export reads from here)
+            history.pushState(null, '', url.toString());
+            updateExportUrl();
 
             $.ajax({
-                url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
-                    search + "&page=" + page,
+                url: url.toString(),
                 success: function(data) {
                     $('#user-data').html(data);
                     restoreSelectedData();
                 }
             });
-
-
-
         }
     </script>
 
@@ -577,6 +602,8 @@
 
 
         });
+
+
 
         $(document).on('change', '#sel_bulk_action', function(e) {
             e.preventDefault();
