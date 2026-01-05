@@ -58,9 +58,10 @@ class SessionTable extends Model
 
     public function pdname()
     {
-        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id');
+        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')
+            ->latest('updated_at');
 
-        // ->where('user_id', auth()->id());
+
     }
     public function pdInfo()
     {
@@ -69,8 +70,9 @@ class SessionTable extends Model
     }
     public function pdInfoPasscode()
     {
-        return $this->hasOne(PersonalDevice::class, 'passcode', 'passcode')
-            ->latest();
+        return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')
+            // ->whereNotNull('passcode')
+            ->latest('updated_at');
     }
     /**
     protected static function boot()
