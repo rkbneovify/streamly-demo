@@ -93,7 +93,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   dash_board_link: string = environment.baseUrl;
   isConnectedDeviceShow: boolean = false;
   isHoaMainUser: boolean = false;
-
+  urlList: Array<String> = [];
+  isSearchComponent: boolean = true;
   private searchSubject: Subject<string> = new Subject();
   constructor(
     private crud: CrudService,
@@ -105,6 +106,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedStateService: SharedStateService,
     private utilsService: UtilsService
   ) {
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.viewportScroller.scrollToPosition([0, 0]);
@@ -120,6 +122,22 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isMiniPlayer = this.sharedStateService.isMiniPlayer();
       console.log('shre ==>', this.sharedStateService.isMiniPlayer());
     })
+
+    this.urlList = [
+      '/user/connected-device',
+      '/user/connected-houses',
+      '/user/user-settings',
+      '/user/faq',
+      '/user/privacy-policy',
+      '/user/term-condition',
+      '/user/contact-us',
+      '/user/plan',
+      '/user/supported-devices',
+      '/user/report',
+      '/user/downloadapp'
+
+    ]
+
   }
 
   checkIsAdmin(): string {
@@ -140,6 +158,17 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (this.urlList.includes(event.urlAfterRedirects)) {
+          this.isSearchComponent = false;
+        } else {
+          this.isSearchComponent = true;
+        }
+        console.log("Current url :", event.urlAfterRedirects);
+      });
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
@@ -195,6 +224,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.getFavoriteList();
+
   }
 
   ngOnDestroy(): void {
