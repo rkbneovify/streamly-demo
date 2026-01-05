@@ -158,6 +158,10 @@ export class ConnectedHousesComponent {
   }
 
   showHomeAddPopUp() {
+    this.devicePerHouse = Array.from(
+      { length: Number(this.deviceLimitPerHouse) },
+      (_, i) => i + 1
+    );
     this.isLoadingAddHomeForm = false;
     document.getElementById('btnshowPopAddHouse').click();
 
