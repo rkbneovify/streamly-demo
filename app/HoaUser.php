@@ -272,12 +272,7 @@ class HoaUser extends Model
         // here $user as hoa sub user
         $uid = $user->user_id;
         return SessionTable::with([
-            'pdname' => function ($q) use ($uid, $user) {
-                $q->select('id', 'personal_devicename', 'device_id', 'user_id')
-                    ->whereNotNull('passcode')
-                    ->where('user_id', '=', $uid)
-                    ->where('passcode', '=', $user->passcode);
-            }
+            'pdname'
         ])
             ->where('passcode', $user->passcode)
             ->where("status", 1)
