@@ -80,7 +80,7 @@ class AdminHoaController extends Controller
             $user = HoaUser::where('passcode', $passcode)->first();
             $query = SessionTable::query();
             $query->with([
-                'pdInfoPasscode' => fn($query) => $query->where('passcode', $passcode),
+                'pdInfoPasscode'
             ]);
             $query->selectRaw("*, 
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
