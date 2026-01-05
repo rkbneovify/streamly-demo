@@ -41,6 +41,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
     } elseif ($userRole == "hoa" && HoaUser::getCurrentHoaUser()) {
         // Hoa sub user session count
 
+        $login_limit = HoaUser::getCurrentHoaUser()->device_limit;
         $active_session = SessionTable::where('passcode', request()->passcode)
             ->where('is_main_account', 0)
             ->where('status', 1)
@@ -250,7 +251,12 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     'Access-Control-Allow-Origin' => '*',
                 ])->send();
     }
+
+
+
 }
+
+
 
 function checkLoginLimitX($user_id, $token, $deviceDetails)
 {
