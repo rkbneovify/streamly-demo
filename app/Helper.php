@@ -1797,6 +1797,7 @@ function personaldeviceTableStore($user_id, $deviceDetails)
     if (count($device_count) == 0) {
         $personalDevice = new PersonalDevice();
         $personalDevice->user_id = $user_id;
+        $personalDevice->passcode = HoaUser::getCurrentHoaUser() != null ? request()->passcode : null;
         $personalDevice->device_id = trim($deviceid);
         $result = $personalDevice->save();
         $LastInsertId = $personalDevice->id;
