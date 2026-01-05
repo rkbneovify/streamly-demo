@@ -133,7 +133,7 @@
               /> -->
             </div>
             <div class="searchbar_pro d-flex gap-2">
-              <div class="search_Bar">
+              <div *ngIf="isSearchComponent" class="search_Bar">
                 <input type="text" placeholder="" [(ngModel)]="searchTerm" (input)="onSearch($event.target)"
                   (focus)="checkData()" />
                 <img loading="lazy" src="../../assets/dummy-img/search-md.svg" alt="" />
