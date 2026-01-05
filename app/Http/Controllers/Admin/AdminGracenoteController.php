@@ -31,8 +31,8 @@ class AdminGracenoteController extends Controller
         // $sourceData = json_decode(json_encode($this->gracenote->getSourceByPrgSvcId($prgSvcId)));
         // $this->gracenote->updateGracenoteSourceDbByPrgSvcId($prgSvcId, $sourceData->sources->prgSvcs->prgSvc);
 
-        $this->gracenote->addPrograms($prgSvcId);
-        return $this->gracenote->insertProgramData($prgSvcId);
+        // $this->gracenote->addPrograms($prgSvcId);
+        // return $this->gracenote->insertProgramData($prgSvcId);
 
         return $this->startAction(function () use ($prgSvcId) {
             $this->gracenote->insertProgramData($prgSvcId);
