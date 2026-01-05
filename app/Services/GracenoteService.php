@@ -129,7 +129,6 @@ class GracenoteService
 
         $startDate = Carbon::today('UTC')
             ->startOfDay()
-            ->subHours(10)
             ->format('Y-m-d\TH:i:s\Z'); //'2024-05-16';
         $endDate = Carbon::today('UTC')->addDays(2)->endOfDay()->format('Y-m-d\TH:i:s\Z'); //'2024-05-17'
         $scheduleResponse = $client->get($this->baseUrl . '/Schedules', [
@@ -258,7 +257,7 @@ class GracenoteService
     {
         $today = Carbon::today()->toDateString();
         $programList = collect($this->getProgramList($prgSvcId))
-            ->filter(fn($item) => $item['date'] === $today)
+            // ->filter(fn($item) => $item['date'] === $today)
             ->sortBy(function ($item) {
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
