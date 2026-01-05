@@ -69,6 +69,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private utilsService: UtilsService
   ) {
+    // console.log('Current url: ', this.router.url)
     this.updateuserDetatils = this.fb.group({
       fullname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
