@@ -130,7 +130,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                         $address['hotel_room'] = $address->hotel->hotel_room;
                     }
 
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
                     unset($address['hotel']);
                     unset($address['device']);
@@ -162,7 +162,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
                     $address['session_id'] = HashUserID($address['id']);
 
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
                     unset($address->pdname);
                     unset($address['device']);
@@ -217,7 +217,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
                     $address['session_id'] = HashUserID($address['id']);
 
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
                     unset($address->pdname);
                     unset($address['device']);
@@ -336,7 +336,7 @@ function checkLoginLimitX($user_id, $token, $deviceDetails)
                         $address['hotel_room'] = $address->hotel->hotel_room;
                     }
 
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
                     unset($address['hotel']);
                     unset($address['device']);
@@ -366,7 +366,7 @@ function checkLoginLimitX($user_id, $token, $deviceDetails)
 
                     $address['session_id'] = HashUserID($address['id']);
 
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
                     unset($address->pdname);
                     unset($address['device']);
@@ -2274,7 +2274,7 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
 
             $address['session_id'] = HashUserID($address['id']);
 
-            $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+            $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
             $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
             unset($address->pdname);
             unset($address['device']);
