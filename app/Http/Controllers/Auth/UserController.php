@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\HoaUser;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
@@ -31,11 +32,34 @@ class UserController extends Controller
                 'message' => $validator->errors()
             ], 400);
         } else {
+
+            $hoaUser = HoaUser::getCurrentSubUserByToken();
+            if ($hoaUser != null) {
+                DB::beginTransaction();
+                try {
+                    $hoaUser->name = $request->name;
+                    $hoaUser->save();
+                    DB::commit();
+                    return response()->json([
+                        'success' => false,
+                        'response_code' => 200,
+                        'message' => 'Account Details updated successfully.'
+                    ], 200);
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    //throw $th;
+
+                    return response()->json(['success' => false, 'response_code' => 500, 'message' => 'Something went wrong !'], 500);
+                }
+            }
+
+
+
             $user = JWTAuth::user();
             if ($user) {
 
                 if ($request->has('name')) {
-                    if (strlen(trim($request['name'])) <  1) {
+                    if (strlen(trim($request['name'])) < 1) {
                         $response = array('success' => false, 'response_code' => 400, 'message' => 'Please enter correct name');
                         return response()->json($response, 401);
                     }
