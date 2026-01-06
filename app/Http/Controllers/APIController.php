@@ -25,6 +25,7 @@ use App\Models\RecentChannel;
 use App\Models\FrontendText;
 use App\Models\Gracenote;
 use App\Models\Subscription;
+use App\Setting;
 use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -892,10 +893,11 @@ class APIController extends Controller
 
     public function qrvisibility()
     {
+        $setting = Setting::where('key_name', 'qrvisibility')->first();
         $return = array(
-            'visible' => false
+            'visible' => $setting->value == '1' ? true : false
         );
-        return response()->json($return, 200);
+        return response()->json($return);
     }
 
     public function connecteddeviceemail(Request $request)
