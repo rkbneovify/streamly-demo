@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class HoaUser extends Model
 {
@@ -224,8 +225,8 @@ class HoaUser extends Model
     public static function updateDevice($user, Request $request)
     {
 
-        $houseCount = ($user->num_of_houses - $request->num_of_houses);
-        $deviceLimitCountPerHouse = ($user->device_per_house - $request->device_per_house);
+        // $houseCount = ($user->num_of_houses - $request->num_of_houses);
+        // $deviceLimitCountPerHouse = ($user->device_per_house - $request->device_per_house);
 
         $addedHouseCount = HoaUser::where('user_id', $user->id)
             ->count();
@@ -244,10 +245,23 @@ class HoaUser extends Model
             ];
         }
 
-        if ($addedHouseCount <= 0) {
-            $user->device_per_house = $request->device_per_house;
+
+        if ($user->device_per_house != $request->device_per_house) {
+            if ($user->device_per_house > $request->device_per_house) {
+                $passcodeList = HoaUser::where('user_id', $user->id)->pluck('passcode');
+                SessionTable::where('status', 0)->delete();
+                $sessions = SessionTable::whereNotNull('passcode')
+                    ->whereIn('passcode', $passcodeList)
+                    ->get();
+                foreach ($sessions as $item) {
+                    JWTAuth::setToken($item->access_token)->invalidate(true);
+                    $item->delete();
+                }
+
+            }
         }
         $user->num_of_houses = $request->num_of_houses;
+        $user->device_per_house = $request->device_per_house;
         $user->save();
         return null;
 
