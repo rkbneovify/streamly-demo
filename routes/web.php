@@ -19,6 +19,7 @@ use App\Http\Controllers\AngularController;
 use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Api\ApiHoaController;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Artisan;
 
 Route::view('/botman/chat', 'frontend.botman');
@@ -166,6 +167,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::put('/channel-slider-edit/{id}', 'Admin\ChannelSliderController@channelSlideUpdate');
 
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
+    Route::get('/qr-code/status/', 'Admin\StripekeysController@qrCodeStatus')->name('qr-code.status');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice')->name('users.connected.devices'); //connected devices
     Route::get('/users/connected-new/{id}', 'Admin\UsersController@connectedDeviceNew')->name('users.connected.devices.new'); //connected devices
