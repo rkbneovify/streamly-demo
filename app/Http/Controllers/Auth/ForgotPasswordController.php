@@ -39,6 +39,9 @@ class ForgotPasswordController extends Controller
 
         if ($request->wantsJson()) {
             $user = User::where('email', $request->input('email'))->first();
+            if ($user == null) {
+                return response()->json(['success' => false, 'response_code' => 404, 'message' => 'Data not found !'], 404);
+            }
             if ($user->is_active == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
             }

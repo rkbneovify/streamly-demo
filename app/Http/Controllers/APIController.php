@@ -380,7 +380,7 @@ class APIController extends Controller
                 $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                     $address['session_id'] = HashUserID($address['id']);
                     $address['hotel_room'] = $address->hotel ? $address->hotel->hotel_room : null;
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
 
                     // ✅ Fix logintime format (remove microseconds)
@@ -434,7 +434,7 @@ class APIController extends Controller
                     ->makeHidden('pdname')
                     ->map(function ($address) {
                         $address['session_id'] = HashUserID($address['id']);
-                        $address['personaldevicename'] = $address->pdname->personal_devicename ?? $address['device']['personaldevicename'] ?? 'empty';
+                        $address['personaldevicename'] = $address->pdname->personal_devicename ?? $address['device']['personaldevicename'] ?? null;
                         $address['personaldeviceid'] = HashUserID($address->pdname->id ?? $address['id']);
 
                         if (!empty($address['logintime'])) {
@@ -478,7 +478,7 @@ class APIController extends Controller
 
                 $s = $prevConnectDevicecount->get()->makeHidden('pdname')->map(function ($address) {
                     $address['session_id'] = HashUserID($address['id']);
-                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? 'empty';
+                    $address['personaldevicename'] = $address->pdname ? $address->pdname->personal_devicename : $address['device']['personaldevicename'] ?? null;
                     $address['personaldeviceid'] = HashUserID($address->pdname ? $address->pdname->id : $address['id']);
 
                     // ✅ Fix logintime format (remove microseconds)
