@@ -8,23 +8,47 @@ use Throwable;
 
 trait ActionTrait
 {
+    /**
+     * Holds current action (request scoped)
+     */
+    public static $currentAction = null;
+
     public function startAction(callable $callback)
     {
-        return new class ($callback) {
+        $action = new class {
 
+            public bool $terminated = false;
+            public $terminateResponse = null;
+
+            public function terminate($response): void
+            {
+                $this->terminated = true;
+                $this->terminateResponse = $response;
+                throw new \RuntimeException('__ACTION_TERMINATED__');
+            }
+        };
+
+        // expose action
+        self::$currentAction = $action;
+
+        return new class ($action, $callback) {
+
+            protected $action;
             protected $initialCallback;
             protected array $thenCallbacks = [];
-            protected $catchCallback = null;
-            protected $finallyCallback = null;
+            protected $catchCallback;
+            protected $finallyCallback;
+            protected $result;
 
-            public function __construct(callable $callback)
+            public function __construct($action, callable $callback)
             {
-                $this->initialCallback = $callback;
+                $this->action = $action;
+                $this->initialCallback = $callback; // ❌ no bindTo
             }
 
             public function then(callable $callback): self
             {
-                $this->thenCallbacks[] = $callback;
+                $this->thenCallbacks[] = $callback; // ❌ no bindTo
                 return $this;
             }
 
@@ -40,45 +64,59 @@ trait ActionTrait
                 return $this;
             }
 
-            /**
-             * Execute chain and RETURN response
-             */
             public function execute()
             {
                 DB::beginTransaction();
 
                 try {
-                    $result = ($this->initialCallback)();
+                    $this->result = ($this->initialCallback)();
 
-                    foreach ($this->thenCallbacks as $callback) {
-                        $result = $callback($result);
+                    foreach ($this->thenCallbacks as $cb) {
+                        $this->result = $cb($this->result);
                     }
 
                     DB::commit();
 
-                    // ✅ SUCCESS → return finally response
                     if ($this->finallyCallback) {
-                        return ($this->finallyCallback)();
+                        return ($this->finallyCallback)($this->result);
                     }
 
-                    return $result;
+                    return $this->result;
 
-                } catch (Throwable $e) {
+                } catch (Throwable $th) {
+
+                    if (
+                        $this->action->terminated &&
+                        $th->getMessage() === '__ACTION_TERMINATED__'
+                    ) {
+                        DB::rollBack();
+                        return $this->action->terminateResponse;
+                    }
+
                     DB::rollBack();
 
-                    if (!config('app.debug')) {
-                        Log::error($e);
-                        $e = new \Exception('Something went wrong. Please try again.');
-                    }
-
-                    // ❌ ERROR → return catch response
                     if ($this->catchCallback) {
-                        return ($this->catchCallback)($e);
+                        return ($this->catchCallback)($th);
                     }
 
-                    throw $e;
+                    throw $th;
+
+                } finally {
+                    ActionTrait::$currentAction = null;
                 }
             }
         };
+    }
+
+    /**
+     * terminate() usable from controller / traits / helpers
+     */
+    public function terminate($response): void
+    {
+        if (self::$currentAction) {
+            self::$currentAction->terminate($response);
+        }
+
+        throw new \RuntimeException('No active action to terminate.');
     }
 }
