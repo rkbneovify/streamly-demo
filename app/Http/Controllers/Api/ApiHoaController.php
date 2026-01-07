@@ -10,8 +10,10 @@ use App\Mail\HoaSubUserForgotPasscode;
 use App\Mail\HoaSubUserPasscodeRegenerate;
 use App\Mail\HoaSubUserWelcome;
 use App\Mail\VerifyHoaSubUserEmail;
+use App\Models\Zipcode;
 use App\PasscodeResetToken;
 use App\SessionTable;
+use App\Traits\ActionTrait;
 use App\Traits\ApiResponseTrait;
 use App\User;
 use Illuminate\Contracts\Session\Session;
@@ -33,7 +35,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ApiHoaController extends Controller
 {
 
-    use ApiResponseTrait;
+    use ApiResponseTrait, ActionTrait;
 
     public function index(Request $request)
     {
@@ -290,6 +292,108 @@ class ApiHoaController extends Controller
 
 
 
+    }
+
+    public function editHouse(Request $request)
+    {
+
+
+        $vaqlidator = validator($request->all(), [
+            'house_id' => 'required',
+            'name' => 'nullable|string|max:225',
+            'email' => 'nullable|email|max:225',
+            'house_no' => 'nullable|alpha_num|max:20',
+            'phone' => 'nullable|digits:10',
+            'plan_in_month' => 'nullable|in:1,3,6,12',
+            'device_limit' => 'nullable|integer',
+            'zipcode' => 'nullable|digits:5',
+        ]);
+        if ($vaqlidator->fails()) {
+            return $this->validationErrorResponse("Validation error !", $vaqlidator->errors());
+        }
+
+        return $this->startAction(function () use ($request) {
+            $hoaUser = HoaUser::where('id', $request->house_id)->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+            $hoaUser->house_no = $request->house_no;
+            $hoaUser->name = $request->name;
+            $hoaUser->phone = $request->phone;
+            $hoaUser->save();
+            return $hoaUser;
+
+        })->then(function ($user) use ($request) {
+            // Zipcode updated
+            $zipcode = Zipcode::where('zipcode', $request->zipcode)
+                ->where('status', 1)
+                ->first();
+            if ($zipcode == null) {
+                $this->terminate(
+                    $this->errorResponse("Our service not available at your area !", 400)
+                );
+            }
+            $user->zipcode = $request->zipcode;
+            $user->save();
+            return $user;
+        })->then(function ($user) use ($request) {
+            // logic if email already exists;
+            if ($request->email != $user->email) {
+                $this->terminate($this->errorResponse("You can't change email of house", 401));
+
+
+            }
+
+            $user->email = $request->email;
+            $user->save();
+            return $user;
+        })->then(function ($user) use ($request) {
+            //  device limit change
+
+            if ($request->device_limit > $user->device_limit) {
+                $totalDevices = auth()->user()->num_of_houses * auth()->user()->device_per_house;
+                $allotedDevices = HoaUser::where('user_id', auth()->id())
+                    ->whereNotNull('device_limit')
+                    ->sum('device_limit');
+                // remainig device calc
+                $remainingDevices = $totalDevices - $allotedDevices;
+                $deviceCountNeedToUpdate = $request->device_limit - $user->device_limit;
+
+                if ($deviceCountNeedToUpdate > $remainingDevices) {
+
+                    $this->terminate($this->errorResponse("You remaining device Limit is " . $remainingDevices));
+                }
+                $user->device_limit = $request->device_limit;
+                $user->save();
+            }
+
+
+            return $user;
+        })->then(function ($user) use ($request) {
+            // subscription change
+            $subscription = HoaSubUserSubscription::where('sub_user_id', $user->id)->latest()->first();
+            if ($subscription == null) {
+                $this->terminate($this->notFoundResponse("Subscription not found !"));
+            }
+
+            $currentPlan = intval($subscription->plan_name);
+            $timestampAfterMonth = date('Y-m-d H:i:s', strtotime('+' . $request->plan_in_month . ' month', strtotime($subscription->plan_start_at)));
+            if ($request->plan_in_month != $currentPlan) {
+                $subscription->plan_name = $request->plan_in_month . ' Month';
+                $subscription->plan_expires_at = $timestampAfterMonth;
+                $subscription->save();
+
+            }
+            return $user;
+
+        })->catch(function ($th) {
+
+            return $this->exceptionResponse($th);
+        })->finally(function ($user) {
+            return $this->successResponse([
+                'user' => $user
+            ], 'User updated successfully !');
+        })->execute();
     }
 
     public function resendMail($id)
