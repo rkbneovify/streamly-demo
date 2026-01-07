@@ -324,5 +324,37 @@ class HoaUser extends Model
     }
 
 
+    public function scopeStatus($query, $status)
+    {
+        if (in_array($status, ['0', '1'])) {
+            $query->where('status', $status);
+        }
+        return $query;
+    }
+
+    public function scopeSearch($query, $term)
+    {
+        if ($term) {
+            $query->where(function ($q) use ($term) {
+                $q->where('ordering', 'like', "%{$term}%")
+                    ->orWhere('passcode', 'like', "%{$term}%")
+                    ->orWhere('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('phone', 'like', "%{$term}%")
+                    ->orWhere('house_no', 'like', "%{$term}%");
+            });
+        }
+        return $query;
+    }
+
+    public function scopeSort($query, $sort)
+    {
+        if ($sort == 'latest') {
+            $query->latest();
+        } elseif ($sort == 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        }
+        return $query;
+    }
 
 }
