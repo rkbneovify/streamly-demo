@@ -315,7 +315,7 @@ class ApiHoaController extends Controller
         return $this->startAction(function () use ($request) {
             $hoaUser = HoaUser::where('id', $request->house_id)->first();
             if ($hoaUser == null) {
-                return $this->notFoundResponse("Data not found !");
+                $this->terminate($this->notFoundResponse("Data not found !"));
             }
             $hoaUser->house_no = $request->house_no;
             $hoaUser->name = $request->name;
@@ -338,7 +338,7 @@ class ApiHoaController extends Controller
             return $user;
         })->then(function ($user) use ($request) {
             // logic if email already exists;
-            if ($request->email != $user->email) {
+            if ($user->email != null) {
                 $this->terminate($this->errorResponse("You can't change email of house", 401));
 
 
