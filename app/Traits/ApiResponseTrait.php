@@ -6,9 +6,19 @@ use Throwable;
 trait ApiResponseTrait
 {
 
-    public function successResponse($data = [], $message = null, $code = 200, $success = true)
+    public function successResponse($message = null, $code = 200, $success = true, $data = null)
     {
 
+        if ($data == null) {
+            return response()->json(
+                [
+                    'success' => $success,
+                    'response_code' => $code,
+                    'message' => $message ?? 'Request processed successfully !',
+                ],
+                $code
+            );
+        }
         return response()->json(
             array_merge([
                 'success' => $success,
@@ -17,6 +27,9 @@ trait ApiResponseTrait
             ], $data),
             $code
         );
+
+
+
     }
     public function exceptionResponse($th, $message = null, $code = 500, $success = false)
     {
