@@ -316,8 +316,8 @@ class ApiHoaController extends Controller
             return $user;
         })->then(function ($user) use ($request) {
             // logic if email already exists;
-            if ($user->email != null) {
-                $this->terminate($this->errorResponse("You can't change email of house", 401));
+            if ($user->email != null && $request->email != $user->email) {
+                $this->terminate($this->errorResponse("You can't change email", 400));
 
 
             }
@@ -368,9 +368,11 @@ class ApiHoaController extends Controller
 
             return $this->exceptionResponse($th);
         })->finally(function ($user) {
-            return $this->successResponse([
+            return $this->dataResponse([
                 'user' => $user
             ], 'User updated successfully !');
+
+
         })->execute();
     }
 
