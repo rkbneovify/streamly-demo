@@ -33,7 +33,7 @@ export class ConnectedHousesComponent {
   deactiveHouseCount: number = null;
   deviceLimitPerHouse: number = null;
   page: number = 1;
-  status: number | null = null;
+  status: number | string | null = null;
   totalHouses: number = 0;
   txtSearch = new FormControl('');
   isSearch: boolean = false;
@@ -108,6 +108,7 @@ export class ConnectedHousesComponent {
         params.set('sort', String(sortBy));
       } else if (typeof sortBy === 'number') {
         params.set('status', String(sortBy));
+        this.status = sortBy;
       }
 
     }

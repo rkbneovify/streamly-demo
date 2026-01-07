@@ -53,38 +53,16 @@ class ApiHoaController extends Controller
 
 
 
-            $query->when($request->has('status'), function ($q) use ($request) {
-                if ($request->status != '') {
-                    $q->where('status', $request->status);
-                }
-            });
-
-
-            $query->when($request->has('q'), function ($q) use ($request) {
-                $txt = $request->q;
-                if ($txt != '') {
-                    $q->where(function ($subQuery) use ($txt) {
-                        $subQuery->where('ordering', 'like', "%{$txt}%")
-                            ->orWhere('passcode', 'like', "%{$txt}%")
-                            ->orWhere('name', 'like', "%{$txt}%")
-                            ->orWhere('email', 'like', "%{$txt}%")
-                            ->orWhere('phone', 'like', "%{$txt}%")
-                            ->orWhere('house_no', 'like', "%{$txt}%");
-                    });
-                }
-            });
+            $query->status($request->status)
+                ->search($request->search)
+                ->sort($request->sort);
 
 
 
-            $query->when($request->has('sort'), function ($q) use ($request) {
-                if ($request->sort == 'latest') {
-                    $q->latest();
-                } elseif ($request->sort == 'oldest') {
-                    $q->orderBy('created_at', 'asc');
-                }
 
 
-            });
+
+
             if ($request->sort == null) {
 
                 $query->latest();
