@@ -6,7 +6,7 @@ use Throwable;
 trait ApiResponseTrait
 {
 
-    public function successResponse($data = null, $message = null, $code = 200, $success = true)
+    public function successResponse($message = null, $code = 200, $success = true)
     {
 
         return response()->json(
