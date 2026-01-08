@@ -33,19 +33,14 @@ class HoaUser extends Model
     public function getSubscriptionExpireInAttribute()
     {
         // Get the latest two subscriptions for this user
-        $subscriptions = HoaSubUserSubscription::where('sub_user_id', $this->id)
-            ->latest() // order by created_at descending
-            ->limit(2)
-            ->get();
+        $subscription = HoaSubUserSubscription::where('sub_user_id', $this->id)
+            ->latest()->first();
 
         // If no subscriptions found
-        if ($subscriptions->isEmpty()) {
+        if ($subscription == null) {
             return null;
         }
 
-        // Get the second latest first, then the most recent
-        $secondLatest = $subscriptions->count() > 1 ? $subscriptions->last() : null;
-        $latest = $subscriptions->first();
 
         // Function to check and format expiry
         $checkExpiry = function ($subscription) {
@@ -66,12 +61,9 @@ class HoaUser extends Model
         };
 
         // ✅ Check second latest first
-        $result = $checkExpiry($secondLatest);
+        $result = $checkExpiry($subscription);
 
-        // If second latest is expired or missing, check latest one
-        if ($result === 'Expired' || $result === null) {
-            $result = $checkExpiry($latest);
-        }
+
 
         return $result ?? 0;
     }
