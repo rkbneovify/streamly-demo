@@ -15,6 +15,7 @@ use App\PasscodeResetToken;
 use App\SessionTable;
 use App\Traits\ActionTrait;
 use App\Traits\ApiResponseTrait;
+use App\Traits\DbTransactionTrait;
 use App\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ApiHoaController extends Controller
 {
 
-    use ApiResponseTrait, ActionTrait;
+    use ApiResponseTrait, ActionTrait, DbTransactionTrait;
 
     public function index(Request $request)
     {
@@ -374,6 +375,41 @@ class ApiHoaController extends Controller
 
 
         })->execute();
+
+    }
+
+    public function addPlan(Request $request)
+    {
+        $validator = Validator($request->all(), [
+            "house_id" => 'required|integer',
+            'plan_in_month' => 'nullable|in:1,3,6,12',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator->errors()->first(), $validator->errors());
+        }
+
+
+        return $this->dbTransaction(function () use ($request) {
+            $hoaUser = HoaUser::where('id', $request->house_id)->first();
+            if ($hoaUser == null) {
+                return $this->errorResponse("Data not found !", 404);
+            }
+
+            $startDate = Carbon::now()->format('Y-m-d H:i:s');
+            $endDate = Carbon::now()->addMonths(intval($request->plan_in_month))->format('Y-m-d H:i:s');
+            $subscription = new HoaSubUserSubscription();
+            $subscription->user_id = $hoaUser->user_id;
+            $subscription->sub_user_id = $hoaUser->id;
+            $subscription->passcode = $hoaUser->passcode;
+            $subscription->plan_name = $request->plan_in_month . " Month";
+            $subscription->plan_start_at = $startDate;
+            $subscription->plan_expires_at = $endDate;
+            $subscription->save();
+
+            return $this->successResponse("Plan added successfully !");
+
+
+        });
     }
 
     public function resendMail($id)
