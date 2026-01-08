@@ -11,7 +11,6 @@ use Illuminate\Support\Carbon;
 
 class AdminGracenoteController extends Controller
 {
-    use ActionTrait;
     private $gracenote;
     public function __construct(GracenoteService $gracenote)
     {
@@ -34,17 +33,17 @@ class AdminGracenoteController extends Controller
         // $this->gracenote->addPrograms($prgSvcId);
         // return $this->gracenote->insertProgramData($prgSvcId);
 
-        return $this->startAction(function () use ($prgSvcId) {
-            $this->gracenote->insertProgramData($prgSvcId);
-        })->catch(function ($e) {
-            return response()->json([
-                "message" => $e->getMessage()
-            ]);
-        })->finally(function () {
-            return response()->json([
-                "message" => "Data updated successfully !"
-            ]);
-        })->execute();
+        // return $this->startAction(function () use ($prgSvcId) {
+        //     $this->gracenote->insertProgramData($prgSvcId);
+        // })->catch(function ($e) {
+        //     return response()->json([
+        //         "message" => $e->getMessage()
+        //     ]);
+        // })->finally(function () {
+        //     return response()->json([
+        //         "message" => "Data updated successfully !"
+        //     ]);
+        // })->execute();
 
 
         $today = Carbon::today()->toDateString();
