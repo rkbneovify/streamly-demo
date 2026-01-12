@@ -194,18 +194,18 @@ export class ConnectedHousesComponent {
   }
 
   showHomeEditPopUp(houseId: number, email: string | null, deviceLimit: number | null, palnInMonth: string | null, event: any) {
+    document.getElementById('btnshowPopEditHouse').click();
+
     this.houseId = houseId;
     this.emailEdit = email !== null ? true : false;
-    document.getElementById('btnshowPopEditHouse').click();
-    document
-      .getElementById('btnEditReset')
-      .closest('form')
-      .reset();
+
+
     this.editHouseForm.patchValue({
       email: email,
       device_limit: deviceLimit,
       plan_in_month: [parseInt(palnInMonth).toString()]
     });
+
   }
 
 
@@ -336,13 +336,27 @@ export class ConnectedHousesComponent {
 
   }
   modelClose() {
+    document
+      .getElementById('btnReset')
+      .closest('form')
+      .reset();
     document.getElementById('btnshowPopAddHouse').click();
+
+
 
   }
   modelCloseAddPlan() {
+    document
+      .getElementById('btnAddPlanReset')
+      .closest('form')
+      .reset();
     document.getElementById('btnshowPopAddPlan').click();
   }
   modelCloseHouseEdit() {
+    document
+      .getElementById('btnEditReset')
+      .closest('form')
+      .reset();
     document.getElementById('btnshowPopEditHouse').click();
   }
   addHomeOnSubmit() {
