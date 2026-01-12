@@ -8,14 +8,14 @@
                 <h1>Connected Houses</h1>
                 <div class="home-total">
                     <div class="item-left">
-                        <p>Houses : {{(activeHouseCount+deactiveHouseCount)}}/{{totalHouses}} |
+                        <p>Houses : {{(activeHouseCount+deactiveHouseCount)}} |
                             <span class="text-success">{{activeHouseCount}} Active</span> |
                             <span class="text-danger">{{deactiveHouseCount}}
                                 Inactive</span>
                         </p>
                     </div>
                     <div class="item-right">
-                        <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
+                        <p> Devices : {{allotedDeviceCount??'' }}/{{ totalDevice??''}}</p>
                     </div>
                 </div>
                 <div class="search-and-btns">
@@ -114,11 +114,38 @@
                                 <div class="item-row">
                                     <p>Plan :</p>
 
-                                    <p [ngClass]="item.subscription_expire_in==0?'text-danger':'text-success'">
-                                        {{item.subscription === null?'-':(item.subscription_expire_in === 0?'Expired'
-                                        :item.subscription.plan_name)}}
+
+
+
+                                    @if (item.subscription_expire_in > 0) {
+                                    <p class="text-success">
+                                        <span>
+                                            {{ item.subscription?.plan_name || '-' }}
+                                        </span>
                                     </p>
+                                    }
+                                    @else if (item.subscription_expire_in == 0 && item.subscription == null) {
+                                    <p class="text-light">
+                                        <span>
+                                            {{ '-' }}
+                                        </span>
+                                    </p>
+                                    }
+                                    @else {
+                                    <p class="text-danger">
+                                        <span (click)="showAddPlanPopUp(item.id,$event)">
+                                            Expired <span class="text-light"></span>
+                                        </span>
+                                        <span class="text-light">&nbsp;|&nbsp;</span>
+                                        <span (click)="showAddPlanPopUp(item.id,$event)" class="text-success">Add
+                                            Plan
+                                        </span>
+                                    </p>
+                                    }
+
+
                                 </div>
+
                                 <div class="item-row">
                                     <p>Expired At :</p>
                                     <p>{{ getExpiryText(item) }}</p>
@@ -143,11 +170,17 @@
                                     <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
                                     <span>Deactive</span>
                                 </a>
-                                <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
-                                    (click)="resendMail(item.id, $event)" class="btn-item btn-send">
-                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
-                                    <span>Send Email</span>
+
+
+                                <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
+                                    class="btn-item btn-active">
+                                    <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
+                                    <span>Edit</span>
+
+
                                 </a>
+
+
                                 <a *ngIf="item.email_verified_at === null || item.status ===0"
                                     (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
@@ -155,12 +188,32 @@
 
 
                                 </a>
+                                <!-- <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
+                                    class="btn-item btn-active">
+                                    <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
+                                    <span>Edit</span>
 
 
+                                </a> -->
 
+
+                                @if (item.email !== null && item.edit_verify ===0 && item.email_verified_at === null) {
+                                <a (click)="resendEditVerificationMail(item.id, $event)" class="btn-item-md btn-send">
+                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                    <span>Send Email</span>
+                                </a>
+                                }
+                                @else {
+                                <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
+                                    (click)="resendMail(item.id, $event)" class="btn-item-md btn-send">
+                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                    <span>Send Email</span>
+                                </a>
+                                }
 
 
                             </div>
+
 
 
                         </div>
@@ -218,12 +271,8 @@
                                     </small>
                                 </div>
                                 <!-- end -->
-                                <select formControlName="device_limit" class="input_standred">
-                                    <option selected value="">Device Limit</option>
-                                    <option *ngFor="let num of devicePerHouse" [value]="num">
-                                        {{ num }}
-                                    </option>
-                                </select>
+                                <input type="text" class="input_standred" placeholder="Enter device limit"
+                                    formControlName="device_limit" />
                                 <div *ngIf="addHouseForm.get('device_limit')?.touched" class="text-danger">
                                     <small *ngIf="addHouseForm.get('device_limit')?.errors as e">
                                         {{ e['required'] && 'Device limit is required.' }}
@@ -272,6 +321,230 @@
             </div>
         </div>
     </div>
+
+    <!-- add plan  -->
+    <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopAddPlan"
+        id="btnshowPopAddPlan"></button>
+    <div class="modal fade" id="showPopAddPlan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered zipcode_correct">
+            <div class="modal-content showPopConf popup_bg margin-left-3">
+                <div class="modal-header p-0 m-0 d-flex justify-content-end">
+                    <div (click)="modelCloseAddPlan()" class="btn-cl">
+                        <img loading="lazy" class="pointer" aria-label="Close"
+                            src="../../../assets/dummy-img/x-circle.svg" alt="" />
+                    </div>
+                </div>
+                <div class="modal-body p-0 m-0">
+                    <div class="zip_top">
+                        <h3 class="d-flex gap-2 mt-2 mb-0">
+                            <span class="d-flex gap-2">
+                                <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+                                Add New Plan
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+                        <div class="zip_bottom_p">
+                            <form [formGroup]="addPlanForm" (ngSubmit)="handleAddPlanForm()"
+                                class="d-flex flex-column gap-2 justify-content-evenly">
+
+
+                                <select formControlName="plan_in_month" class="input_standred">
+                                    <option selected value="">Plan for Month</option>
+                                    <option value="1">1 Month</option>
+                                    <option value="3">3 Month</option>
+                                    <option value="6">6 Month</option>
+                                    <option value="12">12 Month</option>
+                                </select>
+                                <div *ngIf="addPlanForm.get('plan_in_month')?.touched" class="text-danger">
+                                    <small *ngIf="addPlanForm.get('plan_in_month')?.errors as e">
+                                        {{ e['required'] && 'Plan is required.' }}
+                                        {{ e['pattern'] && 'Plan is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div>
+                                <!-- end -->
+                                <input type="text" class="input_standred" placeholder="Enter device limit"
+                                    formControlName="device_limit" />
+
+                                <div *ngIf="addPlanForm.get('device_limit')?.touched" class="text-danger">
+                                    <small *ngIf="addPlanForm.get('device_limit')?.errors as e">
+                                        {{ e['required'] && 'Device limit is required.' }}
+                                        {{ e['pattern'] && 'Device limit is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div>
+                                <!-- end -->
+                                <!-- <input type="text" formControlName="amount" class="input_standred" placeholder="Enter Amount"
+                                    formControlName="amount" /> -->
+                                <div class="zip_bottom mt-3 d-flex gap-3 justify-content-evenly">
+                                    <button [class.spinner]="isLoadingAddHomeForm"
+                                        [disabled]="isLoadingAddPlanForm||!addPlanForm.valid" [ngClass]="{
+                                            'btn_2 position-relative': true,
+                                            'mb-2': true,
+                                            'btn-bg-gold': addPlanForm.valid
+                                        }" type="submit">
+                                        <span *ngIf="!isLoadingAddPlanForm">Submit</span>
+                                    </button>
+                                    <button id="btnAddPlanReset" class="btn_2 mb-2 w-auto align-self-center btn-bg-gold"
+                                        type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- edit house model -->
+    <button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopEditHouse"
+        id="btnshowPopEditHouse"></button>
+    <div class="modal fade" id="showPopEditHouse" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered zipcode_correct">
+            <div class="modal-content showPopConf popup_bg margin-left-3">
+                <div class="modal-header p-0 m-0 d-flex justify-content-end">
+                    <div (click)="modelCloseHouseEdit()" class="btn-cl">
+                        <img loading="lazy" class="pointer" aria-label="Close"
+                            src="../../../assets/dummy-img/x-circle.svg" alt="" />
+                    </div>
+                </div>
+                <div class="modal-body p-0 m-0">
+                    <div class="zip_top">
+                        <h3 class="d-flex gap-2 mt-2 mb-0">
+                            <span class="d-flex gap-2">
+                                <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+                                Edit House
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+                        <div class="zip_bottom_p">
+                            <form [formGroup]="editHouseForm" (ngSubmit)="handleEditHouseForm()"
+                                class="d-flex flex-column gap-2 justify-content-evenly">
+                                <!-- <input type="text" class="input_standred" placeholder="Enter house no."
+                                    formControlName="house_no" />
+
+                                <div *ngIf="addHouseForm.get('house_no')?.touched" class="text-danger">
+                                    <small *ngIf="addHouseForm.get('house_no')?.errors as e">
+                                        {{ e['required'] && 'House no. is required.' }}
+                                        {{ e['pattern'] && 'House no. is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div> -->
+                                <input type="text" [readonly]="editHouseForm.get('email')?.value !== null"
+                                    class="input_standred" placeholder="Enter Email" formControlName="email" />
+
+                                <div *ngIf="editHouseForm.get('email')?.touched" class="text-danger">
+                                    <small *ngIf="editHouseForm.get('email')?.errors as e">
+                                        {{ e['required'] && 'Email is required.' }}
+                                        {{ e['pattern'] && 'Email is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div>
+                                <!-- end -->
+                                <!-- <input type="text" class="input_standred" placeholder="Enter name"
+                                    formControlName="name" />
+
+                                <div *ngIf="addHouseForm.get('name')?.touched" class="text-danger">
+                                    <small *ngIf="addHouseForm.get('name')?.errors as e">
+                                        {{ e['required'] && 'Name is required.' }}
+                                        {{ e['pattern'] && 'Name is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div> -->
+                                <!-- end -->
+                                <!-- <input type="text" class="input_standred" placeholder="Enter phone"
+                                    formControlName="phone" />
+
+                                <div *ngIf="addHouseForm.get('phone')?.touched" class="text-danger">
+                                    <small *ngIf="addHouseForm.get('phone')?.errors as e">
+                                        {{ e['required'] && 'Phone is required.' }}
+                                        {{ e['pattern'] && 'Phone is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div> -->
+                                <!-- end -->
+                                <!-- <ng-select class="ng-select" formControlName="zipcode" [items]="zipcodes"
+                                    bindLabel="label" bindValue="value" placeholder="Enter your zipcode"
+                                    [searchable]="true" [loading]="zipcodeLoading" (search)="zipcodeOnSearch($event)"
+                                    (selected)="zipcodeOnSelected($event)">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        {{ item.label }}
+                                    </ng-template>
+                                    <ng-template ng-label-tmp let-item="item">
+                                        {{ item.value }}
+                                    </ng-template>
+                                </ng-select>
+
+                                <div *ngIf="addHouseForm.get('zipcode')?.touched" class="text-danger">
+                                    <small *ngIf="addHouseForm.get('zipcode')?.errors as e">
+                                        {{ e['required'] && 'Zipcode no. is required.' }}
+                                        {{ e['pattern'] && 'Zipcode no. is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div> -->
+                                <!--  -->
+                                <input type="text" class="input_standred" placeholder="Enter device limit"
+                                    formControlName="device_limit" />
+
+                                <div *ngIf="editHouseForm.get('device_limit')?.touched" class="text-danger">
+                                    <small *ngIf="editHouseForm.get('device_limit')?.errors as e">
+                                        {{ e['required'] && 'Device limit is required.' }}
+                                        {{ e['pattern'] && 'Device limit is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div>
+
+
+                                <!-- end -->
+                                <select formControlName="plan_in_month" class="input_standred">
+                                    <option selected value="">Plan for Month</option>
+                                    <option value="1">1 Month</option>
+                                    <option value="3">3 Month</option>
+                                    <option value="6">6 Month</option>
+                                    <option value="12">12 Month</option>
+                                </select>
+                                <div *ngIf="editHouseForm.get('plan_in_month')?.touched" class="text-danger">
+                                    <small *ngIf="editHouseForm.get('plan_in_month')?.errors as e">
+                                        {{ e['required'] && 'Plan is required.' }}
+                                        {{ e['pattern'] && 'Plan is not valid.' }}
+                                        {{ e['server'] }}
+                                    </small>
+                                </div>
+                                <!-- end -->
+                                <!-- <input type="text" formControlName="amount" class="input_standred" placeholder="Enter Amount"
+                                    formControlName="amount" /> -->
+                                <div class="zip_bottom mt-3 d-flex gap-3 justify-content-evenly">
+                                    <button [class.spinner]="isLoadingEditHomeForm"
+                                        [disabled]="isLoadingEditHomeForm||!editHouseForm.valid" [ngClass]="{
+                                            'btn_2 position-relative': true,
+                                            'mb-2': true,
+                                            'btn-bg-gold': editHouseForm.valid
+                                        }" type="submit">
+                                        <span *ngIf="!isLoadingEditHomeForm">Submit</span>
+                                    </button>
+                                    <button id="btnEditReset" class="btn_2 mb-2 w-auto align-self-center btn-bg-gold"
+                                        type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 

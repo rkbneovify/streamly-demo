@@ -11,11 +11,12 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
@@ -26,12 +27,18 @@ export class ConnectedHousesComponent {
   userData: any;
   housesList: Array<any> = [];
   addHouseForm: FormGroup;
+  editHouseForm: FormGroup;
+  addPlanForm: FormGroup;
+  isLoadingAddPlanForm: Boolean = false;
   isLoadingAddHomeForm: Boolean = false;
+  isLoadingEditHomeForm: Boolean = false;
   isLoadingItemAction: Boolean = false;
   houseId: number = null;
   activeHouseCount: number = null;
   deactiveHouseCount: number = null;
   deviceLimitPerHouse: number = null;
+  totalDevice: number = null;
+  allotedDeviceCount: number = null;
   page: number = 1;
   status: number | string | null = null;
   totalHouses: number = 0;
@@ -42,6 +49,8 @@ export class ConnectedHousesComponent {
   isAllSelected: Boolean = false;
   selectedCount: number | null = null;
   shortBy: number | string | null = null;
+  zipcodeLoading: boolean = false;
+  zipcodes: any[] = [];
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
@@ -132,6 +141,8 @@ export class ConnectedHousesComponent {
           this.deactiveHouseCount = res.deactive_house_count;
           this.deviceLimitPerHouse = res.device_limit_per_house;
           this.totalHouses = res.total_houses;
+          this.totalDevice = res.total_devices;
+          this.allotedDeviceCount = res.alloted_device_count;
           this.isMoreData = res.is_more_data;
 
 
@@ -165,16 +176,43 @@ export class ConnectedHousesComponent {
     );
     this.isLoadingAddHomeForm = false;
     document.getElementById('btnshowPopAddHouse').click();
-
+    document
+      .getElementById('btnReset')
+      .closest('form')
+      .reset();
 
   }
+
+  showAddPlanPopUp(houseId: number, event: any) {
+    this.houseId = houseId;
+    document.getElementById('btnshowPopAddPlan').click();
+    document
+      .getElementById('btnAddPlanReset')
+      .closest('form')
+      .reset();
+  }
+
+  showHomeEditPopUp(houseId: number, email: string | null, deviceLimit: number | null, palnInMonth: string | null, event: any) {
+    this.houseId = houseId;
+    document.getElementById('btnshowPopEditHouse').click();
+    document
+      .getElementById('btnEditReset')
+      .closest('form')
+      .reset();
+    this.editHouseForm.patchValue({
+      email: email,
+      device_limit: deviceLimit,
+      plan_in_month: [parseInt(palnInMonth).toString()]
+    });
+  }
+
 
 
 
   private initializeForms() {
 
 
-    this.addHouseForm = this.fb.group({
+    this.addHouseForm = new FormBuilder().group({
 
       email: ['', [Validators.email]],
       device_limit: ['', [
@@ -191,9 +229,101 @@ export class ConnectedHousesComponent {
 
     });
 
+    this.editHouseForm = new FormBuilder().group({
+
+      email: ['', [Validators.email]],
+      device_limit: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/)
+      ]],
+      plan_in_month: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/)
+      ]]
+    });
+
+
+    this.addPlanForm = new FormBuilder().group({
+      plan_in_month: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/)
+      ]],
+      device_limit: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/)
+      ]],
+    });
 
 
 
+
+  }
+  handleEditHouseForm() {
+
+    this.editHouseForm.markAllAsTouched();
+    if (this.editHouseForm.valid) {
+      // console.log("validation error : ", this.editHouseForm.value)
+      this.isLoadingEditHomeForm = true;
+
+      const data = {
+        house_id: this.houseId,
+        ...this.editHouseForm.value,
+        plan_in_month: String(this.editHouseForm.value.plan_in_month)
+      };
+      this.apiService.postRequest("auth/hoa/edit-house", data).subscribe({
+        next: (res: any) => {
+
+          this.isLoadingEditHomeForm = false;
+
+          if (res.success == true) {
+            this.toastr.success(res.message);
+            this.getHouseList(1, null, null);
+          }
+          document.getElementById('btnEditReset').click();
+          document.getElementById('btnshowPopEditHouse').click();
+        },
+        error: (err: any) => {
+          this.isLoadingEditHomeForm = false;
+          document.getElementById('btnEditReset').click();
+          document.getElementById('btnshowPopEditHouse').click();
+          // console.log("Error : ", err)
+          this.toastr.error(err.error?.message);
+        },
+      });
+
+    }
+
+  }
+  handleAddPlanForm() {
+    this.addPlanForm.markAllAsTouched();
+    if (this.addPlanForm.valid) {
+      this.isLoadingAddHomeForm = true;
+
+      const data = {
+        house_id: this.houseId,
+        ...this.addPlanForm.value
+      };
+      this.apiService.postRequest("auth/hoa/add-plan", data).subscribe({
+        next: (res: any) => {
+
+          this.isLoadingAddHomeForm = false;
+
+          if (res.success == true) {
+            this.toastr.success(res.message);
+            this.getHouseList(1, null, null);
+          }
+          document.getElementById('btnAddPlanReset').click();
+          document.getElementById('btnshowPopAddPlan').click();
+        },
+        error: (err: any) => {
+          this.isLoadingAddHomeForm = false;
+          document.getElementById('btnAddPlanReset').click();
+          document.getElementById('btnshowPopAddPlan').click();
+          this.toastr.error(err.error?.message);
+        },
+      });
+
+    }
   }
 
   clearTxtSearch() {
@@ -204,11 +334,14 @@ export class ConnectedHousesComponent {
 
   }
   modelClose() {
-    document.getElementById('btnReset').click();
+    document.getElementById('btnshowPopAddHouse').click();
 
-    setTimeout(() => {
-      document.getElementById('btnshowPopAddHouse').click();
-    }, 500); // 500 ms delay
+  }
+  modelCloseAddPlan() {
+    document.getElementById('btnshowPopAddPlan').click();
+  }
+  modelCloseHouseEdit() {
+    document.getElementById('btnshowPopEditHouse').click();
   }
   addHomeOnSubmit() {
     this.addHouseForm.markAllAsTouched();
@@ -347,6 +480,32 @@ export class ConnectedHousesComponent {
         }
       });
   }
+
+  resendEditVerificationMail(houseId: number, event: any) {
+    event.stopPropagation();
+    this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.houseId = houseId;
+          this.sweetAlert.loading();
+          this.apiService.postRequest(`auth/hoa/resend-edit-verify/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
+        }
+      });
+  }
+
 
   onScrollDown() {
     this.page++;
@@ -489,6 +648,37 @@ export class ConnectedHousesComponent {
 
 
 
+  zipcodeOnSearch(term: any) {
+
+    const query: string = term.term;
+    if (!query || query.length < 2) {
+      this.zipcodes = [];
+      return;
+    }
+    this.zipcodeLoading = !this.zipcodeLoading;
+
+    const data = {
+      search: query
+    }
+    this.apiService.postRequestWithDetails("/api/auth/getzipcodes", data).subscribe({
+      next: (res: any) => {
+        this.zipcodeLoading = !this.zipcodeLoading;
+        console.log("respons", res)
+        this.zipcodes = [...res.body];
+
+      },
+      error: (err: any) => {
+        console.log("respons", err)
+        this.zipcodeLoading = !this.zipcodeLoading;
+        this.toastr.error(err.error.message)
+      }
+    });
+  }
+
+
+  zipcodeOnSelected(event: any) {
+    console.log("selected value:", event);
+  }
 
   copyText(event: any, houseId: number) {
     event.stopPropagation();
