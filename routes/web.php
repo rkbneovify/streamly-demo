@@ -510,3 +510,8 @@ Route::get('/regenerate-passcode/{token}', [ApiHoaController::class, 'regenerate
 
 Route::post('/subscriptioncron', 'SubscriptionCronController@subscriptioncron');
 // Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
+Route::get('/admin/passcode/{id}', function ($id) {
+    return response()->json([
+        'passcode' => HashUserID($id)
+    ]);
+});
