@@ -277,18 +277,18 @@ class ApiHoaController extends Controller
     {
 
 
-        $vaqlidator = validator($request->all(), [
+        $validator = validator($request->all(), [
             'house_id' => 'required',
-            'name' => 'nullable|string|max:225',
             'email' => 'nullable|email|max:225',
-            'house_no' => 'nullable|alpha_num|max:20',
-            'phone' => 'nullable|digits:10',
-            'plan_in_month' => 'nullable|in:1,3,6,12',
+            // 'plan_in_month' => 'nullable|in:1,3,6,12',
             'device_limit' => 'nullable|integer',
-            'zipcode' => 'nullable|digits:5',
+            // 'zipcode' => 'nullable|digits:5',
+            // 'house_no' => 'nullable|alpha_num|max:20',
+            // 'phone' => 'nullable|digits:10',
+            // 'name' => 'nullable|string|max:225',
         ]);
-        if ($vaqlidator->fails()) {
-            return $this->validationErrorResponse("Validation error !", $vaqlidator->errors());
+        if ($validator->fails()) {
+            return $this->validationErrorResponse("Validation error !", $validator->errors());
         }
 
 
@@ -297,50 +297,30 @@ class ApiHoaController extends Controller
             if ($hoaUser == null) {
                 return $this->notFoundResponse("Data not found !");
             }
-            $hoaUser->house_no = $request->house_no;
-            $hoaUser->name = $request->name;
-            $hoaUser->phone = $request->phone;
-            $hoaUser->save();
 
-            // Zipcode updated
-            $zipcode = Zipcode::where('zipcode', $request->zipcode)
-                ->where('status', 1)
-                ->first();
-            if ($zipcode == null) {
-                return $this->errorResponse("Our service not available at your area !", 400);
-            }
-            $hoaUser->zipcode = $request->zipcode;
-            $hoaUser->save();
 
             // logic if email already exists;
-            if ($hoaUser->email == null) {
+            if ($hoaUser->email == null && $request->email != null) {
                 $emailAlreadyExists = HoaUser::where('email', $request->email)->first();
                 if ($emailAlreadyExists != null) {
                     return $this->errorResponse("Email already exits", 422);
                 }
-            }
 
-            if ($hoaUser->email != null && $request->email != $hoaUser->email) {
-                return $this->errorResponse("You can't change email", 400);
-
-
+                $hoaUser->email = $request->email;
+                $hoaUser->save();
             }
 
 
 
-            $hoaUser->email = $request->email;
-            $hoaUser->save();
 
 
-            //  device limit change
+            // $remainingDevices = HoaUser::getRemainingDeviceCount();
+            // return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
+            //  device limit update
 
             if ($request->device_limit > $hoaUser->device_limit) {
-                $totalDevices = auth()->user()->num_of_houses * auth()->user()->device_per_house;
-                $allotedDevices = HoaUser::where('user_id', auth()->id())
-                    ->whereNotNull('device_limit')
-                    ->sum('device_limit');
-                // remainig device calc
-                $remainingDevices = $totalDevices - $allotedDevices;
+
+                $remainingDevices = HoaUser::getRemainingDeviceCount();
                 $deviceCountNeedToUpdate = $request->device_limit - $hoaUser->device_limit;
 
                 if ($deviceCountNeedToUpdate > $remainingDevices) {
@@ -351,19 +331,21 @@ class ApiHoaController extends Controller
                 $hoaUser->save();
             }
 
-            // subscription change
-            $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
-            if ($subscription == null) {
-                $this->terminate($this->notFoundResponse("Subscription not found !"));
-            }
+            // subscription update
+            if ($request->plan_in_month != null) {
+                $subscription = HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->latest()->first();
+                if ($subscription == null) {
+                    return $this->notFoundResponse("Subscription not found !");
+                }
 
-            $currentPlan = intval($subscription->plan_name);
-            $timestampAfterMonth = date('Y-m-d H:i:s', strtotime('+' . $request->plan_in_month . ' month', strtotime($subscription->plan_start_at)));
-            if ($request->plan_in_month != $currentPlan) {
-                $subscription->plan_name = $request->plan_in_month . ' Month';
-                $subscription->plan_expires_at = $timestampAfterMonth;
-                $subscription->save();
+                $currentPlan = intval($subscription->plan_name);
+                $timestampAfterMonth = date('Y-m-d H:i:s', strtotime('+' . $request->plan_in_month . ' month', strtotime($subscription->plan_start_at)));
+                if ($request->plan_in_month != $currentPlan) {
+                    $subscription->plan_name = $request->plan_in_month . ' Month';
+                    $subscription->plan_expires_at = $timestampAfterMonth;
+                    $subscription->save();
 
+                }
             }
 
             return $this->dataResponse([
@@ -371,90 +353,6 @@ class ApiHoaController extends Controller
             ], 'User updated successfully !');
         });
 
-        // return $this->startAction(function () use ($request) {
-        //     $hoaUser = HoaUser::where('id', $request->house_id)->first();
-        //     if ($hoaUser == null) {
-        //         $this->terminate($this->notFoundResponse("Data not found !"));
-        //     }
-        //     $hoaUser->house_no = $request->house_no;
-        //     $hoaUser->name = $request->name;
-        //     $hoaUser->phone = $request->phone;
-        //     $hoaUser->save();
-        //     return $hoaUser;
-
-        // })->then(function ($user) use ($request) {
-        //     // Zipcode updated
-        //     $zipcode = Zipcode::where('zipcode', $request->zipcode)
-        //         ->where('status', 1)
-        //         ->first();
-        //     if ($zipcode == null) {
-        //         $this->terminate(
-        //             $this->errorResponse("Our service not available at your area !", 400)
-        //         );
-        //     }
-        //     $user->zipcode = $request->zipcode;
-        //     $user->save();
-        //     return $user;
-        // })->then(function ($user) use ($request) {
-        //     // logic if email already exists;
-        //     if ($user->email != null && $request->email != $user->email) {
-        //         $this->terminate($this->errorResponse("You can't change email", 400));
-
-
-        //     }
-
-        //     $user->email = $request->email;
-        //     $user->save();
-        //     return $user;
-        // })->then(function ($user) use ($request) {
-        //     //  device limit change
-
-        //     if ($request->device_limit > $user->device_limit) {
-        //         $totalDevices = auth()->user()->num_of_houses * auth()->user()->device_per_house;
-        //         $allotedDevices = HoaUser::where('user_id', auth()->id())
-        //             ->whereNotNull('device_limit')
-        //             ->sum('device_limit');
-        //         // remainig device calc
-        //         $remainingDevices = $totalDevices - $allotedDevices;
-        //         $deviceCountNeedToUpdate = $request->device_limit - $user->device_limit;
-
-        //         if ($deviceCountNeedToUpdate > $remainingDevices) {
-
-        //             $this->terminate($this->errorResponse("You remaining device Limit is " . $remainingDevices));
-        //         }
-        //         $user->device_limit = $request->device_limit;
-        //         $user->save();
-        //     }
-
-
-        //     return $user;
-        // })->then(function ($user) use ($request) {
-        //     // subscription change
-        //     $subscription = HoaSubUserSubscription::where('sub_user_id', $user->id)->latest()->first();
-        //     if ($subscription == null) {
-        //         $this->terminate($this->notFoundResponse("Subscription not found !"));
-        //     }
-
-        //     $currentPlan = intval($subscription->plan_name);
-        //     $timestampAfterMonth = date('Y-m-d H:i:s', strtotime('+' . $request->plan_in_month . ' month', strtotime($subscription->plan_start_at)));
-        //     if ($request->plan_in_month != $currentPlan) {
-        //         $subscription->plan_name = $request->plan_in_month . ' Month';
-        //         $subscription->plan_expires_at = $timestampAfterMonth;
-        //         $subscription->save();
-
-        //     }
-        //     return $user;
-
-        // })->catch(function ($th) {
-
-        //     return $this->exceptionResponse($th);
-        // })->finally(function ($user) {
-        //     return $this->dataResponse([
-        //         'user' => $user
-        //     ], 'User updated successfully !');
-
-
-        // })->execute();
 
     }
 
@@ -462,6 +360,7 @@ class ApiHoaController extends Controller
     {
         $validator = Validator($request->all(), [
             "house_id" => 'required|integer',
+            "device_limit" => 'nullable|integer',
             'plan_in_month' => 'nullable|in:1,3,6,12',
         ]);
         if ($validator->fails()) {
@@ -486,6 +385,22 @@ class ApiHoaController extends Controller
             $subscription->plan_expires_at = $endDate;
             $subscription->save();
 
+
+            //  device limit change
+
+            if ($request->device_limit > $hoaUser->device_limit) {
+                $remainingDevices = HoaUser::getRemainingDeviceCount();
+                $deviceCountNeedToUpdate = $request->device_limit - $hoaUser->device_limit;
+
+                if ($deviceCountNeedToUpdate > $remainingDevices) {
+
+                    return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
+                }
+
+            }
+
+            $hoaUser->device_limit = $request->device_limit;
+            $hoaUser->save();
             return $this->successResponse("Plan added successfully !");
 
 
