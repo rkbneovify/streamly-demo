@@ -51,6 +51,7 @@ export class ConnectedHousesComponent {
   shortBy: number | string | null = null;
   zipcodeLoading: boolean = false;
   zipcodes: any[] = [];
+  emailEdit: boolean = false;
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
 
@@ -194,6 +195,7 @@ export class ConnectedHousesComponent {
 
   showHomeEditPopUp(houseId: number, email: string | null, deviceLimit: number | null, palnInMonth: string | null, event: any) {
     this.houseId = houseId;
+    this.emailEdit = email !== null ? true : false;
     document.getElementById('btnshowPopEditHouse').click();
     document
       .getElementById('btnEditReset')
