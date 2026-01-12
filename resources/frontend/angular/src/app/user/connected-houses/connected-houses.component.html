@@ -438,8 +438,8 @@
                                         {{ e['server'] }}
                                     </small>
                                 </div> -->
-                                <input type="text" [readonly]="editHouseForm.get('email')?.value !== null"
-                                    class="input_standred" placeholder="Enter Email" formControlName="email" />
+                                <input type="text" [readonly]="emailEdit" class="input_standred"
+                                    placeholder="Enter Email" formControlName="email" />
 
                                 <div *ngIf="editHouseForm.get('email')?.touched" class="text-danger">
                                     <small *ngIf="editHouseForm.get('email')?.errors as e">
