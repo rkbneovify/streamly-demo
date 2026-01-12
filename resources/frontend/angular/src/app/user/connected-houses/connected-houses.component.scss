@@ -23,6 +23,32 @@ main {
     color: white;
 }
 
+
+::ng-deep ng-select .ng-select-container {
+    background: #1b4974 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    height: 48px !important;
+    font-family: Poppins !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 21px !important;
+    letter-spacing: 0em !important;
+    text-align: left !important;
+}
+
+::ng-deep ng-select .ng-value {
+    color: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+
+
+
+
 .remove_Device-Container {
     --_spacing: 2rem;
     width: 100%;
@@ -328,6 +354,7 @@ p {
                 font-weight: 800;
                 line-height: 100%;
                 gap: 8px;
+                cursor: pointer;
                 transition: all 0.2s ease;
 
                 img {
@@ -336,8 +363,7 @@ p {
                 }
 
                 &:hover {
-                    cursor: pointer;
-                    transform: translateY(-2px);
+                    transform: scale(0.9);
                 }
 
             }
@@ -356,8 +382,11 @@ p {
                 line-height: 100%;
                 text-align: center;
                 cursor: pointer;
+                transition: all 0.2s ease;
 
-
+                &:hover {
+                    transform: scale(0.9);
+                }
 
                 select {
                     width: 100%;
@@ -398,6 +427,10 @@ p {
                 line-height: 100%;
                 gap: 8px;
                 transition: all 0.2s ease;
+
+                &:hover {
+                    transform: scale(0.93);
+                }
             }
 
             .btn-delete-all {
@@ -415,6 +448,10 @@ p {
                 line-height: 100%;
                 gap: 8px;
                 transition: all 0.2s ease;
+
+                &:hover {
+                    transform: scale(0.93);
+                }
             }
 
 
@@ -436,6 +473,10 @@ p {
             line-height: 100%;
             gap: 8px;
             transition: all 0.2s ease;
+
+            &:hover {
+                transform: scale(0.93);
+            }
         }
     }
 
@@ -491,8 +532,11 @@ p {
             padding: 30px 30px;
             gap: 10px;
             cursor: pointer;
+            transition: all 2ms ease;
 
-
+            // &:hover {
+            //     transform: scale(0.97);
+            // }
 
 
 
@@ -606,13 +650,15 @@ p {
 
                 .btn-deactive {
                     cursor: pointer;
+                    transition: all 2ms ease;
 
                     &:hover {
                         background: #EB5757;
                         border: 1px solid #ffffff;
                         font-weight: bold;
-                        transform: translateY(-2px);
+                        // transform: translateY(-2px);
                         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+                        transform: scale(0.93);
 
                         span {
                             font-size: 12px;
@@ -625,13 +671,15 @@ p {
 
                 .btn-active {
                     cursor: pointer;
+                    transition: all 2ms ease;
 
                     &:hover {
                         background: #219653;
                         border: 1px solid #ffffff;
                         font-weight: bold;
-                        transform: translateY(-2px);
+                        // transform: translateY(-2px);
                         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+                        transform: scale(0.93);
 
                         span {
                             font-size: 12px;
@@ -642,13 +690,14 @@ p {
 
                 .btn-send {
                     cursor: pointer;
+                    transition: all 2ms ease;
 
                     &:hover {
                         background: #219653;
                         border: 1px solid #ffffff;
                         font-weight: bold;
-                        transform: translateY(-2px);
                         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+                        transform: scale(0.93);
 
                         span {
                             font-size: 12px;
