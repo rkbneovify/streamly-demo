@@ -172,7 +172,8 @@
                                 </a>
 
 
-                                <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
+                                <a *ngIf="item.email !==null && item.subscription !== null"
+                                    (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
                                     class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
                                     <span>Edit</span>
