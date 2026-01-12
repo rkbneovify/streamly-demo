@@ -195,6 +195,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::match(['post', 'get'], "house-list-roku", "Api\ApiHoaController@index2")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("add-house", "Api\ApiHoaController@addHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("edit-house", "Api\ApiHoaController@editHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
+        Route::post("resend-edit-verify/{id}", "Api\ApiHoaController@resendEditVerification")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("add-plan", "Api\ApiHoaController@addPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("resend-verification-mail/{id}", "Api\ApiHoaController@resendMail")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::delete("delete-house/{id}", "Api\ApiHoaController@deleteHouse")->middleware(['jwt.verify', 'hoa.admin.check']);
@@ -212,6 +213,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 Route::group(['prefix' => 'hoa/sub-user'], function () {
     Route::post("account-active", "Api\ApiHoaController@accountActive");
+    Route::post("edit-verify-house", "Api\ApiHoaController@verifyEditHouse");
 });
 
 Route::post('check-update', 'Api\VersionUpdateController@checkUpdate');

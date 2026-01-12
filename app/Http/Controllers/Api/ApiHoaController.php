@@ -6,9 +6,11 @@ use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\HoaSubUserEditVerification;
 use App\Mail\HoaSubUserForgotPasscode;
 use App\Mail\HoaSubUserPasscodeRegenerate;
 use App\Mail\HoaSubUserWelcome;
+use App\Mail\HoaSubUserWelcome2;
 use App\Mail\VerifyHoaSubUserEmail;
 use App\Models\Zipcode;
 use App\PasscodeResetToken;
@@ -85,6 +87,8 @@ class ApiHoaController extends Controller
                 'message' => 'Data fetched successfully !',
                 'total_houses' => auth()->user()->num_of_houses,
                 'device_limit_per_house' => auth()->user()->device_per_house,
+                'total_devices' => (auth()->user()->num_of_houses * auth()->user()->device_per_house),
+                'alloted_device_count' => HoaUser::getDeviceCount(),
                 'active_house_count' => HoaUser::activeHouseCount(),
                 'deactive_house_count' => HoaUser::inactiveHouseCount(),
                 'data' => $data->items(),
@@ -200,12 +204,16 @@ class ApiHoaController extends Controller
 
         DB::beginTransaction();
         try {
-            if (!HoaUser::isHouseAvailable()) {
-                return $this->maxlimitExceed("You have reached the maximum number of houses.");
-            } elseif ($request->device_limit > auth()->user()->device_per_house) {
-                return $this->validationErrorResponse("Per house device limit exceed !");
-            }
+            // if (!HoaUser::isHouseAvailable()) {
+            //     return $this->maxlimitExceed("You have reached the maximum number of houses.");
+            // } elseif ($request->device_limit > auth()->user()->device_per_house) {
+            //     return $this->validationErrorResponse("Per house device limit exceed !");
+            // }
+            $remainingDeviceCount = HoaUser::getRemainingDeviceCount();
 
+            if ($request->device_limit > $remainingDeviceCount) {
+                return $this->errorResponse("Device limit exceed !");
+            }
 
 
             $hoaUser = HoaUser::whereNotNull('email')->where('email', $request->email)->first();
@@ -308,6 +316,8 @@ class ApiHoaController extends Controller
 
                 $hoaUser->email = $request->email;
                 $hoaUser->save();
+                $verificationUrl = url('hoa/sub-user-account/verify') . '/' . $hoaUser->id;
+                Mail::to($request->email)->send(new HoaSubUserEditVerification($hoaUser, $verificationUrl));
             }
 
 
@@ -354,6 +364,62 @@ class ApiHoaController extends Controller
         });
 
 
+    }
+
+    public function verifyEditHouse(Request $request)
+    {
+
+
+        $validator = validator($request->all(), [
+            'house_id' => 'required',
+            // 'email' => 'nullable|email|max:225',
+            // 'plan_in_month' => 'nullable|in:1,3,6,12',
+            // 'device_limit' => 'nullable|integer',
+            'zipcode' => 'nullable|digits:5',
+            'house_no' => 'nullable|alpha_num|max:20',
+            'phone' => 'nullable|digits:10',
+            'name' => 'nullable|string|max:225',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationErrorResponse("Validation error !", $validator->errors());
+        }
+
+
+        return $this->dbTransaction(function () use ($request) {
+            $hoaUser = HoaUser::where('id', $request->house_id)->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+
+            $hoaUser->name = $request->name;
+            $hoaUser->house_no = $request->house_no;
+            $hoaUser->phone = $request->phone;
+            $hoaUser->zipcode = $request->zipcode;
+            $hoaUser->edit_verify = 1;
+            $hoaUser->email_verified_at = now();
+            $hoaUser->save();
+            $user = User::where('id', $hoaUser->user_id)->first();
+            Mail::to($hoaUser->email)->send(new HoaSubUserWelcome2($hoaUser, $user->email));
+
+
+            return $this->successResponse('Acoount Verification done successfully ! Please check your email.');
+        });
+
+
+    }
+
+    public function resendEditVerification($id)
+    {
+        return $this->dbTransaction(function () use ($id) {
+            $hoaUser = HoaUser::where('id', $id)->first();
+            if ($hoaUser == null) {
+                return $this->notFoundResponse("Data not found !");
+            }
+            $hoaUser->edit_verify = 0;
+            $hoaUser->save();
+            $verificationUrl = url('hoa/sub-user-account/verify') . '/' . $hoaUser->id;
+            Mail::to($hoaUser->email)->send(new HoaSubUserEditVerification($hoaUser, $verificationUrl));
+        });
     }
 
     public function addPlan(Request $request)
