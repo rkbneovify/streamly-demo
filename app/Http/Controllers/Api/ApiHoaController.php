@@ -419,6 +419,8 @@ class ApiHoaController extends Controller
             $hoaUser->save();
             $verificationUrl = url('hoa/sub-user-account/verify') . '/' . $hoaUser->id;
             Mail::to($hoaUser->email)->send(new HoaSubUserEditVerification($hoaUser, $verificationUrl));
+
+            return $this->successResponse('Mail resent successfully ! Please check your email.');
         });
     }
 
