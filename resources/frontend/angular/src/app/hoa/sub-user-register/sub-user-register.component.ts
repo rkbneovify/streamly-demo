@@ -7,11 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-interface QrCode {
-  key: string;
-  msg: string;
-  status: number;
-}
+
 
 @Component({
   selector: 'app-login',

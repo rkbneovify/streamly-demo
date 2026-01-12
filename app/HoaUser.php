@@ -315,6 +315,29 @@ class HoaUser extends Model
             ->count();
     }
 
+    public static function getRemainingDeviceCount()
+    {
+        // remainig device calc
+        $totalDevices = (auth()->user()->num_of_houses * auth()->user()->device_per_house);
+        $allotedDevices = HoaUser::where('user_id', auth()->id())
+            ->whereNotNull('device_limit')
+            ->sum('device_limit');
+
+        $remainingDevices = $totalDevices - $allotedDevices;
+        return $remainingDevices;
+
+    }
+
+    public static function getDeviceCount()
+    {
+
+        return (int) HoaUser::where('user_id', auth()->id())
+            ->whereNotNull('device_limit')
+            ->sum('device_limit');
+
+
+
+    }
 
     public function scopeStatus($query, $status)
     {
