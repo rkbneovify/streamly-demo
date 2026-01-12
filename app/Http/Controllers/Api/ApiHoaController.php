@@ -280,7 +280,7 @@ class ApiHoaController extends Controller
         $validator = validator($request->all(), [
             'house_id' => 'required',
             'email' => 'nullable|email|max:225',
-            // 'plan_in_month' => 'nullable|in:1,3,6,12',
+            'plan_in_month' => 'nullable|in:1,3,6,12',
             'device_limit' => 'nullable|integer',
             // 'zipcode' => 'nullable|digits:5',
             // 'house_no' => 'nullable|alpha_num|max:20',
