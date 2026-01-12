@@ -8,14 +8,14 @@
                 <h1>Connected Houses</h1>
                 <div class="home-total">
                     <div class="item-left">
-                        <p>Houses : {{(activeHouseCount+deactiveHouseCount)}}/{{totalHouses}} |
+                        <p>Houses : {{(activeHouseCount+deactiveHouseCount)}} |
                             <span class="text-success">{{activeHouseCount}} Active</span> |
                             <span class="text-danger">{{deactiveHouseCount}}
                                 Inactive</span>
                         </p>
                     </div>
                     <div class="item-right">
-                        <p> Device Limit : {{deviceLimitPerHouse??''}}</p>
+                        <p> Devices : {{allotedDeviceCount??'' }}/{{ totalDevice??''}}</p>
                     </div>
                 </div>
                 <div class="search-and-btns">
@@ -124,7 +124,13 @@
                                         </span>
                                     </p>
                                     }
-
+                                    @else if (item.subscription_expire_in == 0 && item.subscription == null) {
+                                    <p class="text-light">
+                                        <span>
+                                            {{ '-' }}
+                                        </span>
+                                    </p>
+                                    }
                                     @else {
                                     <p class="text-danger">
                                         <span (click)="showAddPlanPopUp(item.id,$event)">
@@ -164,18 +170,8 @@
                                     <img src="../../../assets/dummy-img/user-xmark-alt.svg" alt="icon">
                                     <span>Deactive</span>
                                 </a>
-                                <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
-                                    (click)="resendMail(item.id, $event)" class="btn-item btn-send">
-                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
-                                    <span>Send Email</span>
-                                </a>
-                                <a *ngIf="item.email_verified_at === null || item.status ===0"
-                                    (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
-                                    <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
-                                    <span>Delete</span>
 
 
-                                </a>
                                 <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
                                     class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
@@ -185,10 +181,39 @@
                                 </a>
 
 
+                                <a *ngIf="item.email_verified_at === null || item.status ===0"
+                                    (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
+                                    <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
+                                    <span>Delete</span>
 
+
+                                </a>
+                                <!-- <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
+                                    class="btn-item btn-active">
+                                    <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
+                                    <span>Edit</span>
+
+
+                                </a> -->
+
+
+                                @if (item.email !== null && item.edit_verify ===0 && item.email_verified_at === null) {
+                                <a (click)="resendEditVerificationMail(item.id, $event)" class="btn-item-md btn-send">
+                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                    <span>Send Email</span>
+                                </a>
+                                }
+                                @else {
+                                <a *ngIf="item.email_verified_at === null && item.status ==0 && item.passcode===null && item.email!==null"
+                                    (click)="resendMail(item.id, $event)" class="btn-item-md btn-send">
+                                    <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
+                                    <span>Send Email</span>
+                                </a>
+                                }
 
 
                             </div>
+
 
 
                         </div>
@@ -246,12 +271,8 @@
                                     </small>
                                 </div>
                                 <!-- end -->
-                                <select formControlName="device_limit" class="input_standred">
-                                    <option selected value="">Device Limit</option>
-                                    <option *ngFor="let num of devicePerHouse" [value]="num">
-                                        {{ num }}
-                                    </option>
-                                </select>
+                                <input type="text" class="input_standred" placeholder="Enter device limit"
+                                    formControlName="device_limit" />
                                 <div *ngIf="addHouseForm.get('device_limit')?.touched" class="text-danger">
                                     <small *ngIf="addHouseForm.get('device_limit')?.errors as e">
                                         {{ e['required'] && 'Device limit is required.' }}
@@ -417,8 +438,8 @@
                                         {{ e['server'] }}
                                     </small>
                                 </div> -->
-                                <input type="text" class="input_standred" placeholder="Enter Email"
-                                    formControlName="email" />
+                                <input type="text" [readonly]="editHouseForm.get('email')?.value !== null"
+                                    class="input_standred" placeholder="Enter Email" formControlName="email" />
 
                                 <div *ngIf="editHouseForm.get('email')?.touched" class="text-danger">
                                     <small *ngIf="editHouseForm.get('email')?.errors as e">

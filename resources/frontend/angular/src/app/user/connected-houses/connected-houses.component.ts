@@ -37,6 +37,8 @@ export class ConnectedHousesComponent {
   activeHouseCount: number = null;
   deactiveHouseCount: number = null;
   deviceLimitPerHouse: number = null;
+  totalDevice: number = null;
+  allotedDeviceCount: number = null;
   page: number = 1;
   status: number | string | null = null;
   totalHouses: number = 0;
@@ -139,6 +141,8 @@ export class ConnectedHousesComponent {
           this.deactiveHouseCount = res.deactive_house_count;
           this.deviceLimitPerHouse = res.device_limit_per_house;
           this.totalHouses = res.total_houses;
+          this.totalDevice = res.total_devices;
+          this.allotedDeviceCount = res.alloted_device_count;
           this.isMoreData = res.is_more_data;
 
 
@@ -476,6 +480,32 @@ export class ConnectedHousesComponent {
         }
       });
   }
+
+  resendEditVerificationMail(houseId: number, event: any) {
+    event.stopPropagation();
+    this.sweetAlert.confirm("Send Mail", "Do you want to send mail?")
+      .then(result => {
+        if (result.isConfirmed) {
+          this.houseId = houseId;
+          this.sweetAlert.loading();
+          this.apiService.postRequest(`auth/hoa/resend-edit-verify/${houseId}`).subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              if (res.success == true) {
+                this.toastr.success(res.message);
+
+              }
+
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.toastr.error(err.error?.message);
+            }
+          })
+        }
+      });
+  }
+
 
   onScrollDown() {
     this.page++;

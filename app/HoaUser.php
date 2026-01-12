@@ -328,6 +328,17 @@ class HoaUser extends Model
 
     }
 
+    public static function getDeviceCount()
+    {
+
+        return (int) HoaUser::where('user_id', auth()->id())
+            ->whereNotNull('device_limit')
+            ->sum('device_limit');
+
+
+
+    }
+
     public function scopeStatus($query, $status)
     {
         if (in_array($status, ['0', '1'])) {

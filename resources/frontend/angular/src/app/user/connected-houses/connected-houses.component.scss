@@ -533,6 +533,8 @@ p {
             gap: 10px;
             cursor: pointer;
             transition: all 2ms ease;
+            // height: 420px;
+
 
             // &:hover {
             //     transform: scale(0.97);
@@ -614,10 +616,43 @@ p {
 
             .item-footer {
                 display: flex;
+                flex-wrap: wrap;
                 padding: 5px 0px;
                 gap: 10px;
+                align-items: center;
 
                 .btn-item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    background: transparent;
+                    border: 1px solid #ffffff;
+                    border-radius: 8px;
+                    width: 90px;
+                    height: 40px;
+                    text-decoration: none;
+                    color: #faebeb;
+                    font-family: 'Poppins';
+                    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+                    img {
+                        width: 18px;
+                        height: 18px;
+
+                    }
+
+                    span {
+                        font-size: 13px;
+                        font-weight: 400;
+                    }
+
+
+
+
+                }
+
+                .btn-item-md {
                     display: flex;
                     align-items: center;
                     justify-content: center;
