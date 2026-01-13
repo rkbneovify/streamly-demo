@@ -29,6 +29,7 @@ class Channel extends Model
      * Mass assignable columns
      */
     protected $fillable = [
+        // 'prgSvcId',
         'name',
         'url',
         'callSign',

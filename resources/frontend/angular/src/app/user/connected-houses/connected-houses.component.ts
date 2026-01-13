@@ -184,13 +184,14 @@ export class ConnectedHousesComponent {
 
   }
 
-  showAddPlanPopUp(houseId: number, event: any) {
+  showAddPlanPopUp(houseId: number, deviceLimit: number, planInMonth: string | null, event: any) {
     this.houseId = houseId;
     document.getElementById('btnshowPopAddPlan').click();
-    document
-      .getElementById('btnAddPlanReset')
-      .closest('form')
-      .reset();
+    this.addPlanForm.patchValue({
+      device_limit: deviceLimit,
+      plan_in_month: [parseInt(planInMonth).toString()]
+    });
+
   }
 
   showHomeEditPopUp(houseId: number, email: string | null, deviceLimit: number | null, palnInMonth: string | null, event: any) {

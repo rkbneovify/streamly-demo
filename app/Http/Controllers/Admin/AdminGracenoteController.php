@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Services\GracenoteService;
 use App\GracenoteSource;
 use App\Traits\ActionTrait;
+use App\Traits\DbTransactionTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class AdminGracenoteController extends Controller
 {
+    use DbTransactionTrait;
     private $gracenote;
     public function __construct(GracenoteService $gracenote)
     {
@@ -45,6 +47,14 @@ class AdminGracenoteController extends Controller
         //     ]);
         // })->execute();
 
+        // return $this->dbTransaction(function () use ($prgSvcId) {
+        //     $this->gracenote->insertProgramData($prgSvcId);
+        //     toast('Data pulled successfully !', 'success')
+        //         ->autoClose(5000)
+        //         ->timerProgressBar();
+        //     return redirect()->back();
+        // });
+
 
         $today = Carbon::today()->toDateString();
         $programList = collect($this->gracenote->getProgramList($prgSvcId))
@@ -54,6 +64,10 @@ class AdminGracenoteController extends Controller
                     'Y-m-d H:i',
                     $item['date'] . ' ' . $item['time']
                 );
+            })->map(function ($item) {
+                $item['start'] = Carbon::createFromTimestamp($item['start'])->format('Y-m-d H:i:s a');
+                $item['end'] = Carbon::createFromTimestamp($item['end'])->format('Y-m-d H:i:s a');
+                return $item;
             })
             ->values();
         return response()->json($programList);
