@@ -265,12 +265,14 @@ class GracenoteService
                 );
             })
             ->toArray();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
+
         foreach (array_chunk($programList, 500) as $chunk) {
             GracenoteScheduleProgram::insert($chunk);
 
         }
-
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 
