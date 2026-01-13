@@ -973,9 +973,9 @@ class ApiHoaController extends Controller
             if ($hoaUser == null) {
                 return $this->notFoundResponse("Data not found !");
             }
-            if (!HoaUser::isEmailVerified($hoaUser->id)) {
-                return $this->errorResponse("Please verify your email", 403);
-            }
+            // if (!HoaUser::isEmailVerified($hoaUser->id)) {
+            //     return $this->errorResponse("Please verify your email", 403);
+            // }
             // if ($hoaUser->status == 1) {
             //     return $this->errorResponse("Account already active.", 403);
             // }
