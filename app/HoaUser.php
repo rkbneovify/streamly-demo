@@ -73,7 +73,7 @@ class HoaUser extends Model
     {
         $user = HoaUser::where('id', $userId)->first();
         if ($user != null) {
-            $user->email_verified_at = now();
+            // $user->email_verified_at = now();
             $user->save();
         }
     }
