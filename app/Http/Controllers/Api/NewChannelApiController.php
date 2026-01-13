@@ -634,7 +634,7 @@ class NewChannelApiController extends Controller
     {
         $gmdate_string = gmdate('Y-m-d H:i');
         $current_timestamp = strtotime($gmdate_string . ' GMT');
-        $query = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'start', 'end', 'assets');
+        $query = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'time', 'start', 'end', 'assets');
         if ($day == 'today') {
             $gmdate = gmdate('Y-m-d');
             $query->where('end', '>=', $current_timestamp);
