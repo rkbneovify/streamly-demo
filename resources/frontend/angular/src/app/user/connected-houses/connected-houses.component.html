@@ -133,11 +133,14 @@
                                     }
                                     @else {
                                     <p class="text-danger">
-                                        <span (click)="showAddPlanPopUp(item.id,$event)">
+                                        <span
+                                            (click)="showAddPlanPopUp(item.id, item.device_limit, item.subscription.plan_name,$event)">
                                             Expired <span class="text-light"></span>
                                         </span>
                                         <span class="text-light">&nbsp;|&nbsp;</span>
-                                        <span (click)="showAddPlanPopUp(item.id,$event)" class="text-success">Add
+                                        <span
+                                            (click)="showAddPlanPopUp(item.id, item.device_limit, item.subscription.plan_name,$event)"
+                                            class="text-success">Add
                                             Plan
                                         </span>
                                     </p>
@@ -172,7 +175,7 @@
                                 </a>
 
 
-                                @if (item.email === null) {
+                                @if (item.email === null && item.status===1) {
                                 <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
                                     class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
@@ -181,7 +184,8 @@
 
                                 </a>
                                 }
-                                @else if(item.email !== null && item.subscription !==null){
+                                @else if(item.email !== null && item.subscription !==null && item.status===1){
+                                <!-- for edit house with email -->
                                 <a (click)="showHomeEditPopUp(item.id, item.email, item.device_limit, item.subscription.plan_name,$event)"
                                     class="btn-item btn-active">
                                     <img src="../../../assets/dummy-img/edit.svg" style="color: white;" alt="icon">
@@ -209,18 +213,19 @@
                                 </a> -->
 
 
-                                @if (item.email !== null && item.subscription !== null && item.email_verified_at===null)
+                                @if (item.email !== null && item.subscription !== null && item.email_verified_at===null
+                                && item.status===1)
                                 {
                                 <a (click)="resendEditVerificationMail(item.id, $event)" class="btn-item-md btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
-                                    <span>Send Email</span>
+                                    <span>Send mail</span>
                                 </a>
                                 }
                                 @else if(item.email !== null && item.subscription === null &&
                                 item.email_verified_at===null) {
                                 <a (click)="resendMail(item.id, $event)" class="btn-item-md btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
-                                    <span>Send Email</span>
+                                    <span>Send mail</span>
                                 </a>
                                 }
 
