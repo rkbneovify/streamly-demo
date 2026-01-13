@@ -57,6 +57,23 @@
 
 
                             </div>
+
+                            {{-- <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="name" class="col-md-4 control-label">PrgSvcId</label>
+
+
+                                <input type="text" class="form-control" name="prgSvcId" value="{{ $channel->prgSvcId }}"
+                                    required autofocus>
+
+                                @if ($errors->has('prgSvcId'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('prgSvcId') }}</strong>
+                                    </span>
+                                @endif
+
+                            </div> --}}
+
+
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">Name</label>
 
@@ -191,21 +208,21 @@
 
                             <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
                                 <label for="smooth_url" class="col-md-4 control-label">zipcodes for channel</label>
- 
+
 
                                 <input id="zip_code" type="text" id="zip_codes" class="form-control"
                                     name="zip_codes" value="{{ implode(', ', $channel->zip_code) }}"
                                     placeholder="e.g., 12345, 67890" autofocus>
 
- 
-                                    <!-- <input id="zip_codes" type="text"
-                                class="form-control"
-                                name="zip_codes"
-                                value="{{ implode(', ', $channel->zip_code) }}"
-                                placeholder="e.g., 12345, 678901"
-                                pattern="^(\d{5,6})(,\s*\d{5,6})*$"
-                                title="Enter 5 or 6-digit zip codes separated by commas"
-                                autofocus> -->
+
+                                <!-- <input id="zip_codes" type="text"
+                                                                                                                                                                                                        class="form-control"
+                                                                                                                                                                                                        name="zip_codes"
+                                                                                                                                                                                                        value="{{ implode(', ', $channel->zip_code) }}"
+                                                                                                                                                                                                        placeholder="e.g., 12345, 678901"
+                                                                                                                                                                                                        pattern="^(\d{5,6})(,\s*\d{5,6})*$"
+                                                                                                                                                                                                        title="Enter 5 or 6-digit zip codes separated by commas"
+                                                                                                                                                                                                        autofocus> -->
 
 
 
@@ -270,33 +287,29 @@
     <script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>
     <script>
         $('.select2').select2();
-    </script>  
+    </script>
     <script>
+        //  const zipInput = document.getElementById('zip_codes');
 
-    //  const zipInput = document.getElementById('zip_codes');
-
-//             zipCodesInput.addEventListener("input", function() {
-//                 const inputValue = zipCodesInput.value.replace(/[^0-9,]/g,
-//                 ""); 
-//                 const formattedValue = inputValue.replace(/(\d{5})(?=\d)/g,
-//                 "$1,"); 
-//                 zipCodesInput.value = formattedValue;
-//             });
-//         });
+        //             zipCodesInput.addEventListener("input", function() {
+        //                 const inputValue = zipCodesInput.value.replace(/[^0-9,]/g,
+        //                 ""); 
+        //                 const formattedValue = inputValue.replace(/(\d{5})(?=\d)/g,
+        //                 "$1,"); 
+        //                 zipCodesInput.value = formattedValue;
+        //             });
+        //         });
 
 
-//         document.getElementById('zip_codes').addEventListener('input', function(e) {
-//     let value = e.target.value;
+        //         document.getElementById('zip_codes').addEventListener('input', function(e) {
+        //     let value = e.target.value;
 
-//     let parts = value.split(',')
-//         .map(p => p.trim().replace(/\D/g, ''))   
-//         .map(p => p.slice(0, 6))                 
-//         .filter(p => p.length >= 5);            
+        //     let parts = value.split(',')
+        //         .map(p => p.trim().replace(/\D/g, ''))   
+        //         .map(p => p.slice(0, 6))                 
+        //         .filter(p => p.length >= 5);            
 
-//     e.target.value = parts.join(', ');
-// });
-
- 
-
+        //     e.target.value = parts.join(', ');
+        // });
     </script>
 @stop

@@ -323,7 +323,10 @@ class ChannelController extends Controller
             // Only update stationName if it is present in the request
             $input['stationName'] = $request->input('stationName');
         }
-
+        if ($request->has('prgSvcId')) {
+            // Only update stationName if it is present in the request
+            $input['prgSvcId'] = $request->input('prgSvcId');
+        }
         if ($request->has('toggleswitch')) {
             // $archived="helllo block user on";
             $input['status'] = 0;

@@ -127,10 +127,17 @@ class GracenoteService
     {
         $client = new Client();
 
-        $startDate = Carbon::today('UTC')
-            ->startOfDay()
-            ->format('Y-m-d\TH:i:s\Z'); //'2024-05-16';
-        $endDate = Carbon::today('UTC')->addDays(2)->endOfDay()->format('Y-m-d\TH:i:s\Z'); //'2024-05-17'
+
+        $startDate = Carbon::now('UTC')
+            ->subDay()
+            ->format('Y-m-d\TH:i:s\Z');
+
+        $endDate = Carbon::now('UTC')
+            ->addDays(2)
+            ->endOfDay()
+            ->format('Y-m-d\TH:i:s\Z');
+
+
         $scheduleResponse = $client->get($this->baseUrl . '/Schedules', [
             'query' => [
                 'prgSvcId' => $prgSvcId,
@@ -265,12 +272,14 @@ class GracenoteService
                 );
             })
             ->toArray();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
+
         foreach (array_chunk($programList, 500) as $chunk) {
             GracenoteScheduleProgram::insert($chunk);
 
         }
-
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 

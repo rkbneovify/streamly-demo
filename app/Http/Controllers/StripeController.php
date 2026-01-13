@@ -355,8 +355,8 @@ class StripeController extends Controller
 
             case 'customer.subscription.updated':
                 $subscription = $event->data->object;
-                Log::info("event : customer.subscription.updated");
-                Log::info("subscription object : " . $subscription);
+                // Log::info("event : customer.subscription.updated");
+                // Log::info("subscription object : " . $subscription);
                 $user = DB::table('users')
                     ->where('stripe_id', $subscription->customer)
                     ->first();

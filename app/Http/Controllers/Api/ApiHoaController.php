@@ -57,7 +57,7 @@ class ApiHoaController extends Controller
 
 
             $query->status($request->status)
-                ->search($request->search)
+                ->search($request->q)
                 ->sort($request->sort);
 
 
@@ -328,15 +328,20 @@ class ApiHoaController extends Controller
             // return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
             //  device limit update
 
-            if ($request->device_limit > $hoaUser->device_limit) {
+            if ($request->device_limit != $hoaUser->device_limit) {
+                if ($request->device_limit > $hoaUser->device_limit) {
 
-                $remainingDevices = HoaUser::getRemainingDeviceCount();
-                $deviceCountNeedToUpdate = $request->device_limit - $hoaUser->device_limit;
+                    $remainingDevices = HoaUser::getRemainingDeviceCount();
+                    $deviceCountNeedToUpdate = $request->device_limit - $hoaUser->device_limit;
 
-                if ($deviceCountNeedToUpdate > $remainingDevices) {
+                    if ($deviceCountNeedToUpdate > $remainingDevices) {
 
-                    return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
+                        return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
+                    }
+                    $hoaUser->device_limit = $request->device_limit;
+                    $hoaUser->save();
                 }
+
                 $hoaUser->device_limit = $request->device_limit;
                 $hoaUser->save();
             }
@@ -968,9 +973,9 @@ class ApiHoaController extends Controller
             if ($hoaUser == null) {
                 return $this->notFoundResponse("Data not found !");
             }
-            if (!HoaUser::isEmailVerified($hoaUser->id)) {
-                return $this->errorResponse("Please verify your email", 403);
-            }
+            // if (!HoaUser::isEmailVerified($hoaUser->id)) {
+            //     return $this->errorResponse("Please verify your email", 403);
+            // }
             // if ($hoaUser->status == 1) {
             //     return $this->errorResponse("Account already active.", 403);
             // }
@@ -986,6 +991,7 @@ class ApiHoaController extends Controller
             $hoaUser->passcode = HoaUser::generatePasscodeForHoa();
             $hoaUser->status = 1;
             $hoaUser->zipcode = $request->zipcode;
+            $hoaUser->email_verified_at = now();
             $hoaUser->save();
             $subs = HoaSubUserSubscription::where('user_id', $user->id)->where('sub_user_id', $hoaUser->id)->first();
             if ($subs == null) {
