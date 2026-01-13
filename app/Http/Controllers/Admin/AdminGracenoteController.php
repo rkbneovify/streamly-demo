@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Services\GracenoteService;
 use App\GracenoteSource;
 use App\Traits\ActionTrait;
+use App\Traits\DbTransactionTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class AdminGracenoteController extends Controller
 {
+    use DbTransactionTrait;
     private $gracenote;
     public function __construct(GracenoteService $gracenote)
     {
@@ -44,6 +46,14 @@ class AdminGracenoteController extends Controller
         //         "message" => "Data updated successfully !"
         //     ]);
         // })->execute();
+
+        return $this->dbTransaction(function () use ($prgSvcId) {
+            $this->gracenote->insertProgramData($prgSvcId);
+            toast('Data pulled successfully !', 'success')
+                ->autoClose(5000)
+                ->timerProgressBar();
+            return redirect()->back();
+        });
 
 
         $today = Carbon::today()->toDateString();
