@@ -197,7 +197,7 @@
 
 
 
-                                <a *ngIf="item.email_verified_at === null || item.status ===0"
+                                <a *ngIf="item.email_verified_at === null && item.status ===0"
                                     (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
                                     <span>Delete</span>
