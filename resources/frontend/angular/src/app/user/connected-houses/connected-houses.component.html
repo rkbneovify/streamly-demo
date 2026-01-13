@@ -216,14 +216,14 @@
                                 @if (item.email !== null && item.subscription !== null && item.email_verified_at===null
                                 && item.status===1)
                                 {
-                                <a (click)="resendEditVerificationMail(item.id, $event)" class="btn-item-md btn-send">
+                                <a (click)="resendEditVerificationMail(item.id, $event)" class="btn-item btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
                                     <span>Send mail</span>
                                 </a>
                                 }
                                 @else if(item.email !== null && item.subscription === null &&
                                 item.email_verified_at===null) {
-                                <a (click)="resendMail(item.id, $event)" class="btn-item-md btn-send">
+                                <a (click)="resendMail(item.id, $event)" class="btn-item btn-send">
                                     <img src="../../../assets/dummy-img/send-2.svg" alt="icon">
                                     <span>Send mail</span>
                                 </a>
