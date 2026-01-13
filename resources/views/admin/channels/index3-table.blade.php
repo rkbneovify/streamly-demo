@@ -139,6 +139,9 @@
                               <td style="vertical-align: middle;">
                                   <a class="btn btn-xs btn-outline-primary w-100"
                                       href="{{ url('/admin/channelstatus/edit') . '/' . $item->id }}">Edit</a>
+                                  <a id="btnDataPull" class="btn btn-xs btn-outline-success w-100"
+                                      data-url="{{ route('admin.gracenote.data.pull', $item->prgSvcId) }}"
+                                      href="javascript:void(0);">Pull Data</a>
                               </td>
                           </tr>
                       @endforeach
@@ -184,3 +187,24 @@
           </div>
       @endif
   </form>
+
+  <script>
+      $('#btnDataPull').click(function(e) {
+          e.preventDefault();
+          let $btn = $(this);
+          let url = $btn.data('url');
+          Swal.fire({
+              title: "Are you sure?",
+              text: `Do you really want to pull data?`,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: `Okay`,
+              cancelButtonText: "Cancel",
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  location.href = url;
+                  showLoader();
+              }
+          });
+      })
+  </script>
