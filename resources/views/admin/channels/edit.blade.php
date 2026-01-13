@@ -58,7 +58,7 @@
 
                             </div>
 
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                            {{-- <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">PrgSvcId</label>
 
 
@@ -71,7 +71,9 @@
                                     </span>
                                 @endif
 
-                            </div>
+                            </div> --}}
+
+
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">Name</label>
 
@@ -214,13 +216,13 @@
 
 
                                 <!-- <input id="zip_codes" type="text"
-                                                                                                                                                                        class="form-control"
-                                                                                                                                                                        name="zip_codes"
-                                                                                                                                                                        value="{{ implode(', ', $channel->zip_code) }}"
-                                                                                                                                                                        placeholder="e.g., 12345, 678901"
-                                                                                                                                                                        pattern="^(\d{5,6})(,\s*\d{5,6})*$"
-                                                                                                                                                                        title="Enter 5 or 6-digit zip codes separated by commas"
-                                                                                                                                                                        autofocus> -->
+                                                                                                                                                                                                        class="form-control"
+                                                                                                                                                                                                        name="zip_codes"
+                                                                                                                                                                                                        value="{{ implode(', ', $channel->zip_code) }}"
+                                                                                                                                                                                                        placeholder="e.g., 12345, 678901"
+                                                                                                                                                                                                        pattern="^(\d{5,6})(,\s*\d{5,6})*$"
+                                                                                                                                                                                                        title="Enter 5 or 6-digit zip codes separated by commas"
+                                                                                                                                                                                                        autofocus> -->
 
 
 
