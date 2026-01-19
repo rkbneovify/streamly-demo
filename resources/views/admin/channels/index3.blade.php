@@ -1,5 +1,6 @@
 @extends('master')
 @section('stylesheets')
+    <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
     <style>
         video {
             width: 100%;
@@ -267,19 +268,32 @@
                             </div>
                         </div>
 
+
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
+
+                            <a href="{{ route('admin.channel.report.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                class="btn-with-img">
                                 <img src="{{ asset('images/export.png') }}" alt="status icon">
-                                <a href="{{ route('admin.channel.report.export', ['type' => 'xlsx'] + request()->query()) }}"
-                                    class="btn-add-user">Export</a>
-                            </div>
+                                Export into Excel</a>
+
                         </div>
+
                         <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
-                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                <a href="javascript:void(0)" class="btn-add-user btn-reset-all">Reset filters</a>
-                            </div>
+
+                            <a href="{{ route('admin.channel.create') }}" class="btn-with-img">
+                                <img src="{{ asset('images/add.png') }}" alt="status icon">
+                                Add New Channel</a>
+
                         </div>
+
+
+                        <div class="col-md-2 mb-3">
+                            <button id="btnResetFilter" type="button" class="btn-with-img btn-reset-all">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                                Reset filters
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
