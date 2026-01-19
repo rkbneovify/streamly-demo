@@ -139,9 +139,9 @@
                               <td style="vertical-align: middle;">
                                   <a class="btn btn-xs btn-outline-primary w-100"
                                       href="{{ url('/admin/channelstatus/edit') . '/' . $item->id }}">Edit</a>
-                                  {{-- <a class="btn btn-xs btn-outline-success w-100 btn-pull-data"
+                                  <a class="btn btn-xs btn-outline-success w-100 btn-pull-data"
                                       data-url="{{ route('admin.gracenote.data.pull', $item->prgSvcId) }}"
-                                      href="javascript:void(0);">Pull Data</a> --}}
+                                      href="javascript:void(0);">Pull Data</a>
                               </td>
                           </tr>
                       @endforeach
