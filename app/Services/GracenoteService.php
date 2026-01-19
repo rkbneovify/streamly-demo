@@ -123,7 +123,7 @@ class GracenoteService
 
         }
     }
-    private function getScheduleByPrgSvcId($prgSvcId)
+    public function getScheduleByPrgSvcId($prgSvcId)
     {
         $client = new Client();
 
@@ -230,33 +230,33 @@ class GracenoteService
         $events = collect($eventList);
         $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
         $allPrograms = []; // accumulator
-
+        $programData = [];
         // program data in chunks
         foreach (array_chunk($TMSIdListPerSchedule, 50) as $items) {
             $response = $this->getPrograms(implode(",", $items));
-            $programData = $response->programs->program;
+            $programData[] = $response->programs->program;
 
-            if (!empty($programData)) {
-                $allPrograms = array_merge(
-                    $allPrograms,
-                    (array) $programData
-                );
-            }
+            // if (!empty($programData)) {
+            //     $allPrograms = array_merge(
+            //         $allPrograms,
+            //         (array) $programData
+            //     );
+            // }
         }
 
-        foreach ($events->toArray() as $event) {
-            foreach ($allPrograms as $program) {
-                if ($event->TMSId == $program->TMSId) {
-                    $program->event = $event;
-                }
-            }
-        }
+        // foreach ($events->toArray() as $event) {
+        //     foreach ($allPrograms as $program) {
+        //         if ($event->TMSId == $program->TMSId) {
+        //             $program->event = $event;
+        //         }
+        //     }
+        // }
 
-        foreach ($allPrograms as $item) {
-            $programList[] = $this->formatProgramData($item);
-        }
+        // foreach ($allPrograms as $item) {
+        //     $programList[] = $this->formatProgramData($item);
+        // }
 
-        return $programList;
+        return $programData;
 
     }
 
