@@ -146,7 +146,7 @@ class RokuEpgGuideApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -224,54 +224,60 @@ class RokuEpgGuideApiController extends Controller
                     trim($channel->callSign) === 'TVGN'
                 ) {
                     $channel->stationName = 'FanDuel';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
-                    $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                    // $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
+                    // $channel->image = env('APP_URL') . '/uploads/fandue.png';
                 }
                 if ($channel->id == 6) {
                     $channel->stationName = 'Trinity Broadcasting Network';
-                    $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
+                    // $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                    // $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
 
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
-                    $channel->image = env('APP_URL') . '/uploads/hallm-fam.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam.png';
+                    // $channel->image = env('APP_URL') . '/uploads/hallm-fam.png';
+                    // $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam.png';
 
                 }
                 if ($channel->id == 45) {
                     $channel->stationName = 'Fuse Music';
-                    $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    // $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                    // $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
 
                 }
-                if ($channel->id == 134) {
-                    $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
-                }
-                if ($channel->id == 135) {
-                    $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
-                }
-                if ($channel->id == 136) {
-                    $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
-                }
-                if ($channel->id == 137) {
-                    $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/abc7-137.png';
-                }
-                if ($channel->id == 138) {
-                    $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
-                }
-                if ($channel->id == 139) {
-                    $channel->image = env('APP_URL') . '/uploads/fox-139.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
-                }
-                if ($channel->id == 140) {
-                    $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
-                    $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+
+                // if ($channel->id == 134) {
+                //     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-134.png';
+                // }
+                // if ($channel->id == 135) {
+                //     $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/WCAU-135.png';
+                // }
+                // if ($channel->id == 136) {
+                //     $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/fox29-136.png';
+                // }
+                // if ($channel->id == 137) {
+                //     $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/abc7-137.png';
+                // }
+                // if ($channel->id == 138) {
+                //     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/ocbs-138.png';
+                // }
+                // if ($channel->id == 139) {
+                //     $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/fox-139.png';
+                // }
+                // if ($channel->id == 140) {
+                //     $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                //     $channel->roku_image = env('APP_URL') . '/uploads/4ny-140.png';
+                // }
+
+                if ($channel->is_logo_from_gracenote == 0) {
+                    $channel->image = url('uploads/channellogo') . '/' . $channel->local_image;
+                    $channel->roku_image = url('uploads/channellogo') . '/' . $channel->local_image;
                 }
 
                 unset($channel->db_image);
