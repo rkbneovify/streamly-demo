@@ -123,7 +123,7 @@ class GracenoteService
 
         }
     }
-    private function getScheduleByPrgSvcId($prgSvcId)
+    public function getScheduleByPrgSvcId($prgSvcId)
     {
         $client = new Client();
 
@@ -230,11 +230,11 @@ class GracenoteService
         $events = collect($eventList);
         $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
         $allPrograms = []; // accumulator
-
+        $programData = [];
         // program data in chunks
         foreach (array_chunk($TMSIdListPerSchedule, 50) as $items) {
             $response = $this->getPrograms(implode(",", $items));
-            $programData = $response->programs->program;
+            $allPrograms = $response->programs->program;
 
             if (!empty($programData)) {
                 $allPrograms = array_merge(
@@ -264,7 +264,7 @@ class GracenoteService
     {
         $today = Carbon::today()->toDateString();
         $programList = collect($this->getProgramList($prgSvcId))
-            // ->filter(fn($item) => $item['date'] === $today)
+            ->filter(fn($item) => $item['date'] === $today)
             ->sortBy(function ($item) {
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
