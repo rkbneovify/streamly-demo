@@ -47,13 +47,13 @@ class AdminGracenoteController extends Controller
         //     ]);
         // })->execute();
 
-        // return $this->dbTransaction(function () use ($prgSvcId) {
-        //     $this->gracenote->insertProgramData($prgSvcId);
-        //     toast('Data pulled successfully !', 'success')
-        //         ->autoClose(5000)
-        //         ->timerProgressBar();
-        //     return redirect()->back();
-        // });
+        return $this->dbTransaction(function () use ($prgSvcId) {
+            $this->gracenote->insertProgramData($prgSvcId);
+            toast('Data pulled successfully !', 'success')
+                ->autoClose(5000)
+                ->timerProgressBar();
+            return redirect()->back();
+        });
 
 
         // $today = Carbon::today()->toDateString();
@@ -72,7 +72,7 @@ class AdminGracenoteController extends Controller
         //     ->values();
         // return response()->json($programList);
 
-        return response()->json($this->gracenote->getProgramList($prgSvcId));
+        // return response()->json($this->gracenote->getProgramList($prgSvcId));
 
     }
 }
