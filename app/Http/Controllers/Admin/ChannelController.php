@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Svg\Tag\Rect;
@@ -263,7 +264,7 @@ class ChannelController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $name = $request->name . '.' . $image->getClientOriginalExtension();
+            $name = Str::slug($request->name) . '-' . date('Y-m-d') . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/channellogo');
             $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
@@ -411,7 +412,7 @@ class ChannelController extends Controller
         $model = Channel::find($id);
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $name = $request->name . '.' . $image->getClientOriginalExtension();
+            $name = Str::slug($request->name) . '-' . $id . '-' . date('Y-m-d') . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/channellogo');
             $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
