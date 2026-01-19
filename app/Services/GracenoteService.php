@@ -234,29 +234,29 @@ class GracenoteService
         // program data in chunks
         foreach (array_chunk($TMSIdListPerSchedule, 50) as $items) {
             $response = $this->getPrograms(implode(",", $items));
-            $programData[] = $response->programs->program;
+            $allPrograms = $response->programs->program;
 
-            // if (!empty($programData)) {
-            //     $allPrograms = array_merge(
-            //         $allPrograms,
-            //         (array) $programData
-            //     );
-            // }
+            if (!empty($programData)) {
+                $allPrograms = array_merge(
+                    $allPrograms,
+                    (array) $programData
+                );
+            }
         }
 
-        // foreach ($events->toArray() as $event) {
-        //     foreach ($allPrograms as $program) {
-        //         if ($event->TMSId == $program->TMSId) {
-        //             $program->event = $event;
-        //         }
-        //     }
-        // }
+        foreach ($events->toArray() as $event) {
+            foreach ($allPrograms as $program) {
+                if ($event->TMSId == $program->TMSId) {
+                    $program->event = $event;
+                }
+            }
+        }
 
-        // foreach ($allPrograms as $item) {
-        //     $programList[] = $this->formatProgramData($item);
-        // }
+        foreach ($allPrograms as $item) {
+            $programList[] = $this->formatProgramData($item);
+        }
 
-        return $programData;
+        return $programList;
 
     }
 
@@ -264,7 +264,7 @@ class GracenoteService
     {
         $today = Carbon::today()->toDateString();
         $programList = collect($this->getProgramList($prgSvcId))
-            // ->filter(fn($item) => $item['date'] === $today)
+            ->filter(fn($item) => $item['date'] === $today)
             ->sortBy(function ($item) {
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
