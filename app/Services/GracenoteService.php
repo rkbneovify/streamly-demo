@@ -209,7 +209,7 @@ class GracenoteService
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $scheduleData = json_decode(json_encode($this->getScheduleByPrgSvcId($prgSvcId)));
         $eventList = [];
         $programList = [];
@@ -311,8 +311,8 @@ class GracenoteService
             })->values()
             ->toArray();
         GracenoteScheduleProgram::insert($programList);
-        // return $programList;
-
+        // return $allPrograms;
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function insertProgramData($prgSvcId)
