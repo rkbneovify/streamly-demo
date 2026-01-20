@@ -25,10 +25,9 @@ class AdminGracenoteController extends Controller
     {
 
 
-        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
-        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        $source = $this->gracenote->getSourceByPrgSvcId($prgSvcId);
+        $this->gracenote->updateGracenoteSourceDbByPrgSvcId($prgSvcId, $source);
         return $this->dbTransaction(function () use ($prgSvcId) {
             $this->gracenote->getProgramList($prgSvcId);
             toast('Data pulled successfully !', 'success')
@@ -40,7 +39,7 @@ class AdminGracenoteController extends Controller
 
 
 
-        // return response()->json(collect($this->gracenote->getProgramList($prgSvcId)));
+        return response()->json(collect($this->gracenote->getProgramList($prgSvcId)));
 
     }
 }
