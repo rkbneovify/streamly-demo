@@ -129,7 +129,7 @@ class GracenoteService
 
 
         $startDate = Carbon::now('UTC')
-            ->subDay()
+            // ->subDay()
             ->format('Y-m-d\TH:i:s\Z');
 
         $endDate = Carbon::now('UTC')
@@ -230,20 +230,17 @@ class GracenoteService
         $events = collect($eventList);
         $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
         $allPrograms = []; // accumulator
-        $programData = [];
-        // program data in chunks
-        foreach (array_chunk($TMSIdListPerSchedule, 50) as $items) {
+        $formatedData = [];
+        foreach (array_chunk($TMSIdListPerSchedule, 10) as $items) {
             $response = $this->getPrograms(implode(",", $items));
-            $allPrograms = $response->programs->program;
+            $allPrograms[] = $response->programs->program;
 
-            if (!empty($programData)) {
-                $allPrograms = array_merge(
-                    $allPrograms,
-                    (array) $programData
-                );
-            }
+
         }
-
+        // array chunch single (flat) array
+        $allPrograms = array_merge(...array_map(function ($item) {
+            return is_array($item) ? $item : [$item];
+        }, $allPrograms));
         foreach ($events->toArray() as $event) {
             foreach ($allPrograms as $program) {
                 if ($event->TMSId == $program->TMSId) {
@@ -253,10 +250,10 @@ class GracenoteService
         }
 
         foreach ($allPrograms as $item) {
-            $programList[] = $this->formatProgramData($item);
+            $formatedData[] = $this->formatProgramData($item);
         }
 
-        return $programList;
+        return $formatedData;
 
     }
 
@@ -264,7 +261,7 @@ class GracenoteService
     {
         $today = Carbon::today()->toDateString();
         $programList = collect($this->getProgramList($prgSvcId))
-            ->filter(fn($item) => $item['date'] === $today)
+            // ->filter(fn($item) => $item['date'] === $today)
             ->sortBy(function ($item) {
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
@@ -272,14 +269,16 @@ class GracenoteService
                 );
             })
             ->toArray();
+        
+
+
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
 
-        foreach (array_chunk($programList, 500) as $chunk) {
-            GracenoteScheduleProgram::insert($chunk);
+        GracenoteScheduleProgram::insert($programList);
 
-        }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
     }
 
 
