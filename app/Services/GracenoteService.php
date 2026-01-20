@@ -207,6 +207,9 @@ class GracenoteService
     }
     public function getProgramList($prgSvcId)
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $scheduleData = json_decode(json_encode($this->getScheduleByPrgSvcId($prgSvcId)));
         $eventList = [];
         $programList = [];
@@ -227,33 +230,88 @@ class GracenoteService
 
 
         }
-        $events = collect($eventList);
-        $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
-        $allPrograms = []; // accumulator
-        $formatedData = [];
-        foreach (array_chunk($TMSIdListPerSchedule, 10) as $items) {
-            $response = $this->getPrograms(implode(",", $items));
-            $allPrograms[] = $response->programs->program;
+
+        // // event split into dates
+        // $eventGroupedByDate = collect($eventList)->groupBy('schedule.date')->values();
+        // // current data or today
+        // $TMSIdListPerSchedule = collect($eventGroupedByDate[0])->pluck('TMSId')->toArray();
+        // // $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
+        // foreach (array_chunk($TMSIdListPerSchedule, 10) as $items) {
+        //     $response = $this->getPrograms(implode(",", $items));
+        //     $allPrograms[] = $response->programs->program;
+
+        // }
+        // $allPrograms = array_merge(...array_map(function ($item) {
+        //     return is_array($item) ? $item : [$item];
+
+        // }, $allPrograms));
+
+        // foreach ($eventGroupedByDate[0] as $event) {
+        //     foreach ($allPrograms as $pogram) {
+        //         if ($event->TMSId == $pogram->TMSId) {
+        //             $pogram->event = $event;
+        //         }
+        //     }
+        // }
 
 
-        }
-        // array chunch single (flat) array
-        $allPrograms = array_merge(...array_map(function ($item) {
-            return is_array($item) ? $item : [$item];
-        }, $allPrograms));
-        foreach ($events->toArray() as $event) {
-            foreach ($allPrograms as $program) {
-                if ($event->TMSId == $program->TMSId) {
-                    $program->event = $event;
+        // foreach ($allPrograms as $item) {
+        //     $programList[] = $this->formatProgramData($item);
+        // }
+
+
+        // 
+        // event split into dates
+        $eventGroupedByDate = collect($eventList)->groupBy('schedule.date')->values();
+
+        foreach ($eventGroupedByDate->toArray() as $event) {
+            $TMSIdListPerSchedule = collect($event)->pluck('TMSId')->toArray();
+            // $TMSIdListPerSchedule = $events->pluck('TMSId')->toArray();
+            foreach (array_chunk($TMSIdListPerSchedule, 10) as $items) {
+                $response = $this->getPrograms(implode(",", $items));
+                $allPrograms[] = $response->programs->program;
+
+            }
+            $allPrograms = array_merge(...array_map(function ($item) {
+                return is_array($item) ? $item : [$item];
+
+            }, $allPrograms));
+
+            foreach ($event as $item) {
+                foreach ($allPrograms as $program) {
+
+                    if ($item->TMSId == $program->TMSId) {
+                        $program->event = $item;
+                    }
                 }
             }
+
+
+
+
+
+
+
+
+
         }
 
         foreach ($allPrograms as $item) {
-            $formatedData[] = $this->formatProgramData($item);
+            $programList[] = $this->formatProgramData($item);
         }
 
-        return $formatedData;
+        $today = Carbon::today()->toDateString();
+        $programList = collect($programList)
+            ->filter(fn($item) => $item['date'] === $today)
+            ->sortBy(function ($item) {
+                return Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    $item['date'] . ' ' . $item['time']
+                );
+            })->values()
+            ->toArray();
+        GracenoteScheduleProgram::insert($programList);
+        // return $programList;
 
     }
 
@@ -268,16 +326,21 @@ class GracenoteService
                     $item['date'] . ' ' . $item['time']
                 );
             })
+            // ->unique('TMSId')->values()
             ->toArray();
-        
+        // $programList = collect($this->getProgramList($prgSvcId))->toArray();
+        // ->sortBy(function ($item) {
+        //     return Carbon::parse($item->date);
+        // })->toArray();
 
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         GracenoteScheduleProgram::insert($programList);
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
 
     }
 
