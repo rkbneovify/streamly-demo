@@ -624,7 +624,9 @@ class NewChannelApiController extends Controller
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
                 }
-
+                // just for additional data hiding
+                unset($channel->is_logo_from_gracenote);
+                unset($channel->local_image);
                 unset($channel->db_image);
                 return $channel;
             });
@@ -984,19 +986,15 @@ class NewChannelApiController extends Controller
                 //     $image = env('APP_URL') . '/uploads/fanduel.png'; // your custom FanDuel logo
                 // }
 
-                if (
-                    trim($stationName) === 'TV Guide' ||
-                    trim($programs[0]->callSign ?? '') === 'TVGN' ||
-                    trim($programs[0]->title ?? '') === 'TV Guide'
-                ) {
+                if ($channelId == 11) {
                     $stationName = 'FanDuel';
-                    $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
+                    // $image = env('APP_URL') . '/uploads/fandue.png'; // your custom FanDuel logo
                     $programs[0]->title = 'FanDuel'; // Replace title also
                 }
 
                 if ($channelId == 6) {
                     $stationName = 'Trinity Broadcasting Network';
-                    $image = env('APP_URL') . '/uploads/tbn-6.png'; // your custom FanDuel logo
+                    // $image = env('APP_URL') . '/uploads/tbn-6.png'; // your custom FanDuel logo
 
                 }
 
