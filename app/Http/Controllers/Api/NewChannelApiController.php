@@ -474,7 +474,7 @@ class NewChannelApiController extends Controller
         } else {
             $user = JWTAuth::user();
             $urlType = $request->get('typeurl');
-            $zipcode = $request->get('zipcode');
+            $zipcode = $request->input('zipcode');
             $genre = $request->get('genre');
             $hoursoffset = $request->get('hoursoffset');
             $pattern = '/^(-?\d{2}:\d{2})$/';
@@ -504,6 +504,7 @@ class NewChannelApiController extends Controller
                 $zipcode = $zipcodeRule->zipcode;
             } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
+
             }
 
             if ($urlType == 'manifest') {
@@ -515,23 +516,32 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::with('zipcode')
+                ->select('channels.id', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    $query->where(function ($q) use ($zipcode) {
-                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    });
+
+                    // $query->where(function ($q) use ($zipcode) {
+
+                    //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+
+                    //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // });
+                    $query->localZipcode($zipcode)
+                        ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                    $query->localZipcode($zipcode);
+
+
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -624,10 +634,14 @@ class NewChannelApiController extends Controller
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
                 }
+
+
                 // just for additional data hiding
                 unset($channel->is_logo_from_gracenote);
                 unset($channel->local_image);
                 unset($channel->db_image);
+
+
                 return $channel;
             });
 
