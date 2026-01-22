@@ -86,8 +86,10 @@
                               </td>
                               <td style="vertical-align: middle;">{!! nl2br($item->genre_list) !!}</td>
                               <td style="vertical-align: middle;">
-                                  @if (count($item->zip_code) == 1)
+                                  @if (count($item->zip_code) == 0)
                                       All
+                                  @elseif (count($item->zip_code) == 1)
+                                      {{ $item->zip_code[0] }}
                                   @else
                                       <div>
                                           <a href="javascript:void(0)" class="toggle-zipcodes"
