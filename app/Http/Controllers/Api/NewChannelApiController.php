@@ -524,6 +524,7 @@ class NewChannelApiController extends Controller
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
 
@@ -544,7 +545,9 @@ class NewChannelApiController extends Controller
 
                 }
             }
+
             $query->where('channels.status', '=', '1');
+
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
             } else if ($genre == 'Others') {
@@ -637,6 +640,7 @@ class NewChannelApiController extends Controller
 
 
                 // just for additional data hiding
+                unset($channel->zipcode);
                 unset($channel->is_logo_from_gracenote);
                 unset($channel->local_image);
                 unset($channel->db_image);
