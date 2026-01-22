@@ -154,7 +154,7 @@ class Channel extends Model
     {
 
         $query->whereHas('zipcode', function ($q) use ($zipcode) {
-            $q->where('zipcode', $zipcode);
+            $q->where('zipcode', $zipcode)->where('status', 1);
         });
         return $query;
     }
