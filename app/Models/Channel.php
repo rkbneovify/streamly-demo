@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\LocalZipcode;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
 use Illuminate\Database\Eloquent\Model;
@@ -142,6 +143,22 @@ class Channel extends Model
 
         parent::boot();
     }
+
+
+
+    public function zipcode()
+    {
+        return $this->hasMany(LocalZipcode::class, 'channel_id', 'id');
+    }
+    public function scopeLocalZipcode($query, $zipcode)
+    {
+
+        $query->whereHas('zipcode', function ($q) use ($zipcode) {
+            $q->where('zipcode', $zipcode);
+        });
+        return $query;
+    }
+
 
 
 
