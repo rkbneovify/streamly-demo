@@ -824,6 +824,18 @@ class UsersController extends Controller
 
             }
 
+            if ($request->plan_duration != null || $request->plan_duration != '') {
+
+                // $subscription = Subscription::where('user_id', $id)->first();
+                // if ($subscription->livemode == 1 && $subscription->stripe_status == 'active') {
+                //     $user->subscription('main')->skipTrial()->cancelNow();
+                // }
+
+                $user->is_custom_user = 1;
+                $user->mode = 'custom';
+                $user->save();
+            }
+
 
 
 
@@ -846,7 +858,7 @@ class UsersController extends Controller
         $user = User::find($id);
         $roles = Role::get();
         $userRoles = $user->roles->pluck('id')->toArray();
-
+        // return response()->json($user);
         $subscription = DB::table('subscriptions')
             ->where('user_id', $id)
             ->latest('created_at')
