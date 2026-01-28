@@ -257,13 +257,18 @@
                             <td style="vertical-align: middle;">
                                 <a class="badge badge-light" title="Edit User"
                                     href="{{ route('admin.users.edit', $user->id) }}">
-                                    <span class="text-black"> Edit</span>
+                                    <span class="text-black">Edit</span>
 
                                 </a>
                                 <a href="{{ route('admin.users.delete', $user->id) }}" title="Delete User"
                                     data-url="{{ route('admin.users.delete', $user->id) }}"
                                     class="badge badge-light btn-user-delete">
-                                    <span class="text-danger"> Delete</span>
+                                    <span class="text-danger">Delete</span>
+
+                                </a>
+                                <a href="{{ route('admin.users.activity', $user->id) }}" title="Activities"
+                                    class="badge badge-light">
+                                    <span>Activity</span>
 
                                 </a>
                             </td>

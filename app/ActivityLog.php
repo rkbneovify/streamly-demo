@@ -16,4 +16,8 @@ class ActivityLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function effectedUser()
+    {
+        return $this->belongsTo(User::class, 'effected_user_id', 'id');
+    }
 }
