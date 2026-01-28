@@ -213,8 +213,18 @@
                      <b>{{ $date }}</b>
                  </div>
 
-                 @foreach ($activity as $item)
+                 @foreach ($activity as $key => $item)
+                     @if ($key > 0)
+                         <hr>
+                     @endif
+
                      <div class="col mb-3">
+
+
+                         <b>
+                             {{ \Carbon\Carbon::parse($item->created_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+                         </b>
+
                          <div class="row">
                              <strong>{{ $item->event }} (<span>{{ $item->event_type }}</span>)</strong>
 
@@ -233,9 +243,17 @@
                              @if ($item->properties)
                                  <details class="mt-2">
                                      <summary class="text-primary">View details</summary>
-                                     <pre class="bg-light p-2 small mt-1 rounded">
-{{ json_encode($item->properties, JSON_PRETTY_PRINT) }}
+                                     <div class="row">
+                                         @foreach ($item->properties as $key => $prop)
+                                             <div class="col-6">
+                                                 <b>{{ str_replace('_', ' ', $key) }}</b>
+                                                 <pre class="bg-light p-2 small mt-1 rounded">
+{{ json_encode($prop, JSON_PRETTY_PRINT) }}
                                 </pre>
+                                             </div>
+                                         @endforeach
+                                     </div>
+
                                  </details>
                              @endif
                          </div>
@@ -244,6 +262,9 @@
 
              </div>
          </div>
+
+         {{-- Pagination --}}
+
      @empty
          <p class="text-center text-muted">No activity found</p>
      @endforelse

@@ -37,13 +37,22 @@ class AdminActivityController extends Controller
 
     }
 
-    public function index2()
+    public function index2($id, Request $request)
     {
-        $perPage = 3; // number of dates per page
+        $perPage = 1; // number of dates per page
         $page = request()->get('page', 1);
 
+
+        $user = User::where('id', $id)->with('roles')->first();
+        if ($user == null) {
+            toast('User not found !', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
+
         // Step 1: get distinct dates
-        $dates = ActivityLog::selectRaw('DATE(created_at) as date')
+        $dates = ActivityLog::where('user_id', $id)->selectRaw('DATE(created_at) as date')
             ->groupBy('date')
             ->orderByDesc('date')
             ->pluck('date');
@@ -54,11 +63,12 @@ class AdminActivityController extends Controller
             ->values();
 
         // Step 3: get logs for those dates
-        $activities = ActivityLog::with('user')
+        $activities = ActivityLog::where('user_id', $id)->with('user')
             ->whereIn(DB::raw('DATE(created_at)'), $paginatedDates)
             ->orderByDesc('created_at')
-            ->get()
-            ->groupBy(fn($log) => $log->created_at->toDateString());
+            ->get()->groupBy(function ($log) {
+                return $log->created_at->format('d/m/Y');
+            });
 
         // Step 4: paginator
         $paginator = new LengthAwarePaginator(
@@ -69,7 +79,13 @@ class AdminActivityController extends Controller
             ['path' => request()->url()]
         );
 
-        return response()->json(["activity" => $activities, "paginator" => $paginator]);
+        // return response()->json(["activity" => $activities, "paginator" => $paginator]);
+
+        if ($request->ajax()) {
+            return view('admin.activity.table', compact('user', 'activities', 'paginator'));
+        }
+        return view('admin.activity.index', compact('user', 'activities', 'paginator'));
+
     }
 
 
