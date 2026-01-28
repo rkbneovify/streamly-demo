@@ -48,7 +48,37 @@ trait ActivityLogger
 
     public function properties(array $properties)
     {
-        $this->activity->properties = $properties;
+        $existingProperties = $this->activity->properties ?? [];
+
+        $this->activity->properties = array_merge(
+            $existingProperties,
+            $properties
+        );
+
+        return $this;
+    }
+
+    public function oldData($properties)
+    {
+        $existingProperties = $this->activity->properties ?? [];
+
+        $this->activity->properties = array_merge(
+            $existingProperties,
+            ["old_data" => $properties]
+        );
+
+        return $this;
+    }
+
+    public function newData($properties)
+    {
+        $existingProperties = $this->activity->properties ?? [];
+
+        $this->activity->properties = array_merge(
+            $existingProperties,
+            ["new_data" => $properties]
+        );
+
         return $this;
     }
 
