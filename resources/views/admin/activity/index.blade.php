@@ -170,6 +170,20 @@
             vertical-align: middle;
         }
     </style>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
 @endsection
 @section('content')
 
@@ -264,23 +278,15 @@
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            <style>
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
 
-                /* Hide scrollbar for IE, Edge and Firefox */
-                .no-scrollbar {
-                    -ms-overflow-style: none;
-                    /* IE and Edge */
-                    scrollbar-width: none;
-                    /* Firefox */
-                }
-            </style>
-            <div class="overflow-auto no-scrollbar" style="height: 720px; ">
+            <div class="overflow-auto no-scrollbar" style="height: 650px; ">
                 <div id="user-data">
                     @include('admin.activity.table')
                 </div>
+            </div>
+
+            <div class="mt-4">
+                {{ $paginator->links() }}
             </div>
 
         </section>
