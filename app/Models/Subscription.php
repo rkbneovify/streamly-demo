@@ -58,4 +58,17 @@ class Subscription extends Model
     {
         return $this->belongsTo('App\User', 'user_id');
     }
+
+    public static function isSubscriptionCustom($subscription)
+    {
+        $isCustom = false;
+        if ($subscription->plan_duration != null && strpos($subscription->stripe_id, 'sub_custom') !== false) {
+            $isCustom = true;
+        } elseif ($subscription->plan_duration != null) {
+            $isCustom = true;
+        }
+
+        return $isCustom;
+
+    }
 }
