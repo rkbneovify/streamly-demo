@@ -43,10 +43,13 @@ use Stripe\Stripe;
 class UsersController extends Controller
 {
     use ActivityLogger;
-    public function __construct()
+    protected $stripeService;
+    public function __construct(StripeService $stripeService)
     {
+
         Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
+        $this->stripeService = $stripeService;
     }
 
     public function index2()
@@ -580,6 +583,7 @@ class UsersController extends Controller
         ]);
 
 
+        DB::beginTransaction();
         try {
             $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
 
@@ -752,25 +756,7 @@ class UsersController extends Controller
             // ]);
 
             // Step 5: Calculate subscription end date
-            $endsAt = null;
-            switch ($request->plan_duration) {
-                case '1 Month':
-                    $endsAt = Carbon::now()->addMonth();
-                    break;
-                case '3 Months':
-                    $endsAt = Carbon::now()->addMonths(3);
-                    break;
-                case '6 Months':
-                    $endsAt = Carbon::now()->addMonths(6);
-                    break;
-                case '12 Months':
-                    $endsAt = Carbon::now()->addMonths(12);
-                    break;
-                case 'Never':
-                default:
-                    $endsAt = null;
-                    break;
-            }
+
 
             // Step 6: Update subscription if tier user
             // Step 6: Subscription logic
@@ -801,18 +787,7 @@ class UsersController extends Controller
 
             // new subscription logic
 
-            DB::table('subscriptions')->updateOrInsert(
-                ['user_id' => $user->id],
-                [
-                    'name' => 'main',
-                    'stripe_status' => 'active',
-                    'plan_duration' => $request->plan_duration,
-                    'ends_at' => null,
-                    'renews_at' => $endsAt,
-                    'quantity' => $newDeviceCount,
-                    'updated_at' => now(),
-                ]
-            );
+
 
             // Hoa update logic
             if (in_array(7, $request->input('roles'))) {
@@ -824,23 +799,79 @@ class UsersController extends Controller
 
             }
 
+            // subscription logic
             if ($request->plan_duration != null || $request->plan_duration != '') {
 
-                // $subscription = Subscription::where('user_id', $id)->first();
-                // if ($subscription->livemode == 1 && $subscription->stripe_status == 'active') {
-                //     $user->subscription('main')->skipTrial()->cancelNow();
-                // }
+                $endsAt = null;
+                switch ($request->plan_duration) {
+                    case '1 Month':
+                        $endsAt = Carbon::now()->addMonth();
+                        break;
+                    case '3 Months':
+                        $endsAt = Carbon::now()->addMonths(3);
+                        break;
+                    case '6 Months':
+                        $endsAt = Carbon::now()->addMonths(6);
+                        break;
+                    case '12 Months':
+                        $endsAt = Carbon::now()->addMonths(12);
+                        break;
+                    case 'Never':
+                    default:
+                        $endsAt = null;
+                        break;
+                }
 
-                $user->is_custom_user = 1;
-                $user->mode = 'custom';
-                $user->save();
+                $subscription = Subscription::where('user_id', $id)->first();
+
+                if ($user->is_custom_user == 0) {
+                    $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+                    if (count($stripeSubscription) > 0) {
+                        if ($stripeSubscription->first()->livemode == true || $stripeSubscription->first()->livemode == false && $stripeSubscription->first()->status != 'canceled') {
+                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
+                        }
+                        $user->is_custom_user = 1;
+                        $user->mode = 'custom';
+                        $user->save();
+                        DB::table('subscriptions')->updateOrInsert(
+                            ['user_id' => $user->id],
+                            [
+                                'name' => 'main',
+                                'stripe_status' => 'canceled',
+                                'plan_duration' => $request->plan_duration,
+                                'ends_at' => null,
+                                'renews_at' => $endsAt,
+                                'quantity' => $newDeviceCount,
+                                'updated_at' => now(),
+                            ]
+                        );
+                    }
+                }
+
+
+                if ($request->plan_duration != $subscription->plan_duration) {
+                    DB::table('subscriptions')->updateOrInsert(
+                        ['user_id' => $user->id],
+                        [
+                            'name' => 'main',
+                            'stripe_status' => 'canceled',
+                            'plan_duration' => $request->plan_duration,
+                            'ends_at' => null,
+                            'renews_at' => $endsAt,
+                            'quantity' => $newDeviceCount,
+                            'updated_at' => now(),
+                        ]
+                    );
+                }
+
+
+
+
             }
-
-
-
-
+            DB::commit();
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
+            DB::rollBack();
             //throw $th;
             return redirect('admin/users')
                 ->with('info', $th->getMessage());
@@ -864,6 +895,8 @@ class UsersController extends Controller
             ->latest('created_at')
             ->first();
         // dd($subscription);
+        // $data = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+        // return response()->json($data);
         $channelRule = DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->first();
