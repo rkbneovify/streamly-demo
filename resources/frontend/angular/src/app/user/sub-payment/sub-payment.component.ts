@@ -79,12 +79,14 @@ export class SubPaymentComponent implements OnInit {
   cardZipData!: any;
   device_per_unit: number = 5;
 
+  stripeKey: string = '';
+
   @ViewChild('cardInfo') public cardInfo!: ElementRef;
   _totalAmount: number = 10;
   card: any;
   cardHandler = this.onChange.bind(this);
   cardError: any;
-  subscribeNowBtn:string = 'Subscribe Now';
+  subscribeNowBtn: string = 'Subscribe Now';
 
   constructor(
     private crud: CrudService,
@@ -95,7 +97,7 @@ export class SubPaymentComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {
 
-    const UserEmail = JSON.parse(localStorage.getItem('userDetails')).email?JSON.parse(localStorage.getItem('userDetails')).email:'';
+    const UserEmail = JSON.parse(localStorage.getItem('userDetails')).email ? JSON.parse(localStorage.getItem('userDetails')).email : '';
 
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -146,7 +148,7 @@ export class SubPaymentComponent implements OnInit {
 
   allowOnlyStrings(event: KeyboardEvent): void {
     const charCode = event.charCode || event.keyCode || event.which;
-  
+
     // Allow only alphabet characters (A-Z, a-z)
     if (
       !(charCode >= 65 && charCode <= 90) && // Uppercase A-Z
@@ -252,8 +254,8 @@ export class SubPaymentComponent implements OnInit {
   basicPrice: any = 20;
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
-  couponCode:string = '';
-  isCouPonApply:boolean = false;
+  couponCode: string = '';
+  isCouPonApply: boolean = false;
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -268,7 +270,7 @@ export class SubPaymentComponent implements OnInit {
             if (this.couponDataDetails) {
               this.discountCode();
             }
-          this.isCouPonApply = true;
+            this.isCouPonApply = true;
           } else {
             this.ts.error(data.message);
             this.discount = 0;
@@ -276,7 +278,7 @@ export class SubPaymentComponent implements OnInit {
             this.grandTotalPrice = this.totalPrice;
           }
 
-          console.log(this.isCouPonApply,'====>')
+          console.log(this.isCouPonApply, '====>')
         },
         error: (err: any) => {
           console.error('Error validating coupon:', err);
@@ -286,7 +288,7 @@ export class SubPaymentComponent implements OnInit {
           this.couponCode = '';
         }
         ,
-        complete:()=>{
+        complete: () => {
           // this.couponFormControl.reset();
         }
       });
@@ -301,13 +303,13 @@ export class SubPaymentComponent implements OnInit {
     // }
   }
 
-  cancelDisCount(){
+  cancelDisCount() {
     this.couponDataDetails = null;
-      this.couponCode = ''
-      this.discount = 0;
-      this.grandTotalPrice = this.totalPrice;
-      this.isCouPonApply = false;
-      this.couponFormControl.reset();
+    this.couponCode = ''
+    this.discount = 0;
+    this.grandTotalPrice = this.totalPrice;
+    this.isCouPonApply = false;
+    this.couponFormControl.reset();
   }
 
   // counter inc
@@ -325,7 +327,7 @@ export class SubPaymentComponent implements OnInit {
       this.device_per_unit = Number(+this.counterControl.value);
       this.getTotalPrice();
     }
-    else{
+    else {
       this.ts.error('Devices in not less then 5.')
     }
   }
@@ -333,36 +335,36 @@ export class SubPaymentComponent implements OnInit {
   getTotalPrice() {
     if (this.checkoutPlans?.plandetails?.tiers?.length > 0) {
       this.totalPrice = 0;
-  
+
       const tiers = this.checkoutPlans.plandetails.tiers;
       let selectedTier: any = null;
-  
+
       // Loop through each tier to find the correct one
       for (let i = 0; i < tiers.length; i++) {
         const tier = tiers[i];
         const upTo = tier.up_to;
-  
+
         if (upTo === null || this.device_per_unit <= upTo) {
           selectedTier = tier;
           break; // Stop at the first matching tier
         }
       }
-  
+
       // If no tier matched (very unlikely unless data is invalid), use the last tier
       if (!selectedTier) {
         selectedTier = tiers[tiers.length - 1];
       }
-  
+
       const unitAmount = selectedTier.unit_amount || 0;
       this.devicePlanAmount = unitAmount / 100;
       this.totalPrice = this.devicePlanAmount * this.device_per_unit;
-  
+
       this.grandTotalPrice = this.totalPrice;
-  
+
       this.discountCode();
     }
   }
-  
+
 
   onChange(error: any) {
     if (error) {
@@ -430,17 +432,17 @@ export class SubPaymentComponent implements OnInit {
     this.paymentFormDetailSub.markAllAsTouched();
     this.loading = true;
     const { token, error } = await this.stripe.createToken(this.card);
-      if (token) {
-        this.submitPaymentDetails(token);
-      }
-      if (token) {
-        this.onSuccess(token);
-      } else {
-        this.onError(error);
-      }
+    if (token) {
+      this.submitPaymentDetails(token);
+    }
+    if (token) {
+      this.onSuccess(token);
+    } else {
+      this.onError(error);
+    }
   }
 
-  onSuccess(token: any) {}
+  onSuccess(token: any) { }
   onError(error: any) {
     if (error.message) {
       this.cardError = error.message;
@@ -457,7 +459,7 @@ export class SubPaymentComponent implements OnInit {
         this.grandTotalPrice = this.totalPrice - this.discount;
       } else if (this.couponDataDetails?.percentoff) {
         this.discount =
-        this.totalPrice * (this.couponDataDetails?.percentoff / 100);
+          this.totalPrice * (this.couponDataDetails?.percentoff / 100);
         this.grandTotalPrice = this.totalPrice - this.discount;
       }
     } else {
@@ -468,7 +470,7 @@ export class SubPaymentComponent implements OnInit {
   submitPaymentDetails(token: any) {
     const formData = this.paymentFormDetailSub.value;
     let trial_day;
-    let quantity = this.selectedPlanType == 'per_unit' ? 1:this.device_per_unit;
+    let quantity = this.selectedPlanType == 'per_unit' ? 1 : this.device_per_unit;
 
     if (this.checkoutPlans.plandetails?.trial_period_days) {
       trial_day = this.checkoutPlans.plandetails?.trial_period_days;
@@ -491,8 +493,9 @@ export class SubPaymentComponent implements OnInit {
       card_brand: token.card.brand,
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetailSub.value.cardZip,
-      coupon:  this.couponCode,
+      coupon: this.couponCode,
       plan_type: this.selectedPlanType,
+      stripe_key: this.stripeKey
     };
 
     this.crud
@@ -532,9 +535,9 @@ export class SubPaymentComponent implements OnInit {
   // selectedplansbyid
   selectedPlanById() {
     if (!this.selectedPlan) return;
-  
+
     const id = this.selectedPlan;
-  
+
     if (this.selectedPlanType === 'per_unit') {
       this.crud.getRequest('get-basic-plan/' + id).subscribe({
         next: (data: any) => {
@@ -542,8 +545,9 @@ export class SubPaymentComponent implements OnInit {
           const amount = this.checkoutPlans?.plandetails?.amount || 0;
           this.totalPrice = amount / 100;
           this.grandTotalPrice = this.totalPrice;
-  
+
           this.initializeKey(data.STRIPE_KEY);
+          this.stripeKey = data.STRIPE_KEY;
           // this.initiateCardElement();
         },
         error: (err: any) => {
@@ -551,15 +555,15 @@ export class SubPaymentComponent implements OnInit {
         },
       });
     }
-  
+
     if (this.selectedPlanType === 'tiered') {
       this.crud.getRequest('get-tier-plan/' + id).subscribe({
         next: (data: any) => {
           this.checkoutPlans = data;
-  
+
           // After setting plan, calculate total based on device count
           this.getTotalPrice();
-  
+
           this.initializeKey(data.STRIPE_KEY);
         },
         error: (err: any) => {
@@ -571,7 +575,7 @@ export class SubPaymentComponent implements OnInit {
 
   getTierUnitAmount(tiers: any[], devices: number): number {
     if (!tiers || !devices) return 0;
-  
+
     for (let tier of tiers) {
       if (tier.up_to === null || devices <= +tier.up_to) {
         return +tier.unit_amount;
@@ -579,8 +583,8 @@ export class SubPaymentComponent implements OnInit {
     }
     return 0;
   }
-  
-  
+
+
 
   Bearer_token: any;
   getAuthHeaders(): HttpHeaders {
@@ -647,30 +651,30 @@ export class SubPaymentComponent implements OnInit {
 
   // Function to prevent input of more than 5 digits
 
-    // Function to prevent input of more than 5 digits
-    onZipcodeKeyPress(event: any) {
-      const input = event.target.value;
-      console.log('===',input)
-      if (input.length >= 5) {
-        event.preventDefault(); // Prevents user from entering more than 5 characters
-      }
+  // Function to prevent input of more than 5 digits
+  onZipcodeKeyPress(event: any) {
+    const input = event.target.value;
+    console.log('===', input)
+    if (input.length >= 5) {
+      event.preventDefault(); // Prevents user from entering more than 5 characters
     }
-
-onZipcodeInput(event: any): void {
-  const input = event.target.value;
-
-  // Remove any non-numeric characters
-  const sanitizedInput = input.replace(/[^0-9]/g, '');
-  
-  // Limit input to 5 characters
-  if (input > 5) {
-    event.target.value = sanitizedInput.substring(0, 5);
-  } else {
-    event.target.value = sanitizedInput;
   }
-  this.paymentFormDetailSub.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
-  console.log('Sanitized Input:', event.target.value);
-}
+
+  onZipcodeInput(event: any): void {
+    const input = event.target.value;
+
+    // Remove any non-numeric characters
+    const sanitizedInput = input.replace(/[^0-9]/g, '');
+
+    // Limit input to 5 characters
+    if (input > 5) {
+      event.target.value = sanitizedInput.substring(0, 5);
+    } else {
+      event.target.value = sanitizedInput;
+    }
+    this.paymentFormDetailSub.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
+    console.log('Sanitized Input:', event.target.value);
+  }
 
 }
 // this.paymentFormDetailSub.get('cardZip').setValue(sanitizedValue, { emitEvent: false });
