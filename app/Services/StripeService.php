@@ -7,6 +7,15 @@ use Stripe\StripeClient;
 
 class StripeService
 {
+
+
+    public function cancelSubscriptionNow(string $subscriptionId, string $mode = 'Live')
+    {
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
+
+        return $stripe->subscriptions->cancel($subscriptionId);
+    }
     public function getPlans($mode = 'Live')
     {
         $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
@@ -21,12 +30,12 @@ class StripeService
 
     public function getPlansAndStore()
     {
-        $cacheKey = "stripe_plans_all";
+        // $cacheKey = "stripe_plans_all";
 
-        // If cached, return directly
-        if (Cache::has($cacheKey)) {
-            return collect(Cache::get($cacheKey));
-        }
+        // // If cached, return directly
+        // if (Cache::has($cacheKey)) {
+        //     return collect(Cache::get($cacheKey));
+        // }
 
         // Otherwise fetch from Stripe
         $livePlans = $this->getPlans('Live');
@@ -35,8 +44,8 @@ class StripeService
         // Merge both Live + Test plans into one flat array
         $plans = array_merge($livePlans->data, $testPlans->data);
 
-        // Store in cache for 6 hours
-        Cache::put($cacheKey, $plans, now()->addHours(6));
+        // // Store in cache for 6 hours
+        // Cache::put($cacheKey, $plans, now()->addHours(6));
 
         return collect($plans);
     }
@@ -47,7 +56,10 @@ class StripeService
         $stripe = new StripeClient($key);
 
         try {
+
             return $stripe->subscriptions->retrieve($subscriptionId, []);
+
+
         } catch (\Exception $e) {
             return null;
         }

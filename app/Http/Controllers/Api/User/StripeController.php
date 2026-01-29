@@ -612,6 +612,10 @@ class StripeController extends Controller
 
     public function afterLoginSubscriptionPayment(Request $request)
     {
+
+        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        \Stripe\Stripe::setApiKey($STRIPE_SECRET);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'stripeToken' => 'required',
