@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
+use App\ActivityLog;
 use App\Console\DebugKernel;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
 use App\Services\GracenoteService;
-
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Subscription::observe(SubscriptionsObserver::class);
+
+
+
     }
 }

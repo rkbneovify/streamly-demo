@@ -11,7 +11,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class StripekeysController extends Controller
 {
-  use ActionTrait;
+
   public function index()
   {
 
@@ -79,7 +79,9 @@ class StripekeysController extends Controller
 
   public function qrCodeStatus()
   {
-    return $this->startAction(function () {
+
+    DB::beginTransaction();
+    try {
       $setting = Setting::where('key_name', 'qrvisibility')->first();
       if ($setting->value == '1') {
         $setting->value = '0';
@@ -87,13 +89,16 @@ class StripekeysController extends Controller
         $setting->value = '1';
       }
       $setting->save();
-    })->catch(function ($e) {
-      Alert::error('Error !', $e->getMessage());
-      return redirect()->back();
-    })->finally(function () {
+      DB::commit();
       toast('Status changes successfully !', 'success');
       return redirect()->back();
-    })->execute();
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      Alert::error('Error !', $th->getMessage());
+      return redirect()->back();
+    }
+
+
 
   }
 

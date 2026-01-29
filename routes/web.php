@@ -107,7 +107,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
-    Route::get('/users', 'Admin\UsersController@index');
+    Route::get('/users', 'Admin\UsersController@index')->name('users');
     Route::get('/users/new', 'Admin\UsersController@index2')->name('users.new.index');
     Route::get('/users/status/{id}', 'Admin\UsersController@changeStatus')->name('users.status');
     Route::get('/users/delete/{id}', 'Admin\UsersController@destroyById')->name('users.delete');
@@ -182,6 +182,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
 
     Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
+
+    // activity
+    Route::get('/users/activities/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create')->name('channel.create'); //channels Statust
@@ -459,7 +462,7 @@ Route::get('dropzone/delete', 'DropzoneController@delete')->name('dropzone.delet
 Route::get('/stripesync', function (Request $request) {
 
     Artisan::call('stripe:sync-renewals');
-    Artisan::call('stripe:check-customer-mode');
+    // Artisan::call('stripe:check-customer-mode');
 
     return redirect()->back()->with('info', Artisan::output());
     //return Artisan::output();
