@@ -613,8 +613,9 @@ class StripeController extends Controller
     public function afterLoginSubscriptionPayment(Request $request)
     {
 
-        $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-        \Stripe\Stripe::setApiKey($STRIPE_SECRET);
+
+
+
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -628,8 +629,10 @@ class StripeController extends Controller
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
+            'stripe_key' => 'required',
             'card_brand' => 'required',
             'card_last_four' => 'required',
+
             'zip_code' => ['required', 'regex:/^[0-9]{3,7}$/', 'exists:zipcodes,zipcode,status,1'],
         ], ['zip_code.exists' => 'Unfortunately, the service is not yet available for the submitted zip code.']);
         if ($validator->fails()) {
@@ -638,6 +641,12 @@ class StripeController extends Controller
                 'message' => $validator->errors()
             ], 400);
         } else {
+
+            $STRIPE_SECRET = DB::table('Stripe_keys')
+                ->where("", $request->stripe_key)
+                ->where('status', 'active')->value('stripe_secret');
+            \Stripe\Stripe::setApiKey($STRIPE_SECRET);
+
             try {
                 // fetch user
                 $user = JWTAuth::user();
