@@ -518,3 +518,17 @@ Route::get('/admin/passcode/{id}', function ($id) {
         'passcode' => HashUserID($id)
     ]);
 });
+
+Route::get('/admin/clear', function ($id) {
+    // Application cache
+    Artisan::call('cache:clear');
+
+    // Config cache
+    Artisan::call('config:clear');
+
+    // Route cache
+    Artisan::call('route:clear');
+
+    // View (Blade) cache
+    Artisan::call('view:clear');
+});
