@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use DB;
 use Laravel\Cashier\Billable;
 use App\Models\Channel;
@@ -171,4 +171,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(HoaUser::class, 'user_id', 'id');
 
     }
+
+
 }

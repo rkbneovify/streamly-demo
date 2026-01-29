@@ -40,7 +40,7 @@ trait DbTransactionTrait
             }
 
             // Web request
-            if (!config('app.debug')) {
+            if (!env('APP_DEBUG')) {
                 abort(500, 'Something went wrong.');
             }
 

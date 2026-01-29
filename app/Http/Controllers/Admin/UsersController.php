@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActivityEvent;
+use App\Enums\ActivityEventType;
 use App\Exports\CustomUserExport;
 use App\Exports\UserExport;
 use App\Exports\UserSessionDeviceExport;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\Zipcode;
@@ -39,10 +42,14 @@ use Stripe\Stripe;
 
 class UsersController extends Controller
 {
-    public function __construct()
+    use ActivityLogger;
+    protected $stripeService;
+    public function __construct(StripeService $stripeService)
     {
+
         Stripe::setApiKey(config('services.stripe.secret'));
         $this->middleware('auth');
+        $this->stripeService = $stripeService;
     }
 
     public function index2()
@@ -576,6 +583,7 @@ class UsersController extends Controller
         ]);
 
 
+        DB::beginTransaction();
         try {
             $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
 
@@ -748,25 +756,7 @@ class UsersController extends Controller
             // ]);
 
             // Step 5: Calculate subscription end date
-            $endsAt = null;
-            switch ($request->plan_duration) {
-                case '1 Month':
-                    $endsAt = Carbon::now()->addMonth();
-                    break;
-                case '3 Months':
-                    $endsAt = Carbon::now()->addMonths(3);
-                    break;
-                case '6 Months':
-                    $endsAt = Carbon::now()->addMonths(6);
-                    break;
-                case '12 Months':
-                    $endsAt = Carbon::now()->addMonths(12);
-                    break;
-                case 'Never':
-                default:
-                    $endsAt = null;
-                    break;
-            }
+
 
             // Step 6: Update subscription if tier user
             // Step 6: Subscription logic
@@ -797,18 +787,7 @@ class UsersController extends Controller
 
             // new subscription logic
 
-            DB::table('subscriptions')->updateOrInsert(
-                ['user_id' => $user->id],
-                [
-                    'name' => 'main',
-                    'stripe_status' => 'active',
-                    'plan_duration' => $request->plan_duration,
-                    'ends_at' => null,
-                    'renews_at' => $endsAt,
-                    'quantity' => $newDeviceCount,
-                    'updated_at' => now(),
-                ]
-            );
+
 
             // Hoa update logic
             if (in_array(7, $request->input('roles'))) {
@@ -820,11 +799,79 @@ class UsersController extends Controller
 
             }
 
+            // subscription logic
+            if ($request->plan_duration != null || $request->plan_duration != '') {
+
+                $endsAt = null;
+                switch ($request->plan_duration) {
+                    case '1 Month':
+                        $endsAt = Carbon::now()->addMonth();
+                        break;
+                    case '3 Months':
+                        $endsAt = Carbon::now()->addMonths(3);
+                        break;
+                    case '6 Months':
+                        $endsAt = Carbon::now()->addMonths(6);
+                        break;
+                    case '12 Months':
+                        $endsAt = Carbon::now()->addMonths(12);
+                        break;
+                    case 'Never':
+                    default:
+                        $endsAt = null;
+                        break;
+                }
+
+                $subscription = Subscription::where('user_id', $id)->first();
+
+                if ($user->is_custom_user == 0) {
+                    $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+                    if (count($stripeSubscription) > 0) {
+                        if ($stripeSubscription->first()->livemode == true || $stripeSubscription->first()->livemode == false && $stripeSubscription->first()->status != 'canceled') {
+                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
+                        }
+                        $user->is_custom_user = 1;
+                        $user->mode = 'custom';
+                        $user->save();
+                        DB::table('subscriptions')->updateOrInsert(
+                            ['user_id' => $user->id],
+                            [
+                                'name' => 'main',
+                                'stripe_status' => 'canceled',
+                                'plan_duration' => $request->plan_duration,
+                                'ends_at' => null,
+                                'renews_at' => $endsAt,
+                                'quantity' => $newDeviceCount,
+                                'updated_at' => now(),
+                            ]
+                        );
+                    }
+                }
+
+
+                if ($request->plan_duration != $subscription->plan_duration) {
+                    DB::table('subscriptions')->updateOrInsert(
+                        ['user_id' => $user->id],
+                        [
+                            'name' => 'main',
+                            'stripe_status' => 'canceled',
+                            'plan_duration' => $request->plan_duration,
+                            'ends_at' => null,
+                            'renews_at' => $endsAt,
+                            'quantity' => $newDeviceCount,
+                            'updated_at' => now(),
+                        ]
+                    );
+                }
 
 
 
+
+            }
+            DB::commit();
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
+            DB::rollBack();
             //throw $th;
             return redirect('admin/users')
                 ->with('info', $th->getMessage());
@@ -842,12 +889,14 @@ class UsersController extends Controller
         $user = User::find($id);
         $roles = Role::get();
         $userRoles = $user->roles->pluck('id')->toArray();
-
+        // return response()->json($user);
         $subscription = DB::table('subscriptions')
             ->where('user_id', $id)
             ->latest('created_at')
             ->first();
         // dd($subscription);
+        // $data = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+        // return response()->json($data);
         $channelRule = DB::table('user_zipcode_rules')
             ->where('email', $user->email)
             ->first();
@@ -1451,14 +1500,34 @@ class UsersController extends Controller
         if (is_array($id)) {
             return response()->json($id);
         } else {
+            DB::beginTransaction();
             try {
+
                 $session = SessionTable::where("id", $id)->first();
+                if ($session == null) {
+                    toast("Session not found !")->timerProgressBar()->autoClose(3000);
+                    return redirect()->back();
+                }
+                $sessionCount = SessionTable::where("users_id", $session->users_id)->count();
+                $this->activity()
+                    ->effectedUser($session->users_id)
+                    ->event(ActivityEvent::sessionRemoved)
+                    ->eventType(ActivityEventType::DELETED)
+                    ->description(ActivityEvent::sessionRemoved)
+                    ->properties(["session" => $session])
+                    ->save();
                 JWTAuth::setToken($session->access_token)->invalidate();
                 $session->delete();
+                DB::commit();
                 toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                return redirect()->back();
-            } catch (\Throwable $th) {
+                if ($sessionCount == 1) {
+                    return redirect()->route('admin.users');
 
+                } else {
+                    return redirect()->back();
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
                 toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
                 return redirect()->back();
             }
@@ -1644,7 +1713,13 @@ class UsersController extends Controller
             DB::table('session_table')->where('users_id', $user->id)->delete();
             DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
 
+
+
             $user->delete();
+
+
+
+
             DB::commit();
             toast("user deleted successfully !", 'success')
                 ->autoClose(3000)
