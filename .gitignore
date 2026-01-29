@@ -19,7 +19,7 @@ resources/frontend/angular/src/environments/environment.prod.ts
 resources/frontend/angular/src/environments/environment.ts
 
 # Ignore personal artisan cmd file
-/app/Console/Commands/GitSync.php
+/app/Console/Commands/Git.php
 /app/Console/Commands/NgCommand.php
 # channel logo
 public/uploads/channellogo
