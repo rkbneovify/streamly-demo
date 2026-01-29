@@ -643,8 +643,7 @@ class StripeController extends Controller
         } else {
 
             $STRIPE_SECRET = DB::table('Stripe_keys')
-                ->where("", $request->stripe_key)
-                ->where('status', 'active')->value('stripe_secret');
+                ->where("", $request->stripe_key)->value('stripe_secret');
             \Stripe\Stripe::setApiKey($STRIPE_SECRET);
 
             try {
