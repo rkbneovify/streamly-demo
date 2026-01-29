@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActivityEvent;
+use App\Enums\ActivityEventType;
 use App\Exports\ChannelReportExport;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\LocalZipcode;
@@ -29,13 +32,10 @@ use Svg\Tag\Rect;
  */
 
 class ChannelController extends Controller
-{    //use ImageUpload; //Using our created Trait to access inside trait method
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  Index  $request
-     * @return \Illuminate\Http\Response
-     */
+{
+
+
+    use ActivityLogger;
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['index', 'index2', 'index3', 'show', 'create', 'edit', 'update', 'destroy', 'store', 'channelData', 'UpdateAll', 'channelDelete', 'channelStore', 'changeStatus', 'bulkAction', 'exportChannelReport']]);
@@ -316,6 +316,17 @@ class ChannelController extends Controller
             'genre_id' => 'required',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+
+        $this->activity()->event(ActivityEvent::channelUpdated)
+            ->eventType(ActivityEventType::UPDATED)
+            ->description("Channel data updated")
+            ->oldData(Channel::find($id));
+        // ->properties([
+        //     'channel_old_data' => Channel::find($id)
+
+        // ]);
+
         $input = $request->only('name', 'stationName', 'url', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
         $alreadyAvalableZipcodes = array_unique(Channel::where('id', $id)->first()->zip_code);
 
@@ -410,6 +421,7 @@ class ChannelController extends Controller
         // dd($input);  //get all the post data
 
         $model = Channel::find($id);
+        $oldData = $model;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $name = Str::slug($request->name) . '-' . $id . '-' . date('Y-m-d') . '.' . $image->getClientOriginalExtension();
@@ -418,11 +430,20 @@ class ChannelController extends Controller
             $image->move($destinationPath, $name);
             $model->image = $name;
         }
-        // dd($input);exit;
+
+
         if (!$model) {
             return redirect('admin/channelstatus')->with('info', 'Channel with id ' . $id . ' cannot be found.');
         } else {
+
             $model->update($input); //update the subscription info
+
+
+            // $this->properties([
+            //     'channel_new_data' => Channel::find($id)->refresh()
+            // ])->save();
+
+            $this->newData(Channel::find($id)->refresh())->save();
 
             $model->genresync()->sync($request->genres);
             return redirect('admin/channelstatus')->with('info', 'Channel updated Successfully');
