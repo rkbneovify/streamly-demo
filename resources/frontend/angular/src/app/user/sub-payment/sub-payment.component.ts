@@ -495,7 +495,7 @@ export class SubPaymentComponent implements OnInit {
       zip_code: this.paymentFormDetailSub.value.cardZip,
       coupon: this.couponCode,
       plan_type: this.selectedPlanType,
-      stripe_key: this.stripeKey
+      // stripe_key: this.stripeKey
     };
 
     this.crud
