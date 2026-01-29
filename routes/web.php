@@ -462,7 +462,7 @@ Route::get('dropzone/delete', 'DropzoneController@delete')->name('dropzone.delet
 Route::get('/stripesync', function (Request $request) {
 
     Artisan::call('stripe:sync-renewals');
-    Artisan::call('stripe:check-customer-mode');
+    // Artisan::call('stripe:check-customer-mode');
 
     return redirect()->back()->with('info', Artisan::output());
     //return Artisan::output();
