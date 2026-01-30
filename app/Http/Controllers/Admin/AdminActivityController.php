@@ -18,9 +18,7 @@ class AdminActivityController extends Controller
     {
         DB::beginTransaction();
         try {
-            ActivityLog::where('is_read', 0)->update([
-                "is_read" => 1
-            ]);
+
 
             $user = User::where('id', $id)->with('roles')->first();
             if ($user == null) {
@@ -59,9 +57,7 @@ class AdminActivityController extends Controller
             $perPage = 1; // number of dates per page
             $page = request()->get('page', 1);
 
-            ActivityLog::where('is_read', 0)->update([
-                "is_read" => 1
-            ]);
+
             $user = User::where('id', $id)->with('roles')->first();
             if ($user == null) {
                 toast('User not found !', 'error')
