@@ -1497,42 +1497,39 @@ class UsersController extends Controller
 
     public function destroyUserSessionById($id)
     {
-        if (is_array($id)) {
-            return response()->json($id);
-        } else {
-            DB::beginTransaction();
-            try {
+        DB::beginTransaction();
+        try {
 
-                $session = SessionTable::where("id", $id)->first();
-                if ($session == null) {
-                    toast("Session not found !")->timerProgressBar()->autoClose(3000);
-                    return redirect()->back();
-                }
-                $sessionCount = SessionTable::where("users_id", $session->users_id)->count();
-                $this->activity()
-                    ->effectedUser($session->users_id)
-                    ->event(ActivityEvent::sessionRemoved)
-                    ->eventType(ActivityEventType::DELETED)
-                    ->description(ActivityEvent::sessionRemoved)
-                    ->properties(["session" => $session])
-                    ->save();
-                JWTAuth::setToken($session->access_token)->invalidate();
-                $session->delete();
-
-                toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
-                if ($sessionCount == 1) {
-                    DB::commit();
-                    return redirect()->route('admin.users');
-
-                } else {
-                    DB::commit();
-                    return redirect()->back();
-                }
-            } catch (\Throwable $th) {
-                DB::rollBack();
-                toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+            $session = SessionTable::where("id", $id)->first();
+            if ($session == null) {
+                toast("Session not found !")->timerProgressBar()->autoClose(3000);
                 return redirect()->back();
             }
+            $sessionCount = SessionTable::where("users_id", $session->users_id)->count();
+            $this->activity()
+                ->effectedUser($session->users_id)
+                ->event("Session")
+                ->eventType(ActivityEventType::REMOVED)
+                ->description("User session removed")
+                ->properties(["session" => $session])
+                ->save();
+            JWTAuth::setToken($session->access_token)->invalidate();
+            $session->delete();
+
+            toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
+
+            // return response()->json($sessionCount);
+            if ($sessionCount == 1) {
+                DB::commit();
+                return redirect()->route('admin.users');
+
+            }
+            DB::commit();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
+            return redirect()->back();
         }
 
 
