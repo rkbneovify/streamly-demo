@@ -8,7 +8,9 @@ use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
 use App\Services\GracenoteService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Stripe\Stripe;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +38,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        $stripeKeys = DB::table('stripe_keys')
+            ->where('status', 'active')
+            ->first();
+
+        if ($stripeKeys) {
+            Stripe::setApiKey($stripeKeys->stripe_secret);
+
+            config([
+                'cashier.key' => $stripeKeys->stripe_key,
+                'cashier.secret' => $stripeKeys->stripe_secret,
+            ]);
+        }
         Subscription::observe(SubscriptionsObserver::class);
 
 
