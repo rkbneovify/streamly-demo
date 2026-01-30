@@ -519,7 +519,7 @@ Route::get('/admin/passcode/{id}', function ($id) {
     ]);
 });
 
-Route::get('/admin/clear', function ($id) {
+Route::get('/admin/clear', function () {
     // Application cache
     Artisan::call('cache:clear');
 
@@ -531,4 +531,6 @@ Route::get('/admin/clear', function ($id) {
 
     // View (Blade) cache
     Artisan::call('view:clear');
+
+    return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
