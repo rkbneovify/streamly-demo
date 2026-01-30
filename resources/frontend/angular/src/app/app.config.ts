@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       NgSelectModule,
       NgxStripeModule.forRoot(''),
-      StripeModule.forRoot(environment.stripe.publicKey),
+      StripeModule.forRoot(''),
       BrowserAnimationsModule,
       BrowserModule,
       SweetalertService,
