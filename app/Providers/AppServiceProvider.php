@@ -40,19 +40,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        if (Schema::hasTable('stripe_keys')) {
-            $keys = DB::table('stripe_keys')->where('status', 'active')->first();
+        $keys = DB::table('Stripe_keys')->where('status', 'active')->first();
 
-            if ($keys) {
-                Stripe::setApiKey($keys->stripe_secret);
+        if ($keys != null) {
+            Stripe::setApiKey($keys->stripe_secret);
+            config([
+                'cashier.key' => $keys->stripe_key,
+                'cashier.secret' => $keys->stripe_secret,
+            ]);
 
-                config([
-                    'cashier.key' => $keys->stripe_key,
-                    'cashier.secret' => $keys->stripe_secret,
-                ]);
-            }
         }
-
 
         Subscription::observe(SubscriptionsObserver::class);
 
