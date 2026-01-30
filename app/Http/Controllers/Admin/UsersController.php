@@ -1518,12 +1518,14 @@ class UsersController extends Controller
                     ->save();
                 JWTAuth::setToken($session->access_token)->invalidate();
                 $session->delete();
-                DB::commit();
+
                 toast("Session removed successfully !")->timerProgressBar()->autoClose(3000);
                 if ($sessionCount == 1) {
+                    DB::commit();
                     return redirect()->route('admin.users');
 
                 } else {
+                    DB::commit();
                     return redirect()->back();
                 }
             } catch (\Throwable $th) {
