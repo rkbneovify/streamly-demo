@@ -641,9 +641,7 @@ class StripeController extends Controller
             ], 400);
         } else {
 
-            // $STRIPE_SECRET = DB::table('Stripe_keys')
-            //     ->where('status', 'active')->value('stripe_secret');
-            // \Stripe\Stripe::setApiKey($STRIPE_SECRET);
+
 
             try {
                 // fetch user
