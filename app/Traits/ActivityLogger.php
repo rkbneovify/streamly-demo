@@ -14,6 +14,7 @@ trait ActivityLogger
     {
         $this->activity = new ActivityLog();
         $this->activity->user_id = Auth::id();
+        $this->activity->user_ip_address = request()->ip();
 
         return $this;
     }
