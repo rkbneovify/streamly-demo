@@ -1,11 +1,12 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
 
     <!-- video.js -->
-    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
-    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+    <link href="https://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <script src="https://vjs.zencdn.net/6.6.3/video.js"></script>
 
     <!-- Brightcove DVRUX plugin -->
     <link href="//players.brightcove.net/videojs-live-dvrux/1/videojs-live-dvrux.min.css" rel="stylesheet">
@@ -17,10 +18,11 @@
 
     <script src="https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"></script>
 </head>
+
 <body>
     <video id="example-video" width="600" height="300" class="video-js vjs-default-skin" controls autoplay muted>
         <!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
-        <source src="http://cdn.streamlytv.com/live/CNN/interlink.m3u8" type="application/x-mpegURL"/>
+        <source src="http://cdn.streamlytv.com/live/CNN/interlink.m3u8" type="application/x-mpegURL" />
     </video>
 
     <script>
@@ -48,4 +50,5 @@
         player.dvrux();
     </script>
 </body>
+
 </html>

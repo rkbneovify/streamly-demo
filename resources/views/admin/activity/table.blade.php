@@ -281,6 +281,7 @@
                              {{ $item->description }}
 
                          </div>
+
                          <div class="row">
                              @if ($item->properties)
                                  <details class="mt-2">
