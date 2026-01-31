@@ -273,8 +273,15 @@ class ChannelController extends Controller
 
         $model->fill($input);
 
+
         if ($model->save()) {
 
+            $this->activity()->event("Channel")
+                ->eventType(ActivityEventType::CREATED)
+                ->description(ActivityEventType::CREATED)
+                ->properties([
+                    "data" => $model
+                ])->save();
             $model->genresync()->attach($request->genres);
             return redirect('admin/channelstatus')->with('info', 'Channel Added Successfully');
         } else {
@@ -318,7 +325,7 @@ class ChannelController extends Controller
         ]);
 
 
-        $this->activity()->event(ActivityEvent::channelUpdated)
+        $this->activity()->event("Channel")
             ->eventType(ActivityEventType::UPDATED)
             ->description("Channel data updated")
             ->oldData(Channel::find($id));
@@ -543,15 +550,31 @@ class ChannelController extends Controller
 
             if ($channel->status == 1) {
                 $channel->status = 0;
+                $this->activity()
+                    ->event("Channel")
+                    ->eventType(ActivityEventType::STATUSDISABLE)
+                    ->description("channel status disable");
             } else {
                 $channel->status = 1;
+                $this->activity()
+                    ->event("Channel")
+                    ->eventType(ActivityEventType::STATUSENABLE)
+                    ->description("channel status enable");
             }
             $channel->save();
+            $this->properties([
+                "data" => $channel
+            ])->save();
+
+
             DB::commit();
             toast("Channel status changed successfully", 'success')
                 ->autoClose(3000)
                 ->timerProgressBar();
             return redirect()->back()->with('remove-all', true);
+
+
+
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
@@ -580,11 +603,20 @@ class ChannelController extends Controller
         }
 
         DB::beginTransaction();
+        $this->activity()
+            ->event("Channel");
+
+
         switch ($request->action) {
             case 'active':
 
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 1]);
+                    $this->eventType(ActivityEventType::STATUSENABLE)
+                        ->description("multiple Channel status enable")
+                        ->properties([
+                            "data" => Channel::whereIn('id', $request->selected)->get()
+                        ])->save();
                     DB::commit();
 
                     toast("Channel(s) activated successfully !", "success")
@@ -601,6 +633,11 @@ class ChannelController extends Controller
             case 'inactive':
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 0]);
+                    $this->eventType(ActivityEventType::STATUSDISABLE)
+                        ->description("multiple Channel status disable")
+                        ->properties([
+                            "data" => Channel::whereIn('id', $request->selected)->get()
+                        ])->save();
                     DB::commit();
                     toast("Channel(s) inactivate successfully !", "success")
                         ->timerProgressBar()
