@@ -16,10 +16,11 @@ class AdminActivityController extends Controller
 
     public function index($id, Request $request)
     {
+
         DB::beginTransaction();
         try {
 
-
+            ActivityLog::resolveNotification();
             $user = User::where('id', $id)->with('roles')->first();
             if ($user == null) {
                 toast('User not found !', 'error')
@@ -51,8 +52,11 @@ class AdminActivityController extends Controller
 
     public function index2($id, Request $request)
     {
+
         DB::beginTransaction();
         try {
+
+            ActivityLog::resolveNotification();
 
             $perPage = 1; // number of dates per page
             $page = request()->get('page', 1);

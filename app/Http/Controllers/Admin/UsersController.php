@@ -223,6 +223,7 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+        DB::beginTransaction();
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -553,9 +554,20 @@ class UsersController extends Controller
 
             Log::info("Mail sent to: {$request->email}");
 
+
+            $user->roles;
+            $user->subscriptions;
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::CREATED)
+                ->description("New user created")
+                ->properties([
+                    "data" => $user
+                ])->save();
+            DB::commit();
             return redirect('admin/users')->with('info', 'User Added Successfully');
         } catch (\Throwable $e) {
-
+            DB::rollBack();
             // Log::error('Exception occurred while creating user: ' . $e->getMessage());
             return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
         }
@@ -671,6 +683,7 @@ class UsersController extends Controller
             $user = User::find($id);
             $roleId = $user->roles[0]->id;
             $roleName = $user->roles[0]->name;
+            $subscription = $user->subscriptions;
 
 
 
@@ -868,7 +881,16 @@ class UsersController extends Controller
 
 
             }
+
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::UPDATED)
+                ->description("User details updated")
+                ->oldData($user);
+
             DB::commit();
+            $this->newData($user->refresh())
+                ->save();
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -1098,8 +1120,16 @@ class UsersController extends Controller
 
             DB::table('session_table')->where('users_id', $user->id)->delete();
             DB::table('user_zipcode_rules')->where('email', $email)->delete();
-
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::DELETED)
+                ->description("User deleted")
+                ->properties([
+                    "data" => $user
+                ])->save();
             $user->delete();
+
+
 
             \Log::info("User ID {$id} successfully deleted.");
             if ($request->ajax()) {
@@ -1665,6 +1695,10 @@ class UsersController extends Controller
 
         DB::beginTransaction();
         try {
+            $this->activity()
+                ->event("User");
+
+
             $user = User::find($id);
             if ($user == null) {
 
@@ -1675,9 +1709,19 @@ class UsersController extends Controller
             }
             if ($user->is_active == 1) {
                 $user->is_active = 0;
+                $this->eventType(ActivityEventType::STATUSDISABLE)
+                    ->description("User disable")
+                    ->properties([
+                        "data" => $user
+                    ])->save();
 
             } else {
                 $user->is_active = 1;
+                $this->eventType(ActivityEventType::STATUSENABLE)
+                    ->description("User enable")
+                    ->properties([
+                        "data" => $user
+                    ])->save();
             }
             $user->save();
             DB::commit();
@@ -1712,7 +1756,15 @@ class UsersController extends Controller
             DB::table('session_table')->where('users_id', $user->id)->delete();
             DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
 
-
+            $user->roles;
+            $user->subscriptions;
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::DELETED)
+                ->description("User deleted")
+                ->properties([
+                    "data" => $user
+                ])->save();
 
             $user->delete();
 
@@ -1804,8 +1856,16 @@ class UsersController extends Controller
 
                 try {
                     User::whereIn('id', $request->user_ids)->update(['is_active' => 1]);
-                    DB::commit();
 
+
+                    $this->activity()
+                        ->event("User")
+                        ->eventType(ActivityEventType::STATUSENABLE)
+                        ->description("Multiple user active")
+                        ->properties([
+                            "data" => User::whereIn('id', $request->user_ids)->get()
+                        ])->save();
+                    DB::commit();
                     toast("User(s) activated successfully !", "success")
                         ->timerProgressBar()
                         ->autoClose(5000);
@@ -1820,6 +1880,14 @@ class UsersController extends Controller
             case 'inactivate':
                 try {
                     User::whereIn('id', $request->user_ids)->update(['is_active' => 0]);
+
+                    $this->activity()
+                        ->event("User")
+                        ->eventType(ActivityEventType::STATUSDISABLE)
+                        ->description("Multiple user inactive")
+                        ->properties([
+                            "data" => User::whereIn('id', $request->user_ids)->get()
+                        ])->save();
                     DB::commit();
                     toast("User(s) inactivate successfully !", "success")
                         ->timerProgressBar()
@@ -1834,6 +1902,14 @@ class UsersController extends Controller
 
             case "delete":
                 try {
+
+                    $this->activity()
+                        ->event("User")
+                        ->eventType(ActivityEventType::DELETED)
+                        ->description("Multiple user deleted")
+                        ->properties([
+                            "data" => User::whereIn('id', $request->user_ids)->get()
+                        ])->save();
                     $users = User::whereIn('id', $request->user_ids)->get();
                     foreach ($users as $user) {
                         DB::table('outside_location_plays')->where('users_id', $user->id)->delete();
@@ -1841,6 +1917,7 @@ class UsersController extends Controller
                         DB::table('user_zipcode_rules')->where('email', $user->email)->delete();
                         $user->delete();
                     }
+
                     DB::commit();
                     toast("User(s) deleted successfully !", "success")
                         ->timerProgressBar()
@@ -1858,11 +1935,20 @@ class UsersController extends Controller
 
                 try {
 
+                    $this->activity()
+                        ->event("Session")
+                        ->eventType(ActivityEventType::REMOVED)
+                        ->description("Multiple session removed")
+                        ->properties([
+                            "data" => SessionTable::whereIn("id", $request->user_ids)->get()
+                        ])->save();
                     foreach ($request->user_ids as $id) {
                         $session = SessionTable::where("id", $id)->first();
                         JWTAuth::setToken($session->access_token)->invalidate();
                         $session->delete();
                     }
+
+
                     DB::commit();
                     toast("Session removed successfully !", "success")->timerProgressBar()->autoClose(3000);
                     return redirect('admin/users');
