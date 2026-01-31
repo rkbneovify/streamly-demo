@@ -556,7 +556,7 @@ class UsersController extends Controller
 
 
             $user->roles;
-            $user->subscriptions;
+            $user->subscriptionLatest;
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::CREATED)
@@ -683,7 +683,7 @@ class UsersController extends Controller
             $user = User::find($id);
             $roleId = $user->roles[0]->id;
             $roleName = $user->roles[0]->name;
-            $subscription = $user->subscriptions;
+            $subscription = $user->subscriptionLatest;
 
 
 
