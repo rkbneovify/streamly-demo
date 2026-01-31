@@ -16,7 +16,7 @@
 	<script src="//vjs.zencdn.net/5.4.6/video.min.js"></script> --}}
 
     <!-- video.js -->
-    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
     <script src="https://vjs.zencdn.net/6.6.3/video.js"></script>
 
     <!-- Brightcove DVRUX plugin -->
@@ -225,25 +225,25 @@
                     </div>
                 </div>
                 <!-- <div class="row">
-         
-         <div class="offset-md-3 col-xs-6 video-container">
-          <video id="example_video_1" class="video-js vjs-default-skin"
-          controls preload="auto" width="640" height="264"
-          poster="//vjs.zencdn.net/v/oceans.png"
-          data-setup='{"example_option":true}'>
-          <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
-          </video>
+             
+             <div class="offset-md-3 col-xs-6 video-container">
+              <video id="example_video_1" class="video-js vjs-default-skin"
+              controls preload="auto" width="640" height="264"
+              poster="//vjs.zencdn.net/v/oceans.png"
+              data-setup='{"example_option":true}'>
+              <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+              </video>
 
-         </div>
-         <div class="col-xs-3">
-          <div>
-           <p>Times Now Global</p>
-           <p>News Bulletin</p>
-           <p>04:00 - 05:00PM</p>
-           <p>Genre : <a href="javascript:void(0)">News</a></p>
-          </div>
-         </div>
-        </div> -->
+             </div>
+             <div class="col-xs-3">
+              <div>
+               <p>Times Now Global</p>
+               <p>News Bulletin</p>
+               <p>04:00 - 05:00PM</p>
+               <p>Genre : <a href="javascript:void(0)">News</a></p>
+              </div>
+             </div>
+            </div> -->
             </div>
         </div>
 
