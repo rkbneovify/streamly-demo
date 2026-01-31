@@ -226,7 +226,49 @@
                          </b>
 
                          <div class="row">
-                             <strong>{{ $item->event }} (<span>{{ $item->event_type }}</span>)</strong>
+                             @switch($item->event_type)
+                                 @case(\App\Enums\ActivityEventType::CREATED)
+                                     <strong class="text-success">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::UPDATED)
+                                     <strong class="text-info">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::STATUSDISABLE)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::STATUSENABLE)
+                                     <strong class="text-success">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::DELETED)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::REMOVED)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @default
+                                     <strong>{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                             @endswitch
+
 
                          </div>
                          @if ($item->effectedUser)
@@ -271,8 +313,8 @@
 
          {{-- Pagination --}}
 
-     @empty
-         <p class="text-center text-muted">No activity found</p>
-     @endforelse
+         @empty
+             <p class="text-center text-muted">No activity found</p>
+         @endforelse
 
- </form>
+     </form>
