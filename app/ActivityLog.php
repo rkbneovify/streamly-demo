@@ -33,4 +33,5 @@ class ActivityLog extends Model
                 ->update(['is_read' => 1]);
         }
     }
+
 }
