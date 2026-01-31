@@ -154,7 +154,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Subscription::class);
     }
-    public function subscriptions()
+    public function subscriptionLatest()
     {
         return $this->hasOne(Subscription::class);
     }
