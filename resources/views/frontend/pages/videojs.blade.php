@@ -5,7 +5,7 @@
     <meta charset="utf-8">
 
     <!-- video.js -->
-    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
     <script src="https://vjs.zencdn.net/6.6.3/video.js"></script>
 
     <!-- Brightcove DVRUX plugin -->
