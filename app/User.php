@@ -154,6 +154,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Subscription::class);
     }
+    public function subscriptions()
+    {
+        return $this->hasOne(Subscription::class);
+    }
     public function sessions()
     {
         return $this->hasMany(SessionTable::class, 'users_id', 'id')

@@ -226,7 +226,49 @@
                          </b>
 
                          <div class="row">
-                             <strong>{{ $item->event }} (<span>{{ $item->event_type }}</span>)</strong>
+                             @switch($item->event_type)
+                                 @case(\App\Enums\ActivityEventType::CREATED)
+                                     <strong class="text-success">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::UPDATED)
+                                     <strong class="text-info">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::STATUSDISABLE)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::STATUSENABLE)
+                                     <strong class="text-success">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::DELETED)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @case(\App\Enums\ActivityEventType::REMOVED)
+                                     <strong class="text-danger">{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                                 @break
+
+                                 @default
+                                     <strong>{{ $item->event }}
+                                         (<span>{{ $item->event_type }}</span>)
+                                     </strong>
+                             @endswitch
+
 
                          </div>
                          @if ($item->effectedUser)
@@ -244,14 +286,20 @@
                                  <details class="mt-2">
                                      <summary class="text-primary">View details</summary>
                                      <div class="row">
-                                         @foreach ($item->properties as $key => $prop)
-                                             <div class="col-6">
-                                                 <b>{{ str_replace('_', ' ', $key) }}</b>
-                                                 <pre class="bg-light p-2 small mt-1 rounded">
+                                         @if ($item->event_type == \App\Enums\ActivityEventType::UPDATED)
+                                             @foreach ($item->properties as $key => $prop)
+                                                 <div class="col-6">
+                                                     <b>{{ str_replace('_', ' ', $key) }}</b>
+                                                     <pre class="bg-light p-2 small mt-1 rounded">
 {{ json_encode($prop, JSON_PRETTY_PRINT) }}
                                 </pre>
-                                             </div>
-                                         @endforeach
+                                                 </div>
+                                             @endforeach
+                                         @else
+                                             <pre class="bg-light p-2 small mt-1 rounded">
+{{ json_encode($item->properties, JSON_PRETTY_PRINT) }}
+                                </pre>
+                                         @endif
                                      </div>
 
                                  </details>
@@ -265,8 +313,8 @@
 
          {{-- Pagination --}}
 
-     @empty
-         <p class="text-center text-muted">No activity found</p>
-     @endforelse
+         @empty
+             <p class="text-center text-muted">No activity found</p>
+         @endforelse
 
- </form>
+     </form>

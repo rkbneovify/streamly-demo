@@ -49,7 +49,7 @@
                 @foreach ($notifications as $item)
                     <a href="{{ route('admin.users.activity', $item->user_id) }}" class="dropdown-item">
                         <i class="fas fa-info mr-2"></i>
-                        {{ $item->event }}
+                        {{ $item->event . ' ' . $item->event_type }}
 
                         <span class="float-right text-muted text-sm">
                             {{ $item->created_at->diffForHumans() }}
