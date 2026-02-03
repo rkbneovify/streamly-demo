@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityEventType;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +18,7 @@ use JWTAuth;
 class StripeController extends Controller
 {
 
+    use ActivityLogger;
     public function __construct()
     {
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
@@ -43,6 +46,8 @@ class StripeController extends Controller
 
                 if ($paymentIntent->status == "canceled") {
 
+
+
                     $planCancelled = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
                     $user = DB::table('users')->where('id', $planCancelled[0]->user_id)->get();
                     $fcm_token = DB::table('session_table')
@@ -50,6 +55,14 @@ class StripeController extends Controller
                         ->where('status', 1)
                         ->whereNotNull('fcm_token')
                         ->get('fcm_token');
+
+                    $this->activity($user->first()->id)->event("Subscription")
+                        ->eventType(ActivityEventType::CANCELED)
+                        ->description("Subscription canceled")
+                        ->properties([
+                            "user" => $user,
+                            "subscription" => $planCancelled
+                        ])->save();
 
                     $fcmResults = [];
                     foreach ($fcm_token as $tokens) {
@@ -125,6 +138,13 @@ class StripeController extends Controller
                         'subscription' => $subscription->subscription, // Use the subscription ID
                     ]);
 
+                    $this->activity($user->first()->id)->event("Subscription")
+                        ->eventType(ActivityEventType::CREATED)
+                        ->description("Subscription created")
+                        ->properties([
+                            "user" => $user,
+                            "subscription" => $subscription
+                        ])->save();
                     $nextBillingDate = $upcomingInvoice->next_payment_attempt ? date('Y-m-d H:i', $upcomingInvoice->next_payment_attempt) : 'N/A';
 
                     $fcm_token = DB::table('session_table')
@@ -290,6 +310,14 @@ class StripeController extends Controller
                     $user = DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
                     //$recipt = $paymentIntent->charges->data->receipt_url;
+
+                    $this->activity($user->first()->id)->event("Trial will end")
+                        ->eventType(ActivityEventType::TRIALEND)
+                        ->description("User Trial pack will end")
+                        ->properties([
+                            "user" => $user,
+
+                        ])->save();
 
                     $fcm_token = DB::table('session_table')
                         ->where('users_id', $user[0]->id)
