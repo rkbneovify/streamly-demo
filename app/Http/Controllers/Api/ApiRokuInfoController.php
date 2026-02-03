@@ -7,6 +7,7 @@ use App\RokuInfo;
 use App\Traits\ApiResponseTrait;
 use App\Traits\DbTransactionTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ApiRokuInfoController extends Controller
@@ -26,7 +27,7 @@ class ApiRokuInfoController extends Controller
 
         return $this->dbTransaction(function () use ($request) {
             $roku = new RokuInfo();
-            $roku->user_id = $request->user()->id ?? null;
+            $roku->user_id = Auth::id() ?? null;
             $roku->token = $request->token;
             $roku->build_version = $request->build_version;
             $roku->save();
