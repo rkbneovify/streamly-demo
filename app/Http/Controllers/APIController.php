@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\SessionTable;
+use App\Traits\ActivityLogger;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -31,6 +33,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class APIController extends Controller
 {
+    use ActivityLogger;
     /**
      * @var bool
      */
@@ -1126,6 +1129,14 @@ class APIController extends Controller
             $User = JWTAuth::user();
 
             if ($User) {
+                $this->activity()
+                    ->event("User")
+                    ->eventType(ActivityEventType::DELETED)
+                    ->description("User account deleted")
+                    ->properties([
+                        "data" => $request->user()
+                    ])->save();
+
                 $UserName = $User['name'];
                 $UserEmail = $User['email'];
                 $id = $User->id;
@@ -1198,6 +1209,8 @@ class APIController extends Controller
                             ->where('users_id', $id)
                             ->where('status', "1")
                             ->update(['status' => "0"]);
+
+
                         DB::commit();
                         $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
                         return response()->json($response, 200);
