@@ -16,7 +16,7 @@ class ApiRokuInfoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'token' => 'required|string',
+            'token' => 'nullable|string',
             'build_version' => 'required|string'
         ]);
 
