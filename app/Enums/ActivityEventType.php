@@ -9,6 +9,7 @@ final class ActivityEventType
     public const DELETED = 'deleted';
     public const REMOVED = 'removed';
     public const LOGIN = 'login';
+    public const REGISTER = 'register';
     public const LOGOUT = 'logout';
     public const STATUSDISABLE = 'disable';
     public const STATUSENABLE = 'enable';
