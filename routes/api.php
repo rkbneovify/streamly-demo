@@ -188,9 +188,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 
-    // Hoa routes
+    // Roku info routes
     Route::group(['prefix' => 'roku-info'], function () {
-        Route::post("store", "Api\ApiRokuInfoController@store")->middleware(['jwt.verify']);
+        Route::post("store", "Api\ApiRokuInfoController@store");
 
     });
     // Hoa routes
