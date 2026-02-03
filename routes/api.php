@@ -189,6 +189,11 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 
     // Hoa routes
+    Route::group(['prefix' => 'roku-info'], function () {
+        Route::post("store", "Api\ApiRokuInfoController@store")->middleware(['jwt.verify']);
+
+    });
+    // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
         Route::match(['post', 'get'], "house-list", "Api\ApiHoaController@index")->middleware(['jwt.verify', 'hoa.admin.check']);
