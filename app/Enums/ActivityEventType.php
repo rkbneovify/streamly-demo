@@ -12,4 +12,6 @@ final class ActivityEventType
     public const LOGOUT = 'logout';
     public const STATUSDISABLE = 'disable';
     public const STATUSENABLE = 'enable';
+    public const CANCELED = 'canceled';
+    public const TRIALEND = 'trial_end';
 }
