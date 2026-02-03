@@ -393,7 +393,7 @@ class StripeController extends Controller
                     exit;
                 }
 
-                $this->activity($user->first()->id)->event("Subscription")
+                $this->activity($user->id)->event("Subscription")
                     ->eventType($subscription->status)
                     ->description("User subscription updated details")
                     ->properties([
