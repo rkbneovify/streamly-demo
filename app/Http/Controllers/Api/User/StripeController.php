@@ -213,12 +213,7 @@ class StripeController extends Controller
             $user->card_last_four = $request->card_last_four;
 
             if ($user->save()) {
-                $this->activity($user->id)->event("New User Registered")
-                    ->eventType(ActivityEventType::REGISTER)
-                    ->description("New user registered")
-                    ->properties([
-                        "user" => $user,
-                    ])->save();
+
                 if ($request->plan_type === 'tiered') {
                     $tieruserrole = Role::where('name', 'tieruser')->first();
                     $role_id = $tieruserrole->id;
@@ -245,7 +240,16 @@ class StripeController extends Controller
                             The ' . env('APP_NAME') . ' Team!
                         </html>';
 
+
+
+
                 try {
+                    $this->activity($user->id)->event("User")
+                        ->eventType(ActivityEventType::REGISTER)
+                        ->description("New user registered")
+                        ->properties([
+                            "user" => $user,
+                        ])->save();
                     if ($coupon = $request->get('coupon')) {
                         $subscription_details = $this->withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod);
                     } else {
@@ -263,6 +267,8 @@ class StripeController extends Controller
 
                     ]);
                 }
+
+
                 // Send email
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
                     $message->to($request->input('email'), $request->input('name'))

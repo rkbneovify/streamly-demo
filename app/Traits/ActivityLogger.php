@@ -41,7 +41,11 @@ trait ActivityLogger
 
     public function description(string $description)
     {
-        $this->activity->description = $description . ' by - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name;
+        if (Auth::check()) {
+            $this->activity->description = $description . ' by - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name;
+            return $this;
+        }
+        $this->activity->description = $description;
         return $this;
     }
 
