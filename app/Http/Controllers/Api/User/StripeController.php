@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Enums\ActivityEventType;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
 use App\Models\EmailOtp;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Models\FrontendText;
 use App\Models\Role;
@@ -31,7 +33,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
 {
+
+    use ActivityLogger;
     private $DEFAULT_ROLE_ID = 3;
+
 
     public function __construct()
     {
@@ -208,6 +213,12 @@ class StripeController extends Controller
             $user->card_last_four = $request->card_last_four;
 
             if ($user->save()) {
+                $this->activity($user->id)->event("New User Registered")
+                    ->eventType(ActivityEventType::REGISTER)
+                    ->description("New user registered")
+                    ->properties([
+                        "user" => $user,
+                    ])->save();
                 if ($request->plan_type === 'tiered') {
                     $tieruserrole = Role::where('name', 'tieruser')->first();
                     $role_id = $tieruserrole->id;
