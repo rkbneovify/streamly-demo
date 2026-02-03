@@ -392,6 +392,15 @@ class StripeController extends Controller
                     Log::info("customer.subscription.updated: User not found");
                     exit;
                 }
+
+                $this->activity($user->first()->id)->event("Subscription")
+                    ->eventType($subscription->status)
+                    ->description("User subscription updated details")
+                    ->properties([
+                        "user" => $user,
+                        "subscription" => $subscription,
+                    ])->save();
+
                 $updateData = [
                     'stripe_status' => $subscription->status,
                     'stripe_plan' => $subscription->plan->id,
