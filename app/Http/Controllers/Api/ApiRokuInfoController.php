@@ -27,7 +27,7 @@ class ApiRokuInfoController extends Controller
 
         return $this->dbTransaction(function () use ($request) {
             $roku = new RokuInfo();
-            $roku->user_id = Auth::id() ?? null;
+            $roku->user_id = Auth::id() == null ? null : Auth::id();
             $roku->token = $request->token;
             $roku->build_version = $request->build_version;
             $roku->save();
