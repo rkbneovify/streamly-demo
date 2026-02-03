@@ -10,10 +10,10 @@ trait ActivityLogger
 {
     protected ActivityLog $activity;
 
-    public function activity()
+    public function activity($userId = null)
     {
         $this->activity = new ActivityLog();
-        $this->activity->user_id = Auth::id();
+        $this->activity->user_id = $userId ?? Auth::id();
         $this->activity->user_ip_address = request()->ip();
 
         return $this;
