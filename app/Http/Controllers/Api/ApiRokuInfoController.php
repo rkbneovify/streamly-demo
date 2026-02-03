@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\RokuInfo;
+use App\SessionTable;
 use App\Traits\ApiResponseTrait;
 use App\Traits\DbTransactionTrait;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class ApiRokuInfoController extends Controller
 
     public function store(Request $request)
     {
+        // return response()->json(request()->bearerToken());
         $validator = Validator::make($request->all(), [
             'token' => 'nullable|string',
             'build_version' => 'required|string'
@@ -26,8 +28,15 @@ class ApiRokuInfoController extends Controller
         }
 
         return $this->dbTransaction(function () use ($request) {
+
+            $token = request()->bearerToken();
+            $sesstion = SessionTable::where(
+                'access_token',
+                'LIKE',
+                '%' . $token . '%'
+            )->first();
             $roku = new RokuInfo();
-            $roku->user_id = Auth::id() == null ? null : Auth::id();
+            $roku->user_id = $sesstion != null ? $sesstion->users_id : null;
             $roku->token = $request->token;
             $roku->build_version = $request->build_version;
             $roku->save();
