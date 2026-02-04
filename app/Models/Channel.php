@@ -160,6 +160,22 @@ class Channel extends Model
         return $query;
     }
 
+    public function scopeChannelType($query, $type)
+    {
+
+        if ($type == "all") {
+            $query->where('type', $type)
+                ->orWhereJsonContains('zip_code', 'All');
+        } elseif ($type == "local") {
+            $query->where('type', $type)
+                ->orWhereJsonDoesntContain('zip_code', 'All');
+        } elseif ($type == "premium") {
+            $query->where('type', $type);
+        }
+
+        return $query;
+    }
+
 
 
 

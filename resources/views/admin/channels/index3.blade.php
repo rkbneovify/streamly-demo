@@ -233,7 +233,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 mb-3">
+                        {{-- <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_availability" class="select-custom">
@@ -244,7 +244,23 @@
                                         Local</option>
                                 </select>
                             </div>
+                        </div> --}}
+
+                        <div class="col-md-3 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="selChannelType" class="select-custom">
+                                    <option value="">Select Channel Type</option>
+                                    <option value="all" {{ request('channel_type') == 'all' ? 'selected' : '' }}>All
+                                    </option>
+                                    <option value="local" {{ request('channel_type') == 'local' ? 'selected' : '' }}>
+                                        Local</option>
+                                    <option value="premium" {{ request('channel_type') == 'premium' ? 'selected' : '' }}>
+                                        Premium</option>
+                                </select>
+                            </div>
                         </div>
+
 
                         <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
@@ -495,7 +511,7 @@
             window.location.href = url.toString();
         });
 
-        $(document).on('change', '#sel_availability', function(e) {
+        $(document).on('change', '#selChannelType', function(e) {
 
             let url = new URL(window.location.href);
             let params = url.searchParams;
@@ -506,12 +522,12 @@
                 // reset URL (remove params except page)
                 url.search = "";
                 url.searchParams.delete("page");
-                url.searchParams.set("availability", $(this).val());
+                url.searchParams.set("channel_type", $(this).val());
             } else if ($(this).val() == "") {
-                url.searchParams.delete("availability");
+                url.searchParams.delete("channel_type");
             } else {
 
-                url.searchParams.set("availability", $(this).val());
+                url.searchParams.set("channel_type", $(this).val());
             }
 
             window.location.href = url.toString();
