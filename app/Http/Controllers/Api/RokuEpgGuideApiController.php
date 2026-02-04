@@ -165,6 +165,13 @@ class RokuEpgGuideApiController extends Controller
                     $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
+
+            if ($user->access_premium_channel == 0) {
+                $query->where('channels.type', '!=', 'premium')
+                    ->orWhere('channels.type', null);
+            }
+
+
             $query->where('channels.status', '=', '1');
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
