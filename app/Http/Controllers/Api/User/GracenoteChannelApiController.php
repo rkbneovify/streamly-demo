@@ -52,7 +52,7 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.type', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -71,6 +71,12 @@ class GracenoteChannelApiController extends Controller
                     $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
+
+            if ($user->access_premium_channel == 0) {
+                $query->where('channels.type', '!=', 'premium')
+                    ->orWhere('channels.type', null);
+            }
+
             $query->where('channels.status', '=', '1');
             $query->orderBy('genre_name', 'asc');
             $record = $query->get()->map(function ($channel) {
