@@ -91,23 +91,7 @@
 
                             </div>
 
-                            <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-                                <label for="callSign" class="col-md-4 control-label">Channel Type</label>
 
-
-                                <select class="form-control" name="type">
-                                    <option value="normal" selected>Normal</option>
-                                    <option value="local">Local</option>
-                                    <option value="premium">Premium</option>
-                                </select>
-
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
-
-                            </div>
 
                             <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
                                 <label for="genre_id" class="col-md-4 control-label">genres id</label>
@@ -200,7 +184,28 @@
 
                             </div>
 
-                            <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
+                            <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+                                <label for="callSign" class="col-md-4 control-label">Channel Type</label>
+
+
+                                <select id="selChannelType" class="form-control" name="type">
+                                    <option value="all">All
+                                    </option>
+                                    <option value="local">Local
+                                    </option>
+                                    <option value="premium">Premium
+                                    </option>
+                                </select>
+
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+
+                            </div>
+
+                            <div id="divZipcode" class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
                                 <label for="zipcode" class="col-md-4 control-label">Zipcode</label>
                                 <input type="text" id="zip_codes" class="form-control" name="zip_codes"
                                     placeholder="e.g., 12345, 67890">
@@ -287,6 +292,14 @@
                 zipCodesInput.value = formattedValue;
             });
         });
+    </script>
+    <script>
+        // $('#divZipcode').hide(); // Initially hide the zipcode div
+        // $('#selChannelType').on('change', function() {
+        //     var selectedType = $(this).val();
+        //     $('#divZipcode').toggle(selectedType === 'local');
+
+        // });
     </script>
 
 @stop
