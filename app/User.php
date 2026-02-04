@@ -47,7 +47,8 @@ class User extends Authenticatable implements JWTSubject
         'card_last_four',
         'connected_device',
         'user_type',
-        'is_custom_user'
+        'is_custom_user',
+        'access_premium_channel'
     ];
 
     /** 

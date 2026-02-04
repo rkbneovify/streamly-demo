@@ -455,6 +455,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <div
+                                        class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                        <input type="checkbox" class=" custom-control-input"
+                                            name="access_premium_channel" id="customSwitch3">
+                                        <label class="custom-control-label" for="customSwitch3">Access Premium
+                                            Channel</label>
+                                    </div>
+                                </div>
+
                                 <!-- /.card-body -->
                             </div>
                             <!-- /.card -->
