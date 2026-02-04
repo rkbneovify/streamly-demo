@@ -120,6 +120,8 @@ class ChannelController extends Controller
 
         });
 
+        $query->ChannelType($request->channel_type);
+
 
         $limit = $request->input('limit', 10);
         $record = $query->paginate($limit);
@@ -261,6 +263,15 @@ class ChannelController extends Controller
         //    } catch (Exception $e) {
         //        //Write your error message here
         //    }
+
+
+        if ($model->zip_code[0] == 'All' && $input['type'] == 'all') {
+            $input['type'] = 'all';
+        } elseif ($model->zip_code[0] == 'All' && $input['type'] == 'premium') {
+            $input['type'] = 'premium';
+        } elseif ($model->zip_code[0] == 'All' && $input['type'] == 'local') {
+            $input['type'] = 'all';
+        }
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -420,13 +431,22 @@ class ChannelController extends Controller
             LocalZipcode::where('channel_id', $id)->whereIn('zipcode', $removedZipcodes)->update(['status' => 0]);
             $input['zip_code'] = array_unique($zipcodeListUpdate);
 
-
+            $input['type'] = 'local';
         } else {
+
+
             $input['zip_code'] = ["All"];
+            // $input['type'] = 'all';
         }
         // $allpost= $request->post();
         // dd($input);  //get all the post data
-
+        if ($input['zip_code'][0] == 'All' && $input['type'] == 'all') {
+            $input['type'] = 'all';
+        } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'premium') {
+            $input['type'] = 'premium';
+        } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'local') {
+            $input['type'] = 'all';
+        }
         $model = Channel::find($id);
         $oldData = $model;
         if ($request->hasFile('image')) {
@@ -443,6 +463,9 @@ class ChannelController extends Controller
             return redirect('admin/channelstatus')->with('info', 'Channel with id ' . $id . ' cannot be found.');
         } else {
 
+            if ($input['zip_code'] == null) {
+
+            }
             $model->update($input); //update the subscription info
 
 
