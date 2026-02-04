@@ -90,12 +90,12 @@
                                       {{ $item->type == null ? 'Normal' : ucfirst($item->type) }}
                                   @elseif (count($item->zip_code) > 0)
                                       @if ($item->zip_code[0] == 'All')
-                                          {{ $item->type == null ? 'Normal' : ucfirst($item->type) }}
+                                          {{ $item->type == null ? 'All' : ucfirst($item->type) }}
                                       @else
                                           {{ $item->type == null ? 'Local' : ucfirst($item->type) }}
                                       @endif
                                   @else
-                                      {{ $item->type == null ? 'Normal' : ucfirst($item->type) }}
+                                      {{ $item->type == null ? 'All' : ucfirst($item->type) }}
                                   @endif
 
                               </td>
