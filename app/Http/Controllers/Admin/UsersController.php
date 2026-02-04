@@ -348,6 +348,7 @@ class UsersController extends Controller
                 'mode' => 'Testing',
                 'user_type' => 'custom',
                 'is_custom_user' => 1,
+                'access_premium_channel' => $request->access_premium_channel != null ? 1 : 0,
 
             ]);
 
@@ -597,7 +598,7 @@ class UsersController extends Controller
 
         DB::beginTransaction();
         try {
-            $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device');
+            $input = $request->only('name', 'email', 'password', 'dob', 'gender', 'city', 'state', 'address', 'zipcode', 'contact', 'connected_device', 'access_premium_channel');
 
             $input['is_active'] = $request->has('toggleswitch') ? 0 : 1;
 
@@ -607,6 +608,8 @@ class UsersController extends Controller
             } else {
                 $input = Arr::except($input, ['password']);
             }
+
+            $input['access_premium_channel'] = $request->access_premium_channel != null ? 1 : 0;
 
 
             $zipcodeExists = Zipcode::where('zipcode', $request->zipcode)->exists();

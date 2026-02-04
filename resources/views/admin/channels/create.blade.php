@@ -90,6 +90,25 @@
                                 @endif
 
                             </div>
+
+                            <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+                                <label for="callSign" class="col-md-4 control-label">Channel Type</label>
+
+
+                                <select class="form-control" name="type">
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="local">Local</option>
+                                    <option value="premium">Premium</option>
+                                </select>
+
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+
+                            </div>
+
                             <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
                                 <label for="genre_id" class="col-md-4 control-label">genres id</label>
 

@@ -33,6 +33,7 @@ class Channel extends Model
         'prgSvcId',
         'name',
         'url',
+        'type',
         'callSign',
         'dash_url',
         'smooth_url',
