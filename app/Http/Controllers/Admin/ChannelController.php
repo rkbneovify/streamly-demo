@@ -238,7 +238,7 @@ class ChannelController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $input = $request->only('name', 'genre_id', 'url', 'callSign', 'dash_url', 'smooth_url', 'status');
+        $input = $request->only('name', 'genre_id', 'url', 'type', 'callSign', 'dash_url', 'smooth_url', 'status');
         $model = new Channel;
         if ($request->genres != '') {
             $break_value = implode(",", $request->genres);
@@ -334,7 +334,7 @@ class ChannelController extends Controller
 
         // ]);
 
-        $input = $request->only('name', 'stationName', 'url', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
+        $input = $request->only('name', 'stationName', 'url', 'type', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
         $alreadyAvalableZipcodes = array_unique(Channel::where('id', $id)->first()->zip_code);
 
 
