@@ -37,6 +37,7 @@
                           </th>
                           <th>#</th>
                           <th>Name</th>
+                          <th>Channel Type</th>
                           <th>Genres</th>
                           <th>Availability
 
@@ -84,7 +85,22 @@
                                   <br class="mb-2">
                                   <b>{{ $item->stationName ?? ($item->name ?? $item->callSign) }}</b>
                               </td>
+                              <td style="vertical-align: middle;">
+                                  @if (count($item->zip_code) == 0)
+                                      {{ $item->type == null ? 'Normal' : ucfirst($item->type) }}
+                                  @elseif (count($item->zip_code) > 0)
+                                      @if ($item->zip_code[0] == 'All')
+                                          {{ $item->type == null ? 'All' : ucfirst($item->type) }}
+                                      @else
+                                          {{ $item->type == null ? 'Local' : ucfirst($item->type) }}
+                                      @endif
+                                  @else
+                                      {{ $item->type == null ? 'All' : ucfirst($item->type) }}
+                                  @endif
+
+                              </td>
                               <td style="vertical-align: middle;">{!! nl2br($item->genre_list) !!}</td>
+
                               <td style="vertical-align: middle;">
                                   @if (count($item->zip_code) == 0)
                                       All
@@ -165,6 +181,7 @@
                           </th>
                           <th>#</th>
                           <th>Name</th>
+                          <th>Channel Type</th>
                           <th>Genres</th>
                           <th>Availability</th>
                           <th>Status</th>
