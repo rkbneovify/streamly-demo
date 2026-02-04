@@ -119,6 +119,29 @@
                                 @endif
 
                             </div>
+
+
+                            <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+                                <label for="callSign" class="col-md-4 control-label">Channel Type</label>
+
+
+                                <select class="form-control" name="type">
+                                    <option value="normal" {{ $channel->type == 'normal' ? 'selected' : '' }}>Normal
+                                    </option>
+                                    <option value="local" {{ $channel->type == 'local' ? 'selected' : '' }}>Local
+                                    </option>
+                                    <option value="premium" {{ $channel->type == 'premium' ? 'selected' : '' }}>Premium
+                                    </option>
+                                </select>
+
+                                @if ($errors->has('type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('type') }}</strong>
+                                    </span>
+                                @endif
+
+                            </div>
+
                             <div class="form-group{{ $errors->has('genre_id') ? ' has-error' : '' }}">
                                 <label for="genre_id" class="col-md-4 control-label">genres id</label>
 
@@ -216,13 +239,13 @@
 
 
                                 <!-- <input id="zip_codes" type="text"
-                                                                                                                                                                                                                    class="form-control"
-                                                                                                                                                                                                                    name="zip_codes"
-                                                                                                                                                                                                                    value="{{ implode(', ', $channel->zip_code) }}"
-                                                                                                                                                                                                                    placeholder="e.g., 12345, 678901"
-                                                                                                                                                                                                                    pattern="^(\d{5,6})(,\s*\d{5,6})*$"
-                                                                                                                                                                                                                    title="Enter 5 or 6-digit zip codes separated by commas"
-                                                                                                                                                                                                                    autofocus> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                    class="form-control"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    name="zip_codes"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    value="{{ implode(', ', $channel->zip_code) }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    placeholder="e.g., 12345, 678901"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    pattern="^(\d{5,6})(,\s*\d{5,6})*$"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    title="Enter 5 or 6-digit zip codes separated by commas"
+                                                                                                                                                                                                                                                                                                                                                                                                                                    autofocus> -->
 
 
 
