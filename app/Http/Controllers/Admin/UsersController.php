@@ -203,7 +203,7 @@ class UsersController extends Controller
         $predefinedLocalZipcodes = ['85120', '85215', '85205', '75662', '08872', '08904', '18344', '85022', '18438', '18302', '18326']; // or fetch from DB
         // $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
 
-        $roles = Role::all()->pluck('name', 'id');
+        $roles = Role::where('name', '!=', 'superadmin')->pluck('name', 'id');
 
         // Fetch dynamic local zipcodes from channels 134–140
         $localZipcodes = DB::table('channels')
@@ -912,7 +912,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $roles = Role::get();
+        $roles = Role::where('name', '!=', 'superadmin')->get();
         $userRoles = $user->roles->pluck('id')->toArray();
         // return response()->json($user);
         $subscription = DB::table('subscriptions')

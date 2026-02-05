@@ -209,15 +209,15 @@
                                 <label for="zipcode" class="col-md-4 control-label">Zipcode</label>
                                 <input type="text" id="zip_codes" class="form-control" name="zip_codes"
                                     placeholder="e.g., 12345, 67890">
+
+                                @error('zip_codes')
+                                    <span class="text-danger mb-2">{{ $message }}</span>
+                                @enderror
                                 <p class="warning">Please enter a ZIP code if you wish to restrict the display of this
                                     channel to a specific area. If you leave the field empty, the channel will be available
                                     for viewing in all ZIP codes by default.</p>
 
-                                @if ($errors->has('zip_code'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('zip_code') }}</strong>
-                                    </span>
-                                @endif
+
 
                             </div>
 
