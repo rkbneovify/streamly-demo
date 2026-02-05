@@ -517,7 +517,7 @@ class NewChannelApiController extends Controller
                 $type = 'dash_url';
             }
             $query = Channel::with('zipcode')
-                ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+                ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -791,7 +791,7 @@ class NewChannelApiController extends Controller
             $sortedPrograms = $sortedPrograms->values();
             // Fetch channels matching the search query
 
-            $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
+            $query = GracenoteSource::select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
             if ($validate == 1) {
@@ -1099,7 +1099,7 @@ class NewChannelApiController extends Controller
             $record = $query->get();
 
             $genre_ids = json_decode($record[0]->genre_ids);
-            $query1 = Channel::select('channels.id', 'channels.type', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+            $query1 = Channel::select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
