@@ -236,7 +236,8 @@ class ChannelController extends Controller
     {
         // $zipCodes = explode(',', $request->input('zip_codes'));
         // dd($zipCodes);
-        $this->validate($request, [
+        $request->validate([
+            'zip_codes' => $request->type == 'local' ? 'required' : '',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -328,10 +329,13 @@ class ChannelController extends Controller
     {
 
 
+
+
         $request->validate([
             'name' => 'required',
             'url' => 'required',
             'genre_id' => 'required',
+            'zip_codes' => $request->type == 'local' ? 'required' : '',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
