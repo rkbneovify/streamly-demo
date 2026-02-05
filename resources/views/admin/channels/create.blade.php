@@ -46,7 +46,7 @@
                         <div class="card-body">
                             <div class="panel-body">
                                 <!-- Display Validation Errors -->
-                                @if (count($errors) > 0)
+                                {{-- @if (count($errors) > 0)
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input.<br><br>
                                         <ul>
@@ -55,7 +55,7 @@
                                             @endforeach
                                         </ul>
                                     </div>
-                                @endif
+                                @endif --}}
                                 <form method="POST" enctype="multipart/form-data"
                                     action="{{ url('admin/insertchannel') }}">
 
@@ -67,27 +67,24 @@
                                 <label for="name" class="col-md-4 control-label">Name</label>
 
 
-                                <input id="display_name" type="text" class="form-control" name="name" required
-                                    autofocus>
+                                <input id="display_name" type="text" class="form-control" name="name"
+                                    value="{{ old('name') }}" autofocus>
 
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
                             <div class="form-group{{ $errors->has('callSign') ? ' has-error' : '' }}">
                                 <label for="callSign" class="col-md-4 control-label">callSign</label>
 
 
-                                <input id="callSign" type="text" class="form-control" name="callSign" autofocus>
+                                <input id="callSign" type="text" class="form-control" name="callSign"
+                                    value="{{ old('callSign') }}" autofocus>
 
-                                @if ($errors->has('callSign'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('callSign') }}</strong>
-                                    </span>
-                                @endif
+                                @error('callSign')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
@@ -101,19 +98,17 @@
                                 <select name="genre_id" id="genre_id" class="form-control">
 
                                     @foreach ($genres as $id => $genre)
-                                        <option value="{{ $id }}">
+                                        <option value="{{ $id }}"
+                                            {{ old('genre_id') == $id ? 'selected' : '' }}>
                                             {{ $genre }}
                                         </option>
                                     @endforeach
 
 
                                 </select>
-
-                                @if ($errors->has('genres'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('genres') }}</strong>
-                                    </span>
-                                @endif
+                                @error('genre_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
@@ -126,7 +121,8 @@
                                     multiple="multiple >
              
                     @foreach ($genres as $id => $genre)
-<option value="{{ $id }}">
+<option value="{{ $id }}"
+                                    {{ in_array($id, old('genres', [])) ? 'selected' : '' }}>
                                     {{ $genre }}
                                     </option>
                                     @endforeach
@@ -134,11 +130,9 @@
 
                                 </select>
 
-                                @if ($errors->has('genres'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('genres') }}</strong>
-                                    </span>
-                                @endif
+                                @error('genres')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
@@ -146,41 +140,36 @@
                                 <label for="url" class="col-md-4 control-label">url</label>
 
 
-                                <input id="url" type="text" class="form-control" name="url" required autofocus>
+                                <input id="url" type="text" class="form-control" name="url"
+                                    value="{{ old('url') }}" autofocus>
 
-                                @if ($errors->has('url'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('url') }}</strong>
-                                    </span>
-                                @endif
+                                @error('url')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
                             <div class="form-group{{ $errors->has('smooth_url') ? ' has-error' : '' }}">
                                 <label for="smooth_url" class="col-md-4 control-label">smooth url</label>
 
 
-                                <input id="smooth_url" type="text" class="form-control" name="smooth_url" required
-                                    autofocus>
+                                <input id="smooth_url" type="text" class="form-control" name="smooth_url"
+                                    value="{{ old('smooth_url') }}" autofocus>
 
-                                @if ($errors->has('smooth_url'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('smooth_url') }}</strong>
-                                    </span>
-                                @endif
+                                @error('smooth_url')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
                             <div class="form-group{{ $errors->has('dash_url') ? ' has-error' : '' }}">
                                 <label for="dash_url" class="col-md-4 control-label">dash url</label>
 
 
-                                <input id="dash_url" type="text" class="form-control" name="dash_url" required
-                                    autofocus>
+                                <input id="dash_url" type="text" class="form-control" name="dash_url"
+                                    value="{{ old('dash_url') }}" autofocus>
 
-                                @if ($errors->has('dash_url'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('dash_url') }}</strong>
-                                    </span>
-                                @endif
+                                @error('dash_url')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
@@ -189,26 +178,26 @@
 
 
                                 <select id="selChannelType" class="form-control" name="type">
-                                    <option value="all">All
+                                    <option value="">Select
                                     </option>
-                                    <option value="local">Local
+                                    <option value="all" {{ old('type') == 'all' ? 'selected' : '' }}>All
                                     </option>
-                                    <option value="premium">Premium
+                                    <option value="local" {{ old('type') == 'local' ? 'selected' : '' }}>Local
+                                    </option>
+                                    <option value="premium" {{ old('type') == 'premium' ? 'selected' : '' }}>Premium
                                     </option>
                                 </select>
 
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
+                                @error('type')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
                             <div id="divZipcode" class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
                                 <label for="zipcode" class="col-md-4 control-label">Zipcode</label>
                                 <input type="text" id="zip_codes" class="form-control" name="zip_codes"
-                                    placeholder="e.g., 12345, 67890">
+                                    value="{{ old('zip_codes') }}" placeholder="e.g., 12345, 67890">
 
                                 @error('zip_codes')
                                     <span class="text-danger mb-2">{{ $message }}</span>
@@ -233,6 +222,10 @@
                                         <span class="input-group-text" id="">Upload</span>
                                     </div>
                                 </div>
+                                @error('image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+
                             </div>
 
                             <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
@@ -240,15 +233,13 @@
                                 <select name="status" id="status" class="form-control">
                                     <option value="">Choose a status</option>
 
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
                                 </select>
 
-                                @if ($errors->has('status'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('status') }}</strong>
-                                    </span>
-                                @endif
+                                @error('status')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
 
                             </div>
 
@@ -295,11 +286,18 @@
     </script>
     <script>
         // $('#divZipcode').hide(); // Initially hide the zipcode div
-        // $('#selChannelType').on('change', function() {
-        //     var selectedType = $(this).val();
-        //     $('#divZipcode').toggle(selectedType === 'local');
+        $('#selChannelType').on('change', function() {
+            var selectedType = $(this).val();
+            if (selectedType !== 'local') {
+                $('#zip_codes').val('');
+                $('#divZipcode').hide();
+            } else if (selectedType === 'local' && zipcodes === 'All') {
+                $('#divZipcode').show();
+                $('#zip_codes').val('');
 
-        // });
+            }
+
+        });
     </script>
 
 @stop
