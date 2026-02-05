@@ -234,11 +234,23 @@ class ChannelController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         // $zipCodes = explode(',', $request->input('zip_codes'));
         // dd($zipCodes);
         $request->validate([
+            'name' => 'required',
+            'callSign' => 'required',
+            'genre_id' => 'nullable|integer',
+            'genres' => 'nullable|array|min:1',
+            'type' => 'required',
+            'url' => 'required|url',
+            'smooth_url' => 'required|url',
+            'dash_url' => 'required|url',
             'zip_codes' => $request->type == 'local' ? 'required' : '',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'status' => 'required',
+        ], [
+            'type.required' => 'The channel type field is required.',
         ]);
 
         $input = $request->only('name', 'genre_id', 'url', 'type', 'callSign', 'dash_url', 'smooth_url', 'status');
@@ -328,15 +340,21 @@ class ChannelController extends Controller
     public function update(Request $request, $id)
     {
 
-
-
-
         $request->validate([
-            'name' => 'required',
-            'url' => 'required',
-            'genre_id' => 'required',
+            'name' => 'required|string|max:255',
+            'stationName' => 'nullable|string|max:255',
+            'callSign' => 'required|string|max:255',
+            'genre_id' => 'nullable|integer',
+            'genres' => 'nullable|array|min:1',
+            'type' => 'required',
+            'url' => 'required|url',
+            'smooth_url' => 'required|url',
+            'dash_url' => 'required|url',
             'zip_codes' => $request->type == 'local' ? 'required' : '',
-            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ], [
+            'type.required' => 'The channel type field is required.',
         ]);
 
 
