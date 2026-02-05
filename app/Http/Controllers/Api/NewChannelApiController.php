@@ -551,7 +551,7 @@ class NewChannelApiController extends Controller
                     ->orWhere('channels.type', null);
             }
 
-            $query->where('channels.status', '=', '1');
+            $query->where('channels.status', '=', 1);
 
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
@@ -806,7 +806,13 @@ class NewChannelApiController extends Controller
                     $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
-            $query->where('channels.status', '=', '1');
+
+            if ($user->access_premium_channel == 0) {
+                $query->where('channels.type', '!=', 'premium')
+                    ->orWhere('channels.type', null);
+            }
+
+            $query->where('channels.status', '=', 1);
             $channels = $query->get();
 
             // Process each channel to add image URI and type, and remove assets
