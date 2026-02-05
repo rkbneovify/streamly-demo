@@ -61,7 +61,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->with('roles')->first();
-        if ($user && $user->roles->first()->name != 'superadmin') {
+        if ($user && !in_array($user->roles->first()->name, ['superadmin', 'admin'])) {
             return Redirect::back()->withErrors([
                 'email' => 'Only Admin can login.'
             ]);
