@@ -239,7 +239,7 @@ class ChannelController extends Controller
         // dd($zipCodes);
         $request->validate([
             'name' => 'required',
-            'callSign' => 'required',
+            'callSign' => 'nullable|string|max:255',
             'genre_id' => 'nullable|integer',
             'genres' => 'nullable|array|min:1',
             'type' => 'required',
@@ -343,7 +343,7 @@ class ChannelController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'stationName' => 'nullable|string|max:255',
-            'callSign' => 'required|string|max:255',
+            'callSign' => 'nullable|string|max:255',
             'genre_id' => 'nullable|integer',
             'genres' => 'nullable|array|min:1',
             'type' => 'required',
