@@ -146,7 +146,7 @@ class RokuEpgGuideApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.type', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -172,7 +172,7 @@ class RokuEpgGuideApiController extends Controller
             }
 
 
-            $query->where('channels.status', '=', '1');
+            $query->where('channels.status', '=', 1);
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
             } else if ($genre == 'Others') {
