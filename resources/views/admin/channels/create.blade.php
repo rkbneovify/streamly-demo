@@ -285,13 +285,13 @@
         });
     </script>
     <script>
-        // $('#divZipcode').hide(); // Initially hide the zipcode div
+        $('#divZipcode').hide();
         $('#selChannelType').on('change', function() {
             var selectedType = $(this).val();
             if (selectedType !== 'local') {
                 $('#zip_codes').val('');
                 $('#divZipcode').hide();
-            } else if (selectedType === 'local' && zipcodes === 'All') {
+            } else if (selectedType === 'local') {
                 $('#divZipcode').show();
                 $('#zip_codes').val('');
 
