@@ -31,6 +31,8 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
+use App\LocalZipcode;
+use App\Models\Channel;
 use App\Models\RoleUser;
 use App\Models\Subscription;
 use App\Services\StripeService;
@@ -206,16 +208,7 @@ class UsersController extends Controller
         $roles = Role::where('name', '!=', 'superadmin')->pluck('name', 'id');
 
         // Fetch dynamic local zipcodes from channels 134–140
-        $localZipcodes = DB::table('channels')
-            ->whereBetween('id', [134, 140])
-            ->pluck('zip_code')
-            ->map(function ($zips) {
-                return json_decode($zips, true) ?? [];
-            })
-            ->flatten()
-            ->unique()
-            ->values()
-            ->toArray();
+        $localZipcodes = LocalZipcode::where('status', 1)->get();
 
         return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes'));
     }
@@ -619,20 +612,11 @@ class UsersController extends Controller
             //     ->pluck('zip_code')
             //     ->toArray();
 
-            $predefinedLocalZipcodes = [
-                "85120",
-                "85215",
-                "85205",
-                "75662",
-                "08872",
-                "08904",
-                "18344",
-                "18438",
-                "18302",
-                "18326"
-            ];
+            $predefinedLocalZipcodes = LocalZipcode::where('status', 1)->groupBy('zipcode')->pluck('zipcode')->toArray();
+
             //  channels
-            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            $localChannelIds = Channel::where('status', 1)->pluck('id')->toArray();
+            // return response()->json($localChannelIds);
 
             $newZip = $request->zipcode;
 
@@ -675,10 +659,39 @@ class UsersController extends Controller
                                 'zip_code' => json_encode(array_values($existingZipcodes)), // Use same column name here
                             ]);
 
+                            $localZipcode = LocalZipcode::where('zipcode', $newZip)
+                                ->where('channel_id', $channelId)
+                                ->first();
+                            if ($localZipcode == null) {
+                                $allZipcode = Zipcode::where('zipcode', $newZip)
+                                    ->where('status', 1)->first();
+                                if ($allZipcode != null) {
+                                    $localZipcode = new LocalZipcode();
+                                    $localZipcode->channel_id = $channelId;
+                                    $localZipcode->zipcode = $allZipcode->zipcode;
+                                    $localZipcode->city = $allZipcode->city;
+                                    $localZipcode->state = $allZipcode->state;
+                                    $localZipcode->state_abbr = $allZipcode->state_abbr;
+                                    $localZipcode->county_area = $allZipcode->county_area;
+                                    $localZipcode->code = $allZipcode->code;
+                                    $localZipcode->latitude = $allZipcode->latitude;
+                                    $localZipcode->longitude = $allZipcode->longitude;
+                                    $localZipcode->status = 1;
+                                    $localZipcode->save();
+
+                                }
+
+                            }
+
                             Log::info("ZIP $newZip added to channel $channelId");
                         }
+
+
                     }
+
                 }
+
+
             }
 
 
