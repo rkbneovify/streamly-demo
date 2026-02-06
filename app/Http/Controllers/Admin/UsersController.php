@@ -202,7 +202,7 @@ class UsersController extends Controller
     public function create()
     {
 
-        $predefinedLocalZipcodes = ['85120', '85215', '85205', '75662', '08872', '08904', '18344', '85022', '18438', '18302', '18326']; // or fetch from DB
+        $predefinedLocalZipcodes = LocalZipcode::where('status', 1)->groupBy('zipcode')->pluck('zipcode')->toArray();
         // $predefinedLocalZipcodes = DB::table('zipcodes')->pluck('zipcode')->toArray();
 
         $roles = Role::where('name', '!=', 'superadmin')->pluck('name', 'id');
@@ -264,20 +264,10 @@ class UsersController extends Controller
             }
 
             // 3️⃣ Predefined zipcodes
-            $predefinedLocalZipcodes = [
-                "85120",
-                "85215",
-                "85205",
-                "75662",
-                "08872",
-                "08904",
-                "18344",
-                "85022",
-                "18438",
-                "18302",
-                "18326"
-            ];
-            $localChannelIds = [134, 135, 136, 137, 138, 139, 140];
+            $predefinedLocalZipcodes = LocalZipcode::where('status', 1)->groupBy('zipcode')->pluck('zipcode')->toArray();
+            $localChannelIds = Channel::where('type', 'local')->where('status', 1)->pluck('id')->toArray();
+
+            // dd($predefinedLocalZipcodes);
 
             $newZip = $request->zipcode;
             if (
@@ -300,7 +290,7 @@ class UsersController extends Controller
             // 5️⃣ Add ZIP to local channels if needed
             if ($request->channel_availability == "2" && !in_array($newZip, $predefinedLocalZipcodes)) {
                 foreach ($localChannelIds as $channelId) {
-                    $channel = DB::table('channels')->where('id', $channelId)->first();
+                    $channel = DB::table('channels')->where('status', 1)->where('id', $channelId)->first();
                     if ($channel) {
                         $existingZipcodes = json_decode($channel->zip_code ?? '[]', true);
                         if (!in_array($newZip, $existingZipcodes)) {
@@ -308,6 +298,31 @@ class UsersController extends Controller
                             DB::table('channels')->where('id', $channelId)->update([
                                 'zip_code' => json_encode(array_values($existingZipcodes)),
                             ]);
+
+                            $localZipcode = LocalZipcode::where('zipcode', $newZip)
+                                ->where('channel_id', $channelId)
+                                ->first();
+                            if ($localZipcode == null) {
+                                $allZipcode = Zipcode::where('zipcode', $newZip)
+                                    ->where('status', 1)->first();
+                                if ($allZipcode != null) {
+                                    $localZipcode = new LocalZipcode();
+                                    $localZipcode->channel_id = $channelId;
+                                    $localZipcode->zipcode = $allZipcode->zipcode;
+                                    $localZipcode->city = $allZipcode->city;
+                                    $localZipcode->state = $allZipcode->state;
+                                    $localZipcode->state_abbr = $allZipcode->state_abbr;
+                                    $localZipcode->county_area = $allZipcode->county_area;
+                                    $localZipcode->code = $allZipcode->code;
+                                    $localZipcode->latitude = $allZipcode->latitude;
+                                    $localZipcode->longitude = $allZipcode->longitude;
+                                    $localZipcode->status = 1;
+                                    $localZipcode->save();
+
+                                }
+
+                            }
+
                             Log::info("ZIP $newZip added to channel $channelId");
                         }
                     }
@@ -562,8 +577,9 @@ class UsersController extends Controller
             return redirect('admin/users')->with('info', 'User Added Successfully');
         } catch (\Throwable $e) {
             DB::rollBack();
+            dd($e->getMessage());
             // Log::error('Exception occurred while creating user: ' . $e->getMessage());
-            return redirect()->back()->with('errormsg', 'An error occurred. Check logs.');
+            return redirect()->back()->with('error', 'An error occurred. Check logs.');
         }
     }
 

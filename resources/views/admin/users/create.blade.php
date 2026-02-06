@@ -494,22 +494,22 @@
 @section('scripts')
 
     <script>
-        function loading() {
-            Swal.fire({
-                title: 'Please wait...',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-        }
+        // function loading() {
+        //     Swal.fire({
+        //         title: 'Please wait...',
+        //         allowOutsideClick: false,
+        //         allowEscapeKey: false,
+        //         didOpen: () => {
+        //             Swal.showLoading();
+        //         }
+        //     });
+        // }
 
-        function formSubmit(event) {
-            event.preventDefault();
-            loading();
-            event.target.closest('form').submit();
-        }
+        // function formSubmit(event) {
+        //     event.preventDefault();
+        //     loading();
+        //     event.target.closest('form').submit();
+        // }
     </script>
 
 
@@ -736,10 +736,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('useradd');
-            const predefinedLocalZipcodes = [
-                "85120", "85215", "85205", "75662", "08872", "08904",
-                "18344", "85022", "18438", "18302", "18326"
-            ];
+
+            const predefinedLocalZipcodes = @json($predefinedLocalZipcodes);
+            console.log("Predefined Local ZIPs:", predefinedLocalZipcodes);
+            // const predefinedLocalZipcodes = [
+            //     "85120", "85215", "85205", "75662", "08872", "08904",
+            //     "18344", "85022", "18438", "18302", "18326"
+            // ];
 
 
             form.addEventListener('submit', function(e) {
