@@ -574,9 +574,7 @@ class NewChannelApiController extends Controller
                 $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->ratio = $assetData['ratio'] ?? 'NA';
 
-                $channel->program = count($this->getProgramScheduleById($channel->prgSvcId, $day)) == 0 ? [
-                    ["quals" => []]
-                ] : [];
+                $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
 
                 if ($channel->stationName == null) {
