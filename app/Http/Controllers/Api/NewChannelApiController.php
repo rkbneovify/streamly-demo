@@ -546,12 +546,19 @@ class NewChannelApiController extends Controller
                 }
             }
 
-            if ($user->access_premium_channel == 0) {
-                $query->where('channels.type', '!=', 'premium')
-                    ->orWhere('channels.type', null);
+            $query->where(function ($q) {
+                $q->whereIn('channels.type', ['all', 'local'])
+                    ->orWhereNull('channels.type');
+            });
+
+            if ($user->access_premium_channel == 1) {
+                $query->orwhere('channels.type', 'premium');
+
             }
 
-            $query->where('channels.status', '=', 1);
+            $query->where('channels.status', 1);
+
+
 
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
@@ -698,6 +705,8 @@ class NewChannelApiController extends Controller
             unset($program->assets);
         });
 
+
+
         return $programs;
     }
 
@@ -807,10 +816,16 @@ class NewChannelApiController extends Controller
                 }
             }
 
-            if ($user->access_premium_channel == 0) {
-                $query->where('channels.type', '!=', 'premium')
-                    ->orWhere('channels.type', null);
+            $query->where(function ($q) {
+                $q->whereIn('channels.type', ['all', 'local'])
+                    ->orWhereNull('channels.type');
+            });
+
+            if ($user->access_premium_channel == 1) {
+                $query->orwhere('channels.type', 'premium');
+
             }
+
 
             $query->where('channels.status', '=', 1);
             $channels = $query->get();
