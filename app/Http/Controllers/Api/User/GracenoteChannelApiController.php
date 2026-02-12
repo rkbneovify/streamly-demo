@@ -72,10 +72,16 @@ class GracenoteChannelApiController extends Controller
                 }
             }
 
-            if ($user->access_premium_channel == 0) {
-                $query->where('channels.type', '!=', 'premium')
-                    ->orWhere('channels.type', null);
+            $query->where(function ($q) {
+                $q->whereIn('channels.type', ['all', 'local'])
+                    ->orWhereNull('channels.type');
+            });
+
+            if ($user->access_premium_channel == 1) {
+                $query->orwhere('channels.type', 'premium');
+
             }
+
 
             $query->where('channels.status', '=', '1');
             $query->orderBy('genre_name', 'asc');
@@ -250,14 +256,17 @@ class GracenoteChannelApiController extends Controller
             if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    $query->where(function ($q) use ($zipcode) {
-                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    });
+                    // $query->where(function ($q) use ($zipcode) {
+                    //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                    //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // });
+                    $query->localZipcode($zipcode)
+                        ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                    $query->localZipcode($zipcode);
                 }
             }
             if (!empty($genre) && $genre != 'Others') {
@@ -267,10 +276,16 @@ class GracenoteChannelApiController extends Controller
             }
 
 
-            if ($user->access_premium_channel == 0) {
-                $query->where('channels.type', '!=', 'premium')
-                    ->orWhere('channels.type', null);
+            $query->where(function ($q) {
+                $q->whereIn('channels.type', ['all', 'local'])
+                    ->orWhereNull('channels.type');
+            });
+
+            if ($user->access_premium_channel == 1) {
+                $query->orwhere('channels.type', 'premium');
+
             }
+
             $query->where('channels.status', '=', 1);
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');

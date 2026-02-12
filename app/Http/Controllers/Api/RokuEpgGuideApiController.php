@@ -166,9 +166,14 @@ class RokuEpgGuideApiController extends Controller
                 }
             }
 
-            if ($user->access_premium_channel == 0) {
-                $query->where('channels.type', '!=', 'premium')
-                    ->orWhere('channels.type', null);
+            $query->where(function ($q) {
+                $q->whereIn('channels.type', ['all', 'local'])
+                    ->orWhereNull('channels.type');
+            });
+
+            if ($user->access_premium_channel == 1) {
+                $query->orwhere('channels.type', 'premium');
+
             }
 
 
