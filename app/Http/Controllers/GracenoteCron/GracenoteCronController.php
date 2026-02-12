@@ -32,14 +32,14 @@ class GracenoteCronController extends Controller
         if ($xml->attributes()) {
             foreach ($xml->attributes() as $key => $value) {
                 if (strpos($key, '__') === 0) {
-                    $array[substr($key, 2)] = (string)$value;
+                    $array[substr($key, 2)] = (string) $value;
                 } else {
-                    $array[$key] = (string)$value;
+                    $array[$key] = (string) $value;
                 }
             }
         }
 
-        $text = trim((string)$xml);
+        $text = trim((string) $xml);
         if (!empty($text)) {
             $array['text'] = $text;
         }
@@ -55,7 +55,7 @@ class GracenoteCronController extends Controller
             }
         } else {
             // If the element has a value, add it to the array
-            $array = (string)$xml;
+            $array = (string) $xml;
         }
         return $array;
     }
@@ -226,7 +226,7 @@ class GracenoteCronController extends Controller
         }
         // return $dataArray;
     }
-  
+
     public function gracenoteScheduleProgramCron1(Request $request)
     {
         $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
@@ -424,20 +424,20 @@ class GracenoteCronController extends Controller
                         if (isset($program->TMSId)) {
                             $programMap[$program->TMSId] = $program;
                         } else {
-                            Log::warning('Program object missing TMSId:', (array)$program);
+                            Log::warning('Program object missing TMSId:', (array) $program);
                         }
                     }
                 } elseif (is_object($programList)) {
                     if (isset($programList->TMSId)) {
                         $programMap[$programList->TMSId] = $programList;
                     } else {
-                        Log::warning('Program object missing TMSId:', (array)$programList);
+                        Log::warning('Program object missing TMSId:', (array) $programList);
                     }
                 } else {
-                    Log::error('Invalid program data structure: Missing or invalid program list', (array)$programData);
+                    Log::error('Invalid program data structure: Missing or invalid program list', (array) $programData);
                 }
             } else {
-                Log::error('Invalid program data structure: Missing programs property', (array)$programData);
+                Log::error('Invalid program data structure: Missing programs property', (array) $programData);
             }
         }
         unset($programXml, $programData); // Clear memory
