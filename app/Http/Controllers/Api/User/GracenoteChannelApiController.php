@@ -72,18 +72,21 @@ class GracenoteChannelApiController extends Controller
                 }
             }
 
-            $query->where(function ($q) {
-                $q->whereIn('channels.type', ['all', 'local'])
-                    ->orWhereNull('channels.type');
+
+
+
+            $query->where('channels.status', '=', 1);
+            $query->where(function ($q) use ($user) {
+                if ($user->access_premium_channel == 1) {
+                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
+                        ->orWhereNull('channels.type');
+                } else {
+                    $q->whereIn('channels.type', ['all', 'local'])
+                        ->orWhereNull('channels.type');
+                }
+
             });
 
-            if ($user->access_premium_channel == 1) {
-                $query->orwhere('channels.type', 'premium');
-
-            }
-
-
-            $query->where('channels.status', '=', '1');
             $query->orderBy('genre_name', 'asc');
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
@@ -276,17 +279,18 @@ class GracenoteChannelApiController extends Controller
             }
 
 
-            $query->where(function ($q) {
-                $q->whereIn('channels.type', ['all', 'local'])
-                    ->orWhereNull('channels.type');
+            $query->where('channels.status', '=', 1);
+            $query->where(function ($q) use ($user) {
+                if ($user->access_premium_channel == 1) {
+                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
+                        ->orWhereNull('channels.type');
+                } else {
+                    $q->whereIn('channels.type', ['all', 'local'])
+                        ->orWhereNull('channels.type');
+                }
+
             });
 
-            if ($user->access_premium_channel == 1) {
-                $query->orwhere('channels.type', 'premium');
-
-            }
-
-            $query->where('channels.status', '=', 1);
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');
             $record = $query->get()->map(function ($channel) {
