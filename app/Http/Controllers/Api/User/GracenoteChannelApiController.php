@@ -75,8 +75,7 @@ class GracenoteChannelApiController extends Controller
 
 
 
-            $query->where('channels.status', '=', 1);
-            $query->where(function ($q) use ($user) {
+            $query->where('channels.status', 1)->where(function ($q) use ($user) {
                 if ($user->access_premium_channel == 1) {
                     $q->whereIn('channels.type', ['all', 'local', 'premium'])
                         ->orWhereNull('channels.type');
@@ -86,6 +85,8 @@ class GracenoteChannelApiController extends Controller
                 }
 
             });
+
+            $query->where('channels.status', 1);
 
             $query->orderBy('genre_name', 'asc');
             $record = $query->get()->map(function ($channel) {
@@ -279,8 +280,7 @@ class GracenoteChannelApiController extends Controller
             }
 
 
-            $query->where('channels.status', '=', 1);
-            $query->where(function ($q) use ($user) {
+            $query->where('channels.status', 1)->where(function ($q) use ($user) {
                 if ($user->access_premium_channel == 1) {
                     $q->whereIn('channels.type', ['all', 'local', 'premium'])
                         ->orWhereNull('channels.type');
@@ -290,6 +290,8 @@ class GracenoteChannelApiController extends Controller
                 }
 
             });
+
+            $query->where('channels.status', 1);
 
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');
