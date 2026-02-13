@@ -154,7 +154,7 @@ class Channel extends Model
     public function scopeLocalZipcode($query, $zipcode)
     {
 
-        $query->whereHas('zipcode', function ($q) use ($zipcode) {
+        $query->where('channels.status', 1)->whereHas('zipcode', function ($q) use ($zipcode) {
             $q->where('zipcode', $zipcode)->where('status', 1);
         });
         return $query;
