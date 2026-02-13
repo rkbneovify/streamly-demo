@@ -166,18 +166,18 @@ class RokuEpgGuideApiController extends Controller
                 }
             }
 
-            $query->where(function ($q) {
-                $q->whereIn('channels.type', ['all', 'local'])
-                    ->orWhereNull('channels.type');
+            $query->where('channels.status', '=', 1);
+            $query->where(function ($q) use ($user) {
+                if ($user->access_premium_channel == 1) {
+                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
+                        ->orWhereNull('channels.type');
+                } else {
+                    $q->whereIn('channels.type', ['all', 'local'])
+                        ->orWhereNull('channels.type');
+                }
+
             });
 
-            if ($user->access_premium_channel == 1) {
-                $query->orwhere('channels.type', 'premium');
-
-            }
-
-
-            $query->where('channels.status', '=', 1);
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
             } else if ($genre == 'Others') {
