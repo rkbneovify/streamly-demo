@@ -302,6 +302,18 @@
 
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="dob">Date of birth</label>
+
+                                    <input type="date" name="dob" placehoder="dob" value="{{ old('dob') }}"
+                                        class="form-control @error('dob')
+                                      is-invalid
+                                    @enderror" />
+                                    @error('dob')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -315,17 +327,7 @@
 
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="dob">Date of birth</label>
 
-                                    <input type="date" name="dob" placehoder="dob" value="{{ old('dob') }}"
-                                        class="form-control @error('dob')
-                                      is-invalid
-                                    @enderror" />
-                                    @error('dob')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
 
                                 <div class="form-group">
