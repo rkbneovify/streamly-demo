@@ -1,6 +1,9 @@
 @extends('master')
 @section('stylesheets')
     <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.2/dist/css/bootstrap-multiselect.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.2/dist/js/bootstrap-multiselect.min.js"></script>
+
     <style>
         /* Chrome, Safari, Edge, Opera */
         input::-webkit-outer-spin-button,
@@ -455,7 +458,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div
                                         class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                         <input type="checkbox" class=" custom-control-input"
@@ -463,6 +466,17 @@
                                         <label class="custom-control-label" for="customSwitch3">Access Premium
                                             Channel</label>
                                     </div>
+                                </div> --}}
+                                <div class="form-group">
+                                    <div class="">Allow Premium Channels</div>
+
+                                    <select id="premium_channels" name="premium_channels[]" multiple form="useradd"
+                                        class="form-control">
+                                        @foreach ($premiumChannels as $channel)
+                                            <option value="{{ $channel->id }}">
+                                                {{ $channel->name }} </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <!-- /.card-body -->
@@ -857,6 +871,20 @@
         const zip = document.getElementById('zipcode');
         zip.addEventListener('input', () => {
             zip.value = zip.value.toString().slice(0, 5);
+        });
+    </script>
+
+    {{-- multi select  --}}
+    <script>
+        $(document).ready(function() {
+
+
+
+            $('#premium_channels').multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                buttonWidth: '100%'
+            });
         });
     </script>
 
