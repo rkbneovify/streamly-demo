@@ -3,6 +3,7 @@ namespace App\Models;
 use App\LocalZipcode;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use App\PremiumChannelAccess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -150,6 +151,11 @@ class Channel extends Model
     public function zipcode()
     {
         return $this->hasMany(LocalZipcode::class, 'channel_id', 'id');
+    }
+
+    public function premium()
+    {
+        return $this->hasOne(PremiumChannelAccess::class, 'channel_id', 'id');
     }
     public function scopeLocalZipcode($query, $zipcode)
     {
