@@ -936,7 +936,8 @@ class UsersController extends Controller
 
             if ($request->premium_channels != null) {
                 foreach ($request->premium_channels as $item) {
-                    $premiumChannel = PremiumChannelAccess::where('channel_id', $item)->first();
+                    $premiumChannel = PremiumChannelAccess::where('user_id', $user->id)
+                        ->where('channel_id', $item)->first();
                     if ($premiumChannel != null) {
                         $channel = Channel::where('id', $item)->first();
                         $premiumChannel->name = $channel != null ? $channel->name : null;
