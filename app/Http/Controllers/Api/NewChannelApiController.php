@@ -548,7 +548,8 @@ class NewChannelApiController extends Controller
 
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
-                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhere('channels.type', 'all')
+                        ->orwhere('channels.type', 'premium')
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
 
@@ -785,7 +786,8 @@ class NewChannelApiController extends Controller
 
                     $pquery->localZipcode($zipcode)
                         ->premiumStatus($user)
-                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhere('channels.type', 'all')
+                        ->orwhere('channels.type', 'premium')
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
 
@@ -884,9 +886,10 @@ class NewChannelApiController extends Controller
                 if (!empty($zipcode)) {
 
 
-                    $pquery->localZipcode($zipcode)
+                    $query->localZipcode($zipcode)
                         ->premiumStatus($user)
-                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhere('channels.type', 'all')
+                        ->orwhere('channels.type', 'premium')
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
 
@@ -895,7 +898,7 @@ class NewChannelApiController extends Controller
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
 
-                    $pquery->localZipcode($zipcode)
+                    $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->where('channels.status', 1);
                 }
