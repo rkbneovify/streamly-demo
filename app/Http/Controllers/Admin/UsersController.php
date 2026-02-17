@@ -935,7 +935,11 @@ class UsersController extends Controller
             }
 
 
-            if ($request->premium_channels != null) {
+            if ($request->premium_channels == null) {
+                PremiumChannelAccess::where('user_id', $user->id)->update([
+                    'status' => 0
+                ]);
+            } else {
 
                 foreach ($request->premium_channels as $item) {
                     $premiumChannel = PremiumChannelAccess::where('user_id', $user->id)
