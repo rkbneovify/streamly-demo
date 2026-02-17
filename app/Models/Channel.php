@@ -3,6 +3,7 @@ namespace App\Models;
 use App\LocalZipcode;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use App\PremiumChannelAccess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -151,6 +152,42 @@ class Channel extends Model
     {
         return $this->hasMany(LocalZipcode::class, 'channel_id', 'id');
     }
+
+    public function premium()
+    {
+        return $this->hasOne(PremiumChannelAccess::class, 'channel_id', 'id');
+    }
+
+
+
+    public function scopePremiumActive($query, $user)
+    {
+        $query->whereHas('premium', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopePremiumStatus($query, $user)
+    {
+
+        $query->orwhereHas('premium', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopeWithPremium($query, $user)
+    {
+        if ($user->is_custom_user == 1) {
+            $query->orwhereHas('premium', function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->where('status', 1);
+            });
+        }
+        return $query;
+    }
+
     public function scopeLocalZipcode($query, $zipcode)
     {
 

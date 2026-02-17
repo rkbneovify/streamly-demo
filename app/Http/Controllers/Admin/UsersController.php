@@ -35,6 +35,7 @@ use App\LocalZipcode;
 use App\Models\Channel;
 use App\Models\RoleUser;
 use App\Models\Subscription;
+use App\PremiumChannelAccess;
 use App\Services\StripeService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -209,12 +210,15 @@ class UsersController extends Controller
 
         // Fetch dynamic local zipcodes from channels 134–140
         $localZipcodes = LocalZipcode::where('status', 1)->get();
+        $premiumChannels = Channel::where('type', 'premium')
+            ->where('status', 1)->get();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes', 'premiumChannels'));
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
 
         DB::beginTransaction();
         try {
@@ -566,6 +570,21 @@ class UsersController extends Controller
 
             $user->roles;
             $user->subscriptionLatest;
+
+            if ($request->premium_channels != null) {
+                foreach ($request->premium_channels as $item) {
+                    $channel = Channel::where('id', $item)->first();
+                    $premiumChannel = new PremiumChannelAccess();
+                    $premiumChannel->user_id = $user->id;
+                    $premiumChannel->channel_id = $item;
+                    $premiumChannel->name = $channel != null ? $channel->name : null;
+                    $premiumChannel->status = 1;
+                    $premiumChannel->save();
+                }
+
+            }
+
+
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::CREATED)
@@ -587,6 +606,7 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
 
+        // dd($request->all());
 
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -914,6 +934,34 @@ class UsersController extends Controller
 
             }
 
+
+            if ($request->premium_channels != null) {
+
+                foreach ($request->premium_channels as $item) {
+                    $premiumChannel = PremiumChannelAccess::where('user_id', $user->id)
+                        ->where('channel_id', $item)->first();
+                    if ($premiumChannel != null) {
+                        $channel = Channel::where('id', $item)->first();
+                        $premiumChannel->name = $channel != null ? $channel->name : null;
+                        $premiumChannel->status = 1;
+                        $premiumChannel->save();
+                    } else {
+                        $channel = Channel::where('id', $item)->first();
+                        $premiumChannel = new PremiumChannelAccess();
+                        $premiumChannel->user_id = $user->id;
+                        $premiumChannel->channel_id = $item;
+                        $premiumChannel->name = $channel != null ? $channel->name : null;
+                        $premiumChannel->status = 1;
+                        $premiumChannel->save();
+                    }
+                }
+
+                PremiumChannelAccess::where('user_id', $user->id)->whereNotIn('channel_id', $request->premium_channels)->update([
+                    'status' => 0
+                ]);
+
+            }
+
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::UPDATED)
@@ -994,6 +1042,16 @@ class UsersController extends Controller
 
         }
 
+        // premium channel list
+
+        $premiumChannels = Channel::with([
+            'premium' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }
+        ])->where('type', 'premium')
+            ->where('status', 1)
+            ->get();
+
 
         return view('admin.users.edit', compact(
             'user',
@@ -1002,7 +1060,8 @@ class UsersController extends Controller
             'subscription',
             'channelRule',
             'planDuration',
-            'currentDeviceCount'
+            'currentDeviceCount',
+            'premiumChannels'
         ));
     }
 
