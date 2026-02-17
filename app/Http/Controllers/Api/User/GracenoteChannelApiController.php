@@ -91,13 +91,13 @@ class GracenoteChannelApiController extends Controller
                 if (!empty($zipcode)) {
 
 
+
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->orwhere('channels.type', 'all')
-                        ->orwhere('channels.type', 'premium')
+                        ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
 
                 }
             } elseif ($validate == 2) {
@@ -308,7 +308,7 @@ class GracenoteChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->orwhere('channels.type', 'all')
-                        ->orwhere('channels.type', 'premium')
+                        ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
 
