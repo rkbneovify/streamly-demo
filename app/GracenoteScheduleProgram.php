@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Channel;
 use Illuminate\Database\Eloquent\Model;
 
 class GracenoteScheduleProgram extends Model
@@ -47,5 +48,9 @@ class GracenoteScheduleProgram extends Model
     public function source()
     {
         return $this->belongsTo(GracenoteSource::class, 'prgSvcId', 'prgSvcId');
+    }
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class, 'prgSvcId', 'prgSvcId');
     }
 }
