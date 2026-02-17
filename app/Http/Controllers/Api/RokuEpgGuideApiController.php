@@ -188,7 +188,8 @@ class RokuEpgGuideApiController extends Controller
 
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
-                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhere('channels.type', 'all')
+                        ->orwhere('channels.type', 'premium')
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
 
