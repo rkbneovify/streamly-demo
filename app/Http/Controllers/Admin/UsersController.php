@@ -934,7 +934,9 @@ class UsersController extends Controller
 
             }
 
+
             if ($request->premium_channels != null) {
+
                 foreach ($request->premium_channels as $item) {
                     $premiumChannel = PremiumChannelAccess::where('user_id', $user->id)
                         ->where('channel_id', $item)->first();
@@ -953,9 +955,11 @@ class UsersController extends Controller
                         $premiumChannel->save();
                     }
                 }
-                PremiumChannelAccess::whereNotIn('channel_id', $request->premium_channels)->update([
+
+                PremiumChannelAccess::where('user_id', $user->id)->whereNotIn('channel_id', $request->premium_channels)->update([
                     'status' => 0
                 ]);
+
             }
 
             $this->activity()
