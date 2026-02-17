@@ -516,7 +516,10 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::with('zipcode')
+            $query = Channel::with([
+                'zipcode',
+                'premium'
+            ])
                 ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
@@ -525,40 +528,59 @@ class NewChannelApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
 
+
+
+            // $query->where('channels.status', 1);
+            // // return response()->json([$query->where('channels.status', 1)->toSql(), $query->getBindings()]);
+
+            // $query->where(function ($q) use ($zipcode) {
+
+            //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+
+            //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            // });
+            // ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
+            // $query->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
 
-                    // $query->where(function ($q) use ($zipcode) {
 
-                    //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-
-                    //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    // });
                     $query->localZipcode($zipcode)
-                        ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                        ->premiumStatus($user)
+                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+
+
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
-                    $query->localZipcode($zipcode);
 
-
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->where('channels.status', 1);
                 }
             }
 
+            // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+            // $query->where('channels.status', 1)->where(function ($q) use ($user) {
+            //     if ($user->access_premium_channel == 1) {
+            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
+            //             ->orWhereNull('channels.type');
+            //     } else {
+            //         $q->whereIn('channels.type', ['all', 'local'])
+            //             ->orWhereNull('channels.type');
+            //     }
 
-            $query->where('channels.status', 1)->where(function ($q) use ($user) {
-                if ($user->access_premium_channel == 1) {
-                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
-                        ->orWhereNull('channels.type');
-                } else {
-                    $q->whereIn('channels.type', ['all', 'local'])
-                        ->orWhereNull('channels.type');
-                }
+            // });
 
-            });
+
+            // $query->premium($user);
 
             $query->where('channels.status', 1);
+
+
 
 
 
@@ -655,6 +677,7 @@ class NewChannelApiController extends Controller
 
                 // just for additional data hiding
                 unset($channel->zipcode);
+                unset($channel->primium);
                 unset($channel->is_logo_from_gracenote);
                 unset($channel->local_image);
                 unset($channel->db_image);
@@ -749,21 +772,36 @@ class NewChannelApiController extends Controller
             }
 
             // Fetch programs matching the search query
-            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId', "channels.$type as url")
+            $pquery = GracenoteScheduleProgram::with([
+                'channels.zipcode',
+                'channels.premium'
+            ])->select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'start', 'end', 'description', 'assets', 'TMSId', "channels.$type as url")
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%");
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    $pquery->where(function ($q) use ($zipcode) {
-                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    });
+
+
+                    $pquery->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+
+
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    $pquery->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+
+                    $pquery->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->where('channels.status', 1);
                 }
             }
+
+
+
             $pquery->distinct('gracenote_schedule_program.TMSId');
             $pquery->where('channels.status', '=', '1');
 
@@ -802,44 +840,69 @@ class NewChannelApiController extends Controller
             $sortedPrograms = $sortedPrograms->values();
             // Fetch channels matching the search query
 
-            $query = GracenoteSource::select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
+            $query = GracenoteSource::with([
+                'channels.zipcode',
+                'channels.premium'
+            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
+
+            //     if ($validate == 1) {
+            //     if (!empty($zipcode)) {
+            //         $query->where(function ($q) use ($zipcode) {
+            //             $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+            //                 ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //         });
+            //     }
+            // } elseif ($validate == 2) {
+            //     if (!empty($zipcode)) {
+            //         $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+            //     }
+            // }
+
+            // $query->where(function ($q) {
+            //     $q->whereIn('channels.type', ['all', 'local'])
+            //         ->orWhereNull('channels.type');
+            // });
+
+            // if ($user->access_premium_channel == 1) {
+            //     $query->orwhere('channels.type', 'premium');
+
+            // }
+
+            // $query->where(function ($q) use ($user) {
+            //     if ($user->access_premium_channel == 1) {
+            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
+            //             ->orWhereNull('channels.type');
+            //     } else {
+            //         $q->whereIn('channels.type', ['all', 'local'])
+            //             ->orWhereNull('channels.type');
+            //     }
+
+            // });
             if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    $query->where(function ($q) use ($zipcode) {
-                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    });
+
+
+                    $pquery->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+
+
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+
+                    $pquery->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->where('channels.status', 1);
                 }
             }
-
-            $query->where(function ($q) {
-                $q->whereIn('channels.type', ['all', 'local'])
-                    ->orWhereNull('channels.type');
-            });
-
-            if ($user->access_premium_channel == 1) {
-                $query->orwhere('channels.type', 'premium');
-
-            }
-
 
             $query->where('channels.status', '=', 1);
-            $query->where(function ($q) use ($user) {
-                if ($user->access_premium_channel == 1) {
-                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
-                        ->orWhereNull('channels.type');
-                } else {
-                    $q->whereIn('channels.type', ['all', 'local'])
-                        ->orWhereNull('channels.type');
-                }
 
-            });
 
             $channels = $query->get();
 
