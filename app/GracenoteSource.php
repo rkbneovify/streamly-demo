@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Channel;
 use Illuminate\Database\Eloquent\Model;
 
 class GracenoteSource extends Model
@@ -26,4 +27,9 @@ class GracenoteSource extends Model
     public $timestamps = true;
 
     // If you want to define any relationships or additional methods, you can add them here.
+
+    public function channel()
+    {
+        return $this->hasOne(Channel::class, 'url', 'url');
+    }
 }
