@@ -52,39 +52,61 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.type', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::with(['zipcode', 'premium'])->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.type', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
+            // if ($validate == 1) {
+            //     if (!empty($zipcode)) {
+            //         // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //         $query->where(function ($q) use ($zipcode) {
+            //             $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+            //                 ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //         });
+            //     }
+            // } elseif ($validate == 2) {
+            //     if (!empty($zipcode)) {
+            //         $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+            //     }
+            // }
+
+
+
+
+            // $query->where('channels.status', 1)->where(function ($q) use ($user) {
+            //     if ($user->access_premium_channel == 1) {
+            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
+            //             ->orWhereNull('channels.type');
+            //     } else {
+            //         $q->whereIn('channels.type', ['all', 'local'])
+            //             ->orWhereNull('channels.type');
+            //     }
+
+            // });
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    $query->where(function ($q) use ($zipcode) {
-                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    });
+
+
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+
+
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->where('channels.status', 1);
                 }
             }
-
-
-
-
-            $query->where('channels.status', 1)->where(function ($q) use ($user) {
-                if ($user->access_premium_channel == 1) {
-                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
-                        ->orWhereNull('channels.type');
-                } else {
-                    $q->whereIn('channels.type', ['all', 'local'])
-                        ->orWhereNull('channels.type');
-                }
-
-            });
 
             $query->where('channels.status', 1);
 
@@ -251,28 +273,57 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::with([
+                'zipcode',
+                'premium'
+            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
+            //     if ($validate == 1) {
+            //     if (!empty($zipcode)) {
+            //         // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //         // $query->where(function ($q) use ($zipcode) {
+            //         //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+            //         //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //         // });
+            //         $query->localZipcode($zipcode)
+            //             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            //     }
+            // } elseif ($validate == 2) {
+            //     if (!empty($zipcode)) {
+            //         // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+            //         $query->localZipcode($zipcode);
+            //     }
+            // }
+
             if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    // $query->where(function ($q) use ($zipcode) {
-                    //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-                    //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    // });
+
+
                     $query->localZipcode($zipcode)
-                        ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                        ->premiumStatus($user)
+                        ->whereIn('channels.type', ['all', 'premium'])
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+
+
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
-                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
-                    $query->localZipcode($zipcode);
+
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->where('channels.status', 1);
                 }
             }
+
+            $query->where('channels.status', 1);
+
+
             if (!empty($genre) && $genre != 'Others') {
                 $query->where('genre.name', '=', $genre);
             } else if ($genre == 'Others') {
@@ -280,18 +331,18 @@ class GracenoteChannelApiController extends Controller
             }
 
 
-            $query->where('channels.status', 1)->where(function ($q) use ($user) {
-                if ($user->access_premium_channel == 1) {
-                    $q->whereIn('channels.type', ['all', 'local', 'premium'])
-                        ->orWhereNull('channels.type');
-                } else {
-                    $q->whereIn('channels.type', ['all', 'local'])
-                        ->orWhereNull('channels.type');
-                }
+            // $query->where('channels.status', 1)->where(function ($q) use ($user) {
+            //     if ($user->access_premium_channel == 1) {
+            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
+            //             ->orWhereNull('channels.type');
+            //     } else {
+            //         $q->whereIn('channels.type', ['all', 'local'])
+            //             ->orWhereNull('channels.type');
+            //     }
 
-            });
+            // });
 
-            $query->where('channels.status', 1);
+            // $query->where('channels.status', 1);
 
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');
