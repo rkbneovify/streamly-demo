@@ -108,35 +108,27 @@ class LocalZipcodeController extends Controller
                     ->whereJsonContains('zip_code', $localZipcode->zipcode)
                     ->first();
 
-                if ($channel == null) {
-                    toast('Channel not found 1', 'error')
-                        ->autoClose(3000)
-                        ->timerProgressBar();
-
-                    return redirect()->back();
+                if ($channel != null) {
+                    $channelNewZipcodes = array_filter($channel->zip_code, function ($item) use ($localZipcode) {
+                        return $item !== strval($localZipcode->zipcode);
+                    });
+                    $channelNewZipcodes = array_values($channelNewZipcodes);
+                    $channel->zip_code = $channelNewZipcodes;
+                    $channel->save();
                 }
-                $channelNewZipcodes = array_filter($channel->zip_code, function ($item) use ($localZipcode) {
-                    return $item !== strval($localZipcode->zipcode);
-                });
-                $channelNewZipcodes = array_values($channelNewZipcodes);
-                $channel->zip_code = $channelNewZipcodes;
-                $channel->save();
+
             } else {
                 $channel = Channel::where('id', $localZipcode->channel_id)
                     ->whereJsonDoesntContain('zip_code', $localZipcode->zipcode)
                     ->first();
 
-                if ($channel == null) {
-                    toast('Channel not found', 'error')
-                        ->autoClose(3000)
-                        ->timerProgressBar();
-
-                    return redirect()->back();
+                if ($channel != null) {
+                    $channelZipcodes = $channel->zip_code;
+                    $channelZipcodes[] = strval($localZipcode->zipcode);
+                    $channel->zip_code = $channelZipcodes;
+                    $channel->save();
                 }
-                $channelZipcodes = $channel->zip_code;
-                $channelZipcodes[] = strval($localZipcode->zipcode);
-                $channel->zip_code = $channelZipcodes;
-                $channel->save();
+
             }
 
 
