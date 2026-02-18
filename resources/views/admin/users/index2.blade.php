@@ -250,6 +250,35 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="user_type" id="sel_user_type" class="select-custom">
+                                    <option value="">Select User type</option>
+                                    <option value="all" {{ request('user_type') == 'all' ? 'selected' : '' }}>All
+                                    </option>
+                                    <option value="local" {{ request('user_type') == 'local' ? 'selected' : '' }}>Local
+                                    </option>
+                                    <option value="all_local" {{ request('user_type') == 'all_local' ? 'selected' : '' }}>
+                                        All + Local
+                                    </option>
+                                    <option value="all_premium"
+                                        {{ request('user_type') == 'all_premium' ? 'selected' : '' }}>All + Premium
+                                    </option>
+                                    <option value="local_premium"
+                                        {{ request('user_type') == 'local_premium' ? 'selected' : '' }}>Local + Premium
+                                    </option>
+                                    <option value="all_local_premium"
+                                        {{ request('user_type') == 'all_local_premium' ? 'selected' : '' }}>All +
+                                        Local +
+                                        Premium
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-2 mb-3">
                             <a href="{{ url('admin/users/create') }} " class="btn-with-img">
                                 <img src="{{ asset('images/add-user.png') }}" alt="status icon">
@@ -622,6 +651,7 @@
                 url.searchParams.set("role", $(this).val());
             }
 
+            window.history.pushState({}, '', url.toString());
             window.location.href = url.toString();
         });
 
@@ -643,6 +673,7 @@
                 url.searchParams.set("mode", $(this).val());
             }
 
+            window.history.pushState({}, '', url.toString());
             window.location.href = url.toString();
         });
 
@@ -664,6 +695,30 @@
                 url.searchParams.set("status", $(this).val());
             }
 
+            window.history.pushState({}, '', url.toString());
+            window.location.href = url.toString();
+        });
+
+        $(document).on('change', '#sel_user_type', function(e) {
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
+
+
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("user_type", $(this).val());
+            } else if ($(this).val() == "") {
+                url.searchParams.delete("user_type");
+            } else {
+                // just add role param
+                url.searchParams.set("user_type", $(this).val());
+            }
+
+            // Push new URL without reload
+            window.history.pushState({}, '', url.toString());
             window.location.href = url.toString();
         });
 
@@ -685,6 +740,7 @@
                 url.searchParams.set("limit", $(this).val());
             }
 
+            window.history.pushState({}, '', url.toString());
             window.location.href = url.toString();
         });
     </script>
@@ -751,7 +807,9 @@
         $(document).on('click', '#btnResetFilter', function(e) {
             e.preventDefault();
             removeAll();
-            location.href = "{{ url()->current() }}"
+            let url = "{{ url()->current() }}";
+            window.history.pushState({}, '', url);
+            window.location.href = url.toString();
         })
     </script>
 
