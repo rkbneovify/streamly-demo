@@ -197,6 +197,7 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
+    // user type
     public function scopeUserType($query, $value)
     {
         if (empty($value))
