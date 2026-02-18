@@ -68,6 +68,9 @@ class UsersController extends Controller
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
         $query->with('roles');
+        $query->with('zipcodeRule');
+        $query->withCount('local');
+        $query->withCount('premium');
         $query->withCount([
             'sessions' => function ($q) {
                 $q->select(DB::raw('count(distinct device_id)'))
@@ -166,9 +169,12 @@ class UsersController extends Controller
             $query->latest();
         }
 
+        $query->userType($request->user_type);
+
 
         $limit = $request->input('limit', 10);
         $users = $query->paginate($limit);
+        // return response()->json($users);
 
         if (empty($request->daterange)) {
             $dates = [
