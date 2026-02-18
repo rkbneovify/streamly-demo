@@ -13,6 +13,7 @@ use DB;
 use Laravel\Cashier\Billable;
 use App\Models\Channel;
 use App\Models\Subscription;
+use App\Models\UserZipcodeRule;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -176,6 +177,58 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(HoaUser::class, 'user_id', 'id');
 
     }
+
+    public function local()
+    {
+        return $this->hasMany(LocalZipcode::class, 'zipcode', 'zipcode')
+            ->where('status', 1);
+
+    }
+
+    public function zipcodeRule()
+    {
+        return $this->hasMany(UserZipcodeRule::class, 'email', 'email');
+
+    }
+    public function premium()
+    {
+        return $this->hasMany(PremiumChannelAccess::class, 'user_id', 'id')
+            ->where('status', 1);
+
+    }
+
+    public function scopeUserType($query, $value)
+    {
+        if (empty($value))
+            return $query;
+        if ($value == 'all') {
+            $query->having('local_count', '<=', 0)->having('premium_count', '<=', 0);
+        } elseif ($value == 'local') {
+            $query->having('local_count', '>', 0)->having('premium_count', '<=', 0)
+                ->wherehas('zipcodeRule', function ($q) {
+                    $q->where('validate', 2);
+                });
+        } elseif ($value == 'all_local') {
+            $query->having('local_count', '>', 0)->having('premium_count', '<=', 0)
+                ->wherehas('zipcodeRule', function ($q) {
+                    $q->where('validate', 1);
+                });
+        } elseif ($value == 'all_premium') {
+            $query->having('local_count', '<=', 0)->having('premium_count', '>', 0);
+
+        } elseif ($value == 'local_premium') {
+            $query->having('local_count', '>', 0)->having('premium_count', '>', 0)
+                ->wherehas('zipcodeRule', function ($q) {
+                    $q->where('validate', 2);
+                });
+        } elseif ($value == 'all_local_premium') {
+            $query->having('local_count', '>', 0)->having('premium_count', '>', 0);
+        }
+        return $query;
+    }
+
+
+
 
 
 }
