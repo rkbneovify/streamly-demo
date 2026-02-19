@@ -885,7 +885,10 @@
             $('#premium_channels').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
-                buttonWidth: '100%'
+                buttonWidth: '100%',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true, // <-- makes Ram and ram match
+                filterBehavior: 'text' // or 'both' if you want to search by value too
             });
         });
     </script>
