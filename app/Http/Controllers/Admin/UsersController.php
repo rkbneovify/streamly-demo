@@ -814,10 +814,14 @@ class UsersController extends Controller
 
 
                     foreach ($extraRooms as $item) {
-                        $session = SessionTable::where("id", $item->session_id)->first();
-                        JWTAuth::setToken($session->access_token)->invalidate();
-                        $session->delete();
+                        if ($item->session_id != null) {
+                            $session = SessionTable::where("id", $item->session_id)->first();
+                            JWTAuth::setToken($session->access_token)->invalidate();
+                            $session->delete();
+                        }
+
                     }
+
                     foreach ($extraRooms as $room) {
                         DB::table('hotel_rooms')->where('id', $room->id)->delete();
                     }
