@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ActivityEventType;
 use App\HoaUser;
+use App\HotelRoomTable;
 use App\SessionTable;
 use App\Traits\ActivityLogger;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -395,6 +396,25 @@ class APIController extends Controller
                     unset($address['hotel'], $address['device'], $address['id'], $address['pdname']);
                     return $address;
                 });
+
+
+                $numofdevice = $prevConnectDevicecount->count();
+
+
+
+                // Final response
+                $response = [
+                    'success' => true,
+                    'response_code' => 200,
+                    'numofdevice' => $numofdevice,
+                    'userDeviceLimit' => HotelRoomTable::where('user_id', $user->id)
+                        ->count(),
+                    'user_connected_device' => $userConnectedDevice,
+                    'message' => 'Connected device found successfully',
+                    'data' => $s,
+                ];
+
+                return response()->json($response, 200);
 
 
             } elseif ($userRole == 'hoa') {
