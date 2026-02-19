@@ -76,7 +76,27 @@ class Subscribed
                 return redirect('/selectplan');
             }
         }
-        if ($user->subscription('main') && $user->subscription('main')->cancelled() || $user->subscription('main')->stripe_status == "canceled") {
+        // Live mode
+        if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "canceled") {
+            if ($request->wantsJson()) {
+                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($response, 410);
+            } else {
+                return redirect('/selectplan');
+            }
+        }
+        // Test mode
+        if ($user->subscription('main') && $user->subscription('main')->livemode == 0 && $user->subscription('main')->plan_duration == null && $user->subscription('main')->stripe_status == "canceled") {
+            if ($request->wantsJson()) {
+                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($response, 410);
+            } else {
+                return redirect('/selectplan');
+            }
+        }
+
+        // Custom mode
+        if ($user->subscription('main')->is_custom == 1 && !$user->hasActiveSubscription()) {
             if ($request->wantsJson()) {
                 $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                 return response()->json($response, 410);

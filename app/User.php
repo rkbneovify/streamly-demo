@@ -154,7 +154,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function customSubscription()
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasOne(Subscription::class)->latest();
     }
     public function subscriptionLatest()
     {
@@ -197,6 +197,7 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
+    // user type
     public function scopeUserType($query, $value)
     {
         if (empty($value))
@@ -225,6 +226,15 @@ class User extends Authenticatable implements JWTSubject
             $query->having('local_count', '>', 0)->having('premium_count', '>', 0);
         }
         return $query;
+    }
+
+    public function hasActiveSubscription()
+    {
+        if ($this->customSubscription->is_custom == 1 && strtolower($this->customSubscription->plan_duration) == 'never') {
+            return true;
+        }
+        return $this->customSubscription &&
+            $this->customSubscription->renews_at > now();
     }
 
 
