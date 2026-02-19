@@ -510,7 +510,7 @@ class UsersController extends Controller
             $tieruserId = 5;
             if ((int) $request->roles === $tieruserId) {
                 $quantity = $request->number_of_devices ?? 1;
-                for ($i = 0; $i < $quantity; $i++) {
+                for ($i = 1; $i <= $quantity; $i++) {
                     DB::table('hotel_rooms')->insert([
                         'user_id' => $user->id,
                         'hotel_room' => 'Room' . ($i),
@@ -764,8 +764,16 @@ class UsersController extends Controller
 
 
             // If role try to change/ remove old session and device
-            if ($roleId != $request->roles[0]) {
-                SessionTable::where('users_id', $user->id)->delete();
+            if (!in_array($roleId, $request->roles)) {
+                $sessions = SessionTable::where('users_id', $user->id)->get();
+                foreach ($sessions as $item) {
+                    $session = SessionTable::where("id", $item->id)->first();
+                    JWTAuth::setToken($session->access_token)->invalidate();
+                    $session->delete();
+                }
+
+
+
                 HoaUser::where('user_id', $user->id)->delete();
                 HotelRoomTable::where('user_id', $user->id)->delete();
 
@@ -789,7 +797,7 @@ class UsersController extends Controller
                 if ($newDeviceCount > $existingCount) {
                     // Add only the difference
                     $roomsToAdd = $newDeviceCount - $existingCount;
-                    for ($i = 0; $i < $roomsToAdd; $i++) {
+                    for ($i = 1; $i <= $roomsToAdd; $i++) {
                         DB::table('hotel_rooms')->insert([
                             'user_id' => $user->id,
                             'hotel_room' => 'Room' . ($existingCount + $i),
@@ -803,12 +811,32 @@ class UsersController extends Controller
 
 
                     $extraRooms = $existingRooms->slice($newDeviceCount);
+
+
+                    foreach ($extraRooms as $item) {
+                        $session = SessionTable::where("id", $item->session_id)->first();
+                        JWTAuth::setToken($session->access_token)->invalidate();
+                        $session->delete();
+                    }
                     foreach ($extraRooms as $room) {
                         DB::table('hotel_rooms')->where('id', $room->id)->delete();
                     }
+
+
+
+
                 }
             } else {
                 // Not a tier user — delete all hotel rooms
+                $rooms = DB::table('hotel_rooms')->where('user_id', $user->id)
+                    ->whereNotNull('session_id')
+                    ->get();
+                foreach ($rooms as $item) {
+                    $session = SessionTable::where("id", $item->session_id)->first();
+                    JWTAuth::setToken($session->access_token)->invalidate();
+                    $session->delete();
+                }
+
                 DB::table('hotel_rooms')->where('user_id', $user->id)->delete();
             }
 
@@ -898,8 +926,10 @@ class UsersController extends Controller
                 if ($user->is_custom_user == 0) {
                     $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
                     if (count($stripeSubscription) > 0) {
-                        if ($stripeSubscription->first()->livemode == true || $stripeSubscription->first()->livemode == false && $stripeSubscription->first()->status != 'canceled') {
+                        if ($stripeSubscription->first()->livemode == true && $stripeSubscription->first()->status != 'canceled') {
                             $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
+                        } elseif ($stripeSubscription->first()->livemode == false && $stripeSubscription->first()->status != 'canceled') {
+                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
                         }
                         $user->is_custom_user = 1;
                         $user->mode = 'custom';
@@ -910,6 +940,7 @@ class UsersController extends Controller
                                 'name' => 'main',
                                 'stripe_status' => 'canceled',
                                 'plan_duration' => $request->plan_duration,
+                                'is_custom' => 1,
                                 'ends_at' => null,
                                 'renews_at' => $endsAt,
                                 'quantity' => $newDeviceCount,
@@ -927,6 +958,7 @@ class UsersController extends Controller
                             'name' => 'main',
                             'stripe_status' => 'canceled',
                             'plan_duration' => $request->plan_duration,
+                            'is_custom' => 1,
                             'ends_at' => null,
                             'renews_at' => $endsAt,
                             'quantity' => $newDeviceCount,
@@ -1036,7 +1068,9 @@ class UsersController extends Controller
             }
         }
 
-        if ($subscription->plan_duration != null) {
+        if ($subscription->is_custom == 0 && $subscription->plan_duration == null) {
+            $planDuration = '';
+        } elseif ($subscription->is_custom == 1 && $subscription->plan_duration != null) {
             $planDuration = $subscription->plan_duration;
         }
 
@@ -2107,4 +2141,6 @@ class UsersController extends Controller
         $filename = 'custom-users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new CustomUserExport($filters), $filename);
     }
+
+
 }
