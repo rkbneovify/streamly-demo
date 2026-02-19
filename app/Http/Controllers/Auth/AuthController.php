@@ -176,14 +176,15 @@ class AuthController extends Controller
 
             $userActiveDeviceCount = SessionTable::where("users_id", $user->id)->where("status", 1)->count();
             if ($userRole[0] == 'tieruser')
-                if ($userActiveDeviceCount >= $deviceLimit) {
-                    return response()->json([
-                        'success' => false,
-                        'response_code' => 402,
-                        'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
+                $deviceLimit = HotelRoomTable::where('user_id', $user->id)->count();
+            if ($userActiveDeviceCount >= $deviceLimit) {
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 402,
+                    'message' => 'Your login limit has been reached. Please contact your service provider to enable further login',
 
-                    ], 402);
-                }
+                ], 402);
+            }
         }
 
         $userRole = $user->roles->pluck('name');
