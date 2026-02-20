@@ -170,8 +170,10 @@ class AuthController extends Controller
         if ($user->is_active == 0) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
-        if ($user->is_custom_user == 1) {
-            $userRole = $user->roles->pluck('name');
+        $userRole = $user->roles->pluck('name');
+
+        if ($user->is_custom_user == 1 && $userRole[0] == 'tieruser') {
+
             $deviceLimit = GetLimitForUser($user->id);
 
             $userActiveDeviceCount = SessionTable::where("users_id", $user->id)->where("status", 1)->count();
