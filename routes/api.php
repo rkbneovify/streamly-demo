@@ -193,6 +193,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("store", "Api\ApiRokuInfoController@store");
 
     });
+    Route::post('sub-session/store', 'Api\ApiSubSessionController@store');
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
