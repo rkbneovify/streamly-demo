@@ -17,15 +17,9 @@ class ApiSubSessionController extends Controller
     public function store(Request $request)
     {
         return $this->dbTransaction(function () use ($request) {
-            $sub = SubSession::where('user_id', Auth::id())
-                ->whereDate('created_at', now())
-                ->orWhere('platform', $request->platform)
-                ->orWhere('device_model', $request->device_model)
-                ->orWhere('build_version', $request->build_version)
-                ->orWhere('device_os_version', $request->device_os_version)
-                ->first();
+            $sub = SubSession::whereDate('created_at', now())->exists();
 
-            if ($sub == null) {
+            if (!$sub) {
                 $session = SessionTable::where('access_token', $request->bearerToken())
                     ->where('status', 1)->first();
                 if ($session != null) {
