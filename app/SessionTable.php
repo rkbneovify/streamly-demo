@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\HotelRoomTable;
 use App\Models\PersonalDevice;
+use Carbon\Carbon;
 use DeviceDetector\DeviceDetector;
 
 class SessionTable extends Model
@@ -73,6 +74,21 @@ class SessionTable extends Model
         return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')
             // ->whereNotNull('passcode')
             ->latest('updated_at');
+    }
+
+    public function list()
+    {
+        return $this->hasMany(SubSession::class, 'session_id', 'id')
+            ->where('is_main_account', 1)
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->latest();
+    }
+    public function listByPasscode()
+    {
+        return $this->hasMany(SubSession::class, 'session_id', 'id')
+            ->where('is_main_account', 0)
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->latest();
     }
     /**
     protected static function boot()

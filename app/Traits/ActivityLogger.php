@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\ActivityLog;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,11 @@ trait ActivityLogger
     public function description(string $description)
     {
         if (Auth::check()) {
-            $this->activity->description = $description . ' by - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name;
+            $this->activity->description = $description . ' - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name;
+            return $this;
+        } elseif ($this->activity->user_id != null) {
+            $user = User::where('id', $this->activity->user_id)->first();
+            $this->activity->description = $description . ' - ' . $user->email . ' | ' . $user->roles[0]->name;
             return $this;
         }
         $this->activity->description = $description;
