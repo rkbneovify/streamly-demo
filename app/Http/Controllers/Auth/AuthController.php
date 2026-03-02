@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\HotelRoomTable;
+use App\Traits\ActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
@@ -32,6 +34,7 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    use ActivityLogger;
     /**
      * Create a new AuthController instance.
      *
@@ -189,6 +192,11 @@ class AuthController extends Controller
             }
         }
 
+        $this->activity($user->id)->event("User")
+            ->eventType(ActivityEventType::LOGIN)
+            ->description("User login")
+            ->save();
+
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
             $uid = $user['id'];
@@ -204,6 +212,7 @@ class AuthController extends Controller
         $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
 
         $this->authenticated($request, $user, $token, $validateFlag);
+
         return $this->respondWithToken($token, $validateFlag);
     }
 
@@ -611,7 +620,13 @@ class AuthController extends Controller
 
             $user = JWTAuth::parseToken()->authenticate();
 
+
+
             $userRole = $user->roles->pluck('name'); //check users role
+            $this->activity()->event("User")
+                ->eventType(ActivityEventType::LOGOUT)
+                ->description("User logout")
+                ->save();
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table
                 $acctoken = SessionTable::where([
@@ -632,6 +647,7 @@ class AuthController extends Controller
                         'message' => 'logged out successful',
                         'response_code' => 200,
                     ];
+
                     return response()->json($response, 200);
                 } else if ((count($acctoken) == 0)) {
                     $response = [
@@ -655,6 +671,9 @@ class AuthController extends Controller
                 JWTAuth::parseToken()->invalidate();
                 return response()->json(['success' => true, 'response_code' => 200, 'message' => 'Successfully logged out'], 200);
             }
+
+
+
         } catch (Exception $ex) { // Anything that went wrong
             return response()->json([
                 'error' => true,
@@ -707,8 +726,12 @@ class AuthController extends Controller
             ->where('id', $id)
             ->first();
 
+        $this->activity($session->users_id)->event("Device")
+            ->eventType(ActivityEventType::REMOVED)
+            ->description("Device removed");
         // If the device is logged in
         if ($session) {
+
             // Log out the user and update connected devices
             $session->update(['status' => 0, 'modified_on' => Carbon::now()]);
             SessionTable::where('status', 1)->where('connected_devices', '!=', 1)
@@ -720,9 +743,18 @@ class AuthController extends Controller
             $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
             $request->server->set('HTTP_AUTHORIZATION', 'Bearer ' . $accesstoken);
             // Invalidate token (this could be its own method)
+
+
+            $this->properties([
+                "data" => $session
+            ])
+                ->save();
+
             invalidateToken();
 
             $this->updateHotelRoomSession($id);
+
+
 
             return response()->json([
                 "response_code" => 200,
