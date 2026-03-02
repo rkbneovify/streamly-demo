@@ -211,7 +211,7 @@
 
             <!-- Default box -->
             <div class="card">
-                <div class="card-header">
+                {{-- <div class="card-header">
                     <div class="row">
                         <div class="col-md-4 px-3 border-right">
                             <span>Name</span>
@@ -235,7 +235,7 @@
 
 
 
-                </div>
+                </div> --}}
                 {{-- <div class="card-header">
                     <div class="row">
                         <div class="col-md-5">
