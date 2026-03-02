@@ -46,6 +46,7 @@
                     <span class="float-right text-muted text-sm">12 hours</span>
                 </a>
                 <div class="dropdown-divider"></div> --}}
+                {{-- test --}}
                 @foreach ($notifications as $item)
                     <a href="{{ route('admin.activity') }}" class="dropdown-item">
                         <i class="fas fa-info mr-2"></i>
