@@ -47,7 +47,7 @@
                 </a>
                 <div class="dropdown-divider"></div> --}}
                 @foreach ($notifications as $item)
-                    <a href="{{ route('admin.users.activity', $item->user_id) }}" class="dropdown-item">
+                    <a href="{{ route('admin.activity') }}" class="dropdown-item">
                         <i class="fas fa-info mr-2"></i>
                         {{ $item->event . ' ' . $item->event_type }}
 

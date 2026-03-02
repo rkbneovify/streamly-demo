@@ -14,33 +14,52 @@ class AdminActivityController extends Controller
 {
 
 
-    public function index($id, Request $request)
+    public function index(Request $request)
     {
 
         DB::beginTransaction();
         try {
 
             ActivityLog::resolveNotification();
-            $user = User::where('id', $id)->with('roles')->first();
-            if ($user == null) {
-                toast('User not found !', 'error')
-                    ->timerProgressBar()
-                    ->autoClose(3000);
-                return redirect()->back();
-            }
-            $activities = ActivityLog::where('user_id', $user->id)
-                ->with('effectedUser')
-                ->latest()
+
+            $perPage = 1; // number of dates per page
+            $page = request()->get('page', 1);
+
+
+
+            // Step 1: get distinct dates
+            $dates = ActivityLog::selectRaw('DATE(created_at) as date')
+                ->groupBy('date')
+                ->orderByDesc('date')
+                ->pluck('date');
+
+            // Step 2: paginate dates manually
+            $paginatedDates = $dates
+                ->slice(($page - 1) * $perPage, $perPage)
+                ->values();
+
+            // Step 3: get logs for those dates
+            $activities = ActivityLog::with('user')
+                ->whereIn(DB::raw('DATE(created_at)'), $paginatedDates)
+                ->orderByDesc('created_at')
                 ->get()->groupBy(function ($log) {
                     return $log->created_at->format('d/m/Y');
                 });
-            // return response()->json($activities);
+
+            // Step 4: paginator
+            $paginator = new LengthAwarePaginator(
+                $paginatedDates,
+                $dates->count(),
+                $perPage,
+                $page,
+                ['path' => request()->url()]
+            );
 
             DB::commit();
             if ($request->ajax()) {
-                return view('admin.activity.table', compact('user', 'activities'));
+                return view('admin.activity.table', compact('activities', 'paginator'));
             }
-            return view('admin.activity.index', compact('user', 'activities'));
+            return view('admin.activity.index', compact('activities', 'paginator'));
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -101,9 +120,9 @@ class AdminActivityController extends Controller
             // return response()->json(["activity" => $activities, "paginator" => $paginator]);
             DB::commit();
             if ($request->ajax()) {
-                return view('admin.activity.table', compact('user', 'activities', 'paginator'));
+                return view('admin.activity.table-user', compact('user', 'activities', 'paginator'));
             }
-            return view('admin.activity.index', compact('user', 'activities', 'paginator'));
+            return view('admin.activity.index-user', compact('user', 'activities', 'paginator'));
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
