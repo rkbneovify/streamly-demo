@@ -16,22 +16,21 @@ class ApiSubSessionController extends Controller
 
     public function store(Request $request)
     {
-        return $this->dbTransaction(function () use ($request) {
-            $sub = SubSession::where('user_id', Auth::id())
-                ->whereDate('created_at', now())
-                ->orWhere('platform', $request->platform)
-                ->orWhere('device_model', $request->device_model)
-                ->orWhere('build_version', $request->build_version)
-                ->orWhere('device_os_version', $request->device_os_version)
-                ->first();
 
-            if ($sub == null) {
-                $session = SessionTable::where('access_token', $request->bearerToken())
-                    ->where('status', 1)->first();
-                if ($session != null) {
+        return $this->dbTransaction(function () use ($request) {
+            $session = SessionTable::where('access_token', $request->bearerToken())
+                ->where('status', 1)->first();
+            if ($session != null) {
+                $sub = SubSession::where('session_id', $session->id)
+                    ->whereDate('created_at', now())->exists();
+
+                if (!$sub) {
+
                     $sub = new SubSession();
                     $sub->session_id = $session->id;
                     $sub->user_id = $session->users_id;
+                    $sub->is_main_account = $session->is_main_account;
+                    $sub->passcode = $session->passcode;
                     $sub->platform = $request->platform;
                     $sub->device_model = $request->device_model;
                     $sub->build_version = $request->build_version;
@@ -41,12 +40,11 @@ class ApiSubSessionController extends Controller
 
                     return $this->successResponse("Data store successfully !");
 
+                } else {
+                    return $this->validationErrorResponse("Current date session already exits");
                 }
 
-            } else {
-                return $this->validationErrorResponse("Current date session already exits");
             }
-
         });
 
     }
