@@ -93,9 +93,9 @@ class HotelController extends Controller
 
                 $this->activity()->event("Tier user")
                     ->eventType(ActivityEventType::LOGIN)
-                    ->description("Sign in to room device")
+                    ->description("Sign in to room")
                     ->properties([
-                        "data" => $hotelRoomtab
+                        "data" => HotelRoomTable::where('id', $roomid)->first()
                     ])->save();
                 $response = [
                     'success' => true,
