@@ -10,7 +10,7 @@ class ActivityLog extends Model
 
     protected $casts = [
         'properties' => 'array',
-        'is_admin' => 'boolean'
+        'is_user' => 'boolean'
     ];
 
     public function user()
