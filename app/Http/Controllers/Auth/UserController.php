@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Traits\ActivityLogger;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +21,7 @@ use Exception;
 
 class UserController extends Controller
 {
+    use ActivityLogger;
     public function accountEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -105,6 +108,12 @@ class UserController extends Controller
             ->whereIn('id', $ids)
             ->get();
 
+        $this->activity()->event("Session")
+            ->eventType(ActivityEventType::REMOVED)
+            ->description("Multiple session removed")
+            ->properties([
+                "data" => $sessions
+            ])->save();
         $errors = $this->destroyJWTtoken($sessions->toArray());
         $userId = $sessions->isEmpty() ? null : $sessions->first()->users_id;
 
@@ -113,6 +122,8 @@ class UserController extends Controller
             $errorCount = count($errors);
             $errorString = ($errorCount > 0) ? "$errorCount error(s) were found" : '';
         }
+
+
 
         $sessionRemove = SessionTable::whereIn('id', $ids)
             ->update(['status' => 0, 'modified_on' => Carbon::now()]);
