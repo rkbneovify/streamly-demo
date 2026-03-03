@@ -433,7 +433,7 @@ class ApiHoaController extends Controller
             $user = User::where('id', $hoaUser->user_id)->first();
             Mail::to($hoaUser->email)->send(new HoaSubUserWelcome2($hoaUser, $user->email));
 
-            $this->activity()->event("Hoa sub user")
+            $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::Verification)
                 ->description("Sub user account verified")
                 ->properties([
