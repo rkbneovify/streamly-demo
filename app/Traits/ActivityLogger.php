@@ -92,7 +92,11 @@ trait ActivityLogger
         return $this;
     }
 
-
+    public function isAdmin()
+    {
+        $this->activity->is_admin = 1;
+        return $this;
+    }
 
     public function save()
     {
