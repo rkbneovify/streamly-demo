@@ -241,6 +241,7 @@ class ApiHoaController extends Controller
                 $this->activity()->event("Hoa main")
                     ->eventType(ActivityEventType::CREATED)
                     ->description("New house created")
+                    ->isUser()
                     ->properties([
                         "data" => $hoaUser
                     ])
@@ -271,6 +272,7 @@ class ApiHoaController extends Controller
 
                 $this->activity()->event("Hoa main")
                     ->eventType(ActivityEventType::CREATED)
+                    ->isUser()
                     ->description("house created")
                     ->properties([
                         "data" => $hoaUser
@@ -388,7 +390,9 @@ class ApiHoaController extends Controller
 
             $this->properties([
                 "new_data" => $hoaUser->refresh()
-            ])->save();
+            ])
+                ->isUser()
+                ->save();
 
             return $this->dataResponse([
                 'user' => $hoaUser
@@ -436,6 +440,7 @@ class ApiHoaController extends Controller
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::Verification)
                 ->description("Sub user account verified")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser->refresh()
                 ])->save();
@@ -461,6 +466,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::MailResend)
                 ->description("Mail resent to user")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser->refresh()
                 ])->save();
@@ -517,6 +523,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::NewPlanAdded)
                 ->description("New plan added")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser->subscriptionLatest
 
@@ -549,6 +556,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::MailResend)
                 ->description("Mail resent to user")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -576,6 +584,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::DELETED)
                 ->description("House deleted")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser
                 ])
@@ -687,6 +696,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa sub user")
                 ->eventType(ActivityEventType::Regenerate)
                 ->description("Sub user regenerate passcode")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -799,6 +809,7 @@ class ApiHoaController extends Controller
                     ->event("Hoa main")
                     ->eventType(ActivityEventType::STATUSDISABLE)
                     ->description("House disable")
+                    ->isUser()
                     ->properties([
                         "data" => $hoaUser
                     ])
@@ -809,6 +820,7 @@ class ApiHoaController extends Controller
                     ->event("Hoa main")
                     ->eventType(ActivityEventType::STATUSENABLE)
                     ->description("House enable")
+                    ->isUser()
                     ->properties([
                         "data" => $hoaUser
                     ])
@@ -895,6 +907,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::REMOVED)
                 ->description("Session removed")
+                ->isUser()
                 ->properties([
                     "data" => $session
                 ])->save();
@@ -942,6 +955,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::REMOVED)
                 ->description("Multiple session removed")
+                ->isUser()
                 ->properties([
                     "data" => $sessions
                 ])->save();
@@ -1128,6 +1142,7 @@ class ApiHoaController extends Controller
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::AccountActive)
                 ->description("Sub user account active")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -1290,6 +1305,7 @@ class ApiHoaController extends Controller
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::Forgot)
                 ->description("Sub user passcode regenerate")
+                ->isUser()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -1328,6 +1344,7 @@ class ApiHoaController extends Controller
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::DELETED)
                 ->description("Multiple house deleted")
+                ->isUser()
                 ->properties([
                     "data" => $houseList
                 ])->save();

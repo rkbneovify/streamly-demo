@@ -40,6 +40,7 @@ class AdminActivityController extends Controller
 
             // Step 3: get logs for those dates
             $activities = ActivityLog::with('user')
+                ->where('is_user', 0)
                 ->whereIn(DB::raw('DATE(created_at)'), $paginatedDates)
                 ->orderByDesc('created_at')
                 ->get()->groupBy(function ($log) {
