@@ -21,4 +21,5 @@ final class ActivityEventType
     public const Regenerate = 'regenerate';
     public const Forgot = 'forgot';
     public const AccountActive = 'account active';
+    public const Change = 'change';
 }

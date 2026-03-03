@@ -92,9 +92,9 @@ trait ActivityLogger
         return $this;
     }
 
-    public function isAdmin()
+    public function isUser()
     {
-        $this->activity->is_admin = 1;
+        $this->activity->is_user = 1;
         return $this;
     }
 
