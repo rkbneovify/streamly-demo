@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActivityEventType;
 use App\Exports\UserRoomExport;
 use App\Http\Controllers\Controller;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\User;
@@ -16,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class HotelController extends Controller
 {
+    use ActivityLogger;
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +46,7 @@ class HotelController extends Controller
         $roomid = request('roomid');
         // 'required|exists:users,email,is_active,1'
         $user = JWTAuth::user();
-        $uid =  $user['id'];
+        $uid = $user['id'];
         // dd($uid);
         $validator = Validator::make($request->all(), [
             'roomid' => ['required', 'numeric', 'exists:hotel_rooms,id,user_id,' . $uid . ''],
@@ -83,9 +86,17 @@ class HotelController extends Controller
                     ['id', '=', $roomid],
                     ['user_id', '=', $uid],
                 ])->update([
-                    'session_id' => $sessionid
-                ]);
+                            'session_id' => $sessionid
+                        ]);
 
+
+
+                $this->activity()->event("Tier user")
+                    ->eventType(ActivityEventType::LOGIN)
+                    ->description("Sign in to room device")
+                    ->properties([
+                        "data" => $hotelRoomtab
+                    ]);
                 $response = [
                     'success' => true,
                     'data' => 'Room id ' . $roomid . ' added',
@@ -197,7 +208,7 @@ class HotelController extends Controller
 
 
         if ($user->hasRole('tieruser')) {
-            $uid =  $user['id'];
+            $uid = $user['id'];
             $rooms = getActiveHotelRooms($uid);
             if ($rooms->isEmpty()) {
                 return response()->json([
