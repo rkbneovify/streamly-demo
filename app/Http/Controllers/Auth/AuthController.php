@@ -363,6 +363,14 @@ class AuthController extends Controller
         $userRole = $user->roles->pluck('name');
         //todo hotel check
 
+        $this->activity($user->id)
+            ->event("User")
+            ->eventType(ActivityEventType::LOGIN)
+            ->description("Login with passcode")
+            ->properties([
+                "passcode" => $request->passcode
+            ])
+            ->save();
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
 
             checkLoginLimit($uid, $token, $deviceDetails);
@@ -622,10 +630,21 @@ class AuthController extends Controller
 
 
 
-            $userRole = $user->roles->pluck('name'); //check users role
+            $userRole = $user->roles->pluck('name');
+            //check users role
+            $session = SessionTable::where('access_token', $request->bearerToken())->first();
             $this->activity()->event("User")
-                ->eventType(ActivityEventType::LOGOUT)
-                ->description("User logout")
+                ->eventType(ActivityEventType::LOGOUT);
+
+
+            if ($session->is_main_account == 0) {
+                $this->description("Sub user (" . $session->passcode . ")");
+            } else {
+                $this->description("User logout");
+            }
+            $this->properties([
+                "data" => $session
+            ])
                 ->save();
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table

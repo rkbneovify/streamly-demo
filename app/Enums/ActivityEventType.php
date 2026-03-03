@@ -15,4 +15,10 @@ final class ActivityEventType
     public const STATUSENABLE = 'enable';
     public const CANCELED = 'canceled';
     public const TRIALEND = 'trial_end';
+    public const MailResend = 'mail resend';
+    public const NewPlanAdded = 'plan added';
+    public const Verification = 'verification';
+    public const Regenerate = 'regenerate';
+    public const Forgot = 'forgot';
+    public const AccountActive = 'account active';
 }
