@@ -96,7 +96,7 @@ class HotelController extends Controller
                     ->description("Sign in to room device")
                     ->properties([
                         "data" => $hotelRoomtab
-                    ]);
+                    ])->save();
                 $response = [
                     'success' => true,
                     'data' => 'Room id ' . $roomid . ' added',
