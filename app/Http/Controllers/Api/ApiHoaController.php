@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ActivityEventType;
 use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
@@ -16,6 +17,7 @@ use App\Models\Zipcode;
 use App\PasscodeResetToken;
 use App\SessionTable;
 use App\Traits\ActionTrait;
+use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\Traits\DbTransactionTrait;
 use App\User;
@@ -38,7 +40,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ApiHoaController extends Controller
 {
 
-    use ApiResponseTrait, DbTransactionTrait;
+    use ApiResponseTrait, DbTransactionTrait, ActivityLogger;
 
     public function index(Request $request)
     {
@@ -236,7 +238,13 @@ class ApiHoaController extends Controller
                     $subs->plan_name = $request->plan_in_month . ' Month Plan';
                     $subs->save();
                 }
-
+                $this->activity()->event("Hoa main")
+                    ->eventType(ActivityEventType::CREATED)
+                    ->description("New house created")
+                    ->properties([
+                        "data" => $hoaUser
+                    ])
+                    ->save();
             } else {
                 $hoaUser = new HoaUser();
                 $hoaUser->user_id = auth()->user()->id;
@@ -260,6 +268,15 @@ class ApiHoaController extends Controller
                     $subs->updated_at = now();
                     $subs->save();
                 }
+
+                $this->activity()->event("Hoa main")
+                    ->eventType(ActivityEventType::CREATED)
+                    ->description("house created")
+                    ->properties([
+                        "data" => $hoaUser
+                    ])
+                    ->save();
+
             }
 
 
@@ -306,6 +323,12 @@ class ApiHoaController extends Controller
                 return $this->notFoundResponse("Data not found !");
             }
 
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::UPDATED)
+                ->description("House updated")
+                ->properties([
+                    "old_data" => $hoaUser
+                ]);
 
             // logic if email already exists;
             if ($hoaUser->email == null && $request->email != null) {
@@ -363,6 +386,10 @@ class ApiHoaController extends Controller
                 }
             }
 
+            $this->properties([
+                "new_data" => $hoaUser->refresh()
+            ])->save();
+
             return $this->dataResponse([
                 'user' => $hoaUser
             ], 'User updated successfully !');
@@ -406,6 +433,12 @@ class ApiHoaController extends Controller
             $user = User::where('id', $hoaUser->user_id)->first();
             Mail::to($hoaUser->email)->send(new HoaSubUserWelcome2($hoaUser, $user->email));
 
+            $this->activity($hoaUser->user_id)->event("Hoa sub user")
+                ->eventType(ActivityEventType::Verification)
+                ->description("Sub user account verified")
+                ->properties([
+                    "data" => $hoaUser->refresh()
+                ])->save();
 
             return $this->successResponse('Acoount Verification done successfully ! Please check your email.');
         });
@@ -425,6 +458,12 @@ class ApiHoaController extends Controller
             $verificationUrl = url('hoa/sub-user-account/verify') . '/' . $hoaUser->id;
             Mail::to($hoaUser->email)->send(new HoaSubUserEditVerification($hoaUser, $verificationUrl));
 
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::MailResend)
+                ->description("Mail resent to user")
+                ->properties([
+                    "data" => $hoaUser->refresh()
+                ])->save();
             return $this->successResponse('Mail resent successfully ! Please check your email.');
         });
     }
@@ -474,6 +513,15 @@ class ApiHoaController extends Controller
 
             $hoaUser->device_limit = $request->device_limit;
             $hoaUser->save();
+
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::NewPlanAdded)
+                ->description("New plan added")
+                ->properties([
+                    "data" => $hoaUser->subscriptionLatest
+
+                ])->save();
+
             return $this->successResponse("Plan added successfully !");
 
 
@@ -498,6 +546,12 @@ class ApiHoaController extends Controller
                 Mail::to($hoaUser->email)->send(new VerifyHoaSubUserEmail($hoaUser, intval(trim($subscription->plan_name)), $subscription->amount));
             }
 
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::MailResend)
+                ->description("Mail resent to user")
+                ->properties([
+                    "data" => $hoaUser
+                ])->save();
             DB::commit();
             return $this->successResponse("Verification mail resend successfully !");
         } catch (\Throwable $th) {
@@ -518,7 +572,16 @@ class ApiHoaController extends Controller
         DB::beginTransaction();
         try {
             HoaSubUserSubscription::where('sub_user_id', $hoaUser->id)->delete();
+
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::DELETED)
+                ->description("House deleted")
+                ->properties([
+                    "data" => $hoaUser
+                ])
+                ->save();
             $hoaUser->delete();
+
             DB::commit();
             return $this->successResponse("House deleted successfully !");
         } catch (\Throwable $th) {
@@ -621,6 +684,12 @@ class ApiHoaController extends Controller
                 ->send(new HoaSubUserPasscodeRegenerate($hoaUser));
 
 
+            $this->activity()->event("Hoa sub user")
+                ->eventType(ActivityEventType::Regenerate)
+                ->description("Sub user regenerate passcode")
+                ->properties([
+                    "data" => $hoaUser
+                ])->save();
             $redirectUrl .= '?type=success&message=Passcode regenerated successfully ! Please check your email.';
             return redirect($redirectUrl);
 
@@ -726,8 +795,24 @@ class ApiHoaController extends Controller
             DB::beginTransaction();
             if ($hoaUser->status == 1) {
                 $hoaUser->status = 0;
+                $this->activity()
+                    ->event("Hoa main")
+                    ->eventType(ActivityEventType::STATUSDISABLE)
+                    ->description("House disable")
+                    ->properties([
+                        "data" => $hoaUser
+                    ])
+                    ->save();
             } else {
                 $hoaUser->status = 1;
+                $this->activity()
+                    ->event("Hoa main")
+                    ->eventType(ActivityEventType::STATUSENABLE)
+                    ->description("House enable")
+                    ->properties([
+                        "data" => $hoaUser
+                    ])
+                    ->save();
             }
             $hoaUser->save();
             if (!empty($hoaUser->passcode)) {
@@ -807,6 +892,12 @@ class ApiHoaController extends Controller
                 return $this->notFoundResponse('Session not found !');
 
             }
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::REMOVED)
+                ->description("Session removed")
+                ->properties([
+                    "data" => $session
+                ])->save();
             JWTAuth::setToken($session->access_token)->invalidate();
             $session->delete();
             DB::commit();
@@ -846,6 +937,15 @@ class ApiHoaController extends Controller
                 return $this->notFoundResponse('Session not found !');
 
             }
+
+
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::REMOVED)
+                ->description("Multiple session removed")
+                ->properties([
+                    "data" => $sessions
+                ])->save();
+
             foreach ($sessions as $session) {
                 JWTAuth::setToken($session->access_token)->invalidate();
                 $session->delete();
@@ -1025,7 +1125,12 @@ class ApiHoaController extends Controller
             Mail::to($hoaUser->email)
                 ->send(new HoaSubUserWelcome($hoaUser, $user->email));
 
-
+            $this->activity($hoaUser->user_id)->event("Hoa sub user")
+                ->eventType(ActivityEventType::AccountActive)
+                ->description("Sub user account active")
+                ->properties([
+                    "data" => $hoaUser
+                ])->save();
             return $this->successResponse("Account active successfully ! Please check your email for details.");
 
         } catch (\Throwable $th) {
@@ -1182,6 +1287,13 @@ class ApiHoaController extends Controller
 
 
             $resetPasscodeUrl = route('sub.user.regenerate.passcode', $token) . '?email=' . $request->email;
+            $this->activity($hoaUser->user_id)->event("Hoa sub user")
+                ->eventType(ActivityEventType::Forgot)
+                ->description("Sub user passcode regenerate")
+                ->properties([
+                    "data" => $hoaUser
+                ])->save();
+
 
             Mail::to($request->email)->send(new HoaSubUserForgotPasscode($resetPasscodeUrl));
             DB::commit();
@@ -1212,8 +1324,17 @@ class ApiHoaController extends Controller
             if (count($houseList) <= 0) {
                 return $this->notFoundResponse("Data not found !");
             }
+
+            $this->activity()->event("Hoa main")
+                ->eventType(ActivityEventType::DELETED)
+                ->description("Multiple house deleted")
+                ->properties([
+                    "data" => $houseList
+                ])->save();
+
             foreach ($houseList as $item) {
                 HoaSubUserSubscription::where('sub_user_id', $item->id)->delete();
+
                 $item->delete();
             }
             DB::commit();
