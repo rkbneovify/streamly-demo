@@ -744,7 +744,11 @@ class UsersController extends Controller
             $subscription = $user->subscriptionLatest;
 
 
-
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::UPDATED)
+                ->description("User details updated")
+                ->oldData($user);
 
             if ($request->has('connected_device')) {
                 $input['connected_device'] = $request->connected_device; // use new value
@@ -1008,15 +1012,13 @@ class UsersController extends Controller
 
             }
 
-            $this->activity()
-                ->event("User")
-                ->eventType(ActivityEventType::UPDATED)
-                ->description("User details updated")
-                ->oldData($user);
 
-            DB::commit();
+
             $this->newData($user->refresh())
                 ->save();
+
+            DB::commit();
+
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
