@@ -194,6 +194,7 @@ class AuthController extends Controller
 
         $this->activity($user->id)->event("User")
             ->eventType(ActivityEventType::LOGIN)
+            ->isUser()
             ->description("User login")
             ->save();
 
@@ -367,6 +368,7 @@ class AuthController extends Controller
             ->event("User")
             ->eventType(ActivityEventType::LOGIN)
             ->description("Login with passcode")
+            ->isUser()
             ->properties([
                 "passcode" => $request->passcode
             ])
@@ -454,6 +456,14 @@ class AuthController extends Controller
         if ($User) {
             $User->password = Hash::make($request->password);
             $User->save();
+
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::Change)
+                ->description("password changed")
+                ->isUser()
+                ->save();
+
             $response = array('success' => true, 'response_code' => 200, 'message' => 'Password changed successfully.');
             return response()->json($response, 200);
         } else {
@@ -645,6 +655,7 @@ class AuthController extends Controller
             $this->properties([
                 "data" => $session
             ])
+                ->isUser()
                 ->save();
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table
@@ -767,6 +778,7 @@ class AuthController extends Controller
             $this->properties([
                 "data" => $session
             ])
+                ->isUser()
                 ->save();
 
             invalidateToken();

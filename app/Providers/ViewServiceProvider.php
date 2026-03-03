@@ -26,8 +26,8 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
-            $notifications = ActivityLog::with('effectedUser')
-                ->where('is_read', 0)
+            $notifications = ActivityLog::where('is_read', 0)
+                ->where('is_user', 0)
                 ->latest()
                 ->limit(10)
                 ->get();

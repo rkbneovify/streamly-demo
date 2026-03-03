@@ -92,7 +92,11 @@ trait ActivityLogger
         return $this;
     }
 
-
+    public function isUser()
+    {
+        $this->activity->is_user = 1;
+        return $this;
+    }
 
     public function save()
     {
