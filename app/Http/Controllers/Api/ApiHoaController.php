@@ -696,7 +696,7 @@ class ApiHoaController extends Controller
 
             $this->activity()->event("Hoa sub user")
                 ->eventType(ActivityEventType::Regenerate)
-                ->description("Sub user regenerate passcode")
+                ->description("Sub user regenerated new passcode")
                 ->isUser()
                 ->isHoa()
                 ->properties([
@@ -1322,8 +1322,9 @@ class ApiHoaController extends Controller
             $resetPasscodeUrl = route('sub.user.regenerate.passcode', $token) . '?email=' . $request->email;
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::Forgot)
-                ->description("Sub user passcode regenerate")
+                ->description("Sub user passcode regenerate request")
                 ->isUser()
+                ->isHoa()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
