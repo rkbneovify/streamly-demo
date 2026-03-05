@@ -441,6 +441,7 @@ class ApiHoaController extends Controller
                 ->eventType(ActivityEventType::Verification)
                 ->description("Sub user account verified")
                 ->isUser()
+                ->isHoa()
                 ->properties([
                     "data" => $hoaUser->refresh()
                 ])->save();
@@ -695,8 +696,9 @@ class ApiHoaController extends Controller
 
             $this->activity()->event("Hoa sub user")
                 ->eventType(ActivityEventType::Regenerate)
-                ->description("Sub user regenerate passcode")
+                ->descriptionSimple("Sub user regenerated new passcode | " . $hoaUser->email)
                 ->isUser()
+                ->isHoa()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -1141,8 +1143,9 @@ class ApiHoaController extends Controller
 
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::AccountActive)
-                ->description("Sub user account active")
+                ->descriptionSimple("Sub user account active | " . $hoaUser->email ?? $hoaUser->passcode)
                 ->isUser()
+                ->isHoa()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
@@ -1165,6 +1168,16 @@ class ApiHoaController extends Controller
 
 
         if ($minutesRemaining <= 0) {
+            $hoaUser = HoaUser::where('id', $id)->first();
+            $this->activity($hoaUser->user_id)->event("Hoa sub user")
+                ->eventType(ActivityEventType::AccountActive)
+                ->descriptionSimple("Verification link expired. House :" . $hoaUser->email ?? $hoaUser->passcode)
+                ->isUser()
+                ->isHoa()
+                ->properties([
+                    "data" => $hoaUser
+                ])->save();
+
             toast("Verification link expired. Please contact your admin.", "error")
                 ->autoClose(3000)
                 ->timerProgressBar();
@@ -1176,6 +1189,9 @@ class ApiHoaController extends Controller
             $hoaUser = HoaUser::where('id', $id)->first();
             if ($hoaUser != null) {
                 if (!hash_equals(sha1($hoaUser->email), $hash)) {
+
+
+
                     toast("Invalid verification link. Please contact your admin.", "error")
                         ->autoClose(3000)
                         ->timerProgressBar();
@@ -1188,7 +1204,9 @@ class ApiHoaController extends Controller
                     ->timerProgressBar();
                 return redirect('/auth/login');
             }
-            HoaUser::markedEmailVerified($id);
+            // HoaUser::markedEmailVerified($id);
+
+
             // send link to frontend
 
             // $accountRegisterUrl = URL::temporarySignedRoute(
@@ -1304,8 +1322,9 @@ class ApiHoaController extends Controller
             $resetPasscodeUrl = route('sub.user.regenerate.passcode', $token) . '?email=' . $request->email;
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::Forgot)
-                ->description("Sub user passcode regenerate")
+                ->description("Sub user passcode regenerate request")
                 ->isUser()
+                ->isHoa()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
