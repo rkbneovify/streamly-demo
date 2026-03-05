@@ -54,6 +54,13 @@ trait ActivityLogger
         return $this;
     }
 
+    public function descriptionSimple(string $description)
+    {
+
+        $this->activity->description = $description;
+        return $this;
+    }
+
 
 
     public function properties(array $properties)
