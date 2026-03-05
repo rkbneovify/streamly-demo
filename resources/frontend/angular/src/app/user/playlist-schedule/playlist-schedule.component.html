@@ -1,14 +1,15 @@
 <div class="schedule_main postion-relative">
   <div class="schedule_heading_container">
     <div class="schedule_channels">Streamly Channels</div>
-    
+
     <div class="schedule_categories" [@slideInOut]="'active'" [class.isMacCh]="isMobileChrom" #scrollablecategory>
-      <div class="schedule_category" [class.active_categories]="selected_category == category.name" *ngFor="let category of categories" (click)="changeCategory(category.name)">
+      <div class="schedule_category" [class.active_categories]="selected_category == category.name"
+        *ngFor="let category of categories" (click)="changeCategory(category.name)">
         <img *ngIf="category?.image" loading="lazy" class="me-1" [src]="category?.image" [alt]="category.name">
         {{ category?.name }}
       </div>
     </div>
-    
+
     <div class="schedule_arrow d-flex">
       <div class="pointer" (click)="scrollRight(50)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
@@ -23,22 +24,25 @@
       <select class="position-relative" [(ngModel)]="selectedDay" (ngModelChange)="changeDays(selectedDay)">
         <option [selected]="isNextDay" disabled *ngIf="isNextDay">Tomorrow</option>
         <ng-container *ngFor="let day of days">Tomorrow
-          <option  [value]="day">{{ day }}</option>
+          <option [value]="day">{{ day }}</option>
         </ng-container>
-        
-        </select>
+
+      </select>
     </div>
     <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-150)">
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
     </div>
-    
-    <div class="schedule_hours scrollByRight d-flex position-relative" [ngClass]="{'isMacCh':isMobileChrom}" [class.isMacCh]="isMacChrome" [@slideInOut]="'active'" #scrollableContent>
+
+    <div class="schedule_hours scrollByRight d-flex position-relative" [ngClass]="{'isMacCh':isMobileChrom}"
+      [class.isMacCh]="isMacChrome" [@slideInOut]="'active'" #scrollableContent>
       <div class="schedule_hour" *ngFor="let hour of getCurrentTimeDate" #scrollItem>{{hour}}</div>
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
-      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live</div>
+      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live
+      </div>
+      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer"
+        (click)="refreshPage()">Go Live</div>
       <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
@@ -53,79 +57,72 @@
 
       <div class="schedule_channel_container">
         <ng-container *ngIf="filteredPrograms?.length">
-        <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
-          <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
-            <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
-            <div class="history_ch-play-icon" [class.opacity_full]="channelID == channel.id">
-              <img loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
+          <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}"
+            *ngFor="let channel of getScheduleChannelLogo">
+            <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
+              <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'"
+                [alt]="channel?.stationName" />
+              <div class="history_ch-play-icon" [class.opacity_full]="channelID == channel.id">
+                <img loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
+              </div>
             </div>
-          </div>
-          <div class="channel_id">
-            {{channel.id}}
-          </div>
-          <div class="heart_ch">
-            <svg
-              [title]="'favorite'"
-              class="mt-2 me-2"
-              (click)="toggleFavorite(channel?.id)"
-              [class.favActive]="isFavorite(channel?.id)"
-              id="heart-icon"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              cursor="pointer"
-            >
+            <div class="channel_id">
+              {{channel.id}}
+            </div>
+            <div class="heart_ch">
+              <svg [title]="'favorite'" class="mt-2 me-2" (click)="toggleFavorite(channel?.id)"
+                [class.favActive]="isFavorite(channel?.id)" id="heart-icon" width="30" height="30" viewBox="0 0 30 30"
+                fill="none" xmlns="http://www.w3.org/2000/svg" cursor="pointer">
 
-            <!-- (click)="toggleFavorite(ch annel?.id)"
+                <!-- (click)="toggleFavorite(ch annel?.id)"
               [class.favActive]="isFavorite(channel?.id)" -->
 
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                fill="#ccc"
-              />
-            </svg>
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  fill="#ccc" />
+              </svg>
+            </div>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
       </div>
 
       <div class="schedule_time_programs_container position-relative">
-        <div *ngIf="selectedDay == 'Today'" class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
+        <div *ngIf="selectedDay == 'Today'" class="position-absolute h-100 livetimecounter"
+          [ngStyle]="{'min-width.px': liveCurrentTime}">
         </div>
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
             <div
-
-            [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
-            class="schedule_time"
-            *ngFor="let program of data.program; let index = index"  
-            [ngClass]="{'hover-active position-relative': isCurrentTimeBetween(program.start,program.end) && this.selectedDay == 'Today','px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
-            (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url,program?.TMSId ,program.start,program.end)"
-            >
-            <div class="position-absolute play-icon-container" [class.display_flex]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId" [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width}"
-            *ngIf="isCurrentTimeBetween(program.start,program.end)">
-              <img class="play-icon-img mt-auto" style="width: 45px;" loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
-            </div>
-                <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
-                <p class="program_time my-2 overflow-hidden" [class.visibility_hidden]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
-                <div
-                  class="program_ep d-flex justify-content-between align-items-center"
-                  [class.visibility_hidden]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId"
-                >
-                  <p class="">{{program?.TMSId | extractFirstTwo}}</p>
-                  <p class="overflow-hidden">{{program?.start | durationFormat:program?.end}}</p>
-                </div>
+              [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
+              class="schedule_time" *ngFor="let program of data.program; let index = index"
+              [ngClass]="{'hover-active position-relative': isCurrentTimeBetween(program.start,program.end) && this.selectedDay == 'Today','px-0':calculateWidth(+program.start,+program.end,index).width<50}"
+              (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url,program?.TMSId ,program.start,program.end)">
+              <div class="position-absolute play-icon-container"
+                [class.display_flex]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId"
+                [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width}"
+                *ngIf="isCurrentTimeBetween(program.start,program.end)">
+                <img class="play-icon-img mt-auto" style="width: 45px;" loading="lazy"
+                  src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
               </div>
-              <p *ngIf="!data?.program?.length" class="pt-4 ps-2 border-grid">
-                No Data Available
-              </p>
+              <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
+              <p class="program_time my-2 overflow-hidden"
+                [class.visibility_hidden]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId">
+                {{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
+              <div class="program_ep d-flex justify-content-between align-items-center"
+                [class.visibility_hidden]="isCurrentTimeBetween(program.start,program.end) && programTMSID === program.TMSId">
+                <p class="">{{program?.TMSId | extractFirstTwo}}</p>
+                <p class="overflow-hidden">{{program?.start | durationFormat:program?.end}}</p>
+              </div>
             </div>
-            </ng-container>
-            <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150+79,'width.px':getCurrentTimeDate?.length*150+79,'height.px':0}">
-              total
-            </div>
+            <p *ngIf="!data?.program?.length" class="pt-4 ps-2 border-grid">
+              EPG Data of: "{{ data?.stationName }}"
+            </p>
+          </div>
+        </ng-container>
+        <div
+          [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150+79,'width.px':getCurrentTimeDate?.length*150+79,'height.px':0}">
+          total
+        </div>
       </div>
     </div>
 
@@ -133,10 +130,12 @@
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
       <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
-        <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
+        <img *ngIf="programDetailData.image" loading="lazy"
+          [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
         <!-- <p class="no-img" *ngIf="!programDetailData.image">No Image</p> -->
 
-        <div (click)="setChannelId(programChannelId,programChannelUrl,false)" class="d-flex playstream_Play_icon position-absolute" *ngIf="programPlayable">
+        <div (click)="setChannelId(programChannelId,programChannelUrl,false)"
+          class="d-flex playstream_Play_icon position-absolute" *ngIf="programPlayable">
           <div class="play-icon-hover" [@scaleAnimation]>
             <img class="" src="../../../assets/dummy-img/play-circle.png">
             <!-- <p>Play</p> -->
@@ -154,15 +153,15 @@
             <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
-        
+
         <p class="playstream_desc my-2">
           {{programDetailData?.description}}
         </p>
-  
+
         <div class="play_btn_container_2">
           <button class="plan_btn playbtn_genre">
-            <span class="text-nowrap">Genre :</span
-            ><span class="text-nowrap pe-1" *ngFor="let genre of programDetailData?.genre">{{genre}}</span>
+            <span class="text-nowrap">Genre :</span><span class="text-nowrap pe-1"
+              *ngFor="let genre of programDetailData?.genre">{{genre}}</span>
           </button>
         </div>
       </div>
@@ -174,38 +173,31 @@
           <h3>Schedule</h3>
         </div>
         <div class="schedule_details_time-container">
-          <div
-            class="schedule_details_time my-3"
-            *ngIf="(programDetailData?.schedule | scheduleFormatter).todaySchedule"
-          >
+          <div class="schedule_details_time my-3"
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).todaySchedule">
             <div class="schedule_details_day mb-2">{{(programDetailData?.schedule | scheduleFormatter).today }}</div>
-            <div
-              class="schedule_details_hr d-flex align-items-center justify-content-between"
-            >
+            <div class="schedule_details_hr d-flex align-items-center justify-content-between">
               <p>{{(programDetailData?.schedule | scheduleFormatter).todaySchedule }}</p>
             </div>
           </div>
-          <div
-            class="schedule_details_time my-3"
-            *ngIf="(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule"
-          >
-            <div class="schedule_details_day mb-2">{{ (programDetailData?.schedule | scheduleFormatter).tomorrow }}</div>
-            <div
-              class="schedule_details_hr d-flex align-items-center justify-content-between"
-            >
+          <div class="schedule_details_time my-3"
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule">
+            <div class="schedule_details_day mb-2">{{ (programDetailData?.schedule | scheduleFormatter).tomorrow }}
+            </div>
+            <div class="schedule_details_hr d-flex align-items-center justify-content-between">
               <p>{{(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule }}</p>
             </div>
           </div>
         </div>
       </div>
-  
+
       <div (click)="playlist_details_show=false" class="close_menu_details pointer">
         <img loading="lazy" src="../../../assets/dummy-img/close-circle.svg" alt="">
       </div>
     </div>
 
   </div>
-    <!-- channels container end -->
+  <!-- channels container end -->
 </div>
 <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>
