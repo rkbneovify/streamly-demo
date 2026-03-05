@@ -43,7 +43,7 @@ trait ActivityLogger
     public function description(string $description)
     {
         if (Auth::check()) {
-            $this->activity->description = $description . ' - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name;
+            $this->activity->description = $description . ' - ' . Auth::user()->email . ' | ' . Auth::user()->roles[0]->name . ' | ' . Auth::user()->mode;
             return $this;
         } elseif ($this->activity->user_id != null) {
             $user = User::where('id', $this->activity->user_id)->first();
@@ -95,6 +95,12 @@ trait ActivityLogger
     public function isUser()
     {
         $this->activity->is_user = 1;
+        return $this;
+    }
+
+    public function isHoa()
+    {
+        $this->activity->is_hoa = 1;
         return $this;
     }
 
