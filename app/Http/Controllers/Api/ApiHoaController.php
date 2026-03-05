@@ -696,7 +696,7 @@ class ApiHoaController extends Controller
 
             $this->activity()->event("Hoa sub user")
                 ->eventType(ActivityEventType::Regenerate)
-                ->description("Sub user regenerated new passcode")
+                ->descriptionSimple("Sub user regenerated new passcode | " . $hoaUser->email)
                 ->isUser()
                 ->isHoa()
                 ->properties([
@@ -1143,7 +1143,7 @@ class ApiHoaController extends Controller
 
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::AccountActive)
-                ->description("Sub user account active")
+                ->descriptionSimple("Sub user account active | " . $hoaUser->email ?? $hoaUser->passcode)
                 ->isUser()
                 ->isHoa()
                 ->properties([
@@ -1171,7 +1171,7 @@ class ApiHoaController extends Controller
             $hoaUser = HoaUser::where('id', $id)->first();
             $this->activity($hoaUser->user_id)->event("Hoa sub user")
                 ->eventType(ActivityEventType::AccountActive)
-                ->description("Verification link expired. House :" . $hoaUser->email ?? $hoaUser->passcode)
+                ->descriptionSimple("Verification link expired. House :" . $hoaUser->email ?? $hoaUser->passcode)
                 ->isUser()
                 ->isHoa()
                 ->properties([
