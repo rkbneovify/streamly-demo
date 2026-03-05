@@ -98,6 +98,12 @@ trait ActivityLogger
         return $this;
     }
 
+    public function isHoa()
+    {
+        $this->activity->is_hoa = 1;
+        return $this;
+    }
+
     public function save()
     {
         $this->activity->save();
