@@ -134,7 +134,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       '/user/plan',
       '/user/supported-devices',
       '/user/report',
-      '/user/downloadapp'
+      '/user/downloadapp',
+      '/user/notifications'
 
     ]
 
