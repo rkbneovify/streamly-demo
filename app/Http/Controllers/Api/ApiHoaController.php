@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActivityLog;
 use App\Enums\ActivityEventType;
 use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
@@ -186,6 +187,43 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function notificationUnreadCount()
+    {
+        $query = ActivityLog::query();
+        $query->where('user_id', auth()->user()->id)
+            ->where('is_hoa', 1)->where('is_read', 0);
+        $count = $query->count();
+
+        return response()->json([
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'Data fetched successfully !',
+            'count' => $count,
+
+        ], 200);
+    }
+    public function notification(Request $request)
+    {
+
+        $query = ActivityLog::query();
+        $query->where('user_id', auth()->user()->id)
+            ->where('is_hoa', 1);
+        $limit = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $data = $query->paginate($limit, ['*'], 'page', $page);
+        // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
+        return response()->json([
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'Data fetched successfully !',
+            'data' => $data->items(),
+            'current_page' => $data->currentPage(),
+            'last_page' => $data->lastPage(),
+            'per_page' => $data->perPage(),
+            'total' => $data->total(),
+            'is_more_data' => $page >= $data->lastPage() ? false : true,
+        ], 200);
+    }
     public function addHouse(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -1382,6 +1420,8 @@ class ApiHoaController extends Controller
         }
     }
 
+
+
     public function exportIntoExcel(Request $request)
     {
 
@@ -1393,6 +1433,58 @@ class ApiHoaController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function planExpireNotification()
+    {
+
+        return $this->dbTransaction(function () {
+            HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
+                ->get()->map(function ($item) {
+                    $daysLeft = now()->diffInDays($item->plan_expires_at, false);
+                    $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
+
+                    $this->activity($item->user_id)
+                        ->event("Hoa sub user")
+                        ->eventType(ActivityEventType::Subscription)
+                        ->isHoa()->isUser();
+
+                    if ($daysLeft > 0 && $hoaUser != null) {
+                        $item->user = $hoaUser;
+                        if ($daysLeft == 1) {
+                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
+                                ->properties([
+                                    "data" => $item
+                                ])->save();
+                        } elseif ($daysLeft > 1) {
+                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
+                                ->properties([
+                                    "data" => $item
+                                ])->save();
+                        }
+                    } else {
+                        if ($hoaUser != null) {
+                            $item->user = $hoaUser;
+                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
+                                ->properties([
+                                    "data" => $item
+                                ])->save();
+                        }
+                    }
+
+
+
+                });
+
+            return response()->json([
+                "message" => "Notification send successfully !"
+            ]);
+
+        });
+
+
+    }
+
+
 
 
 }
