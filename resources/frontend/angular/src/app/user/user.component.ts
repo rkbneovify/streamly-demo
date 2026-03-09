@@ -96,6 +96,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   urlList: Array<String> = [];
   isSearchComponent: boolean = true;
   private searchSubject: Subject<string> = new Subject();
+  notificationCount: number = 0;
   constructor(
     private crud: CrudService,
     private router: Router,
@@ -159,7 +160,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    this.getNotificationCount();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -720,4 +721,17 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   //     console.log('Hello', target, isInsideMenu, this.isExpanded);
   //   }
   // }
+
+
+  getNotificationCount() {
+
+    this.crud.getRequest('auth/hoa/notification/count').subscribe({
+      next: (res: any) => {
+        this.notificationCount = res.count;
+      },
+      error: (error: any) => {
+
+      },
+    });
+  }
 }
