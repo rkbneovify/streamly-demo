@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Models\Subscription;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use JWTAuth;
@@ -19,8 +20,10 @@ class StripeController extends Controller
 {
 
     use ActivityLogger;
-    public function __construct()
+    protected $notification;
+    public function __construct(NotificationService $notification)
     {
+        $this->notification = $notification;
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
     }
 
@@ -59,6 +62,7 @@ class StripeController extends Controller
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CANCELED)
                         ->description("Subscription canceled")
+                        ->notification()
                         ->properties([
                             "user" => $user,
                             "subscription" => $planCancelled
@@ -74,30 +78,33 @@ class StripeController extends Controller
 
                     if (count($fcm_token) == 0) {
                     } else {
-                        $curl = curl_init();
 
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                 "registration_ids": ' . json_encode($fcmResults) . ',
-                 "title": "Subscription Cancelled",
-                 "body": "HI ' . ucwords($user[0]->name) . ' your subscription is cancelled to renew your subscription please visit ' . $website_link . '"
-                }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/json'
-                            ),
-                        ));
-                        $response = curl_exec($curl);
-                        curl_close($curl);
+                        $this->notification->send($fcmResults, "Subscription", "Your subscription is cancelled to renew your subscription please visit" . env('APP_URL'));
+
+                        //         $curl = curl_init();
+
+                        //         curl_setopt_array($curl, array(
+                        //             CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        //             CURLOPT_RETURNTRANSFER => true,
+                        //             CURLOPT_ENCODING => '',
+                        //             CURLOPT_MAXREDIRS => 10,
+                        //             CURLOPT_TIMEOUT => 0,
+                        //             CURLOPT_FOLLOWLOCATION => true,
+                        //             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //             CURLOPT_CUSTOMREQUEST => 'POST',
+                        //             CURLOPT_POSTFIELDS => '{
+                        //  "registration_ids": ' . json_encode($fcmResults) . ',
+                        //  "title": "Subscription Cancelled",
+                        //  "body": "HI ' . ucwords($user[0]->name) . ' your subscription is cancelled to renew your subscription please visit ' . $website_link . '"
+                        // }',
+                        //             CURLOPT_HTTPHEADER => array(
+                        //                 'Content-Type: application/json'
+                        //             ),
+                        //         ));
+                        //         $response = curl_exec($curl);
+                        //         curl_close($curl);
                     }
-                    ;
+
 
                     $userplanCanceled = DB::table('subscriptions')
                         ->where('stripe_id', $paymentIntent->id)
@@ -141,6 +148,7 @@ class StripeController extends Controller
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CREATED)
                         ->description("Subscription created")
+                        ->notification()
                         ->properties([
                             "user" => $user,
                             "subscription" => $subscription
@@ -161,28 +169,31 @@ class StripeController extends Controller
 
                     if (count($fcm_token) == 0) {
                     } else {
-                        $curl = curl_init();
 
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                          "registration_ids": ' . json_encode($fcmResults) . ',
-                          "title": "Subscription Renewed",
-                          "body": "HI ' . ucwords($user[0]->name) . ' your subscription is renewed."
-                         }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/json'
-                            ),
-                        ));
-                        $response = curl_exec($curl);
-                        curl_close($curl);
+                        $this->notification->send($fcmResults, "Subscription", "Your subscription is renewed.");
+
+                        // $curl = curl_init();
+
+                        // curl_setopt_array($curl, array(
+                        //     CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        //     CURLOPT_RETURNTRANSFER => true,
+                        //     CURLOPT_ENCODING => '',
+                        //     CURLOPT_MAXREDIRS => 10,
+                        //     CURLOPT_TIMEOUT => 0,
+                        //     CURLOPT_FOLLOWLOCATION => true,
+                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //     CURLOPT_CUSTOMREQUEST => 'POST',
+                        //     CURLOPT_POSTFIELDS => '{
+                        //   "registration_ids": ' . json_encode($fcmResults) . ',
+                        //   "title": "Subscription Renewed",
+                        //   "body": "HI ' . ucwords($user[0]->name) . ' your subscription is renewed."
+                        //  }',
+                        //     CURLOPT_HTTPHEADER => array(
+                        //         'Content-Type: application/json'
+                        //     ),
+                        // ));
+                        // $response = curl_exec($curl);
+                        // curl_close($curl);
                     }
                     ;
 
@@ -241,6 +252,15 @@ class StripeController extends Controller
 
                     //$recipt = $paymentIntent->charges->data->receipt_url;
 
+                    $this->activity($user->first()->id)->event("Subscription")
+                        ->eventType(ActivityEventType::CREATED)
+                        ->description("Subscription payment failed")
+                        ->notification()
+                        ->properties([
+                            "user" => $user,
+                            "subscription" => $paymentIntent
+                        ])->save();
+
                     $fcm_token = DB::table('session_table')
                         ->where('users_id', $user[0]->id)
                         ->where('status', 1)
@@ -255,30 +275,32 @@ class StripeController extends Controller
 
                     if (count($fcm_token) == 0) {
                     } else {
-                        $curl = curl_init();
 
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                          "registration_ids": ' . json_encode($fcmResults) . ',
-                          "title": "Payment Failed",
-                          "body": "HI ' . ucwords($user[0]->name) . ' please renew your card to enjoy streamlytv continously."
-                         }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/json'
-                            ),
-                        ));
-                        $response = curl_exec($curl);
-                        curl_close($curl);
+                        $this->notification->send($fcmResults, "Subscription", "Payment failed. Please renew your card to enjoy streamlytv continously.");
+                        //     $curl = curl_init();
+
+                        //     curl_setopt_array($curl, array(
+                        //         CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        //         CURLOPT_RETURNTRANSFER => true,
+                        //         CURLOPT_ENCODING => '',
+                        //         CURLOPT_MAXREDIRS => 10,
+                        //         CURLOPT_TIMEOUT => 0,
+                        //         CURLOPT_FOLLOWLOCATION => true,
+                        //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //         CURLOPT_CUSTOMREQUEST => 'POST',
+                        //         CURLOPT_POSTFIELDS => '{
+                        //       "registration_ids": ' . json_encode($fcmResults) . ',
+                        //       "title": "Payment Failed",
+                        //       "body": "HI ' . ucwords($user[0]->name) . ' please renew your card to enjoy streamlytv continously."
+                        //      }',
+                        //         CURLOPT_HTTPHEADER => array(
+                        //             'Content-Type: application/json'
+                        //         ),
+                        //     ));
+                        //     $response = curl_exec($curl);
+                        //     curl_close($curl);
                     }
-                    ;
+                    // ;
 
                     $website_link = env('WEBSITE_URL');
 
@@ -313,7 +335,8 @@ class StripeController extends Controller
 
                     $this->activity($user->first()->id)->event("Trial will end")
                         ->eventType(ActivityEventType::TRIALEND)
-                        ->description("User Trial pack will end")
+                        ->description("Trial pack will end" . date("d/m/y", $paymentIntent->trial_end))
+                        ->notification()
                         ->properties([
                             "user" => $user,
 
@@ -333,28 +356,30 @@ class StripeController extends Controller
 
                     if (count($fcm_token) == 0) {
                     } else {
-                        $curl = curl_init();
 
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                          "registration_ids": ' . json_encode($fcmResults) . ',
-                          "title": "Trial period is ending soon",
-                          "body": "HI ' . ucwords($user[0]->name) . ' your trail period is ending on ' . date("Y-m-d", $paymentIntent->trial_end) . '"
-                         }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Content-Type: application/json'
-                            ),
-                        ));
-                        $response = curl_exec($curl);
-                        curl_close($curl);
+                        $this->notification->send($fcmResults, "Subscription", "Your trail period is ending on" . date("d/m/y", $paymentIntent->trial_end));
+                        // $curl = curl_init();
+
+                        // curl_setopt_array($curl, array(
+                        //     CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        //     CURLOPT_RETURNTRANSFER => true,
+                        //     CURLOPT_ENCODING => '',
+                        //     CURLOPT_MAXREDIRS => 10,
+                        //     CURLOPT_TIMEOUT => 0,
+                        //     CURLOPT_FOLLOWLOCATION => true,
+                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //     CURLOPT_CUSTOMREQUEST => 'POST',
+                        //     CURLOPT_POSTFIELDS => '{
+                        //   "registration_ids": ' . json_encode($fcmResults) . ',
+                        //   "title": "Trial period is ending soon",
+                        //   "body": "HI ' . ucwords($user[0]->name) . ' your trail period is ending on ' . date("Y-m-d", $paymentIntent->trial_end) . '"
+                        //  }',
+                        //     CURLOPT_HTTPHEADER => array(
+                        //         'Content-Type: application/json'
+                        //     ),
+                        // ));
+                        // $response = curl_exec($curl);
+                        // curl_close($curl);
                     }
                     ;
 
@@ -395,11 +420,27 @@ class StripeController extends Controller
 
                 $this->activity($user->id)->event("Subscription")
                     ->eventType($subscription->status)
-                    ->description("User subscription updated details")
+                    ->description("Your trial period has ended, and your subscription is now active.")
+                    ->notification()
                     ->properties([
                         "user" => $user,
                         "subscription" => $subscription,
                     ])->save();
+
+                $fcm_token = DB::table('session_table')
+                    ->where('users_id', $user[0]->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->get('fcm_token');
+
+                $fcmResults = [];
+                foreach ($fcm_token as $tokens) {
+                    array_push($fcmResults, $tokens->fcm_token);
+                }
+                if ($fcmResults > 0) {
+                    $this->notification->send($fcmResults, "Subscription", "Your trial period has ended, and your subscription is now active.");
+                }
+
 
                 $updateData = [
                     'stripe_status' => $subscription->status,
