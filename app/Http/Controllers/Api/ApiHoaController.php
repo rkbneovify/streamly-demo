@@ -16,6 +16,7 @@ use App\Mail\HoaSubUserWelcome2;
 use App\Mail\VerifyHoaSubUserEmail;
 use App\Models\Zipcode;
 use App\PasscodeResetToken;
+use App\Services\NotificationService;
 use App\SessionTable;
 use App\Traits\ActionTrait;
 use App\Traits\ActivityLogger;
@@ -202,7 +203,7 @@ class ApiHoaController extends Controller
 
         ], 200);
     }
-    public function notification(Request $request)
+    public function notificationList(Request $request)
     {
 
         $query = ActivityLog::query();
@@ -1434,18 +1435,19 @@ class ApiHoaController extends Controller
         }
     }
 
-    public function planExpireNotification()
+    public function planExpireNotification(NotificationService $notification)
     {
 
-        return $this->dbTransaction(function () {
+        return $this->dbTransaction(function () use ($notification) {
             HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
-                ->get()->map(function ($item) {
+                ->get()->map(function ($item) use ($notification) {
                     $daysLeft = now()->diffInDays($item->plan_expires_at, false);
                     $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
 
                     $this->activity($item->user_id)
                         ->event("Hoa sub user")
                         ->eventType(ActivityEventType::Subscription)
+                        ->notification()
                         ->isHoa()->isUser();
 
                     if ($daysLeft > 0 && $hoaUser != null) {
@@ -1455,11 +1457,22 @@ class ApiHoaController extends Controller
                                 ->properties([
                                     "data" => $item
                                 ])->save();
+                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+
+                            if ($fcmToken != null) {
+                                $notification->send($fcmToken, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                            }
                         } elseif ($daysLeft > 1) {
                             $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
                                 ->properties([
                                     "data" => $item
                                 ])->save();
+
+                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+
+                            if ($fcmToken != null) {
+                                $notification->send($fcmToken, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                            }
                         }
                     } else {
                         if ($hoaUser != null) {
@@ -1468,6 +1481,12 @@ class ApiHoaController extends Controller
                                 ->properties([
                                     "data" => $item
                                 ])->save();
+
+                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+
+                            if ($fcmToken != null) {
+                                $notification->send($fcmToken, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired"));
+                            }
                         }
                     }
 
@@ -1476,13 +1495,14 @@ class ApiHoaController extends Controller
                 });
 
             return response()->json([
-                "message" => "Notification send successfully !"
+                "message" => "Notification sent successfully !"
             ]);
 
         });
 
 
     }
+
 
 
 
