@@ -242,6 +242,8 @@
         border-right: 2px solid #004480;
       }
 
+
+
       .schedule_channel {
         width: 168px;
         height: 100px;
@@ -254,11 +256,17 @@
         align-items: center;
         position: relative;
 
+        &.premium {
+          border-bottom: 2.5px solid #ffdb4e;
+        }
+
         &::after,
         &::before {
           position: absolute;
           background-color: green;
         }
+
+
 
         .history_ch {
           width: 80px;
@@ -266,12 +274,16 @@
           padding: 10px;
           flex: 1;
 
+
+
           img {
             height: 60px;
             object-fit: contain;
             width: 86px;
             margin: auto;
           }
+
+
 
           .history_ch-play-icon {
             position: absolute;
@@ -288,6 +300,8 @@
             float: inline-end;
             transition: opacity 400ms ease-in-out;
             border: 1px solid white;
+
+
 
             img {
               width: 48px;
@@ -818,6 +832,19 @@
   color: #fff;
   font-size: 10px;
   font-weight: bold;
+}
+
+.premium-img {
+  display: flex;
+  justify-content: end;
+  align-items: baseline;
+
+  margin-top: calc(40%);
+
+  img {
+    width: 24px;
+    width: 24px;
+  }
 }
 
 @media screen and (max-width: 750px) {
