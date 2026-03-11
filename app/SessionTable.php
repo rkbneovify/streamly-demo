@@ -235,4 +235,6 @@ class SessionTable extends Model
         $subscriptionStatus = DB::table('subscriptions')->where('user_id', $this->users_id)->value('stripe_status');
         return $subscriptionStatus ?? 'unsubscribe';
     }
+
+
 }

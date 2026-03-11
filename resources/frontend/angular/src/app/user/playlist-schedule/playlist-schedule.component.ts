@@ -646,14 +646,13 @@ export class PlaylistScheduleComponent
 
   // get the channels log and id
   filterchannelAnd(stations: any) {
-    return stations
-      .filter((station: any) => station.prgSvcId !== null)
-      .map((station: any) => ({
-        id: station.id,
-        image: station.image,
-        channel_url: station.channel_url,
-        url: station.url,
-      }));
+    return stations.map((station: any) => ({
+      id: station.id,
+      image: station.image,
+      channel_url: station.channel_url,
+      url: station.url,
+      premium: station.premium
+    }));
   }
 
   setLiveMinWith() {
