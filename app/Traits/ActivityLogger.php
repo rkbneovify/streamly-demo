@@ -16,6 +16,7 @@ trait ActivityLogger
         $this->activity = new ActivityLog();
         $this->activity->user_id = $userId ?? Auth::id();
         $this->activity->user_ip_address = request()->ip();
+        $this->activity->category = "activity";
 
         return $this;
     }
@@ -25,7 +26,11 @@ trait ActivityLogger
         $this->activity->effected_user_id = $userId;
         return $this;
     }
-
+    public function notification()
+    {
+        $this->activity->category = "notification";
+        return $this;
+    }
     public function event(string $event)
     {
         $this->activity->event = $event;
