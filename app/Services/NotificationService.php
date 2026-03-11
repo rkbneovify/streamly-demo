@@ -18,7 +18,7 @@ class NotificationService
             $firebase = (new Factory)->withServiceAccount(storage_path('app/firebase/streamly-tv-android-firebase-adminsdk-1hfhq-1ba968a112.json'));
             $messaging = $firebase->createMessaging();
             $happy = "eHveuW0sSYCmbV6o99gX5V:APA91bFTNBhJak_yXCfsmB8HA0zRR-HDcXXoom1xhrarf_NxfMJBxo9UkngI7oSdcWCkV8oBe8U40og3p_aZJ_0MfLyRa5GRv2q1TaBvos0-vdFHqBTxlgo";
-            $message = CloudMessage::withTarget('token', $happy)
+            $message = CloudMessage::withTarget('token', $token)
                 ->withNotification(
                     Notification::create($title, $body)
                 );
