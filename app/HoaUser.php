@@ -376,9 +376,11 @@ class HoaUser extends Model
     {
         $session = SessionTable::where('users_id', $userId)
             ->where('status', 1)
-            ->where('is_main_account', 1)->latest('created_on')->first();
-        if ($session != null && $session->fcm_token != null) {
-            return $session->fcm_token;
+            ->where('is_main_account', 1)
+            ->whereNotNull('fcm_token')
+            ->get();
+        if (count($session) > 0) {
+            return $session->pluck('fcm_token');
         }
         return null;
     }
