@@ -57,8 +57,8 @@
 
       <div class="schedule_channel_container">
         <ng-container *ngIf="filteredPrograms?.length">
-          <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}"
-            *ngFor="let channel of getScheduleChannelLogo">
+          <div class="schedule_channel" [class.premium]="channel.premium"
+            [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
             <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
               <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'"
                 [alt]="channel?.stationName" />
@@ -81,6 +81,12 @@
                   d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
                   fill="#ccc" />
               </svg>
+            </div>
+            <!-- <div class="ribbon" *ngIf="channel.premium != null">
+              <span>Premium</span>
+            </div> -->
+            <div *ngIf="channel.premium != null" class="premium-img">
+              <img src="../../../assets/dummy-img/crown.png" alt="">
             </div>
           </div>
         </ng-container>

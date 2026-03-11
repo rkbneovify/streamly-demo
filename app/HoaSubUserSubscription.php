@@ -10,7 +10,12 @@ class HoaSubUserSubscription extends Model
 {
     protected $table = 'hoa_sub_user_subscriptions';
 
-   
+
+
+    public function hoaSubUser()
+    {
+        $this->hasOne(HoaUser::class, 'sub_user_id', 'id');
+    }
 
     public static function calcExpiryDate($month)
     {
@@ -33,5 +38,7 @@ class HoaSubUserSubscription extends Model
         }
         return Carbon::now()->addDays($daysToAdd);
     }
+
+
 
 }
