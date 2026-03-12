@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use Kreait\Firebase\Factory;
@@ -8,37 +9,77 @@ use Kreait\Firebase\Messaging\Notification;
 
 class NotificationService
 {
+    protected $messaging;
 
+    public function __construct()
+    {
+        $this->messaging = (new Factory)
+            ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
+            ->createMessaging();
+    }
 
     public function send($token, $title, $body)
     {
-
         try {
 
-            $firebase = (new Factory)->withServiceAccount(storage_path('app/firebase/streamly-tv-android-firebase-adminsdk-1hfhq-1ba968a112.json'));
-            $messaging = $firebase->createMessaging();
-            $happy = "eHveuW0sSYCmbV6o99gX5V:APA91bFTNBhJak_yXCfsmB8HA0zRR-HDcXXoom1xhrarf_NxfMJBxo9UkngI7oSdcWCkV8oBe8U40og3p_aZJ_0MfLyRa5GRv2q1TaBvos0-vdFHqBTxlgo";
-            $message = CloudMessage::withTarget('token', $token)
-                ->withNotification(
-                    Notification::create($title, $body)
-                );
+            if (empty($token)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Device token is missing'
+                ]);
+            }
 
-            $messaging->send($message);
+            $message = CloudMessage::withTarget('token', $token)
+                ->withNotification(Notification::create($title, $body));
+
+            $this->messaging->send($message);
+
             return response()->json([
-                "message" => "Notification send successfully !"
+                'status' => true,
+                'message' => 'Notification sent successfully'
             ]);
+
         } catch (\Throwable $th) {
+
             return response()->json([
-                // "message" => "Something went wrong !"
-                "message" => $th->getMessage()
+                'status' => false,
+                'message' => $th->getMessage()
             ]);
         }
-
-
-
     }
 
+    public function sendMulti($tokens, $title, $body)
+    {
+        try {
 
+            if (empty($tokens)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Device tokens are missing'
+                ]);
+            }
+
+            // remove empty + duplicate tokens
+            $tokens = array_values(array_unique(array_filter($tokens)));
+
+            $message = CloudMessage::new()
+                ->withNotification(Notification::create($title, $body));
+
+            $report = $this->messaging->sendMulticast($message, $tokens);
+
+            return response()->json([
+                'status' => true,
+                'success' => $report->successes()->count(),
+                'failed' => $report->failures()->count(),
+                'message' => 'Notifications processed'
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 }
-
-
