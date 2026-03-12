@@ -14,7 +14,7 @@ class NotificationService
     public function __construct()
     {
         $this->messaging = (new Factory)
-            ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
+            ->withServiceAccount(env('FIREBASE_CREDENTIALS'))
             ->createMessaging();
     }
 
