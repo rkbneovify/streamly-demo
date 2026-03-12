@@ -10,14 +10,18 @@
                 <div class="container" *ngFor="let item of data">
                     <div class="item">
                         <div class="bell">
-                            <img src="../../../assets/dummy-img/notification.svg" alt="">
+                            <img src="../../../assets/dummy-img/notification2.svg" alt="">
                         </div>
 
                         <div class="content">
-                            <b>{{item.event_type}}</b>
+                            <div class="content-header">
+                                <b>{{item.event_type | titlecase }}</b>
+                                <span>{{ item.created_at | timeAgo | titlecase}}</span>
+                            </div>
+
                             <p>{{item.description}}</p>
 
-                            <span>{{ item.created_at | date:'dd/MM/yyyy hh:mm:ss a' }}</span>
+
                         </div>
 
                     </div>

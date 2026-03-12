@@ -207,6 +207,7 @@ class ApiHoaController extends Controller
             ->where('is_hoa', 1);
         $limit = $request->input('per_page', 10);
         $page = $request->input('page', 1);
+        $query->latest();
         $data = $query->paginate($limit, ['*'], 'page', $page);
         // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
         return response()->json([
