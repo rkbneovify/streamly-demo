@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
@@ -16,7 +16,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, TimeAgoPipe, TitleCasePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss'
 })
