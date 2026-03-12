@@ -17,8 +17,8 @@ export class TimeAgoPipe implements PipeTransform {
       { label: 'week', seconds: 604800 },
       { label: 'day', seconds: 86400 },
       { label: 'hour', seconds: 3600 },
-      { label: 'minute', seconds: 60 },
-      { label: 'second', seconds: 1 }
+      { label: 'min', seconds: 60 },
+      { label: 'sec', seconds: 1 }
     ];
 
     for (const interval of intervals) {
