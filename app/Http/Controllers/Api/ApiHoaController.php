@@ -1435,70 +1435,82 @@ class ApiHoaController extends Controller
     {
 
         return $this->dbTransaction(function () use ($notification) {
-            HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
-                ->get()->map(function ($item) use ($notification) {
-                    $daysLeft = now()->diffInDays($item->plan_expires_at, false);
-                    $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
+            $subscriptions = HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
+                ->get();
 
-                    $this->activity($item->user_id)
-                        ->event("Hoa sub user")
-                        ->eventType(ActivityEventType::Subscription)
-                        ->notification()
-                        ->isHoa()->isUser();
+            $tokenList = [];
+            foreach ($subscriptions as $item) {
+                $daysLeft = now()->diffInDays($item->plan_expires_at, false);
+                $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
 
-                    if ($daysLeft > 0 && $hoaUser != null) {
-                        $item->user = $hoaUser;
-                        if ($daysLeft == 1) {
-                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
-                                ->properties([
-                                    "data" => $item
-                                ])->save();
-                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                $this->activity($item->user_id)
+                    ->event("Hoa sub user")
+                    ->eventType(ActivityEventType::Subscription)
+                    ->notification()
+                    ->isHoa()->isUser();
 
-                            if (count($fcmToken) > 0) {
-                                foreach ($fcmToken as $token) {
-                                    $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
-                                }
-                            }
-                        } elseif ($daysLeft > 1) {
-                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
-                                ->properties([
-                                    "data" => $item
-                                ])->save();
-
-                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
-
-                            if (count($fcmToken) > 0) {
-                                foreach ($fcmToken as $token) {
-                                    $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
-                                }
-                            }
+                if ($daysLeft > 0 && $hoaUser != null) {
+                    $item->user = $hoaUser;
+                    if ($daysLeft == 1) {
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+                            $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
                         }
-                    } else {
-                        if ($hoaUser != null) {
-                            $item->user = $hoaUser;
-                            $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
-                                ->properties([
-                                    "data" => $item
-                                ])->save();
 
-                            $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
 
-                            if (count($fcmToken) > 0) {
-                                foreach ($fcmToken as $token) {
-                                    $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
-                                }
+                    } elseif ($daysLeft > 1) {
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+                            foreach ($fcmToken as $token) {
+                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
                             }
                         }
                     }
+                } else {
+                    if ($hoaUser != null) {
+                        $item->user = $hoaUser;
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+
+                            foreach ($fcmToken as $token) {
+                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired"));
+                            }
+                        }
+                    }
+                }
+
+
+            }
 
 
 
-                });
+            return response()->json(
 
-            return response()->json([
-                "message" => "Notification sent successfully !"
-            ]);
+                [
+                    'status' => true,
+                    // 'tokens' => $tokenList,
+                    'message' => 'Notification sent successfully !',
+                ]
+            );
+
+
 
         });
 
