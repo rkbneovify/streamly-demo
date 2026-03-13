@@ -66,7 +66,7 @@ export class NotificationsComponent {
     if (this.isMoreData) {
       this.sweetAlert.loading();
       this.isLoading = true;
-      this.apiService.getRequest(`auth/hoa/notification?${params.toString()}`).subscribe({
+      this.apiService.getRequest(`auth/notification?${params.toString()}`).subscribe({
         next: (res: any) => {
           this.isLoading = false;
           this.sweetAlert.close();

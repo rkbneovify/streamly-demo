@@ -184,44 +184,7 @@ class ApiHoaController extends Controller
         }
     }
 
-    public function notificationUnreadCount()
-    {
-        $query = ActivityLog::query();
-        $query->where('user_id', auth()->user()->id)
-            ->where('is_hoa', 1)->where('is_read', 0);
-        $count = $query->count();
 
-        return response()->json([
-            'success' => true,
-            'response_code' => 200,
-            'message' => 'Data fetched successfully !',
-            'count' => $count,
-
-        ], 200);
-    }
-    public function notificationList(Request $request)
-    {
-
-        $query = ActivityLog::query();
-        $query->where('user_id', auth()->user()->id)
-            ->where('is_hoa', 1);
-        $limit = $request->input('per_page', 10);
-        $page = $request->input('page', 1);
-        $query->latest();
-        $data = $query->paginate($limit, ['*'], 'page', $page);
-        // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
-        return response()->json([
-            'success' => true,
-            'response_code' => 200,
-            'message' => 'Data fetched successfully !',
-            'data' => $data->items(),
-            'current_page' => $data->currentPage(),
-            'last_page' => $data->lastPage(),
-            'per_page' => $data->perPage(),
-            'total' => $data->total(),
-            'is_more_data' => $page >= $data->lastPage() ? false : true,
-        ], 200);
-    }
     public function addHouse(Request $request)
     {
         $validator = Validator::make($request->all(), [
