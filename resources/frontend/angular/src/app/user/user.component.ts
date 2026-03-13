@@ -739,7 +739,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getNotificationCount() {
 
-    this.crud.getRequest('auth/hoa/notification/count').subscribe({
+    this.crud.getRequest('auth/notification/count').subscribe({
       next: (res: any) => {
         this.notificationCount = res.count;
       },
