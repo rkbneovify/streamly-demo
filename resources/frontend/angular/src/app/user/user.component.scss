@@ -76,7 +76,7 @@ main {
 
   .badge-box {
     width: 12px;
-    height: 12px;
+    height: 13px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -85,9 +85,12 @@ main {
     top: 6px;
     right: 8px;
 
+
     span {
       font-size: 10px;
+      line-height: 1;
       color: #fff;
+      padding-bottom: 1px;
     }
   }
 
