@@ -14,6 +14,8 @@ use App\Models\Gracenote;
 use App\Models\Gracenotechannel;
 use App\Models\Genre;
 use App\Models\Zipcode;
+use App\PhxLocalChannelAccess;
+use App\PremiumChannelAccess;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
@@ -466,6 +468,10 @@ class ChannelController extends Controller
             $input['type'] = 'all';
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'premium') {
             $input['type'] = 'premium';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+        } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'phx-locals') {
+            $input['type'] = 'phx-locals';
+            PremiumChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'local') {
             $input['type'] = 'all';
         }
