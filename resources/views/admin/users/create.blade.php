@@ -481,6 +481,18 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <div class="">Allow PHX Local Channels</div>
+
+                                    <select id="phx_channels" name="phx_channels[]" multiple form="useradd"
+                                        class="form-control">
+                                        @foreach ($phxChannels as $channel)
+                                            <option value="{{ $channel->id }}">
+                                                {{ $channel->name }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <!-- /.card-body -->
                             </div>
                             <!-- /.card -->
@@ -883,6 +895,15 @@
 
 
             $('#premium_channels').multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                buttonWidth: '100%',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true, // <-- makes Ram and ram match
+                filterBehavior: 'text' // or 'both' if you want to search by value too
+            });
+
+            $('#phx_channels').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
                 buttonWidth: '100%',
