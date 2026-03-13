@@ -16,7 +16,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, TimeAgoPipe, TitleCasePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgSelectModule, FormsModule, TimeAgoPipe, TitleCasePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss'
 })
@@ -26,6 +26,7 @@ export class NotificationsComponent {
   data: Array<any> = [];
   page: number = 1;
   isMoreData: Boolean = true;
+  isLoading: boolean = false;
 
   constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
 
@@ -64,8 +65,10 @@ export class NotificationsComponent {
     }
     if (this.isMoreData) {
       this.sweetAlert.loading();
+      this.isLoading = true;
       this.apiService.getRequest(`auth/hoa/notification?${params.toString()}`).subscribe({
         next: (res: any) => {
+          this.isLoading = false;
           this.sweetAlert.close();
 
 
@@ -83,6 +86,7 @@ export class NotificationsComponent {
 
         },
         error: (err: any) => {
+          this.isLoading = false;
           this.sweetAlert.close();
 
           this.toastr.error(err.error.message);
