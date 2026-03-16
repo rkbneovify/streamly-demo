@@ -82,11 +82,17 @@
                   fill="#ccc" />
               </svg>
             </div>
-            <div class="ribbon" *ngIf="channel.premium != null">
+            <!-- <div class="ribbon" *ngIf="channel.premium != null">
               <span>Premium</span>
             </div>
             <div class="ribbon" *ngIf="channel.phx_local != null">
               <span>PHX Locals</span>
+            </div> -->
+            <div class="ribbon-premium" *ngIf="channel.premium != null">
+              <img src="../../../assets/dummy-img/prem.png" alt="">
+            </div>
+            <div class="ribbon-phx" *ngIf="channel.phx_local != null">
+              <img src="../../../assets/dummy-img/phx.png" alt="">
             </div>
           </div>
         </ng-container>
