@@ -399,7 +399,7 @@ class ChannelController extends Controller
 
         if ($request->input('zip_codes') && $request->input('zip_codes') != 'All') {
 
-            $zipcodeListUpdate = array_unique(array_map('trim', explode(',', $request->input('zip_codes'))));
+            $zipcodeListUpdate = $zipcodeListUpdate = array_values(array_unique(array_map('trim', explode(',', $request->input('zip_codes')))));
 
             $channelAvalableInLocalzipcode = LocalZipcode::where('channel_id', $id)->first();
             if ($channelAvalableInLocalzipcode == null) {
@@ -462,10 +462,15 @@ class ChannelController extends Controller
             $input['zip_code'] = ["All"];
             // $input['type'] = 'all';
         }
+
+
+
         // $allpost= $request->post();
         // dd($input);  //get all the post data
         if ($input['zip_code'][0] == 'All' && $input['type'] == 'all') {
             $input['type'] = 'all';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'premium') {
             $input['type'] = 'premium';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
@@ -474,6 +479,12 @@ class ChannelController extends Controller
             PremiumChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'local') {
             $input['type'] = 'all';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
+        } elseif ($input['zip_code'][0] != 'All' && $input['type'] == 'local') {
+            $input['type'] = 'local';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
         }
         $model = Channel::find($id);
         $oldData = $model;
