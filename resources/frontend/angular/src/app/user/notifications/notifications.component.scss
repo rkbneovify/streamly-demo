@@ -1,0 +1,294 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.full-height {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    background: linear-gradient(180deg, #06223c 0%, rgba(35, 75, 105, 0.9) 100%);
+}
+
+main {
+    flex-grow: 1;
+    background-image: url("../../../assets/dummy-img/404-bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+::ng-deep ng-select .ng-select-container {
+    background: #1b4974 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #ffffff !important;
+    height: 48px !important;
+    font-family: Poppins !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 21px !important;
+    letter-spacing: 0em !important;
+    text-align: left !important;
+}
+
+::ng-deep ng-select .ng-value {
+    color: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+
+
+
+
+.remove_Device-Container {
+    --_spacing: 2rem;
+    width: 100%;
+    padding: var(--_spacing);
+    border-radius: 0.75rem;
+    background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0em;
+    font-family: Poppins;
+    flex: 1;
+
+    input[type="checkbox"],
+    .dots_v {
+        width: 24px;
+        height: 24px;
+    }
+
+    input[type="checkbox"] {
+        border: 1px solid #ffffff;
+    }
+
+    input[type="checkbox"]:checked {
+        border: 2px solid #ffffff;
+    }
+
+    h1 {
+        font-size: 32px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .toatlcheck-device {
+        p {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            text-align: left;
+        }
+    }
+}
+
+.devices-container {
+    .card_device {
+        width: 350px;
+        height: 285px;
+        border: 1px solid #ffffff;
+        border-radius: 8px;
+        padding: 18px;
+
+        .btn_hover {
+            min-height: fit-content;
+            padding: 0.5rem;
+        }
+
+        .devi_top {
+            text-align: -webkit-center;
+            position: relative;
+
+            input {
+                position: absolute;
+                top: 1rem;
+                left: 0;
+            }
+
+            .dots_v {
+                position: absolute;
+                top: 1rem;
+                right: 0;
+            }
+
+            .device_img {
+                max-width: 169.04px;
+                max-height: 108px;
+                margin: auto;
+            }
+
+            .device_imgpar {
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                p {
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 21px;
+                    text-align: left;
+                }
+            }
+        }
+
+        .devi_bottom {
+            .remove_dev_con {
+                font-family: Poppins;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 21px;
+                letter-spacing: 0em;
+                text-align: left;
+                gap: 10px;
+
+                p {
+                    img {
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+
+                .dev_heading {
+                    font-weight: 400;
+                    text-wrap: nowrap;
+                }
+            }
+        }
+    }
+}
+
+.text-suscess {
+    color: #219653;
+}
+
+.text-danger {
+    color: #EB5757;
+}
+
+.yes {
+
+    margin-left: auto;
+    color: red !important;
+    font-size: 18px;
+    font-weight: bold;
+
+
+}
+
+.copy-text {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px;
+
+    .hint {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #000;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        opacity: 0;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+
+        &.show {
+            opacity: 1;
+        }
+    }
+
+    &:hover .hint {
+        opacity: 1;
+    }
+}
+
+
+.scroll-container {
+    width: 100% !important;
+}
+
+p {
+    font-family: 'Poppins';
+    font-size: 14px;
+}
+
+// connected houses
+.top-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 15px 10px 15px;
+
+
+
+
+    h1 {
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+
+
+
+    .item {
+        display: flex;
+        width: 100%;
+        background: #02203B;
+        align-items: center;
+        padding: 10px 15px 10px 15px;
+        gap: 10px;
+        border-radius: 5px;
+
+        .bell {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            /* prevents shrinking */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #888282;
+
+            border-radius: 50%;
+
+
+            img {
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            padding: 5px 10px 5px 10px;
+
+        }
+    }
+
+
+}
+
+
+
+
+@media screen and (max-width: 545px) {}
+
+@media screen and (max-width: 392px) {}
+
+@media screen and (max-width: 292px) {}

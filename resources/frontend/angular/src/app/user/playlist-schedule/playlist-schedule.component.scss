@@ -11,6 +11,7 @@
   letter-spacing: 0em;
   text-align: left;
   color: #ffffff;
+
   .schedule_heading_container {
     display: flex;
     align-items: center;
@@ -18,6 +19,7 @@
     border-radius: 11px 11px 0px 0px;
     padding: 0px 10px 0px 0px;
     overflow: hidden;
+
     .schedule_channels {
       width: 168px;
       padding: 8px 16px 8px 16px;
@@ -25,6 +27,7 @@
       cursor: pointer;
       background-color: #0a3153;
     }
+
     .schedule_categories {
       display: flex;
       justify-content: space-start;
@@ -33,11 +36,13 @@
       margin-left: 10px;
       flex-wrap: nowrap;
       overflow-x: hidden;
+
       // scroll-behavior: smooth;
       &::-webkit-scrollbar {
         height: 0px;
         width: 0px;
       }
+
       .schedule_category {
         padding: 8px 16px 8px 16px;
         height: 40px;
@@ -47,14 +52,16 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+
         &:hover {
           background-color: #ffffff2e;
         }
 
-        img{
+        img {
           width: 20px;
         }
       }
+
       .schedule_arrow {
         div {
           width: 24px;
@@ -63,10 +70,12 @@
       }
     }
   }
+
   .schedule_time_container {
     display: flex;
     background-color: #ffffff2e;
-    .left-side-move{
+
+    .left-side-move {
       cursor: pointer;
       top: 1px;
       height: 40px;
@@ -77,19 +86,23 @@
       will-change: box-shadow, transform;
       font-size: 18px;
       transition: box-shadow 0.15s ease, transform 0.15s ease;
+
       &:hover {
-          box-shadow: 0px 4px 8px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%);
-          transform: translateY(-2px);
+        box-shadow: 0px 4px 8px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%);
+        transform: translateY(-2px);
       }
-      &:active{
-          transform: translateY(2px);
+
+      &:active {
+        transform: translateY(2px);
       }
     }
+
     .schedule_days {
       width: 168px;
 
       height: 40px;
       background-color: transparent;
+
       select {
         width: 100%;
         border: none;
@@ -100,6 +113,7 @@
         font-size: 14px;
         font-weight: 500;
         line-height: 24px;
+
         option {
           // background-color: #00274900 !important;
         }
@@ -107,7 +121,7 @@
     }
 
     .schedule_days select option {
-      background-color:rgb(0 39 73) !important;
+      background-color: rgb(0 39 73) !important;
       line-height: 24px !important;
       padding: 8px 20px 8px 20px;
 
@@ -120,10 +134,12 @@
       flex: 1;
       overflow-x: hidden;
       scroll-behavior: smooth;
+
       &::-webkit-scrollbar {
         height: 0;
         width: 0;
       }
+
       .schedule_hour {
         flex: 1;
         padding: 10px 0px 10px 16px;
@@ -132,12 +148,12 @@
         line-height: 20px;
         color: #e0e0e0;
         min-width: 150px;
-      border: 1px solid rgba(255, 255, 255, 0.1019607843);
+        border: 1px solid rgba(255, 255, 255, 0.1019607843);
         // min-width: 300px;
       }
     }
 
-    .isMacCh{
+    .isMacCh {
       scroll-behavior: auto !important;
     }
 
@@ -146,45 +162,51 @@
       margin-left: 4px;
       right: 0;
       top: 1px;
-      .schedule_Live{
+
+      .schedule_Live {
         color: white;
         font-weight: bold;
         border-radius: 15px;
         padding-left: 10px;
         padding-right: 10px;
         background-color: red;
-        
+
       }
+
       .schedule_GoLive {
         color: #ffdb4e;
         text-wrap: nowrap;
         backdrop-filter: blur(1px);
       }
-      div{
-        img{
-        backdrop-filter: blur(1px);
+
+      div {
+        img {
+          backdrop-filter: blur(1px);
         }
       }
 
-      .righ-side-move{
-      padding-top: 8px;
+      .righ-side-move {
+        padding-top: 8px;
 
         height: 40px;
         will-change: box-shadow, transform;
         font-size: 18px;
         transition: box-shadow 0.15s ease, transform 0.15s ease;
+
         &:hover {
-            box-shadow: 0px 4px 8px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%);
-            transform: translateY(-2px);
+          box-shadow: 0px 4px 8px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%);
+          transform: translateY(-2px);
         }
-        &:active{
-            transform: translateY(2px);
+
+        &:active {
+          transform: translateY(2px);
         }
       }
     }
   }
 }
-.active_categories{
+
+.active_categories {
   border-bottom: 2px solid #ffffff;
 }
 
@@ -195,47 +217,65 @@
   height: 100%;
   border-radius: 0px 0px 11px 11px;
   position: relative;
+
   .schedule_content {
     background-color: #ffffff12;
     overflow: hidden;
     scroll-behavior: smooth;
+
     &::-webkit-scrollbar {
       height: 0;
       width: 0;
     }
+
     .schedule_channel_container {
-      cursor: pointer;  
+      cursor: pointer;
       width: 168px;
       position: absolute;
       top: 0;
       bottom: 0;
       z-index: 133;
-      &::before{
+
+      &::before {
         width: 150px;
         background: #FFFFFF0D;
         border-right: 2px solid #004480;
       }
+
+
+
       .schedule_channel {
         width: 168px;
         height: 100px;
         padding: 15px;
         border: 1px solid #ffffff1a;
         position: relative;
-        background-color:  #0a3153;
+        background-color: #0a3153;
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
+
+        &.premium {
+          border-bottom: 2.5px solid #ffdb4e;
+        }
+
         &::after,
         &::before {
           position: absolute;
           background-color: green;
         }
+
+
+
         .history_ch {
           width: 80px;
           height: 80px;
           padding: 10px;
           flex: 1;
+
+
+
           img {
             height: 60px;
             object-fit: contain;
@@ -243,7 +283,9 @@
             margin: auto;
           }
 
-          .history_ch-play-icon{
+
+
+          .history_ch-play-icon {
             position: absolute;
             left: 0;
             right: 0;
@@ -258,86 +300,100 @@
             float: inline-end;
             transition: opacity 400ms ease-in-out;
             border: 1px solid white;
-            img{
-              width:48px;
+
+
+
+            img {
+              width: 48px;
               height: 48px;
             }
           }
 
-          &:hover{
-            .history_ch-play-icon{
+          &:hover {
+            .history_ch-play-icon {
               opacity: 1;
             }
           }
         }
+
         .heart_ch {
           position: absolute;
           top: 0px;
           right: 0px;
+
           img {
             width: 20px;
             height: 20px;
           }
         }
 
-        .channel_id{
+        .channel_id {
           position: absolute;
           top: 7px;
           left: 15px;
           font-size: 1.3rem;
           filter: contrast(0.6);
-          
+
         }
       }
 
       .schedule_channel:has(:first-child:hover) {
         border: 1px solid white !important;
-    }
-    
+      }
+
     }
 
-    .schedule_channel::after,.schedule_channel::before{
+    .schedule_channel::after,
+    .schedule_channel::before {
       width: 150px;
       height: 100px;
       background: #FFFFFF0D;
       border-right: 2px solid #004480;
     }
-    
+
     .schedule_time_programs_container {
       margin-left: 168px;
+
       .schedule_time_programs {
         cursor: pointer;
         height: 100px;
         border-bottom: 1px solid #ffffff1a;
         white-space: nowrap;
-        .child:not(:first-child){
+
+        .child:not(:first-child) {
           border-top: 1px solid #ffffff1a;
         }
+
         .schedule_time {
           display: inline-block;
           padding: 12px 11px 12px 11px;
           height: 100px;
           border: 1px solid #ffffff1a;
-          &::-webkit-scrollbar{
+
+          &::-webkit-scrollbar {
             height: 0;
             width: 0;
           }
+
           .program_title {
             font-size: 14px;
             font-weight: 600;
             line-height: 20px;
             text-align: left;
             overflow-x: auto;
-            &::-webkit-scrollbar{
+
+            &::-webkit-scrollbar {
               height: 0;
               width: 0;
             }
           }
+
           .program_time {
             font-weight: 500;
             color: #ffffffb2;
             font-size: 11.5px;
           }
+
           .program_ep {
             font-weight: 500;
             color: #ffffffb2;
@@ -349,13 +405,13 @@
   }
 }
 
-.tom-style{
+.tom-style {
   top: 0px;
-    left: 0px;
-    background: #00122c;
-    max-width: 149px;
-    width: 100%;
-    padding: 8px 32px;
+  left: 0px;
+  background: #00122c;
+  max-width: 149px;
+  width: 100%;
+  padding: 8px 32px;
 }
 
 .schedule_container_content::-webkit-scrollbar {
@@ -381,9 +437,11 @@
   margin: auto;
   position: fixed;
   max-width: 90%;
+
   &::-webkit-scrollbar {
     width: 0;
   }
+
   .section1_img {
     width: 100%;
     height: 100%;
@@ -392,16 +450,18 @@
     flex: 1;
     background-image: url('../../../assets/dummy-img/bg.png');
     position: relative;
+
     &::-webkit-scrollbar {
       width: 0;
     }
+
     img {
       width: 100%;
       height: 100%;
       border-radius: 0.5rem;
     }
 
-    .programDetailDataStationName{
+    .programDetailDataStationName {
       position: absolute;
       top: 4px;
       background-color: #00000061;
@@ -419,13 +479,16 @@
     font-weight: 600;
     line-height: 20px;
     text-align: left;
+
     &::-webkit-scrollbar {
       width: 0px;
     }
+
     h1 {
       color: #ffffff;
       font-size: 24px;
     }
+
     p {
       font-family: Poppins;
       font-size: 16px;
@@ -438,6 +501,7 @@
     .play_btn_container_1 {
       display: flex;
       gap: 1rem;
+
       .playbtn_time {
         display: flex;
         justify-content: center;
@@ -469,10 +533,12 @@
         outline: none;
         border: none;
         text-wrap: nowrap;
+
         img {
           width: 16.67px;
           height: 15px;
         }
+
         span {
           font-family: Poppins;
           font-size: 12px;
@@ -487,7 +553,8 @@
       font-size: 14px;
       word-break: break-word;
     }
-    .playstream_title{
+
+    .playstream_title {
       color: white;
     }
 
@@ -500,10 +567,12 @@
         text-align: left;
         color: #ffffff;
       }
+
       .playbtn_genre,
       .playbtn_aired {
         background-color: #ffffff29;
       }
+
       .playbtn_genre {
         display: flex;
         align-items: center;
@@ -511,10 +580,12 @@
         height: 34px;
         padding: 12px 20px 12px 20px;
         border-radius: 40px;
+
         &:first-child {
           font-weight: 600;
         }
       }
+
       .playbtn_aired {
         display: flex;
         align-items: center;
@@ -530,7 +601,9 @@
         border-bottom: 1px solid #ffffff66;
         padding-bottom: 1rem;
       }
+
       margin-top: 30px;
+
       .play_stream_now {
         font-family: Poppins;
         font-size: 18px;
@@ -539,6 +612,7 @@
         text-align: left;
         color: #ffffff;
       }
+
       p {
         font-family: Poppins;
         font-size: 16px;
@@ -558,6 +632,7 @@
           color: #ffffffb2;
           border-bottom: 1px solid #ffffff66;
         }
+
         .playstream_liveTime {
           div {
             font-family: Poppins;
@@ -583,6 +658,7 @@
     background: #ffffff26;
     max-height: 100%;
     overflow: auto;
+
     .schedule_details_data {
       h3 {
         font-family: Poppins;
@@ -603,6 +679,7 @@
           text-align: left;
           color: #ffffff;
         }
+
         .schedule_details_hr {
           font-family: Poppins;
           font-size: 14px;
@@ -627,7 +704,7 @@
   display: none;
 }
 
-.play-icon-container{
+.play-icon-container {
   display: none;
   transition: display ease-in;
   background: rgba(255, 255, 255, 0.0509803922);
@@ -638,39 +715,40 @@
   width: 600px;
   padding-left: 14px;
   padding-bottom: 9px;
-  &:hover{
+
+  &:hover {
     display: flex;
   }
 }
 
-.hover-active:hover .play-icon-container{
+.hover-active:hover .play-icon-container {
   display: flex;
 }
 
-.hover-active:hover .program_ep{
+.hover-active:hover .program_ep {
   // display: none !important;
   visibility: hidden;
 }
 
-.hover-active:hover .program_time{
+.hover-active:hover .program_time {
   // display: none !important;
   visibility: hidden;
 }
 
-.display_flex{
+.display_flex {
   display: flex;
 }
 
-.display_none{
+.display_none {
   display: none;
 }
 
-.visibility_hidden{
+.visibility_hidden {
   visibility: hidden;
 }
 
-.opacity_full{
-  opacity: 1  !important;
+.opacity_full {
+  opacity: 1 !important;
 }
 
 
@@ -685,11 +763,11 @@
 }
 
 
-.backgorundGroundColor{
+.backgorundGroundColor {
   background-color: #0a3153 !important;
 }
 
-.playstream_Play_icon{
+.playstream_Play_icon {
   align-items: center;
   cursor: pointer;
   height: 100%;
@@ -697,36 +775,79 @@
   width: 100%;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.523);
-  div{
+
+  div {
     max-width: 75px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 65px;
-    img{
+
+    img {
       object-fit: contain;
       width: 40px;
     }
   }
 }
 
-.play-icon-hover{
+.play-icon-hover {
   transition: transform 200ms ease-in-out;
-  &:hover{
+
+  &:hover {
     transform: scale(1.2);
   }
 }
 
-.border-grid{
-  border :1px solid rgba(255, 255, 255, 0.1019607843);
+.border-grid {
+  border: 1px solid rgba(255, 255, 255, 0.1019607843);
   height: 100%;
 }
 
-.livetimecounter{
-  background-color:#FFFFFF0D;
+.livetimecounter {
+  background-color: #FFFFFF0D;
   border-right: 4px solid #004480;
   z-index: 132;
 }
+
+
+
+/* Triangle ribbon */
+.ribbon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-left: 65px solid transparent;
+  border-bottom: 45px solid #ffdb4e;
+  /* ribbon color */
+}
+
+/* Ribbon text */
+.ribbon span {
+  position: absolute;
+  bottom: -38px;
+  right: -1px;
+  transform: rotate(-37deg);
+  color: #3C3C3C;
+  font-size: 10px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.ribbon-premium {
+  position: absolute;
+  right: 2px;
+  top: 73px;
+}
+
+.ribbon-phx {
+  position: absolute;
+  right: 2px;
+  top: 77px;
+
+}
+
 
 @media screen and (max-width: 750px) {
   .schedule_details_container {
@@ -734,25 +855,26 @@
     flex-wrap: nowrap;
   }
 
-  .section1_img{
-    overflow-y:visible !important;
+  .section1_img {
+    overflow-y: visible !important;
     margin: auto;
     max-width: 250px !important;
-    img{
+
+    img {
       width: fit-content !important;
     }
   }
 
-  .play_btn_container_1{
+  .play_btn_container_1 {
     flex-wrap: wrap;
   }
 
-  .playstream_2{
+  .playstream_2 {
     overflow-y: visible !important;
 
   }
 
-  .schedule_details_section3{
+  .schedule_details_section3 {
     overflow: visible !important;
   }
 
@@ -760,22 +882,22 @@
 
 @media screen and (max-width: 550px) {
   .schedule_details_container {
-  padding: 20px;
+    padding: 20px;
   }
 
-  .schedule_channel{
+  .schedule_channel {
     width: 110px !important;
   }
 
-  .schedule_time_programs_container{
+  .schedule_time_programs_container {
     margin-left: 110px !important;
   }
 
-  .schedule_channel_container{
+  .schedule_channel_container {
     width: 110px !important;
   }
 
-  .schedule_days{
+  .schedule_days {
     width: 110px !important;
   }
 
@@ -785,31 +907,32 @@
         padding: 8px 10px 8px 7px !important;
       }
     }
-    .left-side-move{
+
+    .left-side-move {
       margin-left: 110px !important;
     }
   }
 
-  .schedule_main{
+  .schedule_main {
     margin: 1rem 0;
   }
 
-  .playstream_2{
+  .playstream_2 {
     min-height: min-content;
   }
 }
 
-@media screen and (max-width: 475px){
-  .schedule_channels{
+@media screen and (max-width: 475px) {
+  .schedule_channels {
     display: none;
   }
 
-  .schedule_GoLive_container{
+  .schedule_GoLive_container {
     gap: 0.5rem !important;
   }
 
-  .animantiontest{
-    .col-12{
+  .animantiontest {
+    .col-12 {
       padding: 0 !important;
     }
   }

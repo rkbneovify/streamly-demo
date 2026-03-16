@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActivityLog;
 use App\Enums\ActivityEventType;
 use App\Exports\HoaSubUserExport;
 use App\HoaSubUserSubscription;
@@ -13,10 +14,9 @@ use App\Mail\HoaSubUserPasscodeRegenerate;
 use App\Mail\HoaSubUserWelcome;
 use App\Mail\HoaSubUserWelcome2;
 use App\Mail\VerifyHoaSubUserEmail;
-use App\Models\Zipcode;
 use App\PasscodeResetToken;
+use App\Services\NotificationService;
 use App\SessionTable;
-use App\Traits\ActionTrait;
 use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\Traits\DbTransactionTrait;
@@ -27,14 +27,12 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
-use Stripe\ApiOperations\All;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApiHoaController extends Controller
@@ -186,6 +184,43 @@ class ApiHoaController extends Controller
         }
     }
 
+    public function notificationUnreadCount()
+    {
+        $query = ActivityLog::query();
+        $query->where('user_id', auth()->user()->id)
+            ->where('is_hoa', 1)->where('is_read', 0);
+        $count = $query->count();
+
+        return response()->json([
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'Data fetched successfully !',
+            'count' => $count,
+
+        ], 200);
+    }
+    public function notificationList(Request $request)
+    {
+
+        $query = ActivityLog::query();
+        $query->where('user_id', auth()->user()->id)
+            ->where('is_hoa', 1);
+        $limit = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $data = $query->paginate($limit, ['*'], 'page', $page);
+        // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
+        return response()->json([
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'Data fetched successfully !',
+            'data' => $data->items(),
+            'current_page' => $data->currentPage(),
+            'last_page' => $data->lastPage(),
+            'per_page' => $data->perPage(),
+            'total' => $data->total(),
+            'is_more_data' => $page >= $data->lastPage() ? false : true,
+        ], 200);
+    }
     public function addHouse(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -1382,6 +1417,8 @@ class ApiHoaController extends Controller
         }
     }
 
+
+
     public function exportIntoExcel(Request $request)
     {
 
@@ -1393,6 +1430,95 @@ class ApiHoaController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function planExpireNotification(NotificationService $notification)
+    {
+
+        return $this->dbTransaction(function () use ($notification) {
+            $subscriptions = HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
+                ->get();
+
+            $tokenList = [];
+            foreach ($subscriptions as $item) {
+                $daysLeft = now()->diffInDays($item->plan_expires_at, false);
+                $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
+
+                $this->activity($item->user_id)
+                    ->event("Hoa sub user")
+                    ->eventType(ActivityEventType::Subscription)
+                    ->notification()
+                    ->isHoa()->isUser();
+
+                if ($daysLeft > 0 && $hoaUser != null) {
+                    $item->user = $hoaUser;
+                    if ($daysLeft == 1) {
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+                            $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                        }
+
+
+                    } elseif ($daysLeft > 1) {
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+                            foreach ($fcmToken as $token) {
+                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                            }
+                        }
+                    }
+                } else {
+                    if ($hoaUser != null) {
+                        $item->user = $hoaUser;
+                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
+                            ->properties([
+                                "data" => $item
+                            ])->save();
+
+                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
+                        $tokenList[] = $fcmToken;
+                        if ($fcmToken != null) {
+
+                            foreach ($fcmToken as $token) {
+                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired"));
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
+
+            return response()->json(
+
+                [
+                    'status' => true,
+                    // 'tokens' => $tokenList,
+                    'message' => 'Notification sent successfully !',
+                ]
+            );
+
+
+
+        });
+
+
+    }
+
+
+
 
 
 }
