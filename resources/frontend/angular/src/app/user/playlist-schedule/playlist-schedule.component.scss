@@ -821,6 +821,20 @@
   white-space: nowrap;
 }
 
+.ribbon-premium {
+  position: absolute;
+  right: 2px;
+  top: 73px;
+}
+
+.ribbon-phx {
+  position: absolute;
+  right: 2px;
+  top: 77px;
+
+}
+
+
 @media screen and (max-width: 750px) {
   .schedule_details_container {
     flex-direction: column;
