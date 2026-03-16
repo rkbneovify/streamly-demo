@@ -30,6 +30,7 @@ import { CommonChannelComponent } from './channels/common-channel/common-channel
 import { SubscriptionCancelComponent } from './subscription-cancel/subscription-cancel.component';
 import { LocationAccessComponent } from './location-access/location-access.component';
 import { ConnectedHousesComponent } from './connected-houses/connected-houses.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'downloadapp', component: DownloadappComponent, canActivate: [authguardGuard] },
       { path: 'connected-device', component: TotalaccountComponent, canActivate: [authguardGuard] },
       { path: 'connected-houses', component: ConnectedHousesComponent, canActivate: [authguardGuard] },
+      { path: 'notifications', component: NotificationsComponent, canActivate: [authguardGuard] },
       { path: 'subscription-expired', component: SubscriptionExpiredComponent, canActivate: [authguardGuard] },
       { path: 'subscription-cancel', component: SubscriptionCancelComponent, canActivate: [authguardGuard] },
       { path: 'payment-subscription', component: SubPaymentComponent, canActivate: [authguardGuard] },
