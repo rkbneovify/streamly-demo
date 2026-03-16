@@ -612,12 +612,24 @@ class ChannelController extends Controller
 
             if ($channel->status == 1) {
                 $channel->status = 0;
+                PremiumChannelAccess::where('channel_id', $id)->update([
+                    'status' => 0
+                ]);
+                PhxLocalChannelAccess::where('channel_id', $id)->update([
+                    'status' => 0
+                ]);
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSDISABLE)
                     ->description("channel status disable");
             } else {
                 $channel->status = 1;
+                PremiumChannelAccess::where('channel_id', $id)->update([
+                    'status' => 1
+                ]);
+                PhxLocalChannelAccess::where('channel_id', $id)->update([
+                    'status' => 1
+                ]);
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSENABLE)
@@ -674,6 +686,12 @@ class ChannelController extends Controller
 
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 1]);
+                    PremiumChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 1
+                    ]);
+                    PhxLocalChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 1
+                    ]);
                     $this->eventType(ActivityEventType::STATUSENABLE)
                         ->description("multiple Channel status enable")
                         ->properties([
@@ -695,6 +713,12 @@ class ChannelController extends Controller
             case 'inactive':
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 0]);
+                    PremiumChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 0
+                    ]);
+                    PhxLocalChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 0
+                    ]);
                     $this->eventType(ActivityEventType::STATUSDISABLE)
                         ->description("multiple Channel status disable")
                         ->properties([
