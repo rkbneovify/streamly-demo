@@ -57,8 +57,8 @@
 
       <div class="schedule_channel_container">
         <ng-container *ngIf="filteredPrograms?.length">
-          <div class="schedule_channel" [class.premium]="channel.premium"
-            [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
+          <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}"
+            *ngFor="let channel of getScheduleChannelLogo">
             <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
               <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'"
                 [alt]="channel?.stationName" />
@@ -85,18 +85,18 @@
             <!-- <div class="ribbon" *ngIf="channel.premium != null">
               <span>Premium</span>
             </div> -->
-            <div *ngIf="channel.premium != null" class="premium-img">
+            <!-- <div *ngIf="channel.premium != null" class="premium-img">
               <img src="../../../assets/dummy-img/crown.png" alt="">
             </div>
             <div class="ribbon" *ngIf="channel.phx_local != null">
               <span>PHX Locals</span>
             </div> -->
-            <div class="ribbon-premium" *ngIf="channel.premium != null">
+            <!-- <div class="ribbon-premium" *ngIf="channel.premium != null">
               <img src="../../../assets/dummy-img/prem.png" alt="">
             </div>
             <div class="ribbon-phx" *ngIf="channel.phx_local != null">
               <img src="../../../assets/dummy-img/phx.png" alt="">
-            </div>
+            </div> -->
           </div>
         </ng-container>
       </div>
