@@ -186,6 +186,9 @@
                                     </option>
                                     <option value="premium" {{ old('type') == 'premium' ? 'selected' : '' }}>Premium
                                     </option>
+                                    <option value="phx-locals" {{ old('type') == 'phx-locals' ? 'selected' : '' }}>PHX
+                                        Locals
+                                    </option>
                                 </select>
 
                                 @error('type')
