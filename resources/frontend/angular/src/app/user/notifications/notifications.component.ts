@@ -1,0 +1,110 @@
+import { Component } from '@angular/core';
+import { CrudService } from '../../services/crud.service';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
+import { SortByDropdownComponent } from "../../components/sort-by-dropdown/sort-by-dropdown.component";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
+import { NgSelectModule } from '@ng-select/ng-select';
+
+@Component({
+  selector: 'app-notifications',
+  standalone: true,
+  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  templateUrl: './notifications.component.html',
+  styleUrl: './notifications.component.scss'
+})
+export class NotificationsComponent {
+
+
+  data: Array<any> = [];
+  page: number = 1;
+  isMoreData: Boolean = true;
+
+  constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+
+
+  }
+
+  ngOnInit() {
+
+
+
+
+
+
+
+    this.getHouseList(1);
+
+
+
+  }
+
+
+
+
+
+
+
+  getHouseList(page: number = 1) {
+
+    const params = new URLSearchParams();
+    this.page = page;
+    params.set('page', String(page));
+
+
+    if (page == 1) {
+      this.isMoreData = true;
+    }
+    if (this.isMoreData) {
+      this.sweetAlert.loading();
+      this.apiService.getRequest(`auth/hoa/notification?${params.toString()}`).subscribe({
+        next: (res: any) => {
+          this.sweetAlert.close();
+
+
+
+
+          this.isMoreData = res.is_more_data;
+
+
+          this.data = [...new Set([...this.data, ...res.data])];
+          if (page === 1) {
+            this.data = res.data;
+
+          }
+
+
+        },
+        error: (err: any) => {
+          this.sweetAlert.close();
+
+          this.toastr.error(err.error.message);
+        }
+      })
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+  onScrollDown() {
+    this.page++;
+    this.getHouseList(this.page)
+    // console.log("Page count", this.page)
+  }
+
+
+}

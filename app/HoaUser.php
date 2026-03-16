@@ -372,4 +372,19 @@ class HoaUser extends Model
         return $query;
     }
 
+    public static function mainUserFcmToken($userId)
+    {
+        $tokens = SessionTable::where('users_id', $userId)
+            ->where('status', 1)
+            ->where('is_main_account', 1)
+            ->whereNotNull('fcm_token')
+            ->latest('created_on')
+            ->pluck('fcm_token')->toArray();
+
+        if (count($tokens) > 0) {
+            return $tokens;
+        }
+        return null;
+    }
+
 }

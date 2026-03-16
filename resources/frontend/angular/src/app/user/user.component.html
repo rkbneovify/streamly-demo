@@ -92,6 +92,10 @@
           <img loading="lazy" width="17" height="17" src="../../assets/dummy-img/home-2.svg" alt="" />
           <p>Connected Houses</p>
         </div>
+        <!-- <div *ngIf="isHoaMainUser" class="submenuOptions" (click)="submenu = false" routerLink="notifications">
+          <img loading="lazy" width="17" height="17" src="../../assets/dummy-img/notification.svg" alt="" />
+          <p>Notifications <span *ngIf="notificationCount>0" class="badge">{{notificationCount}}</span></p>
+        </div> -->
         <div class="submenuOptions" (click)="submenu = false" routerLink="downloadapp">
           <img loading="lazy" src="../../assets/dummy-img/download.svg" alt="" />
           <p>Download App</p>

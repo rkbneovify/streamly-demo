@@ -35,6 +35,7 @@ use App\LocalZipcode;
 use App\Models\Channel;
 use App\Models\RoleUser;
 use App\Models\Subscription;
+use App\PhxLocalChannelAccess;
 use App\PremiumChannelAccess;
 use App\Services\StripeService;
 use Illuminate\Support\Facades\Validator;
@@ -218,8 +219,10 @@ class UsersController extends Controller
         $localZipcodes = LocalZipcode::where('status', 1)->get();
         $premiumChannels = Channel::where('type', 'premium')
             ->where('status', 1)->get();
+        $phxChannels = Channel::where('type', 'phx-locals')
+            ->where('status', 1)->get();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes', 'premiumChannels'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes', 'premiumChannels', 'phxChannels'));
     }
 
     public function store(Request $request)
@@ -577,6 +580,7 @@ class UsersController extends Controller
             $user->roles;
             $user->subscriptionLatest;
 
+            // Premium channels 
             if ($request->premium_channels != null) {
                 foreach ($request->premium_channels as $item) {
                     $channel = Channel::where('id', $item)->first();
@@ -589,6 +593,21 @@ class UsersController extends Controller
                 }
 
             }
+
+            // Phx channels 
+            if ($request->phx_channels != null) {
+                foreach ($request->phx_channels as $item) {
+                    $channel = Channel::where('id', $item)->first();
+                    $phxChannel = new PhxLocalChannelAccess();
+                    $phxChannel->user_id = $user->id;
+                    $phxChannel->channel_id = $item;
+                    $phxChannel->name = $channel != null ? $channel->name : null;
+                    $phxChannel->status = 1;
+                    $phxChannel->save();
+                }
+
+            }
+
 
 
             $this->activity()
@@ -981,6 +1000,7 @@ class UsersController extends Controller
             }
 
 
+            // premium_channels
             if ($request->premium_channels == null) {
                 PremiumChannelAccess::where('user_id', $user->id)->update([
                     'status' => 0
@@ -1012,6 +1032,38 @@ class UsersController extends Controller
 
             }
 
+
+            // PHX locals_channels
+            if ($request->phx_channels == null) {
+                PhxLocalChannelAccess::where('user_id', $user->id)->update([
+                    'status' => 0
+                ]);
+            } else {
+
+                foreach ($request->phx_channels as $item) {
+                    $premiumChannel = PhxLocalChannelAccess::where('user_id', $user->id)
+                        ->where('channel_id', $item)->first();
+                    if ($premiumChannel != null) {
+                        $channel = Channel::where('id', $item)->first();
+                        $premiumChannel->name = $channel != null ? $channel->name : null;
+                        $premiumChannel->status = 1;
+                        $premiumChannel->save();
+                    } else {
+                        $channel = Channel::where('id', $item)->first();
+                        $premiumChannel = new PhxLocalChannelAccess();
+                        $premiumChannel->user_id = $user->id;
+                        $premiumChannel->channel_id = $item;
+                        $premiumChannel->name = $channel != null ? $channel->name : null;
+                        $premiumChannel->status = 1;
+                        $premiumChannel->save();
+                    }
+                }
+
+                PhxLocalChannelAccess::where('user_id', $user->id)->whereNotIn('channel_id', $request->phx_channels)->update([
+                    'status' => 0
+                ]);
+
+            }
 
 
             $this->newData($user->refresh())
@@ -1102,6 +1154,14 @@ class UsersController extends Controller
             ->where('status', 1)
             ->get();
 
+        $phxChannels = Channel::with([
+            'phxLocal' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }
+        ])->where('type', 'phx-locals')
+            ->where('status', 1)
+            ->get();
+
 
         return view('admin.users.edit', compact(
             'user',
@@ -1111,7 +1171,8 @@ class UsersController extends Controller
             'channelRule',
             'planDuration',
             'currentDeviceCount',
-            'premiumChannels'
+            'premiumChannels',
+            'phxChannels'
         ));
     }
 

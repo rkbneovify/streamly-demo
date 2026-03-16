@@ -257,6 +257,9 @@
                                         Local</option>
                                     <option value="premium" {{ request('channel_type') == 'premium' ? 'selected' : '' }}>
                                         Premium</option>
+                                    <option value="phx-locals"
+                                        {{ request('channel_type') == 'phx-locals' ? 'selected' : '' }}>
+                                        PHX Locals</option>
                                 </select>
                             </div>
                         </div>
