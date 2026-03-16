@@ -22,4 +22,5 @@ final class ActivityEventType
     public const Forgot = 'forgot';
     public const AccountActive = 'account active';
     public const Change = 'change';
+    public const Subscription = 'subscription';
 }

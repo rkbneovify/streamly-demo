@@ -12,11 +12,12 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'r
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-connected-houses',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, RouterLink, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
