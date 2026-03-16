@@ -399,7 +399,7 @@ class ChannelController extends Controller
 
         if ($request->input('zip_codes') && $request->input('zip_codes') != 'All') {
 
-            $zipcodeListUpdate = array_unique(array_map('trim', explode(',', $request->input('zip_codes'))));
+            $zipcodeListUpdate = $zipcodeListUpdate = array_values(array_unique(array_map('trim', explode(',', $request->input('zip_codes')))));
 
             $channelAvalableInLocalzipcode = LocalZipcode::where('channel_id', $id)->first();
             if ($channelAvalableInLocalzipcode == null) {
@@ -462,10 +462,15 @@ class ChannelController extends Controller
             $input['zip_code'] = ["All"];
             // $input['type'] = 'all';
         }
+
+
+
         // $allpost= $request->post();
         // dd($input);  //get all the post data
         if ($input['zip_code'][0] == 'All' && $input['type'] == 'all') {
             $input['type'] = 'all';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'premium') {
             $input['type'] = 'premium';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
@@ -474,6 +479,12 @@ class ChannelController extends Controller
             PremiumChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'local') {
             $input['type'] = 'all';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
+        } elseif ($input['zip_code'][0] != 'All' && $input['type'] == 'local') {
+            $input['type'] = 'local';
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            PremiumChannelAccess::where('channel_id', $id)->delete();
         }
         $model = Channel::find($id);
         $oldData = $model;
@@ -601,12 +612,24 @@ class ChannelController extends Controller
 
             if ($channel->status == 1) {
                 $channel->status = 0;
+                PremiumChannelAccess::where('channel_id', $id)->update([
+                    'status' => 0
+                ]);
+                PhxLocalChannelAccess::where('channel_id', $id)->update([
+                    'status' => 0
+                ]);
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSDISABLE)
                     ->description("channel status disable");
             } else {
                 $channel->status = 1;
+                PremiumChannelAccess::where('channel_id', $id)->update([
+                    'status' => 1
+                ]);
+                PhxLocalChannelAccess::where('channel_id', $id)->update([
+                    'status' => 1
+                ]);
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSENABLE)
@@ -663,6 +686,12 @@ class ChannelController extends Controller
 
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 1]);
+                    PremiumChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 1
+                    ]);
+                    PhxLocalChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 1
+                    ]);
                     $this->eventType(ActivityEventType::STATUSENABLE)
                         ->description("multiple Channel status enable")
                         ->properties([
@@ -684,6 +713,12 @@ class ChannelController extends Controller
             case 'inactive':
                 try {
                     Channel::whereIn('id', $request->selected)->update(['status' => 0]);
+                    PremiumChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 0
+                    ]);
+                    PhxLocalChannelAccess::whereIn('channel_id', $request->selected)->update([
+                        'status' => 0
+                    ]);
                     $this->eventType(ActivityEventType::STATUSDISABLE)
                         ->description("multiple Channel status disable")
                         ->properties([
