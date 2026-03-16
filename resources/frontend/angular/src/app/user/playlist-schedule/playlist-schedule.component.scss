@@ -242,6 +242,8 @@
         border-right: 2px solid #004480;
       }
 
+
+
       .schedule_channel {
         width: 168px;
         height: 100px;
@@ -254,11 +256,17 @@
         align-items: center;
         position: relative;
 
+        &.premium {
+          border-bottom: 2.5px solid #ffdb4e;
+        }
+
         &::after,
         &::before {
           position: absolute;
           background-color: green;
         }
+
+
 
         .history_ch {
           width: 80px;
@@ -266,12 +274,16 @@
           padding: 10px;
           flex: 1;
 
+
+
           img {
             height: 60px;
             object-fit: contain;
             width: 86px;
             margin: auto;
           }
+
+
 
           .history_ch-play-icon {
             position: absolute;
@@ -288,6 +300,8 @@
             float: inline-end;
             transition: opacity 400ms ease-in-out;
             border: 1px solid white;
+
+
 
             img {
               width: 48px;
