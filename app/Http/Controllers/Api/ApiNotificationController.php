@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\ActivityLog;
+use App\HoaUser;
 use App\Http\Controllers\Controller;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -26,14 +27,16 @@ class ApiNotificationController extends Controller
     public function index(Request $request)
     {
 
-        $role = auth()->user()->roles[0]->name;
+
         $query = ActivityLog::query();
-        $query->where('user_id', auth()->user()->id);
-        if ($role == 'hoa') {
-            $query->where('is_hoa', 1);
-        } elseif ($role == 'user') {
-            $query->where('is_user', 1);
+        $query->where('user_id', auth()->user()->id)
+            ->where('category', 'notification')
+            ->where('is_user', 1);
+        $hoaSubUser = HoaUser::getCurrentSubUserByToken();
+        if ($hoaSubUser != null) {
+            $query->where('passcode', $hoaSubUser->passcode);
         }
+
         $limit = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $query->latest();
@@ -53,15 +56,17 @@ class ApiNotificationController extends Controller
     }
     public function unreadCount()
     {
-        $role = auth()->user()->roles[0]->name;
+
         $query = ActivityLog::query();
         $query->where('user_id', auth()->user()->id)
-            ->where('is_read', 0);
-        if ($role == 'hoa') {
-            $query->where('is_hoa', 1);
-        } elseif ($role == 'user') {
-            $query->where('is_user', 1);
+            ->where('category', 'notification')
+            ->where('is_read', 0)
+            ->where('is_user', 1);
+        $hoaSubUser = HoaUser::getCurrentSubUserByToken();
+        if ($hoaSubUser != null) {
+            $query->where('passcode', $hoaSubUser->passcode);
         }
+
         $count = $query->count();
 
         return response()->json([
