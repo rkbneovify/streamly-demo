@@ -1471,6 +1471,7 @@ class ApiHoaController extends Controller
                     }
                 } else {
                     if ($hoaUser != null) {
+                        $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
                         $item->user = $hoaUser;
                         $this->passcode($hoaUser->passcode)
                             ->descriptionSimple($houseNo . "  | Subscription expired")
