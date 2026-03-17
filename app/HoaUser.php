@@ -388,4 +388,20 @@ class HoaUser extends Model
         return null;
     }
 
+    public static function subUserFcmToken($passcode)
+    {
+        $tokens = SessionTable::whereNotNull('passcode')
+            ->where('passcode', $$passcode)
+            ->where('status', 1)
+            ->where('is_main_account', 0)
+            ->whereNotNull('fcm_token')
+            ->latest('created_on')
+            ->pluck('fcm_token')->toArray();
+
+        if (count($tokens) > 0) {
+            return $tokens;
+        }
+        return null;
+    }
+
 }
