@@ -391,7 +391,7 @@ class HoaUser extends Model
     public static function subUserFcmToken($passcode)
     {
         $tokens = SessionTable::whereNotNull('passcode')
-            ->where('passcode', $$passcode)
+            ->where('passcode', $passcode)
             ->where('status', 1)
             ->where('is_main_account', 0)
             ->whereNotNull('fcm_token')
