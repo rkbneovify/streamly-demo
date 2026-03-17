@@ -1417,8 +1417,9 @@ class ApiHoaController extends Controller
                     $item->user = $hoaUser;
                     if ($daysLeft == 1) {
 
+                        $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
                         $this->passcode($hoaUser->passcode)
-                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
+                            ->descriptionSimple($houseNo . "  | Subscription expire today.")
                             ->properties([
                                 "data" => $item
                             ])->save();
@@ -1427,7 +1428,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire today."));
                             }
                         }
 
@@ -1436,14 +1437,15 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire today."));
                             }
                         }
 
 
                     } elseif ($daysLeft > 1) {
+                        $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
                         $this->passcode($hoaUser->passcode)
-                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
+                            ->descriptionSimple($houseNo . "  | Subscription expire in " . $daysLeft . " days.")
                             ->properties([
                                 "data" => $item
                             ])->save();
@@ -1453,7 +1455,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmToken != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire in " . $daysLeft . " days."));
                             }
                         }
 
@@ -1462,7 +1464,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire in " . $daysLeft . " days."));
                             }
                         }
 
@@ -1471,7 +1473,7 @@ class ApiHoaController extends Controller
                     if ($hoaUser != null) {
                         $item->user = $hoaUser;
                         $this->passcode($hoaUser->passcode)
-                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
+                            ->descriptionSimple($houseNo . "  | Subscription expired")
                             ->properties([
                                 "data" => $item
                             ])->save();
@@ -1481,7 +1483,7 @@ class ApiHoaController extends Controller
                         if ($fcmToken != null) {
 
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired"));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expired"));
                             }
                         }
 
@@ -1491,7 +1493,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expired"));
                             }
                         }
 
