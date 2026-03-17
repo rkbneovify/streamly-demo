@@ -63,6 +63,8 @@ class StripeController extends Controller
                         ->eventType(ActivityEventType::CANCELED)
                         ->description("Subscription canceled")
                         ->notification()
+                        ->isUser()
+                        ->isAdmin()
                         ->properties([
                             "user" => $user,
                             "subscription" => $planCancelled
@@ -149,6 +151,8 @@ class StripeController extends Controller
                         ->eventType(ActivityEventType::CREATED)
                         ->description("Subscription created")
                         ->notification()
+                        ->isUser()
+                        ->isAdmin()
                         ->properties([
                             "user" => $user,
                             "subscription" => $subscription
@@ -256,6 +260,8 @@ class StripeController extends Controller
                         ->eventType(ActivityEventType::CREATED)
                         ->description("Subscription payment failed")
                         ->notification()
+                        ->isUser()
+                        ->isAdmin()
                         ->properties([
                             "user" => $user,
                             "subscription" => $paymentIntent
@@ -337,6 +343,8 @@ class StripeController extends Controller
                         ->eventType(ActivityEventType::TRIALEND)
                         ->description("Trial pack will end" . date("d/m/y", $paymentIntent->trial_end))
                         ->notification()
+                        ->isUser()
+                        ->isAdmin()
                         ->properties([
                             "user" => $user,
 
@@ -422,6 +430,8 @@ class StripeController extends Controller
                     ->eventType($subscription->status)
                     ->description("Your trial period has ended, and your subscription is now active.")
                     ->notification()
+                    ->isUser()
+                    ->isAdmin()
                     ->properties([
                         "user" => $user,
                         "subscription" => $subscription,

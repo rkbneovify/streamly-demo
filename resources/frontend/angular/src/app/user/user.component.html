@@ -143,6 +143,15 @@
                 <img loading="lazy" src="../../assets/dummy-img/search-md.svg" alt="" />
               </div>
 
+              <a routerLink="/user/notifications">
+                <div class="notification">
+                  <div *ngIf="notificationCount > 0" class="badge-box">
+                    <span>{{notificationCount}}</span>
+                  </div>
+                  <img loading="lazy" src="../../assets/dummy-img/notification2.svg" alt="" />
+                </div>
+              </a>
+
               <div class="position-relative">
                 <div (click)="submenu = !submenu" class="schedule_profile pointer">
                   <img loading="lazy" class="userProfileImage" src="../../assets/dummy-img/user-circle.svg" alt="" />

@@ -65,6 +65,43 @@ main {
   }
 }
 
+.notification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 10px;
+  border-radius: 50%;
+  background-color: rgba(210, 234, 255, 0.3019607843);
+
+  .badge-box {
+    width: 12px;
+    height: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background: #EF3E44;
+    top: 6px;
+    right: 8px;
+
+
+    span {
+      font-size: 10px;
+      line-height: 1;
+      color: #fff;
+      padding-bottom: 1px;
+    }
+  }
+
+
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 .search_Bar {
   position: relative;
 
