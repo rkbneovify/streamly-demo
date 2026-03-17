@@ -819,7 +819,7 @@
   width: 0;
   height: 0;
   border-left: 65px solid transparent;
-  border-bottom: 45px solid #ef4444;
+  border-bottom: 45px solid #ffdb4e;
   /* ribbon color */
 }
 
@@ -829,23 +829,25 @@
   bottom: -38px;
   right: -1px;
   transform: rotate(-37deg);
-  color: #fff;
+  color: #3C3C3C;
   font-size: 10px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
-.premium-img {
-  display: flex;
-  justify-content: end;
-  align-items: baseline;
-
-  margin-top: calc(40%);
-
-  img {
-    width: 24px;
-    width: 24px;
-  }
+.ribbon-premium {
+  position: absolute;
+  right: 2px;
+  top: 73px;
 }
+
+.ribbon-phx {
+  position: absolute;
+  right: 2px;
+  top: 77px;
+
+}
+
 
 @media screen and (max-width: 750px) {
   .schedule_details_container {
