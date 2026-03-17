@@ -136,7 +136,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       '/user/supported-devices',
       '/user/report',
       '/user/downloadapp',
-      '/user/notifications'
+      '/user/notifications',
 
     ]
 
@@ -160,7 +160,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNotificationCount();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -171,6 +170,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         console.log("Current url :", event.urlAfterRedirects);
       });
+
+
+
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
@@ -222,9 +224,21 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isDataForHoaMain != null) {
       this.isHoaMainUser = Boolean(isDataForHoaMain);
     }
+
+    this.getNotificationCount();
   }
 
   ngAfterViewInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (this.urlList.includes(event.urlAfterRedirects)) {
+          this.isSearchComponent = false;
+        } else {
+          this.isSearchComponent = true;
+        }
+        console.log("Current url :", event.urlAfterRedirects);
+      });
     this.getFavoriteList();
 
   }
@@ -725,7 +739,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getNotificationCount() {
 
-    this.crud.getRequest('auth/hoa/notification/count').subscribe({
+    this.crud.getRequest('auth/notification/count').subscribe({
       next: (res: any) => {
         this.notificationCount = res.count;
       },
