@@ -3,6 +3,7 @@ namespace App\Models;
 use App\LocalZipcode;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use App\PhxLocalChannelAccess;
 use App\PremiumChannelAccess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -158,6 +159,10 @@ class Channel extends Model
         return $this->hasOne(PremiumChannelAccess::class, 'channel_id', 'id');
     }
 
+    public function phxLocal()
+    {
+        return $this->hasOne(PhxLocalChannelAccess::class, 'channel_id', 'id');
+    }
 
 
     public function scopePremiumActive($query, $user)
@@ -188,6 +193,34 @@ class Channel extends Model
         return $query;
     }
 
+    public function scopePhxLocalActive($query, $user)
+    {
+        $query->whereHas('phxLocal', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopePhxLocalStatus($query, $user)
+    {
+
+        $query->orwhereHas('phxLocal', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopeWithPhxLocal($query, $user)
+    {
+        if ($user->is_custom_user == 1) {
+            $query->orwhereHas('phxLocal', function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->where('status', 1);
+            });
+        }
+        return $query;
+    }
+
     public function scopeLocalZipcode($query, $zipcode)
     {
 
@@ -207,6 +240,8 @@ class Channel extends Model
             $query->where('type', $type)
                 ->orWhereJsonDoesntContain('zip_code', 'All');
         } elseif ($type == "premium") {
+            $query->where('type', $type);
+        } elseif ($type == "phx-locals") {
             $query->where('type', $type);
         }
 

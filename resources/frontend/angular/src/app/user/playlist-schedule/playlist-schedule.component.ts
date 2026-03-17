@@ -651,7 +651,8 @@ export class PlaylistScheduleComponent
       image: station.image,
       channel_url: station.channel_url,
       url: station.url,
-      premium: station.premium
+      premium: station.premium,
+      phx_local: station.phx_local
     }));
   }
 
