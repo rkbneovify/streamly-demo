@@ -263,6 +263,7 @@ class HoaUser extends Model
     {
         $session = SessionTable::where('access_token', request()->bearerToken())
             ->where("status", 1)
+            ->where('is_main_account', 0)
             ->whereNotNull('passcode')
             ->first();
         if ($session != null) {
