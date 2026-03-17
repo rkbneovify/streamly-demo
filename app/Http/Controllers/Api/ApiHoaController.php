@@ -1402,7 +1402,7 @@ class ApiHoaController extends Controller
             $subscriptions = HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
                 ->get();
 
-            $tokenList = [];
+
             foreach ($subscriptions as $item) {
                 $daysLeft = now()->diffInDays($item->plan_expires_at, false);
                 $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
@@ -1411,30 +1411,35 @@ class ApiHoaController extends Controller
                     ->event("Hoa sub user")
                     ->eventType(ActivityEventType::Subscription)
                     ->notification()
-                    ->isHoa()->isUser();
+                    ->isUser();
 
                 if ($daysLeft > 0 && $hoaUser != null) {
                     $item->user = $hoaUser;
                     if ($daysLeft == 1) {
-                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
+
+                        $this->passcode($hoaUser->passcode)
+                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day.")
                             ->properties([
                                 "data" => $item
                             ])->save();
-                        $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
-                        $tokenList[] = $fcmToken;
-                        if ($fcmToken != null) {
-                            $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                        $fcmTokens = HoaUser::mainUserFcmToken($hoaUser->user_id);
+
+                        if ($fcmTokens != null) {
+                            foreach ($fcmToken as $token) {
+                                $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
+                            }
                         }
 
 
                     } elseif ($daysLeft > 1) {
-                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
+                        $this->passcode($hoaUser->passcode)
+                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " days.")
                             ->properties([
                                 "data" => $item
                             ])->save();
 
                         $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
-                        $tokenList[] = $fcmToken;
+
                         if ($fcmToken != null) {
                             foreach ($fcmToken as $token) {
                                 $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expire in " . $daysLeft . " day."));
@@ -1444,19 +1449,22 @@ class ApiHoaController extends Controller
                 } else {
                     if ($hoaUser != null) {
                         $item->user = $hoaUser;
-                        $this->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
+                        $this->passcode($hoaUser->passcode)
+                            ->descriptionSimple(($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired")
                             ->properties([
                                 "data" => $item
                             ])->save();
 
                         $fcmToken = HoaUser::mainUserFcmToken($hoaUser->user_id);
-                        $tokenList[] = $fcmToken;
+
                         if ($fcmToken != null) {
 
                             foreach ($fcmToken as $token) {
                                 $notification->send($token, "Subscription", (($hoaUser->passcode ?? $hoaUser->email) . "  | Subscription expired"));
                             }
                         }
+
+
                     }
                 }
 
