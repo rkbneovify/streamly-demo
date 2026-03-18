@@ -21,6 +21,7 @@ class StripeController extends Controller
 
     use ActivityLogger;
     protected $notification;
+    protected $token = "fz7jygh1AUa9rmNy8_nHEL:APA91bHuwCVSUxq60sKzeOqYYU8dqjBqrpXIyuOQQy72RQZaUJnF-xEPxocj6rCugNy24m1XeUj0RkXL5I19txIUlm_w-LjBdLIBb-eEHI1jT2w0_ze_4gI";
     public function __construct(NotificationService $notification)
     {
         $this->notification = $notification;
@@ -37,6 +38,7 @@ class StripeController extends Controller
             $event = \Stripe\Event::constructFrom(
                 json_decode($payload, true)
             );
+            // Log::info("Stripe Event : " . $event);
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
             http_response_code(400);
@@ -45,6 +47,8 @@ class StripeController extends Controller
 
         switch ($event->type) {
             case 'customer.subscription.deleted':
+
+
                 $paymentIntent = $event->data->object;
 
                 if ($paymentIntent->status == "canceled") {
@@ -108,7 +112,7 @@ class StripeController extends Controller
                     // }
                     if ($fcmTokens != null && count($fcmTokens) > 0) {
                         foreach ($fcmTokens as $token) {
-                            $this->notification->send($token, "Subscription", "Your subscription is cancelled to renew your subscription please visit" . env('APP_URL'));
+                            $this->notification->send($token, "Subscription", "Your subscription is cancelled. ");
                         }
                     }
 
@@ -139,6 +143,8 @@ class StripeController extends Controller
 
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data;
+
+
 
                 if ($paymentIntent->object->description != "Subscription creation") {
 
@@ -261,6 +267,8 @@ class StripeController extends Controller
             case 'payment_intent.payment_failed':
                 $paymentIntent = $event->data->object;
 
+
+
                 if ($paymentIntent->last_payment_error->code == "expired_card") {
 
                     //$cardExpire = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
@@ -349,6 +357,7 @@ class StripeController extends Controller
 
             case 'customer.subscription.trial_will_end':
                 $paymentIntent = $event->data->object;
+
 
                 if ($paymentIntent->status == "trialing") {
 
@@ -442,6 +451,11 @@ class StripeController extends Controller
                 $subscription = $event->data->object;
                 // Log::info("event : customer.subscription.updated");
                 // Log::info("subscription object : " . $subscription);
+
+                // $this->notification->send($this->token, "Subscription", "Your trial period has ended, and your subscription is now active.");
+                // exit;
+
+
                 $user = DB::table('users')
                     ->where('stripe_id', $subscription->customer)
                     ->first();
@@ -461,21 +475,21 @@ class StripeController extends Controller
                         "subscription" => $subscription,
                     ])->save();
 
-                $fcmTokens = DB::table('session_table')
-                    ->where('users_id', $user[0]->id)
-                    ->where('status', 1)
-                    ->whereNotNull('fcm_token')
-                    ->get('fcm_token');
+                // $fcmTokens = DB::table('session_table')
+                //     ->where('users_id', $user[0]->id)
+                //     ->where('status', 1)
+                //     ->whereNotNull('fcm_token')
+                //     ->get('fcm_token');
 
                 // $fcmResults = [];
                 // foreach ($fcm_token as $tokens) {
                 //     array_push($fcmResults, $tokens->fcm_token);
                 // }
-                if ($fcmTokens != null && count($fcmTokens) > 0) {
-                    foreach ($fcmTokens as $token) {
-                        $this->notification->send($token, "Subscription", "Your trial period has ended, and your subscription is now active.");
-                    }
-                }
+                // if ($fcmTokens != null && count($fcmTokens) > 0) {
+                //     foreach ($fcmTokens as $token) {
+                //         $this->notification->send($token, "Subscription", "Your trial period has ended, and your subscription is now active.");
+                //     }
+                // }
                 // if ($fcmResults > 0) {
                 //     $this->notification->send($fcmResults, "Subscription", "Your trial period has ended, and your subscription is now active.");
                 // }
