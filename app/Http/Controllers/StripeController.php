@@ -366,7 +366,7 @@ class StripeController extends Controller
 
                     //$recipt = $paymentIntent->charges->data->receipt_url;
 
-                    $this->activity($user->first()->id)->event("Trial will end")
+                    $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::TRIALEND)
                         ->descriptionSimple("Trial pack will end" . date("d/m/y", $paymentIntent->trial_end))
                         ->notification()

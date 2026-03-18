@@ -111,6 +111,7 @@ class UserController extends Controller
         $this->activity()->event("Session")
             ->eventType(ActivityEventType::REMOVED)
             ->description("Multiple session removed")
+            ->isUser()
             ->properties([
                 "data" => $sessions
             ])->save();
