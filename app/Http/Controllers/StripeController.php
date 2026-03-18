@@ -65,7 +65,7 @@ class StripeController extends Controller
 
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CANCELED)
-                        ->description("Subscription canceled")
+                        ->descriptionSimple("Subscription canceled")
                         ->notification()
                         ->isUser()
                         ->isAdmin()
@@ -160,7 +160,7 @@ class StripeController extends Controller
 
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CREATED)
-                        ->description("Subscription created")
+                        ->descriptionSimple("Subscription created")
                         ->notification()
                         ->isUser()
                         ->isAdmin()
@@ -278,7 +278,7 @@ class StripeController extends Controller
 
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CREATED)
-                        ->description("Subscription payment failed")
+                        ->descriptionSimple("Subscription payment failed")
                         ->notification()
                         ->isUser()
                         ->isAdmin()
@@ -368,7 +368,7 @@ class StripeController extends Controller
 
                     $this->activity($user->first()->id)->event("Trial will end")
                         ->eventType(ActivityEventType::TRIALEND)
-                        ->description("Trial pack will end" . date("d/m/y", $paymentIntent->trial_end))
+                        ->descriptionSimple("Trial pack will end" . date("d/m/y", $paymentIntent->trial_end))
                         ->notification()
                         ->isUser()
                         ->isAdmin()
@@ -466,7 +466,7 @@ class StripeController extends Controller
 
                 $this->activity($user->id)->event("Subscription")
                     ->eventType($subscription->status)
-                    ->description("Your trial period has ended, and your subscription is now active.")
+                    ->descriptionSimple("Your trial period has ended, and your subscription is now active.")
                     ->notification()
                     ->isUser()
                     ->isAdmin()
