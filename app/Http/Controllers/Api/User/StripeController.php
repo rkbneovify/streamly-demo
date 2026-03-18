@@ -247,6 +247,7 @@ class StripeController extends Controller
                     $this->activity($user->id)->event("User")
                         ->eventType(ActivityEventType::REGISTER)
                         ->description("New user registered")
+                        ->isAdmin()
                         ->properties([
                             "user" => $user,
                         ])->save();

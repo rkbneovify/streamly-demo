@@ -614,6 +614,7 @@ class UsersController extends Controller
                 ->event("User")
                 ->eventType(ActivityEventType::CREATED)
                 ->description("New user created")
+                ->isAdmin()
                 ->properties([
                     "data" => $user
                 ])->save();
@@ -766,6 +767,7 @@ class UsersController extends Controller
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::UPDATED)
+                ->isAdmin()
                 ->description("User details updated")
                 ->oldData($user);
 
@@ -1325,6 +1327,7 @@ class UsersController extends Controller
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::DELETED)
+                ->isAdmin()
                 ->description("User deleted")
                 ->properties([
                     "data" => $user
@@ -1743,6 +1746,7 @@ class UsersController extends Controller
                 ->effectedUser($session->users_id)
                 ->event("Session")
                 ->eventType(ActivityEventType::REMOVED)
+                ->isAdmin()
                 ->description("User session removed")
                 ->properties(["session" => $session])
                 ->save();
@@ -1899,7 +1903,8 @@ class UsersController extends Controller
         DB::beginTransaction();
         try {
             $this->activity()
-                ->event("User");
+                ->event("User")
+                ->isAdmin();
 
 
             $user = User::find($id);
@@ -1964,6 +1969,7 @@ class UsersController extends Controller
             $this->activity()
                 ->event("User")
                 ->eventType(ActivityEventType::DELETED)
+                ->isAdmin()
                 ->description("User deleted")
                 ->properties([
                     "data" => $user
@@ -2064,6 +2070,7 @@ class UsersController extends Controller
                     $this->activity()
                         ->event("User")
                         ->eventType(ActivityEventType::STATUSENABLE)
+                        ->isAdmin()
                         ->description("Multiple user active")
                         ->properties([
                             "data" => User::whereIn('id', $request->user_ids)->get()
@@ -2087,6 +2094,7 @@ class UsersController extends Controller
                     $this->activity()
                         ->event("User")
                         ->eventType(ActivityEventType::STATUSDISABLE)
+                        ->isAdmin()
                         ->description("Multiple user inactive")
                         ->properties([
                             "data" => User::whereIn('id', $request->user_ids)->get()
@@ -2109,6 +2117,7 @@ class UsersController extends Controller
                     $this->activity()
                         ->event("User")
                         ->eventType(ActivityEventType::DELETED)
+                        ->isAdmin()
                         ->description("Multiple user deleted")
                         ->properties([
                             "data" => User::whereIn('id', $request->user_ids)->get()
@@ -2141,6 +2150,7 @@ class UsersController extends Controller
                     $this->activity()
                         ->event("Session")
                         ->eventType(ActivityEventType::REMOVED)
+                        ->isAdmin()
                         ->description("Multiple session removed")
                         ->properties([
                             "data" => SessionTable::whereIn("id", $request->user_ids)->get()
