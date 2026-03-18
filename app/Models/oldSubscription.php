@@ -11,64 +11,66 @@ use Illuminate\Database\Eloquent\Model;
 @property User $user belongsTo
 @property Subscriptionpack $subscriptionPack belongsTo
 @property \Illuminate\Database\Eloquent\Collection $payment hasMany
-   
+
  */
-class Subscription extends Model 
+class OldSubscription extends Model
 {
-    
+
     /**
-    * Database table name
-    */
+     * Database table name
+     */
     protected $table = 'subscriptions';
-    
+
     const CREATED_AT = 'created_on';
-const UPDATED_AT = 'modified_on';
+    const UPDATED_AT = 'modified_on';
     /**
-    * Mass assignable columns
-    */
-    protected $fillable=[
-'subscriptionpack_id',
-'users_id',
-'start_date','status'
-];
+     * Mass assignable columns
+     */
+    protected $fillable = [
+        'subscriptionpack_id',
+        'users_id',
+        'start_date',
+        'status'
+    ];
 
     /**
-    * Date time columns.
-    */
-    protected $dates=['start_date',
-'expiry_date',
-'created_on',
-'modified_on',
-];
+     * Date time columns.
+     */
+    protected $dates = [
+        'start_date',
+        'expiry_date',
+        'created_on',
+        'modified_on',
+    ];
 
     /**
-    * user
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    */
+     * user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
-        return $this->belongsTo('App\User','users_id');
+        return $this->belongsTo('App\User', 'users_id');
     }
 
     /**
-    * subscriptionpack
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    */
+     * subscriptionpack
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function subscriptionpack()
     {
-        return $this->belongsTo(SubscriptionPack::class,'subscriptionpack_id');
+        return $this->belongsTo(SubscriptionPack::class, 'subscriptionpack_id');
     }
 
     /**
-    * payments
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
+     * payments
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function payments()
     {
-        return $this->hasMany(Payment::class,'subscriptions_id');
+        return $this->hasMany(Payment::class, 'subscriptions_id');
     }
 
 
