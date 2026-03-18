@@ -1437,7 +1437,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire today."));
+                                $notification->send($token, "Subscription", "Subscription expire today.");
                             }
                         }
 
@@ -1464,7 +1464,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expire in " . $daysLeft . " days."));
+                                $notification->send($token, "Subscription", "Subscription expire in " . $daysLeft . " days.");
                             }
                         }
 
@@ -1494,7 +1494,7 @@ class ApiHoaController extends Controller
 
                         if ($fcmTokens != null) {
                             foreach ($fcmToken as $token) {
-                                $notification->send($token, "Subscription", ($houseNo . "  | Subscription expired"));
+                                $notification->send($token, "Subscription", "Subscription expired");
                             }
                         }
 
