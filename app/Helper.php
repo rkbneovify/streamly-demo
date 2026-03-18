@@ -258,7 +258,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
 
 
 
-function checkLoginLimitX($user_id, $token, $deviceDetails)
+function qqcheckLoginLimitX($user_id, $token, $deviceDetails)
 {
     $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
