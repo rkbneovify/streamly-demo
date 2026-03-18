@@ -34,7 +34,7 @@ class ApiNotificationController extends Controller
             ->where('is_user', 1);
         $hoaSubUser = HoaUser::getCurrentSubUserByToken();
         if ($hoaSubUser != null) {
-            $query->where('passcode', $hoaSubUser->passcode);
+            $query->whereNotNull('passcode')->where('passcode', $hoaSubUser->passcode);
         }
 
         $limit = $request->input('per_page', 10);
@@ -64,7 +64,8 @@ class ApiNotificationController extends Controller
             ->where('is_user', 1);
         $hoaSubUser = HoaUser::getCurrentSubUserByToken();
         if ($hoaSubUser != null) {
-            $query->where('passcode', $hoaSubUser->passcode);
+            $query->whereNotNull('passcode')
+                ->where('passcode', $hoaSubUser->passcode);
         }
 
         $count = $query->count();
