@@ -28,19 +28,24 @@ class ApiNotificationController extends Controller
     {
 
 
-        $query = ActivityLog::query();
-        $query->where('user_id', auth()->user()->id)
+        $query = ActivityLog::query()
+            ->where('user_id', auth()->id())
             ->where('category', 'notification')
             ->where('is_user', 1);
+
         $hoaSubUser = HoaUser::getCurrentSubUserByToken();
-        if ($hoaSubUser != null) {
-            $query->whereNotNull('passcode')->where('passcode', $hoaSubUser->passcode);
+
+        if ($hoaSubUser !== null) {
+            $query->whereNotNull('passcode')
+                ->where('passcode', $hoaSubUser->passcode);
+        } else {
+            $query->whereNull('passcode');
         }
 
         $limit = $request->input('per_page', 10);
         $page = $request->input('page', 1);
-        $query->latest();
-        $data = $query->paginate($limit, ['*'], 'page', $page);
+
+        $data = $query->latest()->paginate($limit, ['*'], 'page', $page);
         // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
         return response()->json([
             'success' => true,
@@ -63,11 +68,12 @@ class ApiNotificationController extends Controller
             ->where('is_read', 0)
             ->where('is_user', 1);
         $hoaSubUser = HoaUser::getCurrentSubUserByToken();
-        if ($hoaSubUser != null) {
+        if ($hoaSubUser !== null) {
             $query->whereNotNull('passcode')
                 ->where('passcode', $hoaSubUser->passcode);
+        } else {
+            $query->whereNull('passcode');
         }
-
         $count = $query->count();
 
         return response()->json([
