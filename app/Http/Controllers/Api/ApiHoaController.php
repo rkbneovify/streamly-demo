@@ -533,6 +533,20 @@ class ApiHoaController extends Controller
                 ])->save();
 
             // sub user notification 
+            $this->activity()->event("subscription")
+                ->eventType(ActivityEventType::NewPlanAdded)
+                ->description("Your new subscription plan has been activated successfully.")
+                ->isUser()
+                ->notification()
+                ->passcode($hoaUser->passcode)
+                ->properties([
+                    "data" => $hoaUser->subscriptionLatest
+
+                ])->save();
+
+
+
+            // sub user notification 
             $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
 
             if ($fcmTokens != null) {
@@ -713,12 +727,13 @@ class ApiHoaController extends Controller
 
             $this->activity()->event("Hoa sub user")
                 ->eventType(ActivityEventType::Regenerate)
-                ->descriptionSimple("Sub user regenerated new passcode | " . $hoaUser->email)
+                ->descriptionSimple("Sub user regenerated new passcode | " . $hoaUser->house_no ?? "House" . $hoaUser->ordering)
                 ->isUser()
                 ->isHoa()
                 ->properties([
                     "data" => $hoaUser
                 ])->save();
+
             $redirectUrl .= '?type=success&message=Passcode regenerated successfully ! Please check your email.';
             return redirect($redirectUrl);
 
