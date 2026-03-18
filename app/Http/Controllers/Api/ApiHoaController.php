@@ -40,6 +40,9 @@ class ApiHoaController extends Controller
 
     use ApiResponseTrait, DbTransactionTrait, ActivityLogger;
 
+
+
+
     public function index(Request $request)
     {
 
@@ -474,7 +477,7 @@ class ApiHoaController extends Controller
         });
     }
 
-    public function addPlan(Request $request)
+    public function addPlan(Request $request, NotificationService $notification)
     {
         $validator = Validator($request->all(), [
             "house_id" => 'required|integer',
@@ -486,7 +489,7 @@ class ApiHoaController extends Controller
         }
 
 
-        return $this->dbTransaction(function () use ($request) {
+        return $this->dbTransaction(function () use ($request, $notification) {
             $hoaUser = HoaUser::where('id', $request->house_id)->first();
             if ($hoaUser == null) {
                 return $this->errorResponse("Data not found !", 404);
@@ -528,6 +531,21 @@ class ApiHoaController extends Controller
                     "data" => $hoaUser->subscriptionLatest
 
                 ])->save();
+
+            // sub user notification 
+            $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
+
+            if ($fcmTokens != null) {
+                foreach ($fcmTokens as $token) {
+                    $notification->send(
+                        $token,
+                        "Subscription",
+                        "Your new subscription plan has been activated successfully."
+                    );
+                }
+            }
+
+
 
             return $this->successResponse("Plan added successfully !");
 
