@@ -535,7 +535,7 @@ class ApiHoaController extends Controller
             // sub user notification 
             $this->activity()->event("subscription")
                 ->eventType(ActivityEventType::NewPlanAdded)
-                ->description("Your new subscription plan has been activated successfully.")
+                ->descriptionSimple("Your new subscription plan has been activated successfully.")
                 ->isUser()
                 ->notification()
                 ->passcode($hoaUser->passcode)
