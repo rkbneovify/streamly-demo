@@ -70,7 +70,7 @@ export class TotalaccountComponent {
     } else console.log('not getting logged device');
     this.connectedDevice = this.response;
 
-    this.notificationService.fetchCount();
+
 
   }
 

@@ -59,7 +59,7 @@ export class ConnectedHousesComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private sweetAlert: SweetalertService,
-    private notificationService: NotificationService
+
   ) {
 
 
@@ -105,7 +105,7 @@ export class ConnectedHousesComponent implements OnInit {
 
     })
 
-    this.notificationService.fetchCount();
+
 
   }
 
