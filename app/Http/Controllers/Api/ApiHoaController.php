@@ -1440,18 +1440,20 @@ class ApiHoaController extends Controller
                 $daysLeft = now()->diffInDays($item->plan_expires_at, false);
                 $hoaUser = HoaUser::where('id', $item->sub_user_id)->first();
 
-                $this->activity($item->user_id)
-                    ->event("subscription")
-                    ->eventType(ActivityEventType::Subscription)
-                    ->notification()
-                    ->isUser();
+
+
 
                 if ($daysLeft > 0 && $hoaUser != null) {
                     $item->user = $hoaUser;
                     if ($daysLeft == 1) {
 
                         $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
-                        $this->descriptionSimple($houseNo . "  | Subscription expire today.")
+                        $this->activity($item->user_id)
+                            ->event("subscription")
+                            ->eventType(ActivityEventType::Subscription)
+                            ->notification()
+                            ->isUser()
+                            ->descriptionSimple($houseNo . "  | Subscription expire today.")
                             ->properties([
                                 "data" => $item
                             ])->save();
@@ -1498,7 +1500,12 @@ class ApiHoaController extends Controller
 
                     } elseif ($daysLeft > 1) {
                         $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
-                        $this->descriptionSimple($houseNo . "  | Subscription expire in " . $daysLeft . " days.")
+                        $this->activity($item->user_id)
+                            ->event("subscription")
+                            ->eventType(ActivityEventType::Subscription)
+                            ->notification()
+                            ->isUser()
+                            ->descriptionSimple($houseNo . "  | Subscription expire in " . $daysLeft . " days.")
                             ->properties([
                                 "data" => $item
                             ])->save();
@@ -1538,7 +1545,11 @@ class ApiHoaController extends Controller
                     if ($hoaUser != null) {
                         $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
                         $item->user = $hoaUser;
-                        $this->passcode($hoaUser->passcode)
+                        $this->activity($item->user_id)
+                            ->event("subscription")
+                            ->eventType(ActivityEventType::Subscription)
+                            ->notification()
+                            ->isUser()
                             ->descriptionSimple($houseNo . "  | Subscription expired")
                             ->properties([
                                 "data" => $item
