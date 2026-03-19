@@ -35,10 +35,13 @@ class ApiNotificationController extends Controller
 
         $hoaSubUser = HoaUser::getCurrentSubUserByToken();
 
-        if ($hoaSubUser !== null) {
+        if ($hoaSubUser != null) {
+            ActivityLog::resolveNotificationForHoaSub($hoaSubUser->passcode);
             $query->whereNotNull('passcode')
                 ->where('passcode', $hoaSubUser->passcode);
         } else {
+
+            ActivityLog::resolveNotificationForAll(auth()->user()->id);
             $query->whereNull('passcode');
         }
 
@@ -46,7 +49,7 @@ class ApiNotificationController extends Controller
         $page = $request->input('page', 1);
 
         $data = $query->latest()->paginate($limit, ['*'], 'page', $page);
-        // ActivityLog::resolveNotificationForHoa(auth()->user()->id);
+
         return response()->json([
             'success' => true,
             'response_code' => 200,
