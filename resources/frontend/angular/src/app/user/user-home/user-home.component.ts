@@ -18,6 +18,7 @@ import {
   TruncatePipe,
 } from '../../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
+import { NotificationService } from '../../services/utils/notification.service';
 
 @Component({
   selector: 'app-user-home',
@@ -45,7 +46,7 @@ export class UserHomeComponent implements OnInit {
   programDetailData: any;
   expandedCardIndexR: number | null = null;
   expandedCardIndex: number | null = null;
-  zipcode:any;
+  zipcode: any;
 
 
 
@@ -53,18 +54,22 @@ export class UserHomeComponent implements OnInit {
     private crud: CrudService,
     private router: Router,
     private ts: ToastrService,
-    private ngZone: NgZone
-  ) {}
+    private ngZone: NgZone,
+    private notificationService: NotificationService
+
+  ) { }
   ngOnInit(): void {
+
     this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     this.loginSliders();
     this.getFavoriteList();
     this.getRecentsListData();
     this.channelsWithGenre();
+    this.notificationService.fetchCount();
   }
 
   // ngAfterViewInit(): void {
-    
+
   //   // setTimeout(() => {
   //   //   if (this.sliderNexrButton) {
   //   //     console.log('start slider')
@@ -83,19 +88,19 @@ export class UserHomeComponent implements OnInit {
   }
 
   // Function to expand the last card
-expandLastCardR(index: number) {
-  this.expandedCardIndexR = index;
-}
+  expandLastCardR(index: number) {
+    this.expandedCardIndexR = index;
+  }
 
   // Function to expand the last card
   expandLastCard(index: number) {
     this.expandedCardIndex = index;
   }
-  
+
   // Function to close the expanded card when another card is clicked
   closeExpandedCard() {
     this.expandedCardIndex = null;
-  this.expandedCardIndexR = null;
+    this.expandedCardIndexR = null;
 
   }
 
@@ -235,7 +240,7 @@ expandLastCardR(index: number) {
   // get genre channel
   channelsWithGenre() {
     this.isLoading = true;
-    console.log('this.zipcode',this.zipcode)
+    console.log('this.zipcode', this.zipcode)
     const body = {
       typeurl: 'mpd',
       zipcode: this.zipcode,
@@ -261,7 +266,7 @@ expandLastCardR(index: number) {
   getRecentsListData(): void {
     // Fetch from API if not found in local storage
     this.isLoading = true;
-    const body = { typeurl: 'mpd' ,zipcode:this.zipcode};
+    const body = { typeurl: 'mpd', zipcode: this.zipcode };
     this.crud
       .postRequest('auth/recent-channels', body)
       .subscribe((res: any) => {
@@ -288,9 +293,9 @@ expandLastCardR(index: number) {
     )
       .toString()
       .padStart(2, '0')}-${currentDate
-      .getUTCDate()
-      .toString()
-      .padStart(2, '0')} ${timeStr} +0000`;
+        .getUTCDate()
+        .toString()
+        .padStart(2, '0')} ${timeStr} +0000`;
     const localDate = this.convertTZ(dateString);
     const hours = localDate.getHours();
     const minutes = localDate.getMinutes();
