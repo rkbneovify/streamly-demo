@@ -1432,14 +1432,13 @@ class ApiHoaController extends Controller
     {
 
         return $this->dbTransaction(function () use ($notification) {
-            $subscriptions = HoaSubUserSubscription::whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
-                ->whereIn('id', function ($query) {
-                    $query->selectRaw('MAX(id)')
-                        ->from('hoa_sub_user_subscriptions')
-                        ->groupBy('sub_user_id');
-                })
-                ->orderBy('plan_expires_at', 'desc')
-                ->get();
+            $subscriptions = HoaSubUserSubscription::whereIn('id', function ($query) {
+                $query->selectRaw('MAX(id)')
+                    ->from('hoa_sub_user_subscriptions')
+                    ->groupBy('sub_user_id');
+            })
+                ->whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
+                ->orderBy('plan_expires_at', 'desc')->get();
 
 
             foreach ($subscriptions as $item) {

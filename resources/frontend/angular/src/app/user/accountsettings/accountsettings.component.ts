@@ -69,7 +69,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     private router: Router,
     private renderer: Renderer2,
     private utilsService: UtilsService,
-    private notificationService: NotificationService
+
   ) {
     // console.log('Current url: ', this.router.url)
     this.updateuserDetatils = this.fb.group({
@@ -97,7 +97,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getAllDetails();
-    this.notificationService.fetchCount();
+
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
