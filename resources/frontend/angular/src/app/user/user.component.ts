@@ -38,6 +38,7 @@ import { environment } from '../../environments/environment';
 import { PlaystreamComponent } from './playstream/playstream.component';
 import { SharedStateService } from '../services/globalState/global-state.service';
 import { UtilsService } from '../services/utils/utils.service';
+import { NotificationService } from '../services/utils/notification.service';
 
 @Component({
   selector: 'app-user',
@@ -54,6 +55,7 @@ import { UtilsService } from '../services/utils/utils.service';
     DurationISOFormatPipe,
     TruncatePipe,
     PlaystreamComponent,
+
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
@@ -96,7 +98,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   urlList: Array<String> = [];
   isSearchComponent: boolean = true;
   private searchSubject: Subject<string> = new Subject();
-  notificationCount: number = 0;
+
   constructor(
     private crud: CrudService,
     private router: Router,
@@ -105,7 +107,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private screenSizeService: ScreenSizeService,
     private cdr: ChangeDetectorRef,
     private sharedStateService: SharedStateService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public notificationService: NotificationService,
+
   ) {
 
     this.router.events.subscribe((event) => {
@@ -160,6 +164,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -171,7 +176,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log("Current url :", event.urlAfterRedirects);
       });
 
-
+    this.notificationService.fetchCount();
 
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
@@ -225,7 +230,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isHoaMainUser = Boolean(isDataForHoaMain);
     }
 
-    this.getNotificationCount();
+
+
   }
 
   ngAfterViewInit(): void {
@@ -737,15 +743,5 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
 
-  getNotificationCount() {
 
-    this.crud.getRequest('auth/notification/count').subscribe({
-      next: (res: any) => {
-        this.notificationCount = res.count;
-      },
-      error: (error: any) => {
-
-      },
-    });
-  }
 }

@@ -13,6 +13,7 @@ import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
 import { UtilsService } from '../../services/utils/utils.service';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
+import { NotificationService } from '../../services/utils/notification.service';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -67,7 +68,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     private ts: ToastrService,
     private router: Router,
     private renderer: Renderer2,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private notificationService: NotificationService
   ) {
     // console.log('Current url: ', this.router.url)
     this.updateuserDetatils = this.fb.group({
@@ -95,6 +97,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getAllDetails();
+    this.notificationService.fetchCount();
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
