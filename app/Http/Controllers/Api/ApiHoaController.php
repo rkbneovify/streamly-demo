@@ -1438,6 +1438,7 @@ class ApiHoaController extends Controller
                         ->from('hoa_sub_user_subscriptions')
                         ->groupBy('sub_user_id');
                 })
+                ->orderBy('plan_expires_at', 'desc')
                 ->get();
 
 
