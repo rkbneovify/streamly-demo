@@ -164,19 +164,26 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.router.events.subscribe(() => {
+      this.notificationService.fetchCount()
+    });
 
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
+
         if (this.urlList.includes(event.urlAfterRedirects)) {
           this.isSearchComponent = false;
         } else {
           this.isSearchComponent = true;
         }
+
         console.log("Current url :", event.urlAfterRedirects);
       });
 
-    this.notificationService.fetchCount();
+
+
+
 
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
@@ -229,6 +236,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isDataForHoaMain != null) {
       this.isHoaMainUser = Boolean(isDataForHoaMain);
     }
+
+
 
 
 
