@@ -55,7 +55,7 @@ export class UserHomeComponent implements OnInit {
     private router: Router,
     private ts: ToastrService,
     private ngZone: NgZone,
-    private notificationService: NotificationService
+
 
   ) { }
   ngOnInit(): void {
@@ -65,7 +65,7 @@ export class UserHomeComponent implements OnInit {
     this.getFavoriteList();
     this.getRecentsListData();
     this.channelsWithGenre();
-    this.notificationService.fetchCount();
+
   }
 
   // ngAfterViewInit(): void {
