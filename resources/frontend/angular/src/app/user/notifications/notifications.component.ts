@@ -13,6 +13,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NotificationService } from '../../services/utils/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
@@ -34,7 +35,7 @@ export class NotificationsComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private sweetAlert: SweetalertService,
-    private notificationService: NotificationService
+
   ) {
 
 
@@ -43,7 +44,8 @@ export class NotificationsComponent implements OnInit {
   ngOnInit() {
 
     this.getList(1);
-    this.notificationService.fetchCount();
+
+
 
 
   }

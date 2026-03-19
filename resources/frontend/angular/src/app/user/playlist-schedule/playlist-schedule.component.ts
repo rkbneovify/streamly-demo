@@ -306,10 +306,10 @@ export class PlaylistScheduleComponent
     private ngZone: NgZone,
     private cacheService: PlaylistCacheService,
     private routeTrackingService: RouteTrackingService,
-    private notificationService: NotificationService,
+
   ) { }
   ngOnInit(): void {
-    this.notificationService.fetchCount();
+
     this.getCurrentTimeSlot();
     this.getFavoriteList();
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
@@ -380,6 +380,7 @@ export class PlaylistScheduleComponent
     }, 1000 * 60 * this.utilsService.timeDifferenceInMinutes(this.getCurrentTimeDate[1]));
 
     this.tabInactivityService.startTabInactivityCheck();
+
   }
 
   convertUtcToLocalTime(utcTimestamp: number): string {
