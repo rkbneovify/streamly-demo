@@ -37,6 +37,7 @@ import { Subscription } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
+import { NotificationService } from '../../services/utils/notification.service';
 
 declare let window: Window;
 
@@ -304,9 +305,11 @@ export class PlaylistScheduleComponent
     private screenSizeService: ScreenSizeService,
     private ngZone: NgZone,
     private cacheService: PlaylistCacheService,
-    private routeTrackingService: RouteTrackingService
+    private routeTrackingService: RouteTrackingService,
+    private notificationService: NotificationService,
   ) { }
   ngOnInit(): void {
+    this.notificationService.fetchCount();
     this.getCurrentTimeSlot();
     this.getFavoriteList();
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
