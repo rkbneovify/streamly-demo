@@ -10,6 +10,7 @@ import { SweetalertService } from '../../services/SweetAlert/sweetalert.service'
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'rxjs';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { NotificationService } from '../../services/utils/notification.service';
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
@@ -27,7 +28,12 @@ export class TotalaccountComponent {
   isLoading: boolean = false;
   isConnectedDeviceShow: boolean = false;
   userData: any;
-  constructor(private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+  constructor(private apiService: CrudService,
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private sweetAlert: SweetalertService,
+    private notificationService: NotificationService
+  ) {
     this.get_all_device();
 
   }
@@ -64,7 +70,7 @@ export class TotalaccountComponent {
     } else console.log('not getting logged device');
     this.connectedDevice = this.response;
 
-
+    this.notificationService.fetchCount();
 
   }
 
