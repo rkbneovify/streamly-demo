@@ -145,8 +145,8 @@
 
               <a routerLink="/user/notifications">
                 <div class="notification">
-                  <div *ngIf="notificationCount > 0" class="badge-box">
-                    <span>{{notificationCount}}</span>
+                  <div *ngIf="notificationService.notificationCount() > 0" class="badge-box">
+                    <span>{{notificationService.notificationCount()}}</span>
                   </div>
                   <img loading="lazy" src="../../assets/dummy-img/notification2.svg" alt="" />
                 </div>

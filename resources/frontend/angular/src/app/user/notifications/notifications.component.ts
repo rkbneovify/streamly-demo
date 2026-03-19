@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { DatePipe, NgClass, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -12,6 +12,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'r
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NotificationService } from '../../services/utils/notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -20,7 +21,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss'
 })
-export class NotificationsComponent {
+export class NotificationsComponent implements OnInit {
 
 
   data: Array<any> = [];
@@ -28,21 +29,21 @@ export class NotificationsComponent {
   isMoreData: Boolean = true;
   isLoading: boolean = false;
 
-  constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+  constructor(private http: HttpClient,
+    private apiService: CrudService,
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private sweetAlert: SweetalertService,
+    private notificationService: NotificationService
+  ) {
 
 
   }
 
   ngOnInit() {
 
-
-
-
-
-
-
-    this.getHouseList(1);
-
+    this.getList(1);
+    this.notificationService.fetchCount();
 
 
   }
@@ -53,7 +54,7 @@ export class NotificationsComponent {
 
 
 
-  getHouseList(page: number = 1) {
+  getList(page: number = 1) {
 
     const params = new URLSearchParams();
     this.page = page;
@@ -106,7 +107,7 @@ export class NotificationsComponent {
 
   onScrollDown() {
     this.page++;
-    this.getHouseList(this.page)
+    this.getList(this.page)
     // console.log("Page count", this.page)
   }
 
