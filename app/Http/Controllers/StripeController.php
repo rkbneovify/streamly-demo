@@ -61,7 +61,7 @@ class StripeController extends Controller
                         ->where('users_id', $user[0]->id)
                         ->where('status', 1)
                         ->whereNotNull('fcm_token')
-                        ->get('fcm_token');
+                        ->pluck('fcm_token')->toArray();
 
                     $this->activity($user->first()->id)->event("Subscription")
                         ->eventType(ActivityEventType::CANCELED)
@@ -71,7 +71,7 @@ class StripeController extends Controller
                         ->isAdmin()
                         ->properties([
                             "user" => $user,
-                            "subscription" => $planCancelled
+                            "subscription" => $paymentIntent
                         ])->save();
 
                     // $fcmResults = [];
@@ -146,101 +146,101 @@ class StripeController extends Controller
 
 
 
-                if ($paymentIntent->object->description != "Subscription creation") {
+                // if ($paymentIntent->object->description != "Subscription creation") {
 
-                    $user = DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
-                    $amount = $paymentIntent->object->amount / 100;
-                    $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
-                    $subscriptionId = $paymentIntent->object->invoice;
+                $user = DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
+                $amount = $paymentIntent->object->amount / 100;
+                $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
+                $subscriptionId = $paymentIntent->object->invoice;
 
-                    $subscription = \Stripe\Invoice::retrieve($subscriptionId);
-                    $upcomingInvoice = \Stripe\Invoice::upcoming([
-                        'subscription' => $subscription->subscription, // Use the subscription ID
-                    ]);
+                $subscription = \Stripe\Invoice::retrieve($subscriptionId);
+                $upcomingInvoice = \Stripe\Invoice::upcoming([
+                    'subscription' => $subscription->subscription, // Use the subscription ID
+                ]);
 
-                    $this->activity($user->first()->id)->event("Subscription")
-                        ->eventType(ActivityEventType::CREATED)
-                        ->descriptionSimple("Subscription created")
-                        ->notification()
-                        ->isUser()
-                        ->isAdmin()
-                        ->properties([
-                            "user" => $user,
-                            "subscription" => $subscription
-                        ])->save();
-                    $nextBillingDate = $upcomingInvoice->next_payment_attempt ? date('Y-m-d H:i', $upcomingInvoice->next_payment_attempt) : 'N/A';
+                $this->activity($user->first()->id)->event("Subscription")
+                    ->eventType(ActivityEventType::CREATED)
+                    ->descriptionSimple("Subscription created")
+                    ->notification()
+                    ->isUser()
+                    ->isAdmin()
+                    ->properties([
+                        "user" => $user,
+                        "subscription" => $subscription
+                    ])->save();
+                $nextBillingDate = $upcomingInvoice->next_payment_attempt ? date('Y-m-d H:i', $upcomingInvoice->next_payment_attempt) : 'N/A';
 
-                    $fcmTokens = DB::table('session_table')
-                        ->where('users_id', $user[0]->id)
-                        ->where('status', 1)
-                        ->whereNotNull('fcm_token')
-                        ->get('fcm_token');
+                $fcmTokens = DB::table('session_table')
+                    ->where('users_id', $user[0]->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->pluck('fcm_token')->toArray();
 
-                    // $fcmResults = [];
-                    // foreach ($fcm_token as $tokens) {
-                    //     array_push($fcmResults, $tokens->fcm_token);
-                    // }
-                    // ;
+                // $fcmResults = [];
+                // foreach ($fcm_token as $tokens) {
+                //     array_push($fcmResults, $tokens->fcm_token);
+                // }
+                // ;
 
-                    if ($fcmTokens != null && count($fcmTokens) > 0) {
-                        foreach ($fcmTokens as $token) {
-                            $this->notification->send($token, "Subscription", "Your subscription is renewed.");
+                if ($fcmTokens != null && count($fcmTokens) > 0) {
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, "Subscription", "Your subscription is renewed.");
 
-                        }
                     }
+                }
 
-                    // if (count($fcm_token) == 0) {
-                    // } else {
+                // if (count($fcm_token) == 0) {
+                // } else {
 
-                    //     $this->notification->send($fcmResults, "Subscription", "Your subscription is renewed.");
+                //     $this->notification->send($fcmResults, "Subscription", "Your subscription is renewed.");
 
-                    //     // $curl = curl_init();
+                //     // $curl = curl_init();
 
-                    //     // curl_setopt_array($curl, array(
-                    //     //     CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
-                    //     //     CURLOPT_RETURNTRANSFER => true,
-                    //     //     CURLOPT_ENCODING => '',
-                    //     //     CURLOPT_MAXREDIRS => 10,
-                    //     //     CURLOPT_TIMEOUT => 0,
-                    //     //     CURLOPT_FOLLOWLOCATION => true,
-                    //     //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    //     //     CURLOPT_CUSTOMREQUEST => 'POST',
-                    //     //     CURLOPT_POSTFIELDS => '{
-                    //     //   "registration_ids": ' . json_encode($fcmResults) . ',
-                    //     //   "title": "Subscription Renewed",
-                    //     //   "body": "HI ' . ucwords($user[0]->name) . ' your subscription is renewed."
-                    //     //  }',
-                    //     //     CURLOPT_HTTPHEADER => array(
-                    //     //         'Content-Type: application/json'
-                    //     //     ),
-                    //     // ));
-                    //     // $response = curl_exec($curl);
-                    //     // curl_close($curl);
-                    // }
-                    // ;
+                //     // curl_setopt_array($curl, array(
+                //     //     CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                //     //     CURLOPT_RETURNTRANSFER => true,
+                //     //     CURLOPT_ENCODING => '',
+                //     //     CURLOPT_MAXREDIRS => 10,
+                //     //     CURLOPT_TIMEOUT => 0,
+                //     //     CURLOPT_FOLLOWLOCATION => true,
+                //     //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     //     CURLOPT_CUSTOMREQUEST => 'POST',
+                //     //     CURLOPT_POSTFIELDS => '{
+                //     //   "registration_ids": ' . json_encode($fcmResults) . ',
+                //     //   "title": "Subscription Renewed",
+                //     //   "body": "HI ' . ucwords($user[0]->name) . ' your subscription is renewed."
+                //     //  }',
+                //     //     CURLOPT_HTTPHEADER => array(
+                //     //         'Content-Type: application/json'
+                //     //     ),
+                //     // ));
+                //     // $response = curl_exec($curl);
+                //     // curl_close($curl);
+                // }
+                // ;
 
-                    //  $userplanRenewed = DB::table('subscriptions')
-                    //  ->where('stripe_id', $paymentIntent->id)
-                    //  ->update(array(
-                    //  'stripe_status' => 'canceled',
-                    //  'ends_at' => date("Y/m/d h:i:s"),
-                    // ));
+                //  $userplanRenewed = DB::table('subscriptions')
+                //  ->where('stripe_id', $paymentIntent->id)
+                //  ->update(array(
+                //  'stripe_status' => 'canceled',
+                //  'ends_at' => date("Y/m/d h:i:s"),
+                // ));
 
-                    $website_link = env('WEBSITE_URL');
+                $website_link = env('WEBSITE_URL');
 
-                    //     $html='<html>
-                    //     Hi, '.$user[0]->name.'<br><br>
-                    //     We hope you are enjoying streamlyTV,<br>
-                    //     as a reminder, your subscription is renewed.<br><br>
-                    //     View your receipt by clicking <a href="'.$recipt.'">here</a><br>
-                    //     If you have any questions or if you find an error, please contact us at contact@streamlytv.com.<br><br>
-                    //     Thanks<br>
-                    //     Team Streamly
+                //     $html='<html>
+                //     Hi, '.$user[0]->name.'<br><br>
+                //     We hope you are enjoying streamlyTV,<br>
+                //     as a reminder, your subscription is renewed.<br><br>
+                //     View your receipt by clicking <a href="'.$recipt.'">here</a><br>
+                //     If you have any questions or if you find an error, please contact us at contact@streamlytv.com.<br><br>
+                //     Thanks<br>
+                //     Team Streamly
 
-                    // </html>';
+                // </html>';
 
 
-                    $html = '<html>
+                $html = '<html>
                     Hi ' . ucwords($user[0]->name) . ',<br><br>
                     We hope you are enjoying streamlyTV.<br>
                     As a reminder, your subscription is renewed.<br><br>
@@ -257,11 +257,11 @@ class StripeController extends Controller
                     Team Streamly<b>
                     </html>';
 
-                    Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
-                        $message->to($user[0]->email, $user[0]->name)
-                            ->subject('Your Subscription Renewed ' . env('APP_NAME'));
-                    });
-                }
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
+                    $message->to($user[0]->email, $user[0]->name)
+                        ->subject('Your Subscription Renewed ' . env('APP_NAME'));
+                });
+                // }
                 break;
 
             case 'payment_intent.payment_failed':
@@ -291,7 +291,7 @@ class StripeController extends Controller
                         ->where('users_id', $user[0]->id)
                         ->where('status', 1)
                         ->whereNotNull('fcm_token')
-                        ->get('fcm_token');
+                        ->pluck('fcm_token')->toArray();
 
                     // $fcmResults = [];
                     // foreach ($fcm_token as $tokens) {
@@ -381,7 +381,7 @@ class StripeController extends Controller
                         ->where('users_id', $user[0]->id)
                         ->where('status', 1)
                         ->whereNotNull('fcm_token')
-                        ->get('fcm_token');
+                        ->pluck('fcm_token')->toArray();
 
                     // $fcmResults = [];
                     // foreach ($fcm_token as $tokens) {
