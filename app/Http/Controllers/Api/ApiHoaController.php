@@ -1437,7 +1437,7 @@ class ApiHoaController extends Controller
                     ->from('hoa_sub_user_subscriptions')
                     ->groupBy('sub_user_id');
             })
-                ->whereDate('plan_expires_at', '<=', Carbon::now()->addDays(10))
+                ->whereDate('plan_expires_at', '<=', Carbon::now()->addDays(5))
                 ->orderBy('plan_expires_at', 'desc')->get();
 
 
