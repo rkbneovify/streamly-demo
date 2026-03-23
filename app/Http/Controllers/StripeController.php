@@ -139,7 +139,7 @@ class StripeController extends Controller
                                 ->where('stripe_id', $invoice->customer)
                                 ->first();
                             $this->activity($user->id)->event("Subscription")
-                                ->eventType("Started")
+                                ->eventType("Subscription")
                                 ->descriptionSimple($message)
                                 ->notification()
                                 ->isUser()
@@ -195,7 +195,7 @@ class StripeController extends Controller
                                 ->where('stripe_id', $invoice->customer)
                                 ->first();
                             $this->activity($user->id)->event("Subscription")
-                                ->eventType("Started")
+                                ->eventType("Subscription")
                                 ->descriptionSimple($message)
                                 ->notification()
                                 ->isUser()
@@ -251,7 +251,7 @@ class StripeController extends Controller
                             ->where('stripe_id', $invoice->customer)
                             ->first();
                         $this->activity($user->id)->event("Subscription")
-                            ->eventType("Started")
+                            ->eventType("Subscription")
                             ->descriptionSimple($message)
                             ->notification()
                             ->isUser()
@@ -319,7 +319,7 @@ class StripeController extends Controller
                     ->where('stripe_id', $subscription->customer)
                     ->first();
                 $this->activity($user->id)->event("Subscription")
-                    ->eventType(ActivityEventType::UPDATED)
+                    ->eventType("Subscription")
                     ->descriptionSimple($message)
                     ->notification()
                     ->isUser()
@@ -414,7 +414,7 @@ class StripeController extends Controller
                     }
                 }
                 $this->activity($user->id)->event("Subscription")
-                    ->eventType(ActivityEventType::Failed)
+                    ->eventType("Subscription")
                     ->descriptionSimple($message)
                     ->notification()
                     ->isUser()
@@ -453,7 +453,7 @@ class StripeController extends Controller
                     return;
                 }
                 $this->activity($user->first()->id)->event("Subscription")
-                    ->eventType(ActivityEventType::TRIALEND)
+                    ->eventType("Subscription")
                     ->descriptionSimple($message)
                     ->notification()
                     ->isUser()
@@ -520,7 +520,7 @@ class StripeController extends Controller
                     }
                 }
                 $this->activity($user->id)->event("Subscription")
-                    ->eventType(ActivityEventType::CANCELED)
+                    ->eventType("Subscription")
                     ->descriptionSimple($message)
                     ->notification()
                     ->isUser()
