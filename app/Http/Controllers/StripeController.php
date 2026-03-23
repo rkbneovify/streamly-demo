@@ -21,7 +21,7 @@ class StripeController extends Controller
 
     use ActivityLogger;
     protected $notification;
-
+    protected $bcc = ["projects.neovify@gmail.com", "mina@neovix.com"];
     public function __construct(NotificationService $notification)
     {
         $this->notification = $notification;
@@ -107,7 +107,7 @@ class StripeController extends Controller
 
                     Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                         $message->to($user->email, $user->name)
-                            ->bcc('annu.sehrawat@oodles.io')
+                            ->bcc($this->bcc)
                             ->subject('Your Free Trial Has Started - ' . env('APP_NAME'));
                     });
 
@@ -180,7 +180,7 @@ class StripeController extends Controller
 
                         Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                             $message->to($user->email, $user->name)
-                                ->bcc('annu.sehrawat@oodles.io')
+                                ->bcc($this->bcc)
                                 ->subject('Your Subscription Started Now - ' . env('APP_NAME'));
                         });
                         break;
@@ -234,7 +234,7 @@ class StripeController extends Controller
 
                         Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                             $message->to($user->email, $user->name)
-                                ->bcc('annu.sehrawat@oodles.io')
+                                ->bcc($this->bcc)
                                 ->subject('Your Subscription Has Been Renewed - ' . env('APP_NAME'));
                         });
                         break;
@@ -324,7 +324,7 @@ class StripeController extends Controller
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                     $message->to($user->email, $user->name)
-                        ->bcc('annu.sehrawat@oodles.io')
+                        ->bcc($this->bcc)
                         ->subject('Your subscription plan changed - ' . env('APP_NAME'));
                 });
 
@@ -378,7 +378,7 @@ class StripeController extends Controller
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                     $message->to($user->email, $user->name);
-                    $message->bcc('annu.sehrawat@oodles.io', 'mina@neovix.com')
+                    $message->bcc($this->bcc)
                         ->subject('Your subscription payment failed' . env('APP_NAME'));
                 });
 
@@ -429,7 +429,7 @@ class StripeController extends Controller
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
                     $message->to($user[0]->email, $user[0]->name);
-                    $message->bcc('annu.sehrawat@oodles.io')
+                    $message->bcc($this->bcc)
                         ->subject('Your trail period is ending soon ' . env('APP_NAME'));
                 });
 
@@ -490,7 +490,7 @@ class StripeController extends Controller
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                     $message->to($user->email, $user->name);
-                    $message->bcc('annu.sehrawat@oodles.io', 'mina@neovix.com')
+                    $message->bcc($this->bcc)
                         ->subject('Your subscription has been canceled. ' . env('APP_NAME'));
                 });
 
