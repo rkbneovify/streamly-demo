@@ -305,6 +305,7 @@ class ChannelController extends Controller
             $this->activity()->event("Channel")
                 ->eventType(ActivityEventType::CREATED)
                 ->description(ActivityEventType::CREATED)
+                ->isAdmin()
                 ->properties([
                     "data" => $model
                 ])->save();
@@ -362,6 +363,7 @@ class ChannelController extends Controller
 
         $this->activity()->event("Channel")
             ->eventType(ActivityEventType::UPDATED)
+            ->isAdmin()
             ->description("Channel data updated")
             ->oldData(Channel::find($id));
         // ->properties([
@@ -621,6 +623,7 @@ class ChannelController extends Controller
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSDISABLE)
+                    ->isAdmin()
                     ->description("channel status disable");
             } else {
                 $channel->status = 1;
@@ -633,6 +636,7 @@ class ChannelController extends Controller
                 $this->activity()
                     ->event("Channel")
                     ->eventType(ActivityEventType::STATUSENABLE)
+                    ->isAdmin()
                     ->description("channel status enable");
             }
             $channel->save();
@@ -678,7 +682,8 @@ class ChannelController extends Controller
 
         DB::beginTransaction();
         $this->activity()
-            ->event("Channel");
+            ->event("Channel")
+            ->isAdmin();
 
 
         switch ($request->action) {
