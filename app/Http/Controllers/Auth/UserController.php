@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\SessionTable;
 use App\HotelRoomTable;
+use App\Models\PersonalDevice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -98,23 +99,57 @@ class UserController extends Controller
             'id.*' => 'required|distinct',
         ]);
 
+
+        $currentSession = SessionTable::where('access_token', $request->bearerToken())->first();
+
         $session_ids = $request->id;
         $ids = [];
         foreach ($session_ids as $id) {
             $ids[] = UnHashUserID($id);
         }
         // dd($ids);
-        $sessions = SessionTable::select('id', 'connected_devices', 'users_id', 'access_token')
-            ->whereIn('id', $ids)
+        $sessions = SessionTable::with('pdInfo')->whereIn('id', $ids)
             ->get();
 
         $this->activity()->event("Session")
-            ->eventType(ActivityEventType::REMOVED)
-            ->description("Multiple session removed")
-            ->isUser()
-            ->properties([
-                "data" => $sessions
-            ])->save();
+            ->eventType(ActivityEventType::REMOVED);
+
+        if ($currentSession->is_main_account == 0) {
+            $hoauser = HoaUser::where('passcode', $currentSession->passcode)->first();
+            $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
+            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->first();
+
+            $this->descriptionSimple(
+                "Hoa sub user device removed <br>" .
+                "Device Id: " . $personalDevice->device_id . "<br>" .
+                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                "Passcode: " . $hoauser->passcode . "<br>" .
+                "Email: " . $hoauser->email . "<br>" .
+                "House No: " . $houseNo
+            )->properties([
+
+                        "data" => $sessions
+                    ])
+                ->isUser()
+                ->save();
+        } else {
+            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->first();
+            $this->descriptionSimple(
+                "User device removed <br>" .
+                "Device Id: " . $currentSession->device_id . "<br>" .
+                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                "Email: " . $request->user()->email . "<br>" .
+                "Role:" . $request->user()->roles->first()->name
+
+            )
+                ->properties([
+                    "data" => $sessions
+                ])
+                ->isUser()
+                ->save();
+        }
+
+
         $errors = $this->destroyJWTtoken($sessions->toArray());
         $userId = $sessions->isEmpty() ? null : $sessions->first()->users_id;
 
