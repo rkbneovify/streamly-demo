@@ -286,7 +286,7 @@
             </div>
 
             <div class="mt-4">
-                {{ $paginator->links() }}
+                {{ $data->links() }}
             </div>
 
         </section>
