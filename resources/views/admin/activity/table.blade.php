@@ -73,7 +73,7 @@
                              </div>
                          @endif
                          <div class="row">
-                             {{ $item->description }}
+                             {!! $item->description !!}
 
                          </div>
 
