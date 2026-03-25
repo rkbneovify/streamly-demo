@@ -35,6 +35,8 @@ class ApiSubSessionController extends Controller
                     $sub->device_model = $request->device_model;
                     $sub->build_version = $request->build_version;
                     $sub->device_os_version = $request->device_os_version;
+                    $sub->zipcode = $request->zipcode;
+
 
                     $sub->save();
 
