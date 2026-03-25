@@ -21,46 +21,15 @@ class AdminActivityController extends Controller
         try {
 
             ActivityLog::resolveNotification();
-
-            $perPage = 1; // number of dates per page
-            $page = request()->get('page', 1);
-
-
-
             // Step 1: get distinct dates
-            $dates = ActivityLog::selectRaw('DATE(created_at) as date')
-                ->groupBy('date')
-                ->orderByDesc('date')
-                ->pluck('date');
-
-            // Step 2: paginate dates manually
-            $paginatedDates = $dates
-                ->slice(($page - 1) * $perPage, $perPage)
-                ->values();
-
-            // Step 3: get logs for those dates
-            $activities = ActivityLog::with('user')
-                ->where('is_user', 0)
-                ->whereIn(DB::raw('DATE(created_at)'), $paginatedDates)
-                ->orderByDesc('created_at')
-                ->get()->groupBy(function ($log) {
-                    return $log->created_at->format('d/m/Y');
-                });
-
-            // Step 4: paginator
-            $paginator = new LengthAwarePaginator(
-                $paginatedDates,
-                $dates->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url()]
-            );
+            $data = ActivityLog::where('is_admin', 1)->latest()
+                ->paginate(10);
 
             DB::commit();
             if ($request->ajax()) {
-                return view('admin.activity.table', compact('activities', 'paginator'));
+                return view('admin.activity.table', compact('data'));
             }
-            return view('admin.activity.index', compact('activities', 'paginator'));
+            return view('admin.activity.index', compact('data'));
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -77,11 +46,6 @@ class AdminActivityController extends Controller
         try {
 
             ActivityLog::resolveNotification();
-
-            $perPage = 1; // number of dates per page
-            $page = request()->get('page', 1);
-
-
             $user = User::where('id', $id)->with('roles')->first();
             if ($user == null) {
                 toast('User not found !', 'error')
@@ -90,40 +54,14 @@ class AdminActivityController extends Controller
                 return redirect()->back();
             }
 
-            // Step 1: get distinct dates
-            $dates = ActivityLog::where('user_id', $id)->selectRaw('DATE(created_at) as date')
-                ->groupBy('date')
-                ->orderByDesc('date')
-                ->pluck('date');
-
-            // Step 2: paginate dates manually
-            $paginatedDates = $dates
-                ->slice(($page - 1) * $perPage, $perPage)
-                ->values();
-
-            // Step 3: get logs for those dates
-            $activities = ActivityLog::where('user_id', $id)->with('user')
-                ->whereIn(DB::raw('DATE(created_at)'), $paginatedDates)
-                ->orderByDesc('created_at')
-                ->get()->groupBy(function ($log) {
-                    return $log->created_at->format('d/m/Y');
-                });
-
-            // Step 4: paginator
-            $paginator = new LengthAwarePaginator(
-                $paginatedDates,
-                $dates->count(),
-                $perPage,
-                $page,
-                ['path' => request()->url()]
-            );
-
+            $data = ActivityLog::where('user_id', $id)->latest()
+                ->paginate(10);
             // return response()->json(["activity" => $activities, "paginator" => $paginator]);
             DB::commit();
             if ($request->ajax()) {
-                return view('admin.activity.table-user', compact('user', 'activities', 'paginator'));
+                return view('admin.activity.table-user', compact('user', 'data'));
             }
-            return view('admin.activity.index-user', compact('user', 'activities', 'paginator'));
+            return view('admin.activity.index-user', compact('user', 'data'));
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();

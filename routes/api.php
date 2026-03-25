@@ -190,10 +190,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     // Roku info routes
     Route::group(['prefix' => 'roku-info'], function () {
-        Route::post("store", "Api\ApiRokuInfoController@store");
+        Route::post("store", "Api\ApiRokuInfoController@store")->middleware(['jwt.verify']);
+
 
     });
-    Route::post('sub-session/store', 'Api\ApiSubSessionController@store');
+    Route::post('sub-session/store', 'Api\ApiSubSessionController@store')->middleware(['jwt.verify']);
+    ;
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
@@ -214,10 +216,11 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
-        Route::get('notification', 'Api\ApiHoaController@notificationList')->middleware(['jwt.verify', 'hoa.admin.check']);
-        Route::get('notification/count', 'Api\ApiHoaController@notificationUnreadCount')->middleware(['jwt.verify', 'hoa.admin.check']);
+
     });
 });
+
+
 
 Route::group(['prefix' => 'hoa/sub-user'], function () {
     Route::post("account-active", "Api\ApiHoaController@accountActive");
@@ -279,4 +282,4 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whet
 // cron subscription table
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
-Route::get('/notification/send', 'Api\NotificationController@send');
+Route::get('/notification/send', 'Api\ApiNotificationController@send');

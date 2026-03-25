@@ -5,7 +5,7 @@ namespace App\Traits;
 use App\ActivityLog;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+
 
 trait ActivityLogger
 {
@@ -16,7 +16,8 @@ trait ActivityLogger
         $this->activity = new ActivityLog();
         $this->activity->user_id = $userId ?? Auth::id();
         $this->activity->user_ip_address = request()->ip();
-        $this->activity->category = "activity";
+        $this->activity->is_user = 1;
+
 
         return $this;
     }
@@ -104,15 +105,26 @@ trait ActivityLogger
         return $this;
     }
 
+    public function passcode($passcode)
+    {
+        $this->activity->passcode = $passcode;
+        return $this;
+    }
     public function isUser()
     {
         $this->activity->is_user = 1;
         return $this;
     }
 
+
     public function isHoa()
     {
         $this->activity->is_hoa = 1;
+        return $this;
+    }
+    public function isAdmin()
+    {
+        $this->activity->is_admin = 1;
         return $this;
     }
 

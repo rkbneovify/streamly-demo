@@ -28,6 +28,7 @@ use DB;
 use App\Models\Zipcode;
 use App\Models\DeclineZipInquiry;
 use App\Models\EmailOtp;
+use App\Models\PersonalDevice;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Str;
@@ -294,6 +295,7 @@ class AuthController extends Controller
 
     public function loginWithPasscode(Request $request)
     {
+        $isMainUser = true;
         $deviceDetails = getDeviceIdforAPI($request);
         $passcode = $request->only('passcode');
         $uid = UnHashUserID($passcode['passcode']);
@@ -304,6 +306,7 @@ class AuthController extends Controller
         )->first();
 
         if ($hoaUser != null) {
+            $isMainUser = false;
             $user = User::find($hoaUser->user_id);
 
             // hoa main checking
@@ -364,15 +367,36 @@ class AuthController extends Controller
         $userRole = $user->roles->pluck('name');
         //todo hotel check
 
+
         $this->activity($user->id)
             ->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->description("Login with passcode")
-            ->isUser()
-            ->properties([
-                "passcode" => $request->passcode
-            ])
-            ->save();
+            ->eventType(ActivityEventType::LOGIN);
+
+        if ($isMainUser && $userRole[0] == "hoa") {
+            $this->description("Hoa main use login with passcode")
+                ->isUser()
+                ->properties([
+                    "user" => $user
+                ])
+                ->save();
+        } elseif (!$isMainUser && $userRole[0] == "hoa") {
+            $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
+            $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
+                ->isUser()
+                ->properties([
+                    "user" => $hoaUser
+                ])
+                ->save();
+        } else {
+            $this->description("Login with passcode")
+                ->isUser()
+                ->properties([
+                    "user" => $hoaUser
+                ])
+                ->save();
+        }
+
+
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
 
             checkLoginLimit($uid, $token, $deviceDetails);
@@ -642,15 +666,34 @@ class AuthController extends Controller
 
             $userRole = $user->roles->pluck('name');
             //check users role
-            $session = SessionTable::where('access_token', $request->bearerToken())->first();
+            $session = SessionTable::with('pdInfo')->where('access_token', $request->bearerToken())->first();
             $this->activity()->event("User")
                 ->eventType(ActivityEventType::LOGOUT);
 
 
             if ($session->is_main_account == 0) {
-                $this->description("Sub user (" . $session->passcode . ")");
+                $hoauser = HoaUser::where('passcode', $session->passcode)->first();
+                $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+
+                $this->descriptionSimple(
+                    "Hoa sub user logout<br>" .
+                    "Device Id: " . $personalDevice->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Passcode: " . $hoauser->passcode . "<br>" .
+                    "Email: " . $hoauser->email . "<br>" .
+                    "House No: " . $houseNo
+                );
             } else {
-                $this->description("User logout");
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+                $this->descriptionSimple(
+                    "user logout <br>" .
+                    "Device Id: " . $session->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Email: " . $user->email . "<br>" .
+                    "Role: " . $userRole[0]
+
+                );
             }
             $this->properties([
                 "data" => $session
@@ -749,16 +792,60 @@ class AuthController extends Controller
         $id = UnHashUserID($request->id);
 
         // Retrieve the session record
-        $session = SessionTable::where('status', 1)
+        $session = SessionTable::with('pdInfo')->where('status', 1)
             ->where('id', $id)
             ->first();
         $sessionLogout = SessionTable::where('status', 0)
             ->where('id', $id)
             ->first();
 
-        $this->activity($session->users_id)->event("Device")
-            ->eventType(ActivityEventType::REMOVED)
-            ->description("Device removed");
+
+
+        $currentSession = SessionTable::where('access_token', $request->bearerToken())->first();
+
+
+
+        if ($currentSession->is_main_account == 0) {
+
+            $hoauser = HoaUser::where('passcode', $session->passcode)->first();
+            $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
+            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED)->descriptionSimple(
+                    "Hoa sub user device removed <br>" .
+                    "Device Id: " . $personalDevice->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Passcode: " . $hoauser->passcode . "<br>" .
+                    "Email: " . $hoauser->email ?? 'na/a' . "<br>" .
+                    "House No: " . $houseNo
+                )
+                ->properties([
+                    "data" => $session
+
+                ])
+                ->isUser()
+                ->save();
+        } else {
+            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+            $this->descriptionSimple(
+                "User device removed <br>" .
+                "Device Id: " . $currentSession->device_id . "<br>" .
+                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                "Email: " . $request->user()->email . "<br>" .
+                "Role:" . $request->user()->roles->first()->name
+
+            )
+                ->properties([
+                    "data" => $session
+
+
+                ])
+                ->isUser()
+                ->save();
+        }
+
+
         // If the device is logged in
         if ($session) {
 
@@ -775,11 +862,6 @@ class AuthController extends Controller
             // Invalidate token (this could be its own method)
 
 
-            $this->properties([
-                "data" => $session
-            ])
-                ->isUser()
-                ->save();
 
             invalidateToken();
 
