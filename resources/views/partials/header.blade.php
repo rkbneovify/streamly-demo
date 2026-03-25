@@ -29,7 +29,7 @@
 
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link" data-toggle="dropdown" href="{{ route('admin.activity') }}">
                 <i class="far fa-bell"></i>
                 <span class="badge badge-warning navbar-badge">{{ $notifications->count() }}</span>
             </a>
@@ -40,15 +40,16 @@
                     <i class="fas fa-envelope mr-2"></i> 4 new messages
                     <span class="float-right text-muted text-sm">3 mins</span>
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-users mr-2"></i> 8 friend requests
-                    <span class="float-right text-muted text-sm">12 hours</span>
-                </a>
                 <div class="dropdown-divider"></div> --}}
+                <a href="{{ route('admin.activity') }}" class="dropdown-item">
+                    <i class="fas fa-info mr-2"></i> Activities
+
+                    <span class="float-right text-muted text-sm">For admin</span>
+                </a>
+                <div class="dropdown-divider"></div>
                 {{-- test --}}
                 @foreach ($notifications as $item)
-                    <a href="{{ route('admin.activity') }}" class="dropdown-item">
+                    <a href="{{ route('admin.users.activity', $item->user_id) }}" class="dropdown-item">
                         <i class="fas fa-info mr-2"></i>
                         {{ $item->event . ' ' . $item->event_type }}
 
