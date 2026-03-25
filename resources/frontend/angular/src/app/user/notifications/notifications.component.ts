@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
@@ -12,35 +12,39 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, of } from 'r
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NotificationService } from '../../services/utils/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, NgSelectModule, FormsModule, DatePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
+  imports: [NgFor, NgIf, NgSelectModule, FormsModule, TimeAgoPipe, TitleCasePipe, SortByDropdownComponent, ɵInternalFormsSharedModule, ReactiveFormsModule, InfiniteScrollDirective],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss'
 })
-export class NotificationsComponent {
+export class NotificationsComponent implements OnInit {
 
 
   data: Array<any> = [];
   page: number = 1;
   isMoreData: Boolean = true;
+  isLoading: boolean = false;
 
-  constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+  constructor(private http: HttpClient,
+    private apiService: CrudService,
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private sweetAlert: SweetalertService,
+
+  ) {
 
 
   }
 
   ngOnInit() {
 
+    this.getList(1);
 
-
-
-
-
-
-    this.getHouseList(1);
 
 
 
@@ -52,7 +56,7 @@ export class NotificationsComponent {
 
 
 
-  getHouseList(page: number = 1) {
+  getList(page: number = 1) {
 
     const params = new URLSearchParams();
     this.page = page;
@@ -64,8 +68,10 @@ export class NotificationsComponent {
     }
     if (this.isMoreData) {
       this.sweetAlert.loading();
-      this.apiService.getRequest(`auth/hoa/notification?${params.toString()}`).subscribe({
+      this.isLoading = true;
+      this.apiService.getRequest(`auth/notification?${params.toString()}`).subscribe({
         next: (res: any) => {
+          this.isLoading = false;
           this.sweetAlert.close();
 
 
@@ -83,6 +89,7 @@ export class NotificationsComponent {
 
         },
         error: (err: any) => {
+          this.isLoading = false;
           this.sweetAlert.close();
 
           this.toastr.error(err.error.message);
@@ -102,7 +109,7 @@ export class NotificationsComponent {
 
   onScrollDown() {
     this.page++;
-    this.getHouseList(this.page)
+    this.getList(this.page)
     // console.log("Page count", this.page)
   }
 

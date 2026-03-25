@@ -20,9 +20,7 @@ class HoaUser extends Model
 
     public function subscription()
     {
-        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')
-            ->whereNotNull('plan_start_at')
-            ->latest();
+        return $this->hasOne(HoaSubUserSubscription::class, 'sub_user_id', 'id')->latest('plan_expires_at');
     }
     public function subscriptionLatest()
     {
@@ -263,6 +261,7 @@ class HoaUser extends Model
     {
         $session = SessionTable::where('access_token', request()->bearerToken())
             ->where("status", 1)
+            ->where('is_main_account', 0)
             ->whereNotNull('passcode')
             ->first();
         if ($session != null) {
@@ -377,6 +376,22 @@ class HoaUser extends Model
         $tokens = SessionTable::where('users_id', $userId)
             ->where('status', 1)
             ->where('is_main_account', 1)
+            ->whereNotNull('fcm_token')
+            ->latest('created_on')
+            ->pluck('fcm_token')->toArray();
+
+        if (count($tokens) > 0) {
+            return $tokens;
+        }
+        return null;
+    }
+
+    public static function subUserFcmToken($passcode)
+    {
+        $tokens = SessionTable::whereNotNull('passcode')
+            ->where('passcode', $passcode)
+            ->where('status', 1)
+            ->where('is_main_account', 0)
             ->whereNotNull('fcm_token')
             ->latest('created_on')
             ->pluck('fcm_token')->toArray();
