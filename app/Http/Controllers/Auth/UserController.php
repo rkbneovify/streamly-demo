@@ -110,10 +110,11 @@ class UserController extends Controller
 
         $this->activity()->event("Session")
             ->eventType(ActivityEventType::REMOVED)
-            ->description("Multiple session removed")
+            ->descriptionSimple("Multiple session removed")
             ->properties([
                 "data" => $sessions
             ])->save();
+
         $errors = $this->destroyJWTtoken($sessions->toArray());
         $userId = $sessions->isEmpty() ? null : $sessions->first()->users_id;
 
