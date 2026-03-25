@@ -37,9 +37,18 @@ class ActivityLog extends Model
         }
     }
 
-    public static function resolveNotificationForHoa($userId)
+    public static function resolveNotificationForAll($userId)
     {
         ActivityLog::where('user_id', $userId)
+            ->whereNull('passcode')
+            ->where('is_read', 0)
+            ->update(['is_read' => 1]);
+    }
+
+    public static function resolveNotificationForHoaSub($passcode)
+    {
+        ActivityLog::where('passcode', $passcode)
+            ->whereNotNull('passcode')
             ->where('is_read', 0)
             ->update(['is_read' => 1]);
     }

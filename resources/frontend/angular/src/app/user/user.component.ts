@@ -38,6 +38,7 @@ import { environment } from '../../environments/environment';
 import { PlaystreamComponent } from './playstream/playstream.component';
 import { SharedStateService } from '../services/globalState/global-state.service';
 import { UtilsService } from '../services/utils/utils.service';
+import { NotificationService } from '../services/utils/notification.service';
 
 @Component({
   selector: 'app-user',
@@ -54,6 +55,7 @@ import { UtilsService } from '../services/utils/utils.service';
     DurationISOFormatPipe,
     TruncatePipe,
     PlaystreamComponent,
+
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
@@ -96,7 +98,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   urlList: Array<String> = [];
   isSearchComponent: boolean = true;
   private searchSubject: Subject<string> = new Subject();
-  notificationCount: number = 0;
+
   constructor(
     private crud: CrudService,
     private router: Router,
@@ -105,7 +107,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private screenSizeService: ScreenSizeService,
     private cdr: ChangeDetectorRef,
     private sharedStateService: SharedStateService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public notificationService: NotificationService,
+
   ) {
 
     this.router.events.subscribe((event) => {
@@ -136,7 +140,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       '/user/supported-devices',
       '/user/report',
       '/user/downloadapp',
-      '/user/notifications'
+      '/user/notifications',
 
     ]
 
@@ -160,17 +164,27 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNotificationCount();
+    this.router.events.subscribe(() => {
+      this.notificationService.fetchCount()
+    });
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
+
         if (this.urlList.includes(event.urlAfterRedirects)) {
           this.isSearchComponent = false;
         } else {
           this.isSearchComponent = true;
         }
+
         console.log("Current url :", event.urlAfterRedirects);
       });
+
+
+
+
+
     this.utilsService.get_all_device().subscribe(() => {
       this.isConnectedDeviceShow = this.utilsService.isCustomUser();
       // Update UI or logic here based on new value
@@ -222,9 +236,24 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isDataForHoaMain != null) {
       this.isHoaMainUser = Boolean(isDataForHoaMain);
     }
+
+
+
+
+
   }
 
   ngAfterViewInit(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (this.urlList.includes(event.urlAfterRedirects)) {
+          this.isSearchComponent = false;
+        } else {
+          this.isSearchComponent = true;
+        }
+        console.log("Current url :", event.urlAfterRedirects);
+      });
     this.getFavoriteList();
 
   }
@@ -723,15 +752,5 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
 
-  getNotificationCount() {
 
-    this.crud.getRequest('auth/hoa/notification/count').subscribe({
-      next: (res: any) => {
-        this.notificationCount = res.count;
-      },
-      error: (error: any) => {
-
-      },
-    });
-  }
 }

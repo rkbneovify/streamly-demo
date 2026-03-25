@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterLink } from '@angular/router';
+import { NotificationService } from '../../services/utils/notification.service';
 
 @Component({
   selector: 'app-connected-houses',
@@ -21,7 +22,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './connected-houses.component.html',
   styleUrl: './connected-houses.component.scss'
 })
-export class ConnectedHousesComponent {
+export class ConnectedHousesComponent implements OnInit {
 
   isHoaMainUser: boolean = false;
   devicePerHouse: Array<number> = [];
@@ -53,7 +54,13 @@ export class ConnectedHousesComponent {
   zipcodeLoading: boolean = false;
   zipcodes: any[] = [];
   emailEdit: boolean = false;
-  constructor(private http: HttpClient, private apiService: CrudService, private toastr: ToastrService, private fb: FormBuilder, private sweetAlert: SweetalertService) {
+  constructor(private http: HttpClient,
+    private apiService: CrudService,
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private sweetAlert: SweetalertService,
+
+  ) {
 
 
   }
@@ -97,6 +104,8 @@ export class ConnectedHousesComponent {
 
 
     })
+
+
 
   }
 
