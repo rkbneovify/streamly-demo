@@ -1571,6 +1571,7 @@ class UsersController extends Controller
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
+            // return response()->json($allSession);
 
             if ($request->ajax()) {
                 return view('admin.users.partials.connected-table', compact('allSession', 'totalRooms'));
