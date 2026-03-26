@@ -138,7 +138,16 @@
                             <td style="vertical-align:middle;">
                                 {{ $item->house_no == null ? 'House' . $item->ordering : $item->house_no }}
                             </td>
-                            <td style="vertical-align:middle;">{{ $item->passcode ?? 'N/A' }}</td>
+                            <td style="vertical-align:middle;">
+                                @if ($item->passcode !== null)
+                                    <a href="{{ route('admin.sub-user.activity', $item->passcode) }}">
+                                        {{ $item->passcode ?? 'N/A' }}
+                                    </a>
+                                @else
+                                    {{ $item->passcode ?? 'N/A' }}
+                                @endif
+
+                            </td>
                             <td style="vertical-align:middle;">
                                 @if ($item->status == 1)
                                     <span class="custom-badge badge-active">Active</span>
