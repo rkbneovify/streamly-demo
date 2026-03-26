@@ -186,6 +186,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // activity
     Route::get('/activities', 'Admin\AdminActivityController@index')->name('activity');
     Route::get('/activities/users/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
+    Route::get('/activities/sub-users/{passcode}', 'Admin\AdminActivityController@subUserActivity')->name('sub-user.activity');
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create')->name('channel.create'); //channels Statust
