@@ -197,6 +197,7 @@ class AuthController extends Controller
             ->eventType(ActivityEventType::LOGIN)
             ->isUser()
             ->description("User login")
+            ->properties(['data' => $user])
             ->save();
 
         $userRole = $user->roles->pluck('name');
@@ -383,6 +384,7 @@ class AuthController extends Controller
             $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
             $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
                 ->isUser()
+                ->passcode($hoaUser->passcode)
                 ->properties([
                     "user" => $hoaUser
                 ])
@@ -667,39 +669,46 @@ class AuthController extends Controller
             $userRole = $user->roles->pluck('name');
             //check users role
             $session = SessionTable::with('pdInfo')->where('access_token', $request->bearerToken())->first();
-            $this->activity()->event("User")
-                ->eventType(ActivityEventType::LOGOUT);
+
 
 
             if ($session->is_main_account == 0) {
                 $hoauser = HoaUser::where('passcode', $session->passcode)->first();
                 $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
-
-                $this->descriptionSimple(
-                    "Hoa sub user logout<br>" .
-                    "Device Id: " . $personalDevice->device_id . "<br>" .
-                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                    "Passcode: " . $hoauser->passcode . "<br>" .
-                    "Email: " . $hoauser->email . "<br>" .
-                    "House No: " . $houseNo
-                );
+                $this->activity()->event("User")
+                    ->eventType(ActivityEventType::LOGOUT)
+                    ->descriptionSimple(
+                        "Hoa sub user logout<br>" .
+                        "Device Id: " . $personalDevice->device_id . "<br>" .
+                        "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                        "Passcode: " . $hoauser->passcode . "<br>" .
+                        "Email: " . $hoauser->email . "<br>" .
+                        "House No: " . $houseNo
+                    )->properties([
+                            "data" => $session
+                        ])
+                    ->passcode($hoauser->passcode)
+                    ->isUser()
+                    ->save();
             } else {
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
-                $this->descriptionSimple(
-                    "user logout <br>" .
-                    "Device Id: " . $session->device_id . "<br>" .
-                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                    "Email: " . $user->email . "<br>" .
-                    "Role: " . $userRole[0]
+                $this->activity()->event("User")
+                    ->eventType(ActivityEventType::LOGOUT)
+                    ->descriptionSimple(
+                        "user logout <br>" .
+                        "Device Id: " . $session->device_id . "<br>" .
+                        "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                        "Email: " . $user->email . "<br>" .
+                        "Role: " . $userRole[0]
 
-                );
+                    )->properties([
+                            "data" => $session
+                        ])
+                    ->isUser()
+                    ->save();
             }
-            $this->properties([
-                "data" => $session
-            ])
-                ->isUser()
-                ->save();
+
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table
                 $acctoken = SessionTable::where([
@@ -824,6 +833,7 @@ class AuthController extends Controller
                     "data" => $session
 
                 ])
+                ->passcode($hoauser->passcode)
                 ->isUser()
                 ->save();
         } else {
