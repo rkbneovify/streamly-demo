@@ -27,12 +27,14 @@ class ViewServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             $notifications = ActivityLog::where('is_read', 0)
-                ->where('category', 'activity')
+                ->whereNull('category')
+                ->where('is_admin', 1)
                 ->latest()
                 ->limit(10)
                 ->get();
 
-            $view->with('notifications', $notifications);
+
+            $view->with(['notifications' => $notifications]);
 
         });
     }
