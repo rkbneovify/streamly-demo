@@ -78,10 +78,7 @@ class SessionTable extends Model
 
     public function list()
     {
-        return $this->hasMany(SubSession::class, 'session_id', 'id')
-            ->where('is_main_account', 1)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
-            ->latest();
+        return $this->hasMany(SubSession::class, 'session_id', 'id')->latest();
     }
     public function listByPasscode()
     {
