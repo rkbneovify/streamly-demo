@@ -130,6 +130,7 @@ class UserController extends Controller
 
                         "data" => $sessions
                     ])
+                ->passcode($hoauser->passcode)
                 ->isUser()
                 ->save();
         } else {
