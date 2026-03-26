@@ -213,6 +213,10 @@
                                                     <b>OS Version : </b>
                                                     <p> &nbsp;&nbsp; {{ $list->device_os_version }}</p>
                                                 </div>
+                                                <div class="row">
+                                                    <b>Zipcode : </b>
+                                                    <p> &nbsp;&nbsp; {{ $list->zipcode }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                         <hr>
