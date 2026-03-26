@@ -810,11 +810,11 @@ class AuthController extends Controller
 
 
 
-        $currentSession = SessionTable::where('access_token', $request->bearerToken())->first();
 
 
 
-        if ($currentSession->is_main_account == 0) {
+
+        if ($session->is_main_account == 0) {
 
             $hoauser = HoaUser::where('passcode', $session->passcode)->first();
             $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
@@ -838,14 +838,16 @@ class AuthController extends Controller
                 ->save();
         } else {
             $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
-            $this->descriptionSimple(
-                "User device removed <br>" .
-                "Device Id: " . $currentSession->device_id . "<br>" .
-                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                "Email: " . $request->user()->email . "<br>" .
-                "Role:" . $request->user()->roles->first()->name
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED)
+                ->descriptionSimple(
+                    "User device removed <br>" .
+                    "Device Id: " . $session->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Email: " . $session->user->email . "<br>" .
+                    "Role:" . $session->user->roles->first()->name
 
-            )
+                )
                 ->properties([
                     "data" => $session
 
