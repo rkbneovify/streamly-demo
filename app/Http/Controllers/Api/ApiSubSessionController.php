@@ -6,6 +6,7 @@ use App\SessionTable;
 use App\SubSession;
 use App\Traits\ApiResponseTrait;
 use App\Traits\DbTransactionTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,45 +21,37 @@ class ApiSubSessionController extends Controller
         return $this->dbTransaction(function () use ($request) {
             $session = SessionTable::where('access_token', $request->bearerToken())
                 ->where('status', 1)->first();
-            // if ($session != null) {
-            //     $sub = SubSession::where('session_id', $session->id)
-            //         ->whereDate('created_at', now())->exists();
+            if ($session != null) {
+                //  1 HOUR INTERVAL
+                $alreadyExists = SubSession::where('session_id', $session->id)
+                    ->where('created_at', '>=', Carbon::now()->subHour())
+                    ->exists();
 
-            //     if (!$sub) {
+                if (!$alreadyExists) {
 
-            //         $sub = new SubSession();
-            //         $sub->session_id = $session->id;
-            //         $sub->user_id = $session->users_id;
-            //         $sub->is_main_account = $session->is_main_account;
-            //         $sub->passcode = $session->passcode;
-            //         $sub->platform = $request->platform;
-            //         $sub->device_model = $request->device_model;
-            //         $sub->build_version = $request->build_version;
-            //         $sub->device_os_version = $request->device_os_version;
-            //         $sub->zipcode = $request->zipcode;
-            //         $sub->save();
+                    $sub = new SubSession();
+                    $sub->session_id = $session->id;
+                    $sub->user_id = $session->users_id;
+                    $sub->is_main_account = $session->is_main_account;
+                    $sub->passcode = $session->passcode;
+                    $sub->platform = $request->platform;
+                    $sub->device_model = $request->device_model;
+                    $sub->build_version = $request->build_version;
+                    $sub->device_os_version = $request->device_os_version;
+                    $sub->zipcode = $request->zipcode;
+                    $sub->save();
 
-            //         return $this->successResponse("Data store successfully !");
+                    return $this->successResponse("Data store successfully !");
 
-            //     } else {
-            //         return $this->validationErrorResponse("Current date session already exits");
-            //     }
+                }
 
-            // }
+                // else {
+                //     return $this->validationErrorResponse("Current date session already exits");
+                // }
 
-            $sub = new SubSession();
-            $sub->session_id = $session->id;
-            $sub->user_id = $session->users_id;
-            $sub->is_main_account = $session->is_main_account;
-            $sub->passcode = $session->passcode;
-            $sub->platform = $request->platform;
-            $sub->device_model = $request->device_model;
-            $sub->build_version = $request->build_version;
-            $sub->device_os_version = $request->device_os_version;
-            $sub->zipcode = $request->zipcode;
-            $sub->save();
+            }
 
-            return $this->successResponse("Data store successfully !");
+
         });
 
     }
