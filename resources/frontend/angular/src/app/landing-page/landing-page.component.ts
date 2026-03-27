@@ -10,16 +10,16 @@ import { ChatbotComponent } from "../components/feature/chatbot/chatbot.componen
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss',
 })
-export class LandingPageComponent implements OnInit{
+export class LandingPageComponent implements OnInit {
   // footer-rd
-  stateR:boolean = false;
+  stateR: boolean = false;
   router = inject(Router);
-
+  currentYear: number = new Date().getFullYear();
   ngOnInit(): void {
     const url = this.router.url;
-    if(url == '/'){
+    if (url == '/') {
       // this.stateR = !this.stateR;
-    }else{
+    } else {
       // this.stateR = false;
     }
   }
