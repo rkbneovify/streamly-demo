@@ -675,7 +675,7 @@ class AuthController extends Controller
             if ($session->is_main_account == 0) {
                 $hoauser = HoaUser::where('passcode', $session->passcode)->first();
                 $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
-                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
                 $this->activity()->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
@@ -692,7 +692,7 @@ class AuthController extends Controller
                     ->isUser()
                     ->save();
             } else {
-                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
                 $this->activity()->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
@@ -818,7 +818,7 @@ class AuthController extends Controller
 
             $hoauser = HoaUser::where('passcode', $session->passcode)->first();
             $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
-            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
 
             $this->activity($session->users_id)->event("Device")
                 ->eventType(ActivityEventType::REMOVED)->descriptionSimple(
@@ -837,7 +837,7 @@ class AuthController extends Controller
                 ->isUser()
                 ->save();
         } else {
-            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->first();
+            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
             $this->activity($session->users_id)->event("Device")
                 ->eventType(ActivityEventType::REMOVED)
                 ->descriptionSimple(
