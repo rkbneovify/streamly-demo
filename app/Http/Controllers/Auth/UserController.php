@@ -117,7 +117,7 @@ class UserController extends Controller
         if ($currentSession->is_main_account == 0) {
             $hoauser = HoaUser::where('passcode', $currentSession->passcode)->first();
             $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
-            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->first();
+            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->latest()->first();
 
             $this->descriptionSimple(
                 "Hoa sub user device removed <br>" .
@@ -134,7 +134,7 @@ class UserController extends Controller
                 ->isUser()
                 ->save();
         } else {
-            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->first();
+            $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->latest()->first();
             $this->descriptionSimple(
                 "User device removed <br>" .
                 "Device Id: " . $currentSession->device_id . "<br>" .
