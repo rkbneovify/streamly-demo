@@ -193,30 +193,30 @@
                                  <div class="timelinex">
                                      <h5> Device Id : {{ $user->device_id }}</h5>
                                      <hr>
-                                     @foreach ($user->listByPasscode as $list)
+                                     @foreach ($user->subSessionPasscode as $item)
                                          <div class="timelinex-item">
                                              <div class="timelinex-content">
                                                  <div class="row">
 
                                                      <h5>
-                                                         {{ \Carbon\Carbon::parse($list->created_at)->setTimezone(config('app.timezone'))->format('d/m/Y h:i:s A') }}
+                                                         {{ \Carbon\Carbon::parse($item->created_at)->setTimezone(config('app.timezone'))->format('d/m/Y h:i:s A') }}
                                                      </h5>
                                                  </div>
                                                  <div class="row">
                                                      <b>Platform : </b>
-                                                     <p> &nbsp;&nbsp; {{ $list->platform }}</p>
+                                                     <p> &nbsp;&nbsp; {{ $item->platform }}</p>
                                                  </div>
                                                  <div class="row">
                                                      <b>Device Model : </b>
-                                                     <p> &nbsp;&nbsp; {{ $list->device_model }}</p>
+                                                     <p> &nbsp;&nbsp; {{ $item->device_model }}</p>
                                                  </div>
                                                  <div class="row">
                                                      <b>Build Version : </b>
-                                                     <p> &nbsp;&nbsp; {{ $list->build_version }}</p>
+                                                     <p> &nbsp;&nbsp; {{ $item->build_version }}</p>
                                                  </div>
                                                  <div class="row">
                                                      <b>OS Version : </b>
-                                                     <p> &nbsp;&nbsp; {{ $list->device_os_version }}</p>
+                                                     <p> &nbsp;&nbsp; {{ $item->device_os_version }}</p>
                                                  </div>
                                              </div>
                                          </div>
