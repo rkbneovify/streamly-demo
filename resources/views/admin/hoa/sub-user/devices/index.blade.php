@@ -180,7 +180,8 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Device details of {{ $user->name ?? '' }}</h1> {{ session()->get('info') }}
+                        <h1>Device details of {{ $user->house_no ?? 'House' . $user->ordering }}</h1>
+                        {{ session()->get('info') }}
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -200,9 +201,9 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-3 px-3 border-right">
-                            <span>Name</span>
+                            <span>House No.</span>
                             <br>
-                            <label for="">{{ $user->name ?? '' }}</label>
+                            <label for="">{{ $user->house_no ?? 'House' . $user->ordering }}</label>
                         </div>
                         <div class="col-md-3 px-4 border-right">
                             <span for="">Email</span>
