@@ -76,15 +76,15 @@ class SessionTable extends Model
             ->latest('updated_at');
     }
 
-    public function list()
+    public function subSession()
     {
         return $this->hasMany(SubSession::class, 'session_id', 'id')->latest();
     }
-    public function listByPasscode()
+    public function subSessionPasscode()
     {
         return $this->hasMany(SubSession::class, 'session_id', 'id')
+            ->whereNotNull('passcode')
             ->where('is_main_account', 0)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->latest();
     }
     /**
