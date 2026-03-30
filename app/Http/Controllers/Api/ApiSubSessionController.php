@@ -43,11 +43,9 @@ class ApiSubSessionController extends Controller
 
                     return $this->successResponse("Data store successfully !");
 
+                } else {
+                    return $this->validationErrorResponse("Session already exits");
                 }
-
-                // else {
-                //     return $this->validationErrorResponse("Current date session already exits");
-                // }
 
             }
 
