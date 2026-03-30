@@ -1530,7 +1530,7 @@ class UsersController extends Controller
                 'user.roles',
                 'hotel',
                 'pdInfo' => fn($query) => $query->where('user_id', $id),
-                'list'
+                'subSession'
             ]);
             $query->selectRaw("*, 
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
