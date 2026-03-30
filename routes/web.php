@@ -322,7 +322,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
 
     // Gracenote sync 
-    Route::get('/gracenote/channel-data/{prgSvcId}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
+    Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
 
 });
 
