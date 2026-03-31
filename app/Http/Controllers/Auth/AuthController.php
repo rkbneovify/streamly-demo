@@ -767,6 +767,7 @@ class AuthController extends Controller
 
     public function samedevicelogout(Request $request)
     {
+
         $validate = Validator::make($request->all(), [
             'id' => 'required'
         ]);
@@ -796,6 +797,7 @@ class AuthController extends Controller
             }
         }
 
+
         //  HoaUser::getCurrentSubUserByToken();
         // Unhash the user ID
         $id = UnHashUserID($request->id);
@@ -811,41 +813,57 @@ class AuthController extends Controller
 
 
 
+
+
         $currentSession = SessionTable::where('status', 1)
-            ->where('access_token', $request->bearerToken())->latest('created_on')->first();
+            ->where('access_token', $request->bearerToken())
+            ->first();
 
 
-        if ($currentSession->is_main_account == 0) {
+        if ($currentSession != null) {
+            if ($currentSession->is_main_account == 0) {
 
-            $hoauser = HoaUser::where('passcode', $session->passcode)->first();
+                $hoauser = HoaUser::where('passcode', $session->passcode)->first();
 
-            $this->activity($session->users_id)->event("Device")
-                ->eventType(ActivityEventType::REMOVED)
-                ->descriptionDeviceRemove($currentSession, $session)
-                ->properties([
-                    "data" => $session
+                $this->activity($session->users_id)->event("Device")
+                    ->eventType(ActivityEventType::REMOVED)
+                    ->descriptionDeviceRemove($currentSession, $session)
+                    ->properties([
+                        "data" => $session
 
-                ])
-                ->passcode($hoauser->passcode)
-                ->isUser()
-                ->save();
-        } else {
+                    ])
+                    ->passcode($hoauser->passcode)
+                    ->isUser()
+                    ->save();
+            } else {
 
-            $this->activity($session->users_id)->event("Device")
-                ->eventType(ActivityEventType::REMOVED)
-                ->descriptionDeviceRemove($currentSession, $session)
-                ->properties([
-                    "data" => $session
+                $this->activity($currentSession->users_id)->event("Device")
+                    ->eventType(ActivityEventType::REMOVED)
+                    ->descriptionDeviceRemove($currentSession, $session)
+                    ->properties([
+                        "data" => $session
 
 
-                ])
-                ->isUser()
-                ->save();
+                    ])
+                    ->isUser()
+                    ->save();
+            }
+
         }
-
 
         // If the device is logged in
         if ($session) {
+
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED)
+                ->descriptionSimple("Device limit exceed. Device removed")
+                ->properties([
+                    "data" => $session
+
+
+                ])
+                ->isUser()
+                ->save();
 
             // Log out the user and update connected devices
             $session->update(['status' => 0, 'modified_on' => Carbon::now()]);
