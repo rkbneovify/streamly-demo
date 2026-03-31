@@ -195,26 +195,34 @@ class SessionTable extends Model
     public function getDeviceTypeAttribute($size = null)
     {
 
+        $ua = strtolower($this->device_id ?? '');
 
-
-        $ua = strtolower($this->useragent);
-
-        // Rule 1: Smart TVs → non-web
-        if (preg_match('/smart-tv|hbbtv|tizen|netcast|appletv|googletv|tv safari/', $ua)) {
+        if (strpos($ua, 'web') !== false) {
+            return 'web';
+        } else {
             return 'non-web';
         }
 
-        // Rule 2: Common web browsers
-        if (
-            strpos($ua, 'mozilla/5.0') !== false &&
-            preg_match('/(chrome|safari|firefox|edge|opr|samsungbrowser)/', $ua) &&
-            preg_match('/(applewebkit|gecko|trident|blink)/', $ua)
-        ) {
-            return 'web';
-        }
+
+
+        // $ua = strtolower($this->useragent);
+
+        // // Rule 1: Smart TVs → non-web
+        // if (preg_match('/smart-tv|hbbtv|tizen|netcast|appletv|googletv|tv safari/', $ua)) {
+        //     return 'non-web';
+        // }
+
+        // // Rule 2: Common web browsers
+        // if (
+        //     strpos($ua, 'mozilla/5.0') !== false &&
+        //     preg_match('/(chrome|safari|firefox|edge|opr|samsungbrowser)/', $ua) &&
+        //     preg_match('/(applewebkit|gecko|trident|blink)/', $ua)
+        // ) {
+        //     return 'web';
+        // }
 
         // Rule 3: Everything else → non-web
-        return 'non-web';
+        // return 'non-web';
 
         // return [
         //     "data-browser='1'"=>'web',
@@ -225,7 +233,7 @@ class SessionTable extends Model
         //     "data-browser='6'"=>'web',
         //     "data-browser='7'"=>'web'
         // ][$this->device['browserclass']?? null] ?? "non-web";
-        return ($this->pdname->personal_devicename ?? null) ? 'non-web' : 'web';
+        // return ($this->pdname->personal_devicename ?? null) ? 'non-web' : 'web';
     }
     public function getsubscriptionStatusAttribute()
     {
