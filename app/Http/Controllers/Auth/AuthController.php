@@ -668,7 +668,9 @@ class AuthController extends Controller
 
             $userRole = $user->roles->pluck('name');
             //check users role
-            $session = SessionTable::with('pdInfo')->where('access_token', $request->bearerToken())->first();
+            $session = SessionTable::with('pdInfo')
+                ->where('status', 1)
+                ->where('access_token', $request->bearerToken())->first();
 
 
 
@@ -676,12 +678,14 @@ class AuthController extends Controller
                 $hoauser = HoaUser::where('passcode', $session->passcode)->first();
                 $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
+
+
                 $this->activity()->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "Hoa sub user logout<br>" .
-                        "Device Id: " . $personalDevice->device_id . "<br>" .
-                        "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
                         "Passcode: " . $hoauser->passcode . "<br>" .
                         "Email: " . $hoauser->email . "<br>" .
                         "House No: " . $houseNo
@@ -697,8 +701,8 @@ class AuthController extends Controller
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "user logout <br>" .
-                        "Device Id: " . $session->device_id . "<br>" .
-                        "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
                         "Email: " . $user->email . "<br>" .
                         "Role: " . $userRole[0]
 
