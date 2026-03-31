@@ -70,19 +70,17 @@ trait ActivityLogger
 
     public function descriptionDeviceRemove($currentSession = null, $session = null)
     {
-        if (!$currentSession || !$session) {
-            return $this;
-        }
+
 
         $removedBy = PersonalDevice::where('device_id', $currentSession->device_id)->latest()->first();
         $device = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
 
-        $description = "Hoa sub user device removed <br>";
+        $description = "";
 
-        ;
+
         // Who removed
         if ($removedBy) {
-            $description .= "Device removed by: " . explode('#~', $currentSession->mac_address)[0] . "<br>";
+            $description .= "Device removed by: " . ($currentSession->device_title ?? explode('#~', $currentSession->mac_address)[0]) . "<br>";
 
             if ($currentSession->device_type == 'non-web') {
                 $description .= "Device Name: {$removedBy->personal_devicename}<br>";
@@ -92,7 +90,7 @@ trait ActivityLogger
         // Removed device details
         if ($device) {
             $description .= "Removed Device Details:<br>";
-            $description .= "Device: " . explode('#~', $session->mac_address)[0] . "<br>";
+            $description .= "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>";
             if ($session->device_type == 'non-web') {
                 $description .= "Device Name: {$device->personal_devicename}<br>";
             }
