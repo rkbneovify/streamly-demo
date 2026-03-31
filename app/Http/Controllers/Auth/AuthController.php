@@ -811,7 +811,8 @@ class AuthController extends Controller
 
 
 
-        $currentSession = SessionTable::with('pdInfo')->where('access_token', $request->bearerToken())->first();
+        $currentSession = SessionTable::where('status', 1)
+            ->where('access_token', $request->bearerToken())->latest('created_on')->first();
 
 
         if ($currentSession->is_main_account == 0) {
@@ -819,8 +820,6 @@ class AuthController extends Controller
             $hoauser = HoaUser::where('passcode', $session->passcode)->first();
 
             $this->activity($session->users_id)->event("Device")
-
-
                 ->eventType(ActivityEventType::REMOVED)
                 ->descriptionDeviceRemove($currentSession, $session)
                 ->properties([
