@@ -134,7 +134,7 @@ class StripeController extends Controller
                     case 'subscription_create':
                         // subscription without trial
                         if ($invoice->amount_paid > 0) {
-                            $message = 'Your subscription has started successfully.';
+                            $message = 'You have subscribed successfully.';
                             $user = DB::table('users')
                                 ->where('stripe_id', $invoice->customer)
                                 ->first();
@@ -299,9 +299,9 @@ class StripeController extends Controller
                         });
                         break;
 
-                    case 'subscription_update':
-                        // Plan change
-                        break;
+                    // case 'subscription_update':
+                    //     // Plan change
+                    //     break;
                 }
 
 
