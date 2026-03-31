@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\ActivityLog;
+use App\Models\PersonalDevice;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,6 +68,40 @@ trait ActivityLogger
         return $this;
     }
 
+    public function descriptionDeviceRemove($currentSession = null, $session = null)
+    {
+        if (!$currentSession || !$session) {
+            return $this;
+        }
+
+        $removedBy = PersonalDevice::where('device_id', $currentSession->device_id)->latest()->first();
+        $device = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
+
+        $description = "Hoa sub user device removed <br>";
+
+        ;
+        // Who removed
+        if ($removedBy) {
+            $description .= "Device removed by: " . explode('#~', $currentSession->mac_address)[0] . "<br>";
+
+            if ($currentSession->device_type == 'non-web') {
+                $description .= "Device Name: {$removedBy->personal_devicename}<br>";
+            }
+        }
+
+        // Removed device details
+        if ($device) {
+            $description .= "Removed Device Details:<br>";
+            $description .= "Device: " . explode('#~', $session->mac_address)[0] . "<br>";
+            if ($session->device_type == 'non-web') {
+                $description .= "Device Name: {$device->personal_devicename}<br>";
+            }
+        }
+
+        $this->activity->description = $description;
+
+        return $this;
+    }
 
 
     public function properties(array $properties)
