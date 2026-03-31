@@ -811,24 +811,18 @@ class AuthController extends Controller
 
 
 
+        $currentSession = SessionTable::with('pdInfo')->where('access_token', $request->bearerToken())->first();
 
 
-
-        if ($session->is_main_account == 0) {
+        if ($currentSession->is_main_account == 0) {
 
             $hoauser = HoaUser::where('passcode', $session->passcode)->first();
-            $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
-            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
 
             $this->activity($session->users_id)->event("Device")
-                ->eventType(ActivityEventType::REMOVED)->descriptionSimple(
-                    "Hoa sub user device removed <br>" .
-                    "Device Id: " . $personalDevice->device_id . "<br>" .
-                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                    "Passcode: " . $hoauser->passcode . "<br>" .
-                    "Email: " . $hoauser->email ?? 'na/a' . "<br>" .
-                    "House No: " . $houseNo
-                )
+
+
+                ->eventType(ActivityEventType::REMOVED)
+                ->descriptionDeviceRemove($currentSession, $session)
                 ->properties([
                     "data" => $session
 
@@ -837,17 +831,10 @@ class AuthController extends Controller
                 ->isUser()
                 ->save();
         } else {
-            $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
+
             $this->activity($session->users_id)->event("Device")
                 ->eventType(ActivityEventType::REMOVED)
-                ->descriptionSimple(
-                    "User device removed <br>" .
-                    "Device Id: " . $session->device_id . "<br>" .
-                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                    "Email: " . $session->user->email . "<br>" .
-                    "Role:" . $session->user->roles->first()->name
-
-                )
+                ->descriptionDeviceRemove($currentSession, $session)
                 ->properties([
                     "data" => $session
 
