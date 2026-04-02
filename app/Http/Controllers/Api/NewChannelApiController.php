@@ -991,6 +991,8 @@ class NewChannelApiController extends Controller
                 $channel->type = 'channel';
                 $channel->description = null;
                 $channel->TMSId = null;
+
+
                 $channel->play_icon = true;
                 unset($channel->assets);
             });
