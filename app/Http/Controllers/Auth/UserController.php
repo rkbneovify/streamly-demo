@@ -246,6 +246,14 @@ class UserController extends Controller
                     $user->forced_change = 0;
                 }
                 if ($user->save()) {
+
+                    $this->activity()
+                        ->event("User")
+                        ->eventType(ActivityEventType::Change)
+                        ->description("(Temp) password changed")
+                        ->isUser()
+                        ->save();
+
                     $response = array('success' => true, 'response_code' => 200, 'message' => 'Password updated successfully.');
                     return response()->json($response, 200);
                 }
