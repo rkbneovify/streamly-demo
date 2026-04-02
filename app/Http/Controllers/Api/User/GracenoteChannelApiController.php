@@ -280,7 +280,7 @@ class GracenoteChannelApiController extends Controller
                 'zipcode',
                 'premium',
                 'phxLocal'
-            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.image as db_image', 'channels.prgSvcId', 'channels.is_logo_from_gracenote', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
