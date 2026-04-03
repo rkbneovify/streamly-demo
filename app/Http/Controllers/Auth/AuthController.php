@@ -772,6 +772,8 @@ class AuthController extends Controller
     public function samedevicelogout(Request $request)
     {
 
+
+
         $validate = Validator::make($request->all(), [
             'id' => 'required'
         ]);
@@ -819,54 +821,135 @@ class AuthController extends Controller
 
 
 
-        $currentSession = SessionTable::where('status', 1)
-            ->where('access_token', $request->bearerToken())
-            ->first();
-
-
-        if ($currentSession != null) {
-            if ($currentSession->is_main_account == 0) {
-
-                $hoauser = HoaUser::where('passcode', $session->passcode)->first();
+        if ($request->passcode != null) {
+            $hoauser = HoaUser::where('passcode', $request->passcode)->first();
+            if ($hoauser != null) {
 
                 $this->activity($session->users_id)->event("Device")
-                    ->eventType(ActivityEventType::REMOVED)
-                    ->descriptionDeviceRemove($currentSession, $session)
-                    ->properties([
-                        "data" => $session
+                    ->eventType(ActivityEventType::REMOVED);
+                $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+                if ($session->device_title != null) {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
 
-                    ])
+                    );
+                } else {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+
+
+                    );
+                }
+                $this->properties([
+                    "data" => $session
+
+
+                ])
                     ->passcode($hoauser->passcode)
                     ->isUser()
                     ->save();
             } else {
 
-                $this->activity($currentSession->users_id)->event("Device")
-                    ->eventType(ActivityEventType::REMOVED)
-                    ->descriptionDeviceRemove($currentSession, $session)
-                    ->properties([
-                        "data" => $session
+
+                $this->activity($session->users_id)->event("Device")
+                    ->eventType(ActivityEventType::REMOVED);
+                $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+                if ($session->device_title != null) {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
+
+                    );
+                } else {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
 
 
-                    ])
+                    );
+                }
+                $this->properties([
+                    "data" => $session
+
+
+                ])
+
                     ->isUser()
                     ->save();
             }
 
+
+        } elseif ($request->email != null) {
+
+
+
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED);
+            $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+            if ($session->device_title != null) {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
+                    . "Device name: {$session->pdInfo->personal_devicename}"
+
+                );
+            } else {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
+
+
+                );
+            }
+            $this->properties([
+                "data" => $session
+
+
+            ])
+
+                ->isUser()
+                ->save();
         }
+
+
+
 
         // If the device is logged in
         if ($session) {
 
             $this->activity($session->users_id)->event("Device")
-                ->eventType(ActivityEventType::REMOVED)
-                ->descriptionSimple("Device limit exceed. Device removed")
-                ->properties([
-                    "data" => $session
+                ->eventType(ActivityEventType::REMOVED);
+            $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+            if ($session->device_title != null) {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed"
+                    . "Device: {$device} <br>"
+                    . "Device name: {$session->pdInfo->personal_devicename}"
+
+                );
+            } else {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
 
 
-                ])
-                ->isUser()
+                );
+            }
+            $this->properties([
+                "data" => $session
+
+
+            ]);
+
+            if ($session->passcode != null) {
+                $this->passcode($session->passcode);
+            }
+
+            $this->isUser()
                 ->save();
 
             // Log out the user and update connected devices
