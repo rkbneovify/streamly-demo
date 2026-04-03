@@ -140,6 +140,13 @@
                                         </span>
                                     </p>
                                     }
+                                    @else if (item.subscription.plan_expires_at == null) {
+                                    <p class="text-light">
+                                        <span>
+                                            {{ '-' }}
+                                        </span>
+                                    </p>
+                                    }
                                     @else {
                                     <p class="text-danger">
                                         <span
@@ -206,8 +213,8 @@
 
 
 
-                                <a *ngIf="item.email_verified_at === null && item.status ===0"
-                                    (click)="deleteHouse(item.id,$event)" class="btn-item btn-deactive">
+                                <a *ngIf="item.status === 0" (click)="deleteHouse(item.id,$event)"
+                                    class="btn-item btn-deactive">
                                     <img src="../../../assets/dummy-img/home-delete.svg" alt="icon">
                                     <span>Delete</span>
 
