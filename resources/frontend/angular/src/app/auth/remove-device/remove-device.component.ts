@@ -24,6 +24,8 @@ export class RemoveDeviceComponent implements OnInit {
   totalDevices: number;
   loading: { [key: string]: boolean } = {};
   isTierRole: boolean | null;
+  email: string | null;
+  passcode: string | null;
 
   constructor(
     private apiService: CrudService,
@@ -48,12 +50,23 @@ export class RemoveDeviceComponent implements OnInit {
 
     this.current_device = localStorage.getItem('deviceId');
     this.connectedDevice = this.response;
+
+    this.email = history.state.email;
+    this.passcode = history.state.passcode;
+
   }
 
-  removedevice(id: string): void {
+  removedevice(id: string, email: string, passcode: string): void {
     console.log("Device Id:", id);
     this.loading[id] = true;
-    this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
+
+    const data = {
+      id,
+      email,
+      passcode
+    };
+
+    this.apiService.postRequest('auth/same-device-id-logout', data).subscribe({
       next: (res: any) => {
         if (res.response_code == 200) {
           this.toastr.success('Device removed successfully');

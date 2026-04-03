@@ -723,7 +723,9 @@ export class ConnectedHousesComponent implements OnInit {
   }
   getExpiryText(item: any) {
 
-
+    if (item.subscription.plan_expires_at == null) {
+      return "-";
+    }
     if (item.subscription_expire_in < 30 && item.subscription_expire_in > 0) {
       return `${item.subscription_expire_in} Days left`;
     }

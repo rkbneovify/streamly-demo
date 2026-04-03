@@ -51,7 +51,7 @@
               <div class="device_imgpar d-flex justify-content-center align-items-center">
                 <button class="input_st min75-h40 w-auto h-100 position-relative"
                   [class.spinner]="loading[data.session_id]" [disabled]="loading[data.session_id]"
-                  (click)="removedevice(data.session_id)"> <span *ngIf="!loading[data.session_id]"> Log
+                  (click)="removedevice(data.session_id, email, passcode)"> <span *ngIf="!loading[data.session_id]"> Log
                     out</span></button>
               </div>
             </ng-template>
