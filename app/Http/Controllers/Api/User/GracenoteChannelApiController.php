@@ -469,6 +469,7 @@ class GracenoteChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            $query->whereNull('channels.type');
             $query->where('channels.status', '=', '1');
             $query->orderBy('genre_name', 'asc');
             $record = $query->get()->map(function ($channel) {
