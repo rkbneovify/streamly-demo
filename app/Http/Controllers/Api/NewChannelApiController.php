@@ -609,6 +609,7 @@ class NewChannelApiController extends Controller
                 $channel->ratio = $assetData['ratio'] ?? 'NA';
 
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
+                    // station name inside program
                     $item->stationName = $channel->stationName;
                     return $item;
                 });
