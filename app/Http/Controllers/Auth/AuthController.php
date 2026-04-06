@@ -146,6 +146,16 @@ class AuthController extends Controller
     {
 
 
+        // already login device id
+
+
+
+        SessionTable::where("device_id", $request->deviceid)
+            ->where('status', 1)
+            ->update([
+                'status' => 0
+            ]);
+
         $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
@@ -296,6 +306,15 @@ class AuthController extends Controller
 
     public function loginWithPasscode(Request $request)
     {
+
+
+        // already login device id
+        SessionTable::where("device_id", $request->deviceid)
+            ->where('status', 1)
+            ->update([
+                'status' => 0
+            ]);
+
         $isMainUser = true;
         $deviceDetails = getDeviceIdforAPI($request);
         $passcode = $request->only('passcode');
