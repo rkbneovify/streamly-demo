@@ -69,6 +69,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     private router: Router,
     private renderer: Renderer2,
     private utilsService: UtilsService,
+    private notificationService: NotificationService
 
   ) {
     // console.log('Current url: ', this.router.url)
@@ -132,6 +133,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     );
 
     this.subscribed = this.deviceInfo?.subscribed;
+    this.notificationService.fetchCount();
   }
 
   toggleEditMode() {
