@@ -47,74 +47,7 @@ class StripeController extends Controller
 
 
         switch ($event->type) {
-            //             case 'customer.subscription.created':
-//                 $message = 'Your free trial has started successfully.';
-//                 $subscription = $event->data->object;
 
-
-            //                 if ($subscription->status === 'trialing') {
-
-            //                     $user = DB::table('users')
-//                         ->where('stripe_id', $subscription->customer)
-//                         ->first();
-//                     $this->activity($user->id)->event("Subscription")
-//                         ->eventType("Started")
-//                         ->descriptionSimple($message)
-//                         ->notification()
-//                         ->isUser()
-//                         ->isAdmin()
-//                         ->properties([
-//                             "user" => $user,
-//                             "details" => $subscription,
-//                         ])->save();
-//                     $fcmTokens = DB::table('session_table')
-//                         ->where('users_id', $user->id)
-//                         ->where('is_main_account', 1)
-//                         ->where('status', 1)
-//                         ->whereNotNull('fcm_token')
-//                         ->pluck('fcm_token')->toArray();
-//                     if ($fcmTokens != null && count($fcmTokens) > 0) {
-//                         foreach ($fcmTokens as $token) {
-//                             $this->notification->send($token, "Subscription", $message);
-//                         }
-//                     }
-
-            //                     $subscription = \Stripe\Subscription::retrieve($subscription->id);
-//                     $plan = $subscription->items->data[0]->plan;
-
-            //                     $planName = $plan->nickname ?? 'Default Plan';
-//                     $amount = number_format($plan->amount / 100, 2);
-//                     $interval = $plan->interval;
-//                     $quantity = $subscription->items->data[0]->quantity;
-//                     $html = '
-// <html>
-//     Hi, ' . ucwords($user->name) . '<br><br>
-
-            //     Your free trial has started successfully.<br>
-//     Enjoy all the features included in your trial plan during the trial period.<br><br>
-
-            //     <b>Trial Details:</b><br>
-//     Plan: ' . htmlspecialchars($planName) . '<br>
-//     Quantity: ' . $quantity . '<br>
-//     Billing Interval: ' . ucfirst($interval) . '<br>
-//     Trial Ends On: ' . date('d M Y', $subscription->trial_end) . '<br><br>
-
-            //     Once your trial ends, your subscription will become active automatically as per your selected plan.<br><br>
-
-            //     If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
-
-            //     <b>Thanks,<br>
-//     Team Streamly</b>
-// </html>';
-
-            //                     Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-//                         $message->to($user->email, $user->name)
-//                             ->bcc($this->bcc)
-//                             ->subject('Your Free Trial Has Started - ' . env('APP_NAME'));
-//                     });
-
-            //                 }
-//                 break;
 
             case 'invoice.paid':
                 $invoice = $event->data->object;
@@ -134,7 +67,7 @@ class StripeController extends Controller
                     case 'subscription_create':
                         // subscription without trial
                         if ($invoice->amount_paid > 0) {
-                            $message = 'Your subscription has started successfully.';
+                            $message = 'You have subscribed successfully.';
                             $user = DB::table('users')
                                 ->where('stripe_id', $invoice->customer)
                                 ->first();
@@ -299,96 +232,96 @@ class StripeController extends Controller
                         });
                         break;
 
-                    case 'subscription_update':
-                        // Plan change
-                        break;
+                    // case 'subscription_update':
+                    //     // Plan change
+                    //     break;
                 }
 
 
                 break;
 
-            case 'customer.subscription.updated':
-                $subscription = $event->data->object;
-                $previous = $event->data->previous_attributes ?? null;
+            // case 'customer.subscription.updated':
+            //     $subscription = $event->data->object;
+            //     $previous = $event->data->previous_attributes ?? null;
 
-                if (!isset($previous->items)) {
-                    return;
-                }
-                $message = 'Your subscription plan has been updated successfully.';
-                $user = DB::table('users')
-                    ->where('stripe_id', $subscription->customer)
-                    ->first();
-                $this->activity($user->id)->event("Subscription")
-                    ->eventType("Subscription")
-                    ->descriptionSimple($message)
-                    ->notification()
-                    ->isUser()
-                    ->isAdmin()
-                    ->properties([
-                        "user" => $user,
-                        "subscription" => $subscription,
-                    ])->save();
-
-
-                $fcmTokens = DB::table('session_table')
-                    ->where('users_id', $user->id)
-                    ->where('is_main_account', 1)
-                    ->where('status', 1)
-                    ->whereNotNull('fcm_token')
-                    ->pluck('fcm_token')->toArray();
-                if ($fcmTokens != null && count($fcmTokens) > 0) {
-                    foreach ($fcmTokens as $token) {
-                        $this->notification->send($token, "Subscription", $message);
-                    }
-                }
-
-                $updateData = [
-                    'stripe_status' => $subscription->status,
-                    'stripe_plan' => $subscription->plan->id,
-                    'quantity' => $subscription->quantity,
-                    'livemode' => (int) $subscription->livemode,
-                    'updated_at' => now(),
-                ];
-
-                if ($subscription->status === 'active') {
-                    $updateData['trial_ends_at'] = null;
-                }
-
-                DB::table('subscriptions')
-                    ->where('user_id', $user->id)
-                    ->update($updateData);
+            //     if (!isset($previous->items)) {
+            //         return;
+            //     }
+            //     $message = 'Your subscription plan has been updated successfully.';
+            //     $user = DB::table('users')
+            //         ->where('stripe_id', $subscription->customer)
+            //         ->first();
+            //     $this->activity($user->id)->event("Subscription")
+            //         ->eventType("Subscription")
+            //         ->descriptionSimple($message)
+            //         ->notification()
+            //         ->isUser()
+            //         ->isAdmin()
+            //         ->properties([
+            //             "user" => $user,
+            //             "subscription" => $subscription,
+            //         ])->save();
 
 
-                $plan = $subscription->plan;
-                $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
-                $interval = $plan->interval; // e.g., "month", "year"
-                $quantity = $subscription->quantity; // Subscription quantity
-                $planName = $plan->nickname ?: 'Default Plan';
+            //     $fcmTokens = DB::table('session_table')
+            //         ->where('users_id', $user->id)
+            //         ->where('is_main_account', 1)
+            //         ->where('status', 1)
+            //         ->whereNotNull('fcm_token')
+            //         ->pluck('fcm_token')->toArray();
+            //     if ($fcmTokens != null && count($fcmTokens) > 0) {
+            //         foreach ($fcmTokens as $token) {
+            //             $this->notification->send($token, "Subscription", $message);
+            //         }
+            //     }
+
+            //     $updateData = [
+            //         'stripe_status' => $subscription->status,
+            //         'stripe_plan' => $subscription->plan->id,
+            //         'quantity' => $subscription->quantity,
+            //         'livemode' => (int) $subscription->livemode,
+            //         'updated_at' => now(),
+            //     ];
+
+            //     if ($subscription->status === 'active') {
+            //         $updateData['trial_ends_at'] = null;
+            //     }
+
+            //     DB::table('subscriptions')
+            //         ->where('user_id', $user->id)
+            //         ->update($updateData);
+
+
+            //     $plan = $subscription->plan;
+            //     $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
+            //     $interval = $plan->interval; // e.g., "month", "year"
+            //     $quantity = $subscription->quantity; // Subscription quantity
+            //     $planName = $plan->nickname ?: 'Default Plan';
 
 
 
-                $html = '
-                                <html>
-                                    Hi, ' . ucwords($user->name) . '<br><br>
-                                  Your subscription plan has been changed, and the updated plan is now active. You have been charged as per the new plan details:<br><br>
-                                    <b>Subscription Details:</b><br>
-                                    Plan: ' . htmlspecialchars($planName) . '<br>
-                                    Amount: $' . $amount . '<br>
-                                    Quantity: ' . $quantity . '<br>
-                                    Billing Interval: ' . ucfirst($interval) . '<br><br>
-                                    Thank you for choosing to stay with us!<br><br>
-                                    If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
-                                    <b>Thanks,<br>
-                                    Team Streamly</b>
-                                </html>';
+            //     $html = '
+            //                     <html>
+            //                         Hi, ' . ucwords($user->name) . '<br><br>
+            //                       Your subscription plan has been changed, and the updated plan is now active. You have been charged as per the new plan details:<br><br>
+            //                         <b>Subscription Details:</b><br>
+            //                         Plan: ' . htmlspecialchars($planName) . '<br>
+            //                         Amount: $' . $amount . '<br>
+            //                         Quantity: ' . $quantity . '<br>
+            //                         Billing Interval: ' . ucfirst($interval) . '<br><br>
+            //                         Thank you for choosing to stay with us!<br><br>
+            //                         If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
+            //                         <b>Thanks,<br>
+            //                         Team Streamly</b>
+            //                     </html>';
 
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-                    $message->to($user->email, $user->name)
-                        ->bcc($this->bcc)
-                        ->subject('Your subscription plan changed - ' . env('APP_NAME'));
-                });
+            //     Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+            //         $message->to($user->email, $user->name)
+            //             ->bcc($this->bcc)
+            //             ->subject('Your subscription plan changed - ' . env('APP_NAME'));
+            //     });
 
-                break;
+            //     break;
 
 
 

@@ -190,10 +190,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     // Roku info routes
     Route::group(['prefix' => 'roku-info'], function () {
-        Route::post("store", "Api\ApiRokuInfoController@store");
+        Route::post("store", "Api\ApiRokuInfoController@store")->middleware(['jwt.verify']);
+
 
     });
-    Route::post('sub-session/store', 'Api\ApiSubSessionController@store');
 
     // Notification
     Route::prefix('notification')->middleware('jwt.verify')->group(function () {
@@ -201,6 +201,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::get("count", "Api\ApiNotificationController@unreadCount");
     });
 
+
+    Route::post('sub-session/store', 'Api\ApiSubSessionController@store')->middleware(['jwt.verify']);
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
@@ -224,6 +226,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     });
 });
+
 
 
 

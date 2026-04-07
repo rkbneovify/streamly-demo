@@ -19,6 +19,7 @@ use App\Http\Controllers\AngularController;
 use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Api\ApiHoaController;
+use App\Http\Controllers\GracenoteCron\GracenoteCronController;
 use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Artisan;
 
@@ -186,6 +187,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // activity
     Route::get('/activities', 'Admin\AdminActivityController@index')->name('activity');
     Route::get('/activities/users/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
+    Route::get('/activities/sub-users/{passcode}', 'Admin\AdminActivityController@subUserActivity')->name('sub-user.activity');
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create')->name('channel.create'); //channels Statust
@@ -318,8 +320,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // logs route for log checking and
     Route::get('/logs', [AdminServerLogController::class, 'index']);
     Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
+
     // Gracenote sync 
-    Route::get('/gracenote/channel/{prgSvcId?}', [AdminGracenoteController::class, 'channelByPrgSvcId'])->name('gracenote.data.pull');
+    Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
+
 });
 
 /*Prev Next channel*/
