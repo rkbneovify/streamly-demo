@@ -279,14 +279,14 @@
             </div>
             <!-- /.card -->
 
-            <div class="overflow-auto no-scrollbar" style="height: 650px; ">
+            <div class="overflow-auto">
                 <div id="user-data">
                     @include('admin.activity.table')
                 </div>
             </div>
 
             <div class="mt-4">
-                {{ $paginator->links() }}
+                {{ $data->links() }}
             </div>
 
         </section>

@@ -556,8 +556,8 @@ class APIController extends Controller
     public function support()
     {
         $frontendjson = FrontendText::find(1)->frontendjson;
-        $supportemail = $frontendjson['supportemail'] ?? 'contact@streamlytv.com';
-        $supportphone = $frontendjson['supportphone2'] ?? '773727828';
+        $supportemail = $frontendjson['supportemail'] ?? 'support@streamlytv.com';
+        $supportphone = $frontendjson['supportphone2'] ?? '6022450986';
         //$supportphone2= $frontendjson['supportphone']??'1234656477';
         $message = $frontendjson['supportapitext'] ?? "Our team is available 24*7. We'll do our best to respond to your inquiries as soon as possible.\n  \n Need help or have a question? Our support team is here to assist you. You can reach us at the following:";
         $supportnumber = [];

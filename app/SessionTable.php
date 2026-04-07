@@ -76,18 +76,15 @@ class SessionTable extends Model
             ->latest('updated_at');
     }
 
-    public function list()
+    public function subSession()
     {
-        return $this->hasMany(SubSession::class, 'session_id', 'id')
-            ->where('is_main_account', 1)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
-            ->latest();
+        return $this->hasMany(SubSession::class, 'session_id', 'id')->latest();
     }
-    public function listByPasscode()
+    public function subSessionPasscode()
     {
         return $this->hasMany(SubSession::class, 'session_id', 'id')
+            ->whereNotNull('passcode')
             ->where('is_main_account', 0)
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->latest();
     }
     /**
@@ -198,26 +195,34 @@ class SessionTable extends Model
     public function getDeviceTypeAttribute($size = null)
     {
 
+        $ua = strtolower($this->device_id ?? '');
 
-
-        $ua = strtolower($this->useragent);
-
-        // Rule 1: Smart TVs → non-web
-        if (preg_match('/smart-tv|hbbtv|tizen|netcast|appletv|googletv|tv safari/', $ua)) {
+        if (strpos($ua, 'web') !== false) {
+            return 'web';
+        } else {
             return 'non-web';
         }
 
-        // Rule 2: Common web browsers
-        if (
-            strpos($ua, 'mozilla/5.0') !== false &&
-            preg_match('/(chrome|safari|firefox|edge|opr|samsungbrowser)/', $ua) &&
-            preg_match('/(applewebkit|gecko|trident|blink)/', $ua)
-        ) {
-            return 'web';
-        }
+
+
+        // $ua = strtolower($this->useragent);
+
+        // // Rule 1: Smart TVs → non-web
+        // if (preg_match('/smart-tv|hbbtv|tizen|netcast|appletv|googletv|tv safari/', $ua)) {
+        //     return 'non-web';
+        // }
+
+        // // Rule 2: Common web browsers
+        // if (
+        //     strpos($ua, 'mozilla/5.0') !== false &&
+        //     preg_match('/(chrome|safari|firefox|edge|opr|samsungbrowser)/', $ua) &&
+        //     preg_match('/(applewebkit|gecko|trident|blink)/', $ua)
+        // ) {
+        //     return 'web';
+        // }
 
         // Rule 3: Everything else → non-web
-        return 'non-web';
+        // return 'non-web';
 
         // return [
         //     "data-browser='1'"=>'web',
@@ -228,7 +233,7 @@ class SessionTable extends Model
         //     "data-browser='6'"=>'web',
         //     "data-browser='7'"=>'web'
         // ][$this->device['browserclass']?? null] ?? "non-web";
-        return ($this->pdname->personal_devicename ?? null) ? 'non-web' : 'web';
+        // return ($this->pdname->personal_devicename ?? null) ? 'non-web' : 'web';
     }
     public function getsubscriptionStatusAttribute()
     {

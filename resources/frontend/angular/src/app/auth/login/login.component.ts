@@ -269,7 +269,12 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
     localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
     localStorage.setItem('loginDetails', JSON.stringify(formData));
-    this.router.navigate(['auth/remove-device']);
+
+
+
+    this.router.navigate(['auth/remove-device'], {
+      state: { passcode: err.error.passcode, email: err.error.email }
+    });
     this.toastr.error(err.error.message, null, {
       closeButton: true,
       tapToDismiss: false,
