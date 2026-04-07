@@ -194,6 +194,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 
     });
+
+    // Notification
+    Route::prefix('notification')->middleware('jwt.verify')->group(function () {
+        Route::get("/", "Api\ApiNotificationController@index");
+        Route::get("count", "Api\ApiNotificationController@unreadCount");
+    });
+
+
     Route::post('sub-session/store', 'Api\ApiSubSessionController@store')->middleware(['jwt.verify']);
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
@@ -218,6 +226,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     });
 });
+
 
 
 
