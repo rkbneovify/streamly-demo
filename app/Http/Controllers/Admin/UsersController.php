@@ -1530,7 +1530,7 @@ class UsersController extends Controller
                 'user.roles',
                 'hotel',
                 'pdInfo' => fn($query) => $query->where('user_id', $id),
-                'list'
+                'subSession'
             ]);
             $query->selectRaw("*, 
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
@@ -1571,6 +1571,7 @@ class UsersController extends Controller
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
+            // return response()->json($allSession);
 
             if ($request->ajax()) {
                 return view('admin.users.partials.connected-table', compact('allSession', 'totalRooms'));

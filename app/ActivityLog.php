@@ -24,13 +24,12 @@ class ActivityLog extends Model
 
     public static function resolveNotification()
     {
-        $latest = ActivityLog::where('is_user', 0)
-            ->where('is_read', 0)
+        $latest = ActivityLog::where('category', 'activity')->where('is_read', 0)
             ->orderByDesc('id') // or created_at
             ->first();
 
         if ($latest) {
-            ActivityLog::where('is_user', 0)
+            ActivityLog::where('category', 'activity')
                 ->where('is_read', 0)
                 ->where('id', '!=', $latest->id)
                 ->update(['is_read' => 1]);

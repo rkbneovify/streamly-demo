@@ -81,11 +81,12 @@ class AdminHoaController extends Controller
             $query = SessionTable::query();
             $query->with([
                 'pdInfoPasscode',
-                'listByPasscode'
+                'subSessionPasscode'
             ]);
             $query->selectRaw("*, 
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
+                ->where('is_main_account', 0)
                 ->where('passcode', $passcode)
                 ->where('status', 1);
 
