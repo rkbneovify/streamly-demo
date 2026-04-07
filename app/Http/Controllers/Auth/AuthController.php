@@ -28,6 +28,7 @@ use DB;
 use App\Models\Zipcode;
 use App\Models\DeclineZipInquiry;
 use App\Models\EmailOtp;
+use App\Models\PersonalDevice;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Str;
@@ -145,6 +146,16 @@ class AuthController extends Controller
     {
 
 
+        // already login device id
+
+
+
+        SessionTable::where("device_id", $request->deviceid)
+            ->where('status', 1)
+            ->update([
+                'status' => 0
+            ]);
+
         $deviceDetails = getDeviceIdforAPI($request);
         $credentials = request(['email', 'password']);
 
@@ -196,6 +207,7 @@ class AuthController extends Controller
             ->eventType(ActivityEventType::LOGIN)
             ->isUser()
             ->description("User login")
+            ->properties(['data' => $user])
             ->save();
 
         $userRole = $user->roles->pluck('name');
@@ -294,6 +306,16 @@ class AuthController extends Controller
 
     public function loginWithPasscode(Request $request)
     {
+
+
+        // already login device id
+        SessionTable::where("device_id", $request->deviceid)
+            ->where('status', 1)
+            ->update([
+                'status' => 0
+            ]);
+
+        $isMainUser = true;
         $deviceDetails = getDeviceIdforAPI($request);
         $passcode = $request->only('passcode');
         $uid = UnHashUserID($passcode['passcode']);
@@ -304,6 +326,7 @@ class AuthController extends Controller
         )->first();
 
         if ($hoaUser != null) {
+            $isMainUser = false;
             $user = User::find($hoaUser->user_id);
 
             // hoa main checking
@@ -364,15 +387,37 @@ class AuthController extends Controller
         $userRole = $user->roles->pluck('name');
         //todo hotel check
 
+
         $this->activity($user->id)
             ->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->description("Login with passcode")
-            ->isUser()
-            ->properties([
-                "passcode" => $request->passcode
-            ])
-            ->save();
+            ->eventType(ActivityEventType::LOGIN);
+
+        if ($isMainUser && $userRole[0] == "hoa") {
+            $this->description("Hoa main use login with passcode")
+                ->isUser()
+                ->properties([
+                    "user" => $user
+                ])
+                ->save();
+        } elseif (!$isMainUser && $userRole[0] == "hoa") {
+            $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
+            $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
+                ->isUser()
+                ->passcode($hoaUser->passcode)
+                ->properties([
+                    "user" => $hoaUser
+                ])
+                ->save();
+        } else {
+            $this->description("Login with passcode")
+                ->isUser()
+                ->properties([
+                    "user" => $hoaUser
+                ])
+                ->save();
+        }
+
+
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
 
             checkLoginLimit($uid, $token, $deviceDetails);
@@ -642,21 +687,51 @@ class AuthController extends Controller
 
             $userRole = $user->roles->pluck('name');
             //check users role
-            $session = SessionTable::where('access_token', $request->bearerToken())->first();
-            $this->activity()->event("User")
-                ->eventType(ActivityEventType::LOGOUT);
+            $session = SessionTable::with('pdInfo')
+                ->where('status', 1)
+                ->where('access_token', $request->bearerToken())->first();
+
 
 
             if ($session->is_main_account == 0) {
-                $this->description("Sub user (" . $session->passcode . ")");
+                $hoauser = HoaUser::where('passcode', $session->passcode)->first();
+                $houseNo = $hoauser->house_no ?? "House" . $hoauser->ordering;
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
+
+
+                $this->activity()->event("User")
+                    ->eventType(ActivityEventType::LOGOUT)
+                    ->descriptionSimple(
+                        "Hoa sub user logout<br>" .
+                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
+                        "Passcode: " . $hoauser->passcode . "<br>" .
+                        "Email: " . $hoauser->email . "<br>" .
+                        "House No: " . $houseNo
+                    )->properties([
+                            "data" => $session
+                        ])
+                    ->passcode($hoauser->passcode)
+                    ->isUser()
+                    ->save();
             } else {
-                $this->description("User logout");
+                $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
+                $this->activity()->event("User")
+                    ->eventType(ActivityEventType::LOGOUT)
+                    ->descriptionSimple(
+                        "user logout <br>" .
+                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
+                        "Email: " . $user->email . "<br>" .
+                        "Role: " . $userRole[0]
+
+                    )->properties([
+                            "data" => $session
+                        ])
+                    ->isUser()
+                    ->save();
             }
-            $this->properties([
-                "data" => $session
-            ])
-                ->isUser()
-                ->save();
+
             if ($userRole[0] == 'user' || 'tieruser') {
                 //check if token exist in table
                 $acctoken = SessionTable::where([
@@ -715,6 +790,9 @@ class AuthController extends Controller
 
     public function samedevicelogout(Request $request)
     {
+
+
+
         $validate = Validator::make($request->all(), [
             'id' => 'required'
         ]);
@@ -744,23 +822,154 @@ class AuthController extends Controller
             }
         }
 
+
         //  HoaUser::getCurrentSubUserByToken();
         // Unhash the user ID
         $id = UnHashUserID($request->id);
 
         // Retrieve the session record
-        $session = SessionTable::where('status', 1)
+        $session = SessionTable::with('pdInfo')->where('status', 1)
             ->where('id', $id)
             ->first();
         $sessionLogout = SessionTable::where('status', 0)
             ->where('id', $id)
             ->first();
 
-        $this->activity($session->users_id)->event("Device")
-            ->eventType(ActivityEventType::REMOVED)
-            ->description("Device removed");
+
+
+
+
+
+        if ($request->passcode != null) {
+            $hoauser = HoaUser::where('passcode', $request->passcode)->first();
+            if ($hoauser != null) {
+
+                $this->activity($session->users_id)->event("Device")
+                    ->eventType(ActivityEventType::REMOVED);
+                $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+                if ($session->device_title != null) {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
+
+                    );
+                } else {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+
+
+                    );
+                }
+                $this->properties([
+                    "data" => $session
+
+
+                ])
+                    ->passcode($hoauser->passcode)
+                    ->isUser()
+                    ->save();
+            } else {
+
+
+                $this->activity($session->users_id)->event("Device")
+                    ->eventType(ActivityEventType::REMOVED);
+                $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+                if ($session->device_title != null) {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
+
+                    );
+                } else {
+                    $this->descriptionSimple(
+                        "Device limit exceed. Device removed <br>"
+                        . "Device: {$device} <br>"
+
+
+                    );
+                }
+                $this->properties([
+                    "data" => $session
+
+
+                ])
+
+                    ->isUser()
+                    ->save();
+            }
+
+
+        } elseif ($request->email != null) {
+
+
+
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED);
+            $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+            if ($session->device_title != null) {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
+                    . "Device name: {$session->pdInfo->personal_devicename}"
+
+                );
+            } else {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
+
+
+                );
+            }
+            $this->properties([
+                "data" => $session
+
+
+            ])
+
+                ->isUser()
+                ->save();
+        }
+
+
+
+
         // If the device is logged in
         if ($session) {
+
+            $this->activity($session->users_id)->event("Device")
+                ->eventType(ActivityEventType::REMOVED);
+            $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
+            if ($session->device_title != null) {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed"
+                    . "Device: {$device} <br>"
+                    . "Device name: {$session->pdInfo->personal_devicename}"
+
+                );
+            } else {
+                $this->descriptionSimple(
+                    "Device limit exceed. Device removed <br>"
+                    . "Device: {$device} <br>"
+
+
+                );
+            }
+            $this->properties([
+                "data" => $session
+
+
+            ]);
+
+            if ($session->passcode != null) {
+                $this->passcode($session->passcode);
+            }
+
+            $this->isUser()
+                ->save();
 
             // Log out the user and update connected devices
             $session->update(['status' => 0, 'modified_on' => Carbon::now()]);
@@ -775,11 +984,6 @@ class AuthController extends Controller
             // Invalidate token (this could be its own method)
 
 
-            $this->properties([
-                "data" => $session
-            ])
-                ->isUser()
-                ->save();
 
             invalidateToken();
 

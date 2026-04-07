@@ -3,8 +3,9 @@
 * {
   box-sizing: border-box;
 }
+
 main {
-//   background-image: url("../../../assets/dummy-img/404-bg.png");
+  //   background-image: url("../../../assets/dummy-img/404-bg.png");
   background-image: url("../../../assets/dummy-img/404-bg.png");
   background-repeat: no-repeat;
   background-size: cover;
@@ -41,6 +42,7 @@ main {
       height: 90%;
       justify-content: end;
       padding-bottom: 50px;
+
       .landing_carousel_section1_img1 {
         img {
           max-width: 227.08px;
@@ -54,6 +56,7 @@ main {
 
         .landing_carousel_section1_img2 {
           margin-bottom: 1rem;
+
           img {
             max-width: 40px;
             max-height: 40px;
@@ -62,10 +65,12 @@ main {
 
         .play_img {
           gap: 0.8rem;
+
           img {
             max-width: 50px;
             max-height: 50px;
           }
+
           p {
             font-family: Poppins;
             font-size: 20px;
@@ -76,6 +81,7 @@ main {
             color: #ffffff;
           }
         }
+
         .heart_circle,
         .info_circle {
           img {
@@ -216,14 +222,14 @@ main {
         overflow-x: hidden;
         background-color: #4b98db4d;
         background-image: url("../../../assets/dummy-img/carBG.png");
-        transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
+        transition: width 1.2s ease-out, min-width 1s ease-in-out, overflow-x 2s ease-in-out;
 
         img {
           max-width: 160px;
           height: 100%;
           object-fit: contain;
-        //   border-radius: 10px;
-        //   transition: border-radius 1s ease;
+          //   border-radius: 10px;
+          //   transition: border-radius 1s ease;
         }
 
         .card_content {
@@ -235,15 +241,18 @@ main {
           background-color: #1A2B3B;
           border-radius: 0 10px 10px 0;
           overflow-y: hidden;
+
           &::-webkit-scrollbar {
             width: 0px;
           }
+
           .card_content_text1 {
             .play_img {
               img {
                 width: 50px;
                 height: 50px;
               }
+
               p {
                 font-family: Poppins;
                 font-size: 16px;
@@ -280,17 +289,20 @@ main {
           width: 426px;
           overflow: visible;
         }
+
         &:hover {
-                min-width:426px !important;
-                width: 426px !important;
-                overflow-x:visible !important;
-                cursor: pointer;
-                img{
-                    border-radius:10px 0 0 10px;
-                }
-                .card_content{
-                    margin-left: -1px;
-                }
+          min-width: 426px !important;
+          width: 426px !important;
+          overflow-x: visible !important;
+          cursor: pointer;
+
+          img {
+            border-radius: 10px 0 0 10px;
+          }
+
+          .card_content {
+            margin-left: -1px;
+          }
         }
       }
 
@@ -337,10 +349,17 @@ main {
   }
 
   .carousel-control-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     justify-content: end !important;
   }
+
   .carousel-control-prev {
     justify-content: start !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   // padding: 6.5px 0px 6.5px 0px;
@@ -381,9 +400,11 @@ main {
   margin: auto;
   position: fixed;
   max-width: 90%;
+
   &::-webkit-scrollbar {
     width: 0;
   }
+
   .section1_img {
     width: 100%;
     height: 100%;
@@ -392,16 +413,18 @@ main {
     flex: 1;
     background-image: url('../../../assets/dummy-img/bg.png');
     position: relative;
+
     &::-webkit-scrollbar {
       width: 0;
     }
+
     img {
       width: 100%;
       height: 100%;
       border-radius: 0.5rem;
     }
 
-    .programDetailDataStationName{
+    .programDetailDataStationName {
       position: absolute;
       top: 4px;
       background-color: #00000061;
@@ -419,13 +442,16 @@ main {
     font-weight: 600;
     line-height: 20px;
     text-align: left;
+
     &::-webkit-scrollbar {
       width: 0px;
     }
+
     h1 {
       color: #ffffff;
       font-size: 24px;
     }
+
     p {
       font-family: Poppins;
       font-size: 16px;
@@ -438,6 +464,7 @@ main {
     .play_btn_container_1 {
       display: flex;
       gap: 1rem;
+
       .playbtn_time {
         display: flex;
         justify-content: center;
@@ -469,10 +496,12 @@ main {
         outline: none;
         border: none;
         text-wrap: nowrap;
+
         img {
           width: 16.67px;
           height: 15px;
         }
+
         span {
           font-family: Poppins;
           font-size: 12px;
@@ -487,7 +516,8 @@ main {
       font-size: 14px;
       word-break: break-word;
     }
-    .playstream_title{
+
+    .playstream_title {
       color: white;
     }
 
@@ -500,10 +530,12 @@ main {
         text-align: left;
         color: #ffffff;
       }
+
       .playbtn_genre,
       .playbtn_aired {
         background-color: #ffffff29;
       }
+
       .playbtn_genre {
         display: flex;
         align-items: center;
@@ -511,10 +543,12 @@ main {
         height: 34px;
         padding: 12px 20px 12px 20px;
         border-radius: 40px;
+
         &:first-child {
           font-weight: 600;
         }
       }
+
       .playbtn_aired {
         display: flex;
         align-items: center;
@@ -530,7 +564,9 @@ main {
         border-bottom: 1px solid #ffffff66;
         padding-bottom: 1rem;
       }
+
       margin-top: 30px;
+
       .play_stream_now {
         font-family: Poppins;
         font-size: 18px;
@@ -539,6 +575,7 @@ main {
         text-align: left;
         color: #ffffff;
       }
+
       p {
         font-family: Poppins;
         font-size: 16px;
@@ -558,6 +595,7 @@ main {
           color: #ffffffb2;
           border-bottom: 1px solid #ffffff66;
         }
+
         .playstream_liveTime {
           div {
             font-family: Poppins;
@@ -583,6 +621,7 @@ main {
     background: #ffffff26;
     max-height: 100%;
     overflow: auto;
+
     .schedule_details_data {
       h3 {
         font-family: Poppins;
@@ -603,6 +642,7 @@ main {
           text-align: left;
           color: #ffffff;
         }
+
         .schedule_details_hr {
           font-family: Poppins;
           font-size: 14px;
@@ -633,11 +673,12 @@ main {
   z-index: 136;
 }
 
-.playstream_Play_icon{
+.playstream_Play_icon {
   width: 40px;
   align-items: center;
   cursor: pointer;
-  img{
+
+  img {
     object-fit: contain;
     width: 40px;
   }
@@ -653,6 +694,7 @@ main {
     color: #ffffffb2;
     border-bottom: 1px solid #ffffff66;
   }
+
   .playstream_liveTime {
     div {
       font-family: Poppins;
@@ -663,7 +705,7 @@ main {
       color: #ffffffb2;
     }
 
-    .text-program-time{
+    .text-program-time {
       min-width: 72px;
     }
   }
@@ -687,13 +729,13 @@ main {
     }
   }
 
-// .landing_carousel_section2{
-//   .landing_carousel_section2_bottom{
-//     &::-webkit-scrollbar{
-//       height: 8px;
-//     }
-//   }
-// }
+  // .landing_carousel_section2{
+  //   .landing_carousel_section2_bottom{
+  //     &::-webkit-scrollbar{
+  //       height: 8px;
+  //     }
+  //   }
+  // }
 }
 
 

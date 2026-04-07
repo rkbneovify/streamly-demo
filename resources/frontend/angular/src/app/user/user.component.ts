@@ -141,6 +141,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       '/user/report',
       '/user/downloadapp',
       '/user/notifications',
+      '/user/help-and-support'
 
     ]
 
@@ -164,9 +165,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe(() => {
-      this.notificationService.fetchCount()
-    });
+    // this.router.events.subscribe(() => {
+    //   this.notificationService.fetchCount()
+    // });
 
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
