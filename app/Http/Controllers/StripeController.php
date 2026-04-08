@@ -369,7 +369,7 @@ class StripeController extends Controller
             case 'customer.subscription.trial_will_end':
 
                 $eventObj = $event->data->object;
-                $message = "Your trial will end soon " . date("d/m/y", $eventObj->trial_end) . " . Add a payment method to continue.";
+                $message = "Your trial will end soon " . date("d/m/y", $eventObj->trial_end) . "After the trial period ends, your card will be automatically charged the monthly subscription fee.";
                 $user = DB::table('users')->where('stripe_id', $eventObj->customer)->first();
                 if ($user == null) {
                     return;
@@ -400,7 +400,7 @@ class StripeController extends Controller
                 $html = '<html>
                             Hi ' . ucwords($user->name) . ',<br><br>
                             Your trail period is ending on ' . date("Y-m-d", $eventObj->trial_end) . '.
-                            after the trial period ends, your credit card will be billed the monthly subscription amount.<br><br>
+                            After the trial period ends, your credit card will be billed the monthly subscription amount.<br><br>
                             If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
                             <br><br>
                             <b>
