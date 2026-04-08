@@ -385,7 +385,7 @@ class StripeController extends Controller
                 if ($user == null) {
                     return;
                 }
-                $this->activity($user->first()->id)->event("Subscription")
+                $this->activity($user->id)->event("Subscription")
                     ->eventType("Subscription")
                     ->descriptionSimple($message)
                     ->notification()
