@@ -238,10 +238,15 @@ class StripeController extends Controller
 
                 break;
 
+
             case 'customer.subscription.updated':
-                $message = 'Your subscription has been canceled successfully.';
 
                 $eventObj = $event->data->object;
+
+                // ❗ Only handle scheduled cancellation
+                if (!$eventObj->cancel_at_period_end) {
+                    return;
+                }
 
                 $subscription = DB::table('subscriptions')
                     ->where('stripe_id', $eventObj->id)
@@ -255,17 +260,9 @@ class StripeController extends Controller
                 if (!$user)
                     return;
 
-                // 🔥 IMPORTANT: detect cancel type
-                $isCancelAtPeriodEnd = $eventObj->cancel_at_period_end;
+                $message = 'Your subscription will be canceled at the end of billing period.';
 
-                // ✅ Set correct message
-                if ($isCancelAtPeriodEnd) {
-                    $message = 'Your subscription will be canceled at the end of billing period.';
-                } else {
-                    $message = 'Your subscription has been canceled immediately.';
-                }
-
-                // 🔔 Send notification
+                // 🔔 Notification
                 $fcmTokens = DB::table('session_table')
                     ->where('users_id', $user->id)
                     ->where('is_main_account', 1)
@@ -274,10 +271,8 @@ class StripeController extends Controller
                     ->pluck('fcm_token')
                     ->toArray();
 
-                if (!empty($fcmTokens)) {
-                    foreach ($fcmTokens as $token) {
-                        $this->notification->send($token, "Subscription", $message);
-                    }
+                foreach ($fcmTokens as $token) {
+                    $this->notification->send($token, "Subscription", $message);
                 }
 
                 // 📝 Activity log
@@ -292,52 +287,31 @@ class StripeController extends Controller
                         "subscription" => $eventObj
                     ])->save();
 
-
-
-                if ($isCancelAtPeriodEnd) {
-
-
-                    DB::table('subscriptions')
-                        ->where('stripe_id', $eventObj->id)
-                        ->update([
-                            'stripe_status' => $eventObj->status, // usually 'active'
-                            'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
-                        ]);
-
-                } else {
-
-
-                    DB::table('subscriptions')
-                        ->where('stripe_id', $eventObj->id)
-                        ->update([
-                            'stripe_status' => $eventObj->status,
-                            'ends_at' => now()
-                        ]);
-                }
-
+                // 🗄️ DB update (still active until period end)
+                DB::table('subscriptions')
+                    ->where('stripe_id', $eventObj->id)
+                    ->update([
+                        'stripe_status' => $eventObj->status, // active
+                        'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
+                    ]);
 
                 // 📧 Email
-                if ($isCancelAtPeriodEnd) {
-                    $emailMsg = "Your subscription will remain active until " . date("d M Y", $eventObj->current_period_end);
-                } else {
-                    $emailMsg = "Your subscription has been canceled immediately.";
-                }
+                $emailMsg = "Your subscription will remain active until " . date("d M Y", $eventObj->current_period_end);
 
                 $html = '<html>
-                Hi, ' . ucwords($user->name) . '<br><br>
-                ' . $emailMsg . '<br><br>
-                To renew your subscription, please visit: ' . env('APP_URL') . '
-                <br><br>
-                <b>Thanks,<br>Team Streamly</b>
+                    Hi, ' . ucwords($user->name) . '<br><br>
+                    ' . $emailMsg . '<br><br>
+                    To renew your subscription, please visit: ' . env('APP_URL') . '
+                    <br><br>
+                    <b>Thanks,<br>Team Streamly</b>
                     </html>';
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-                    $message->to($user->email, $user->name);
-                    $message->bcc($this->bcc)
+                    $message->to($user->email, $user->name)
                         ->subject('Subscription Update - ' . env('APP_NAME'));
                 });
-                break;
 
+                break;
 
 
 
