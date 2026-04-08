@@ -97,6 +97,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   isHoaMainUser: boolean = false;
   urlList: Array<String> = [];
   isSearchComponent: boolean = true;
+  currentYear: number = new Date().getFullYear();
   private searchSubject: Subject<string> = new Subject();
 
   constructor(
