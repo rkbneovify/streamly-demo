@@ -611,9 +611,7 @@ class StripeController extends Controller
                     "message" => "Subscription not found"
                 ], 404);
             }
-            $user->subscription('main')->skipTrial()->cancelNow();
-            $subscription->stripe_status = "canceled";
-            $subscription->save();
+            $user->subscription('main')->cancel();
             DB::commit();
             return response()->json(['response_code' => 200, 'message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
