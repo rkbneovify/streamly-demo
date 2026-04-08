@@ -232,96 +232,111 @@ class StripeController extends Controller
                         });
                         break;
 
-                    // case 'subscription_update':
-                    //     // Plan change
-                    //     break;
+
                 }
 
 
                 break;
 
-            // case 'customer.subscription.updated':
-            //     $subscription = $event->data->object;
-            //     $previous = $event->data->previous_attributes ?? null;
+            case 'customer.subscription.updated':
+                $message = 'Your subscription has been canceled successfully.';
 
-            //     if (!isset($previous->items)) {
-            //         return;
-            //     }
-            //     $message = 'Your subscription plan has been updated successfully.';
-            //     $user = DB::table('users')
-            //         ->where('stripe_id', $subscription->customer)
-            //         ->first();
-            //     $this->activity($user->id)->event("Subscription")
-            //         ->eventType("Subscription")
-            //         ->descriptionSimple($message)
-            //         ->notification()
-            //         ->isUser()
-            //         ->isAdmin()
-            //         ->properties([
-            //             "user" => $user,
-            //             "subscription" => $subscription,
-            //         ])->save();
+                $eventObj = $event->data->object;
 
+                $subscription = DB::table('subscriptions')
+                    ->where('stripe_id', $eventObj->id)
+                    ->latest()
+                    ->first();
 
-            //     $fcmTokens = DB::table('session_table')
-            //         ->where('users_id', $user->id)
-            //         ->where('is_main_account', 1)
-            //         ->where('status', 1)
-            //         ->whereNotNull('fcm_token')
-            //         ->pluck('fcm_token')->toArray();
-            //     if ($fcmTokens != null && count($fcmTokens) > 0) {
-            //         foreach ($fcmTokens as $token) {
-            //             $this->notification->send($token, "Subscription", $message);
-            //         }
-            //     }
+                if (!$subscription)
+                    return;
 
-            //     $updateData = [
-            //         'stripe_status' => $subscription->status,
-            //         'stripe_plan' => $subscription->plan->id,
-            //         'quantity' => $subscription->quantity,
-            //         'livemode' => (int) $subscription->livemode,
-            //         'updated_at' => now(),
-            //     ];
+                $user = DB::table('users')->where('id', $subscription->user_id)->first();
+                if (!$user)
+                    return;
 
-            //     if ($subscription->status === 'active') {
-            //         $updateData['trial_ends_at'] = null;
-            //     }
+                // 🔥 IMPORTANT: detect cancel type
+                $isCancelAtPeriodEnd = $eventObj->cancel_at_period_end;
 
-            //     DB::table('subscriptions')
-            //         ->where('user_id', $user->id)
-            //         ->update($updateData);
+                // ✅ Set correct message
+                if ($isCancelAtPeriodEnd) {
+                    $message = 'Your subscription will be canceled at the end of billing period.';
+                } else {
+                    $message = 'Your subscription has been canceled immediately.';
+                }
 
+                // 🔔 Send notification
+                $fcmTokens = DB::table('session_table')
+                    ->where('users_id', $user->id)
+                    ->where('is_main_account', 1)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->pluck('fcm_token')
+                    ->toArray();
 
-            //     $plan = $subscription->plan;
-            //     $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
-            //     $interval = $plan->interval; // e.g., "month", "year"
-            //     $quantity = $subscription->quantity; // Subscription quantity
-            //     $planName = $plan->nickname ?: 'Default Plan';
+                if (!empty($fcmTokens)) {
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, "Subscription", $message);
+                    }
+                }
+
+                // 📝 Activity log
+                $this->activity($user->id)->event("Subscription")
+                    ->eventType("Subscription")
+                    ->descriptionSimple($message)
+                    ->notification()
+                    ->isUser()
+                    ->isAdmin()
+                    ->properties([
+                        "user" => $user,
+                        "subscription" => $eventObj
+                    ])->save();
 
 
 
-            //     $html = '
-            //                     <html>
-            //                         Hi, ' . ucwords($user->name) . '<br><br>
-            //                       Your subscription plan has been changed, and the updated plan is now active. You have been charged as per the new plan details:<br><br>
-            //                         <b>Subscription Details:</b><br>
-            //                         Plan: ' . htmlspecialchars($planName) . '<br>
-            //                         Amount: $' . $amount . '<br>
-            //                         Quantity: ' . $quantity . '<br>
-            //                         Billing Interval: ' . ucfirst($interval) . '<br><br>
-            //                         Thank you for choosing to stay with us!<br><br>
-            //                         If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
-            //                         <b>Thanks,<br>
-            //                         Team Streamly</b>
-            //                     </html>';
+                if ($isCancelAtPeriodEnd) {
 
-            //     Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-            //         $message->to($user->email, $user->name)
-            //             ->bcc($this->bcc)
-            //             ->subject('Your subscription plan changed - ' . env('APP_NAME'));
-            //     });
 
-            //     break;
+                    DB::table('subscriptions')
+                        ->where('stripe_id', $eventObj->id)
+                        ->update([
+                            'stripe_status' => $eventObj->status, // usually 'active'
+                            'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
+                        ]);
+
+                } else {
+
+
+                    DB::table('subscriptions')
+                        ->where('stripe_id', $eventObj->id)
+                        ->update([
+                            'stripe_status' => $eventObj->status,
+                            'ends_at' => now()
+                        ]);
+                }
+
+
+                // 📧 Email
+                if ($isCancelAtPeriodEnd) {
+                    $emailMsg = "Your subscription will remain active until " . date("d M Y", $eventObj->current_period_end);
+                } else {
+                    $emailMsg = "Your subscription has been canceled immediately.";
+                }
+
+                $html = '<html>
+                Hi, ' . ucwords($user->name) . '<br><br>
+                ' . $emailMsg . '<br><br>
+                To renew your subscription, please visit: ' . env('APP_URL') . '
+                <br><br>
+                <b>Thanks,<br>Team Streamly</b>
+                    </html>';
+
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                    $message->to($user->email, $user->name);
+                    $message->bcc($this->bcc)
+                        ->subject('Subscription Update - ' . env('APP_NAME'));
+                });
+                break;
 
 
 
@@ -396,7 +411,7 @@ class StripeController extends Controller
 
                     ])->save();
                 $fcmTokens = DB::table('session_table')
-                    ->where('users_id', $user[0]->id)
+                    ->where('users_id', $user->id)
                     ->where('status', 1)
                     ->where('is_main_account', 1)
                     ->whereNotNull('fcm_token')
@@ -409,7 +424,7 @@ class StripeController extends Controller
                 }
 
                 $html = '<html>
-                            Hi ' . ucwords($user[0]->name) . ',<br><br>
+                            Hi ' . ucwords($user->name) . ',<br><br>
                             Your trail period is ending on ' . date("Y-m-d", $eventObj->trial_end) . '.
                             after the trial period ends, your credit card will be billed the monthly subscription amount.<br><br>
                             If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
@@ -421,7 +436,7 @@ class StripeController extends Controller
                         </html>';
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
-                    $message->to($user[0]->email, $user[0]->name);
+                    $message->to($user->email, $user->name);
                     $message->bcc($this->bcc)
                         ->subject('Your trail period is ending soon ' . env('APP_NAME'));
                 });
