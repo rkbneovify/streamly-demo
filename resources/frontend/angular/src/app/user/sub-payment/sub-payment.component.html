@@ -1,8 +1,5 @@
 <div class="row_5 row py-4 pt-5 position-relative">
-  <div
-    *ngIf="selectedPlanType == 'per_unit'"
-    class="col-12 col-md-4 cart-content d-flex flex-column"
-  >
+  <div *ngIf="selectedPlanType == 'per_unit'" class="col-12 col-md-4 cart-content d-flex flex-column">
     <div class="row_5_rt d-flex flex-column m-3">
       <div class="row_5_heading">
         <h2>Cart</h2>
@@ -11,16 +8,10 @@
         <div class="row_plans d-flex justify-content-between pt-4 pb-5">
           <p class="fw-bolder">Basic Plan</p>
           <div>
-            <img
-              loading="lazy"
-              src="../../../assets/dummy-img/shopping-cart-03.svg"
-              alt=""
-            />
+            <img loading="lazy" src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
           </div>
         </div>
-        <div
-          class="row_plans flex-column-flex justify-content-between pt-2 pb-3"
-        >
+        <div class="row_plans flex-column-flex justify-content-between pt-2 pb-3">
           <div class="d-flex justify-content-between mb-2">
             <p class="fw-bolder">
               {{ checkoutPlans?.plandetails.nickname }}
@@ -34,9 +25,9 @@
             <p class="fw-bolder">Trial</p>
             <p>
               {{
-                checkoutPlans?.plandetails.trial_period_days
-                  ? checkoutPlans?.plandetails.trial_period_days + " days"
-                  : "No trials days"
+              checkoutPlans?.plandetails.trial_period_days
+              ? checkoutPlans?.plandetails.trial_period_days + " days"
+              : "No trials days"
               }}
             </p>
           </div>
@@ -49,34 +40,21 @@
             <p>
               $
               {{
-                discount > 0
-                  ? (discount | number : "1.2-2") + " off"
-                  : (discount | number : "1.2-2")
+              discount > 0
+              ? (discount | number : "1.2-2") + " off"
+              : (discount | number : "1.2-2")
               }}
             </p>
           </div>
           <div class="d-flex justify-content-between mt-2">
-            <input
-              [formControl]="couponFormControl"
-              type="text"
-              class="input_standred input-coupon"
-              placeholder="Coupon Code"
-              [readOnly]="isCouPonApply"
-            />
+            <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon"
+              placeholder="Coupon Code" [readOnly]="isCouPonApply" />
             <!-- <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button> -->
-            <button
-              *ngIf="!isCouPonApply"
-              class="btn_hover btn-coupon"
-              [class.btn-bg-gold]="couponFormControl.value != ''"
-              (click)="validateCoupon()"
-            >
+            <button *ngIf="!isCouPonApply" class="btn_hover btn-coupon"
+              [class.btn-bg-gold]="couponFormControl.value != ''" (click)="validateCoupon()">
               Apply
             </button>
-            <button
-              *ngIf="isCouPonApply"
-              class="btn-coupon btn_hover btn-bg-gold"
-              (click)="cancelDisCount()"
-            >
+            <button *ngIf="isCouPonApply" class="btn-coupon btn_hover btn-bg-gold" (click)="cancelDisCount()">
               Cancel
             </button>
           </div>
@@ -94,59 +72,38 @@
           <img loading="lazy" src="../../../assets/dummy-img/visa.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/american.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/american.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/discover.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/discover.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/mastercard.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/mastercard.svg" alt="" />
         </div>
       </div>
     </div>
   </div>
 
-  <div
-    *ngIf="selectedPlanType == 'tiered'"
-    class="col-12 col-md-4 cart-content d-flex flex-column"
-  >
+  <div *ngIf="selectedPlanType == 'tiered'" class="col-12 col-md-4 cart-content d-flex flex-column">
     <div class="row_5_rt d-flex flex-column m-3">
       <div class="row_5_heading pt-2">
         <h2>Your Bill summary</h2>
       </div>
       <div class="row_5_items d-flex flex-column gap-4">
-        <div
-          class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column"
-        >
-        <p class="text-nowrap">
-          $
-          {{
+        <div class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column">
+          <p class="text-nowrap">
+            $
+            {{
             getTierUnitAmount(checkoutPlans?.plandetails?.tiers, device_per_unit) / 100
-          }}
-          per device/ per month
-        </p>
-        
+            }}
+            per device/ per month
+          </p>
+
           <div class="counter d-flex justify-content-center mt-3">
             <button class="btn-inc btn-count me-2" (click)="decrement()">
               -
             </button>
-            <input
-              class="w-25 input_standred text-center"
-              [formControl]="counterControl"
-              readonly
-            />
+            <input class="w-25 input_standred text-center" [formControl]="counterControl" readonly />
             <button class="btn-count ms-2" (click)="increment()">+</button>
           </div>
         </div>
@@ -160,26 +117,13 @@
             <p>$ {{ discount > 0 ? discount + " off" : discount }}</p>
           </div>
           <div class="d-flex justify-content-between">
-            <input
-              [formControl]="couponFormControl"
-              type="text"
-              class="input_standred input-coupon"
-              placeholder="Coupon Code"
-              [readOnly]="isCouPonApply"
-            />
-            <button
-              *ngIf="!isCouPonApply"
-              class="btn_hover btn-coupon"
-              [class.btn-bg-gold]="couponFormControl.value != ''"
-              (click)="validateCoupon()"
-            >
+            <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon"
+              placeholder="Coupon Code" [readOnly]="isCouPonApply" />
+            <button *ngIf="!isCouPonApply" class="btn_hover btn-coupon"
+              [class.btn-bg-gold]="couponFormControl.value != ''" (click)="validateCoupon()">
               Apply
             </button>
-            <button
-              *ngIf="isCouPonApply"
-              class="btn-coupon btn_hover btn-bg-gold"
-              (click)="cancelDisCount()"
-            >
+            <button *ngIf="isCouPonApply" class="btn-coupon btn_hover btn-bg-gold" (click)="cancelDisCount()">
               Cancel
             </button>
           </div>
@@ -187,12 +131,8 @@
 
         <div class="row_total flex-column justify-content-between">
           <div class="pointer" (click)="showplansDetails = !showplansDetails">
-            <img
-              loading="lazy"
-              [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
-              src="../../../assets/dummy-img/chevron-down.svg"
-              alt=""
-            />
+            <img loading="lazy" [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
+              src="../../../assets/dummy-img/chevron-down.svg" alt="" />
             <div class="text-center tiers">Tiers 1 months</div>
           </div>
 
@@ -203,10 +143,8 @@
               <div class="h-auto py-3">Flat amount</div>
             </div>
 
-            <div
-              *ngFor="let tPlans of checkoutPlans?.plandetails.tiers"
-              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
-            >
+            <div *ngFor="let tPlans of checkoutPlans?.plandetails.tiers"
+              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
               <div *ngIf="tPlans.up_to">
                 For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
                 {{ tPlans.up_to }}
@@ -237,10 +175,7 @@
             </p>
           </div>
 
-          <div
-            id="tier__b"
-            class="tier__b pt-2 d-flex justify-content-between align-item-center"
-          >
+          <div id="tier__b" class="tier__b pt-2 d-flex justify-content-between align-item-center">
             <p class="fw-bolder">Total</p>
             <p class="total">${{ grandTotalPrice }}</p>
           </div>
@@ -255,57 +190,31 @@
           <img loading="lazy" src="../../../assets/dummy-img/visa.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/american.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/american.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/discover.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/discover.svg" alt="" />
         </div>
         <div class="card">
-          <img
-            loading="lazy"
-            src="../../../assets/dummy-img/mastercard.svg"
-            alt=""
-          />
+          <img loading="lazy" src="../../../assets/dummy-img/mastercard.svg" alt="" />
         </div>
       </div>
     </div>
   </div>
 
-  <form
-    [formGroup]="paymentFormDetailSub"
-    class="col-12 col-md-8 px-4 carts-details"
-  >
+  <form [formGroup]="paymentFormDetailSub" class="col-12 col-md-8 px-4 carts-details">
     <div class="row gy-2 row1">
       <div class="col-6 col-md-6 ps-0">
         <p>Name on Card <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            form
-            type="text"
-            placeholder="Enter Name"
-            formControlName="nameOnCard"
-            (keypress)="allowOnlyStrings($event)"
-          />
+          <input form type="text" placeholder="Enter Name" formControlName="nameOnCard"
+            (keypress)="allowOnlyStrings($event)" />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('nameOnCard').touched &&
               paymentFormDetailSub.get('nameOnCard').invalid
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('nameOnCard').errors?.['required']"
-              >Name is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('nameOnCard').errors?.['required']">Name is required.</small>
           </div>
         </div>
       </div>
@@ -336,40 +245,19 @@
             bindLabel="label"
           >
           </ng-select> -->
-          <ng-select
-            class="res-ngselect"
-            formControlName="cardZip"
-            [items]="zipcodedata"
-            (input)="onZipcodeInput($event)"
-            placeholder="Search zipcode"
-            (search)="onSearch($event)"
-            (change)="onSelect($event)"
-            [searchable]="true"
-            bindLabel="label"
-            (keypress)="onZipcodeKeyPress($event)"
-
-
-          >
+          <ng-select class="res-ngselect" formControlName="cardZip" [items]="zipcodedata"
+            (input)="onZipcodeInput($event)" placeholder="Search zipcode" (search)="onSearch($event)"
+            (change)="onSelect($event)" [searchable]="true" bindLabel="label" (keypress)="onZipcodeKeyPress($event)">
           </ng-select>
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('cardZip').touched &&
               paymentFormDetailSub.get('cardZip').invalid
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('cardZip').errors?.['required']"
-              >Card Zip is required.</small
-            >
-            <small
-              *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['minlength']"
-              >Please enter a valid 5-digit zipcode.</small
-            >
-            <small
-              *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['maxlength']"
-              >Please enter a valid 5-digit zipcode.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('cardZip').errors?.['required']">Card Zip is required.</small>
+            <small *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['minlength']">Please enter a valid 5-digit
+              zipcode.</small>
+            <small *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['maxlength']">Please enter a valid 5-digit
+              zipcode.</small>
           </div>
         </div>
       </div>
@@ -379,25 +267,13 @@
       <div class="col-12 col-md-12 ps-0">
         <p>Email <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            type="email"
-            placeholder="Enter Email"
-            required
-            formControlName="cardEmail"
-            readonly
-          />
+          <input type="email" placeholder="Enter Email" required formControlName="cardEmail" readonly />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('cardEmail').touched &&
               paymentFormDetailSub.get('cardEmail').invalid
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('cardEmail').errors?.['required']"
-              >Email is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('cardEmail').errors?.['required']">Email is required.</small>
           </div>
         </div>
       </div>
@@ -408,34 +284,20 @@
         <!-- <button (click)="paymentShowData()"></button> -->
         <p>Address 1 <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            type="text"
-            placeholder="Enter Address 1"
-            formControlName="address1"
-          />
+          <input type="text" placeholder="Enter Address 1" formControlName="address1" />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('address1').touched &&
               paymentFormDetailSub.get('address1').invalid
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('address1').errors?.['required']"
-              >Address 1 is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('address1').errors?.['required']">Address 1 is required.</small>
           </div>
         </div>
       </div>
       <div class="col-6 px-0">
         <p>Address 2</p>
         <div class="card-input">
-          <input
-            type="text"
-            placeholder="Enter Address 2"
-            formControlName="address2"
-          />
+          <input type="text" placeholder="Enter Address 2" formControlName="address2" />
         </div>
       </div>
     </div>
@@ -444,76 +306,45 @@
       <div class="col-6 col-md-4 ps-0">
         <p>City <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            type="text"
-            placeholder="Enter City"
-            formControlName="paymentCity"
-            (keypress)="allowOnlyStrings($event)"
-          />
+          <input type="text" placeholder="Enter City" formControlName="paymentCity"
+            (keypress)="allowOnlyStrings($event)" />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('paymentCity').touched &&
               paymentFormDetailSub.get('paymentCity').invalid
 
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('paymentCity').errors?.['required']"
-              >City is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('paymentCity').errors?.['required']">City is required.</small>
           </div>
         </div>
       </div>
       <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
         <p>State <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            type="text"
-            placeholder="Enter State"
-            formControlName="paymentState"
-            (keypress)="allowOnlyStrings($event)"
-          />
+          <input type="text" placeholder="Enter State" formControlName="paymentState"
+            (keypress)="allowOnlyStrings($event)" />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
 
               paymentFormDetailSub.get('paymentState').touched &&
               paymentFormDetailSub.get('paymentState').invalid
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('paymentState').errors?.['required']"
-              >State is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('paymentState').errors?.['required']">State is required.</small>
           </div>
         </div>
       </div>
       <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
         <p>Country <span class="text-danger">*</span></p>
         <div class="card-input">
-          <input
-            type="text"
-
-            placeholder="Enter Country"
-            formControlName="country"
-            (keypress)="allowOnlyStrings($event)"
-          />
+          <input type="text" placeholder="Enter Country" formControlName="country"
+            (keypress)="allowOnlyStrings($event)" />
           <!--validation error -->
-          <div
-            *ngIf="
+          <div *ngIf="
               paymentFormDetailSub.get('country').touched &&
               paymentFormDetailSub.get('country').invalid
               
-            "
-            class="text-danger"
-          >
-            <small
-              *ngIf="paymentFormDetailSub.get('country').errors?.['required']"
-              >country is required.</small
-            >
+            " class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('country').errors?.['required']">country is required.</small>
           </div>
         </div>
       </div>
@@ -531,26 +362,21 @@
     </div>
     <div class="row gy-2 justify-content-end">
       <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
-        <button
-          [class.spinner]="loading"
-          [disabled]="loading"
-          [disabled]="!paymentFormDetailSub.valid || !checkCardDetail"
-          type="submit"
-          [ngClass]="{
+        <button [class.spinner]="loading" [disabled]="loading"
+          [disabled]="!paymentFormDetailSub.valid || !checkCardDetail" type="submit" [ngClass]="{
             'flex-fill position-relative': true,
             'btn-bg-gold': paymentFormDetailSub.valid && checkCardDetail,
             'cursor-not-allow': !paymentFormDetailSub.valid || !checkCardDetail
-          }"
-          (click)="createStripeToken()"
-        >
+          }" (click)="createStripeToken()">
           <span *ngIf="!loading">
             {{
-              checkoutPlans?.plandetails?.trial_period_days &&
-              checkoutPlans?.plandetails?.trial_period_days > 0
-                ? "Start your " +
-                  checkoutPlans?.plandetails?.trial_period_days +
-                  " days trial"
-                : "Subscribe Now"
+            checkoutPlans?.plandetails?.trial_period_days &&
+            checkoutPlans?.plandetails?.trial_period_days > 0 &&
+            trialTaken == 0 || trialTaken == null
+            ? "Start your " +
+            checkoutPlans?.plandetails?.trial_period_days +
+            " days trial"
+            : "Subscribe Now"
             }}
           </span>
         </button>

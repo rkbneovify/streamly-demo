@@ -80,6 +80,7 @@ export class SubPaymentComponent implements OnInit {
   device_per_unit: number = 5;
 
   stripeKey: string = '';
+  trialTaken: number = 0;
 
   @ViewChild('cardInfo') public cardInfo!: ElementRef;
   _totalAmount: number = 10;
@@ -98,7 +99,7 @@ export class SubPaymentComponent implements OnInit {
   ) {
 
     const UserEmail = JSON.parse(localStorage.getItem('userDetails')).email ? JSON.parse(localStorage.getItem('userDetails')).email : '';
-
+    this.trialTaken = JSON.parse(localStorage.getItem('userDetails'));
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', Validators.required],
@@ -160,6 +161,7 @@ export class SubPaymentComponent implements OnInit {
   }
 
   async ngOnInit() {
+
     this.searchTerms
       .pipe(
         debounceTime(300),
