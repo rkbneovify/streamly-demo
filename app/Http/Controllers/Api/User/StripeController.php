@@ -256,12 +256,15 @@ class StripeController extends Controller
                     } else {
                         $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
                     }
+
+                    if ($request->trial_days > 0) {
+                        $user->trial_taken = 1;
+                        $user->save();
+                    }
+
                 } catch (\Exception $e) {
 
-                    if (isset($user->id)) {
-
-                        $user->delete();
-                    }
+                    DB::rollBack();
                     return response()->json([
                         'error' => 'Something Went Wrong.',
                         'message' => $e->getMessage()
@@ -662,6 +665,11 @@ class StripeController extends Controller
                 $StripeplanId = $request->plan_id;
                 $quantity = $request->quantity ?? 1;
 
+                if ($user->trial_taken == 1) {
+
+                    $trial_days = null;
+
+                }
                 // 1. Create Payment Method
                 $paymentMethod = PaymentMethod::create([
                     'type' => 'card',
