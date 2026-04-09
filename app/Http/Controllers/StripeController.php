@@ -369,7 +369,7 @@ class StripeController extends Controller
             case 'customer.subscription.trial_will_end':
 
                 $eventObj = $event->data->object;
-                $message = "Your trial will end soon " . date("d/m/y", $eventObj->trial_end) . " After the trial period ends, your card will be automatically charged the monthly subscription fee.";
+                $message = "Your trial will end soon " . date("d/m/y", $eventObj->trial_end) . ". After the trial period ends, your card will be automatically charged the monthly subscription fee.";
                 $user = DB::table('users')->where('stripe_id', $eventObj->customer)->first();
                 if ($user == null) {
                     return;
