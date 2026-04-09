@@ -61,6 +61,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   isHoaSubUser: boolean | null = false;
   hoaSubUSerSubscription: any = null;
   hoaMainUserSubscription: any = null;
+  subscreptionCanceled: boolean = false;
+  planExpiredAt: Date;
 
   constructor(
     private fb: FormBuilder,
@@ -278,6 +280,10 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
             this.cardDetails = res?.subscription?.payment_method;
             this.cardDetails1 = res?.card_details;
             this.tiredPlansDetails = res?.plan.tiers;
+            this.subscreptionCanceled = res?.subscription.canceled;
+
+
+            this.planExpiredAt = new Date(res?.subscription.plan_expired_at);
             this.qunantity =
               res.subscription.plan_type == 'per_unit'
                 ? 1

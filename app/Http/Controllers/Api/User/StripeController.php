@@ -553,6 +553,8 @@ class StripeController extends Controller
                 'plan_type' => $plan_type ?? null,
                 'renewaldatetime' => $renewaldatetime ?? null,
                 'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
+                'canceled' => $subscription->cancel_at_period_end,
+                'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
             ];
 
             $response_to_send['subscription'] = $subscription_data;
