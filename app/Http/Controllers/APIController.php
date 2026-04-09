@@ -1190,6 +1190,7 @@ class APIController extends Controller
                                     ->where(['user_id' => $id, 'stripe_status' => 'active'])
                                     ->update(['stripe_status' => "canceled"]);
                             } else {
+                                $User->subscription('main')->skipTrial()->cancelNow();
                                 DB::table('subscriptions')
                                     ->where(['user_id' => $id, 'stripe_status' => 'active'])
                                     ->update(['stripe_status' => "canceled"]);
