@@ -315,7 +315,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email Trail
-            $this->sendSubscriptionConfirmationEmailTrail($user);
+            // $this->sendSubscriptionConfirmationEmailTrail($user);
         } else {
             $newSubscription = $user->newSubscription('main', $StripeplanId)
                 ->quantity($quantity)
@@ -324,7 +324,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email
-            $this->sendSubscriptionConfirmationEmail($user);
+            // $this->sendSubscriptionConfirmationEmail($user);
         }
         $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
@@ -342,7 +342,7 @@ class StripeController extends Controller
             //send user email after successfull payment
             // Send confirmation email Trail
 
-            $this->sendSubscriptionConfirmationEmailTrail($user);
+            // $this->sendSubscriptionConfirmationEmailTrail($user);
         } else {
             $newSubscription = $user->newSubscription('main', $StripeplanId)
                 ->quantity($quantity)
@@ -350,7 +350,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email
-            $this->sendSubscriptionConfirmationEmail($user);
+            // $this->sendSubscriptionConfirmationEmail($user);
         }
         $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
