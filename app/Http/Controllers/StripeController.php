@@ -296,21 +296,21 @@ class StripeController extends Controller
                     ]);
 
                 // 📧 Email
-                $emailMsg = "Your subscription will remain active until " . date("d M Y", $eventObj->current_period_end);
+                $emailMsg = "Your subscription auto-renewal has been successfully cancelled.<br><br>
+                    Your current plan will remain active until " . date("d M Y", $eventObj->current_period_end) . ", after which it will expire automatically, and you will not be charged further.<br><br>
+                    If you wish to renew your subscription in the future, you can do so by visiting:<br>" . env('APP_URL');
 
                 $html = '<html>
-                    Hi, ' . ucwords($user->name) . '<br><br>
-                    ' . $emailMsg . '<br><br>
-                    To renew your subscription, please visit: ' . env('APP_URL') . '
-                    <br><br>
-                    <b>Thanks,<br>Team Streamly</b>
-                    </html>';
+                        Hi, ' . ucwords($user->name) . '<br><br>
+                        ' . $emailMsg . '
+                        <br><br>
+                        <b>Thanks,<br>Team Streamly</b>
+                        </html>';
 
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($user, $eventObj) {
                     $message->to($user->email, $user->name)
-                        ->subject('Subscription Update - ' . env('APP_NAME'));
+                        ->subject('Auto-Renewal Cancelled – Subscription Active Until ' . date("d M Y", $eventObj->current_period_end));
                 });
-
                 break;
 
 
