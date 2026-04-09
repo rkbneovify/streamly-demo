@@ -63,6 +63,12 @@ class StripeController extends Controller
                 $interval = $plan->interval;
                 $quantity = $subscription->items->data[0]->quantity;
 
+                // Common dates
+                $nextBillingDate = date('d M Y', $subscription->current_period_end);
+                $trialEndDate = $subscription->trial_end
+                    ? date('d M Y', $subscription->trial_end)
+                    : null;
+
                 switch ($invoice->billing_reason) {
                     case 'subscription_create':
                         // subscription without trial
@@ -94,31 +100,40 @@ class StripeController extends Controller
                             }
 
                             $html = '
-                            <html>
-                                Hi, ' . ucwords($user->name) . '<br><br>
+                <html>
+                    Hi, ' . ucwords($user->name) . '<br><br>
 
-                                Your subscription has been successfully activated. You have been charged as per the following details:<br><br>
+                    Thanks for Subscribing! ' . env('APP_NAME') . '.<br>
+                    Your subscription is now active.<br><br>
 
-                                <b>Subscription Details:</b><br>
-                                Plan: ' . htmlspecialchars($planName) . '<br>
-                                Amount: $' . $amount . '<br>
-                                Quantity: ' . $quantity . '<br>
-                                Billing Interval: ' . ucfirst($interval) . '<br><br>
+                    <b>Subscription Details:</b><br>
+                    Plan: ' . htmlspecialchars($planName) . '<br>
+                    Amount: $' . $amount . '<br>
+                    Quantity: ' . $quantity . '<br>
+                    Billing Interval: ' . ucfirst($interval) . '<br>
+                    Next Billing Date: ' . $nextBillingDate . '<br><br>
 
-                                You can now enjoy all the features included in your plan.<br><br>
+                    Start watching StreamlyTV here:<br>
+                    <a href="' . env('APP_URL') . '" target="_blank"
+                        style="display:inline-block;padding:10px 18px;margin-top:8px;
+                        background-color:#4CAF50;color:#ffffff;text-decoration:none;
+                        border-radius:5px;font-weight:bold;">
+                        ▶ Start Watching
+                    </a><br><br>
 
-                                Thank you for choosing to stay with us!<br><br>
+                    Or download the StreamlyTV App on your preferred device:<br>
+                    Apple • Apple TV • Android • Amazon Fire • Roku • Smart TVs<br><br>
 
-                                If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
+                    If you have any questions, contact us at contact@streamlytv.com.<br><br>
 
-                                <b>Thanks,<br>
-                                Team Streamly</b>
-                            </html>';
+                    Thanks!<br>
+                    Team Streamly
+                </html>';
 
                             Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                                 $message->to($user->email, $user->name)
                                     ->bcc($this->bcc)
-                                    ->subject('Your streamly subscription is now active - ' . env('APP_NAME'));
+                                    ->subject('Your Subscription is Now Active - ' . env('APP_NAME'));
                             });
                         } else {
                             // subscription with trial
@@ -150,30 +165,45 @@ class StripeController extends Controller
                             }
 
                             $html = '
-                                <html>
-                                    Hi, ' . ucwords($user->name) . '<br><br>
+                <html>
+                    Hi, ' . ucwords($user->name) . '<br><br>
 
-                                    Your free trial has started successfully.<br>
-                                    Enjoy all the features included in your trial plan during the trial period.<br><br>
+                 
+                    Your free trial has started successfully.<br><br>
 
-                                    <b>Trial Details:</b><br>
-                                    Plan: ' . htmlspecialchars($planName) . '<br>
-                                    Quantity: ' . $quantity . '<br>
-                                    Billing Interval: ' . ucfirst($interval) . '<br>
-                                    Trial Ends On: ' . date('d M Y', $subscription->trial_end) . '<br><br>
+                    <b>Trial Details:</b><br>
+                    Plan: ' . htmlspecialchars($planName) . '<br>
+                    Quantity: ' . $quantity . '<br>
+                    Billing Interval: ' . ucfirst($interval) . '<br>
+                    Trial Ends On: ' . $trialEndDate . '<br>
+                    First Billing Date: ' . $trialEndDate . '<br><br>
 
-                                    Once your trial ends, your subscription will become active automatically as per your selected plan.<br><br>
+                    Enjoy full access during your trial period.<br>
+                    Your subscription will be activated automatically after trial.<br><br>
 
-                                    If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
+                    Start watching StreamlyTV here:<br>
+                    <a href="' . env('APP_URL') . '" target="_blank"
+                        style="display:inline-block;padding:10px 18px;margin-top:8px;
+                        background-color:#4CAF50;color:#ffffff;text-decoration:none;
+                        border-radius:5px;font-weight:bold;">
+                        ▶ Start Watching
+                    </a><br><br>
 
-                                    <b>Thanks,<br>
-                                    Team Streamly</b>
-                                </html>';
+                    Or download the StreamlyTV App on your preferred device:<br>
+                    Apple • Apple TV • Android • Amazon Fire • Roku • Smart TVs<br><br>
+
+                    <b>Note:</b> Cancel anytime before ' . $trialEndDate . ' to avoid charges.<br><br>
+
+                    If you have any questions, contact us at contact@streamlytv.com.<br><br>
+
+                    Thanks!<br>
+                    Team Streamly
+                </html>';
 
                             Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                                 $message->to($user->email, $user->name)
                                     ->bcc($this->bcc)
-                                    ->subject('Your free trial has started - ' . env('APP_NAME'));
+                                    ->subject('Your Free Trial Has Started - ' . env('APP_NAME'));
                             });
                         }
                         break;
@@ -215,7 +245,8 @@ class StripeController extends Controller
                             Plan: ' . htmlspecialchars($planName) . '<br>
                             Amount: $' . $amount . '<br>
                             Quantity: ' . $quantity . '<br>
-                            Billing Interval: ' . ucfirst($interval) . '<br><br>
+                            Billing Interval: ' . ucfirst($interval) . '<br>
+                            Next Billing Date: ' . $nextBillingDate . '<br><br>
 
                             Thank you for continuing with us! We appreciate your support.<br><br>
 
@@ -295,22 +326,36 @@ class StripeController extends Controller
                         'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
                     ]);
 
-                // 📧 Email
-                $emailMsg = "Your subscription will remain active until " . date("d M Y", $eventObj->current_period_end);
 
-                $html = '<html>
+                $endDate = date("d M Y", $eventObj->current_period_end);
+
+                $html = '
+                <html>
                     Hi, ' . ucwords($user->name) . '<br><br>
-                    ' . $emailMsg . '<br><br>
-                    To renew your subscription, please visit: ' . env('APP_URL') . '
-                    <br><br>
-                    <b>Thanks,<br>Team Streamly</b>
-                    </html>';
 
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                    Your subscription auto-renewal has been successfully cancelled.<br><br>
+
+                    <b>What this means:</b><br>
+                    • Your subscription will remain active until <b>' . $endDate . '</b><br>
+                    • You will not be charged again after this date<br>
+                    • Your access will end automatically after this period<br><br>
+
+                    <b>Subscription Ends On:</b> ' . $endDate . '<br><br>
+
+                    You can continue enjoying all features until the end date.<br><br>
+
+                    
+
+                    If you need help, contact us at contact@streamlytv.com.<br><br>
+
+                    Thanks for being with us,<br>
+                    <b>Team Streamly</b>
+                </html>';
+
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($user, $endDate) {
                     $message->to($user->email, $user->name)
-                        ->subject('Subscription Update - ' . env('APP_NAME'));
+                        ->subject('Subscription Cancelled – Active Until ' . $endDate . ' | ' . env('APP_NAME'));
                 });
-
                 break;
 
 
@@ -346,17 +391,24 @@ class StripeController extends Controller
                         "subscription" => $eventObj
                     ])->save();
 
-                $html = '<html>
-                            Hi ' . ucwords($user->name) . ',<br>
-                            <br>
-                            Your subscription payment failed .<br>
-                            Please visit my accounts by visiting<br>
-                            ' . env('APP_URL') . '/user/user-settings
-                            <br><br>
-                            <b>Thanks,<br>
-                            Team Streamly<b>
+                $html = '
+                <html>
+                    Hi ' . ucwords($user->name) . ',<br><br>
 
-                        </html>';
+                    We were unable to process your subscription payment.<br><br>
+
+                    <b>What you can do:</b><br>
+                    • Update your payment method<br>
+                    • Retry the payment to continue enjoying uninterrupted access<br><br>
+
+                   
+                    If the payment is not completed, your subscription may be paused or cancelled.<br><br>
+
+                    If you need any help, contact us at contact@streamlytv.com.<br><br>
+
+                    Thanks,<br>
+                    <b>Team Streamly</b>
+                </html>';
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
                     $message->to($user->email, $user->name);
@@ -397,17 +449,27 @@ class StripeController extends Controller
                     }
                 }
 
-                $html = '<html>
-                            Hi ' . ucwords($user->name) . ',<br><br>
-                            Your trail period is ending on ' . date("Y-m-d", $eventObj->trial_end) . '.
-                            After the trial period ends, your credit card will be billed the monthly subscription amount.<br><br>
-                            If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
-                            <br><br>
-                            <b>
-                            Thanks<br>
-                            Team Streamly<b>
 
-                        </html>';
+
+                $trialEndDate = date("d M Y", $eventObj->trial_end);
+                $html = '
+                    <html>
+                        Hi ' . ucwords($user->name) . ',<br><br>
+
+                        Your free trial is ending soon on <b>' . $trialEndDate . '</b>.<br><br>
+
+                        After your trial ends, your subscription will automatically continue and your payment method will be charged as per your selected plan.<br><br>
+
+                        To continue enjoying uninterrupted access, no action is required.<br><br>
+                       
+
+                      
+
+                        If you have any questions or need assistance, contact us at contact@streamlytv.com.<br><br>
+
+                        Thanks,<br>
+                        <b>Team Streamly</b>
+                    </html>';
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
                     $message->to($user->email, $user->name);
@@ -461,19 +523,24 @@ class StripeController extends Controller
 
                 // mail
 
-                $html = '<html>
+                $html = '
+                <html>
                     Hi, ' . ucwords($user->name) . '<br><br>
-                    Your StreamlyTV subscription is now canceled.<br>
-                    To renew your subscription, please visit: ' . env('APP_URL') . ', login, and select a plan !.
-                    <br><br>
-                    <b>Thanks,<br>
-                    Team Streamly<b>
+
+                    Your StreamlyTV subscription has been <b>cancelled successfully</b>.<br><br>
+
+                    Your access to all premium features has ended immediately, and you will not be charged further.<br><br>
+
+                    If you need any help, contact us at contact@streamlytv.com.<br><br>
+
+                    Thanks for being with us,<br>
+                    <b>Team Streamly</b>
                 </html>';
 
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
-                    $message->to($user->email, $user->name);
-                    $message->bcc($this->bcc)
-                        ->subject('Your subscription has been canceled. ' . env('APP_NAME'));
+                    $message->to($user->email, $user->name)
+                        ->bcc($this->bcc)
+                        ->subject('Your Subscription Has Been Cancelled – ' . env('APP_NAME'));
                 });
 
                 break;
