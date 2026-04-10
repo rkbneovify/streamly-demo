@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\HotelRoomTable;
+use App\Mail\DeleteAccount;
 use App\SessionTable;
 use App\Traits\ActivityLogger;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -556,8 +557,8 @@ class APIController extends Controller
     public function support()
     {
         $frontendjson = FrontendText::find(1)->frontendjson;
-        $supportemail = $frontendjson['supportemail'] ?? 'contact@streamlytv.com';
-        $supportphone = $frontendjson['supportphone2'] ?? '773727828';
+        $supportemail = $frontendjson['supportemail'] ?? 'support@streamlytv.com';
+        $supportphone = $frontendjson['supportphone2'] ?? '6022450986';
         //$supportphone2= $frontendjson['supportphone']??'1234656477';
         $message = $frontendjson['supportapitext'] ?? "Our team is available 24*7. We'll do our best to respond to your inquiries as soon as possible.\n  \n Need help or have a question? Our support team is here to assist you. You can reach us at the following:";
         $supportnumber = [];
@@ -1190,6 +1191,7 @@ class APIController extends Controller
                                     ->where(['user_id' => $id, 'stripe_status' => 'active'])
                                     ->update(['stripe_status' => "canceled"]);
                             } else {
+                                $User->subscription('main')->skipTrial()->cancelNow();
                                 DB::table('subscriptions')
                                     ->where(['user_id' => $id, 'stripe_status' => 'active'])
                                     ->update(['stripe_status' => "canceled"]);
@@ -1225,13 +1227,13 @@ class APIController extends Controller
                         // }
 
 
+                        Mail::to($User->email)->send(new DeleteAccount($User));
                         DB::table('session_table')
                             ->where('users_id', $id)
-                            ->where('status', "1")
-                            ->update(['status' => "0"]);
-
+                            ->delete();
 
                         DB::commit();
+
                         $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
                         return response()->json($response, 200);
                     } else {

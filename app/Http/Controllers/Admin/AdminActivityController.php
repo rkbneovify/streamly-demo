@@ -55,7 +55,7 @@ class AdminActivityController extends Controller
                 return redirect()->back();
             }
 
-            $data = ActivityLog::whereNull('category')->whereNull('passcode')->where('user_id', $id)->latest()
+            $data = ActivityLog::where('user_id', $id)->latest()
                 ->paginate(10);
             // return response()->json(["activity" => $activities, "paginator" => $paginator]);
             DB::commit();

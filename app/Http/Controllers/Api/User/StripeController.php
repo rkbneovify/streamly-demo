@@ -256,12 +256,15 @@ class StripeController extends Controller
                     } else {
                         $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
                     }
+
+                    if ($request->trial_days > 0) {
+                        $user->trial_taken = 1;
+                        $user->save();
+                    }
+
                 } catch (\Exception $e) {
 
-                    if (isset($user->id)) {
-
-                        $user->delete();
-                    }
+                    DB::rollBack();
                     return response()->json([
                         'error' => 'Something Went Wrong.',
                         'message' => $e->getMessage()
@@ -312,7 +315,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email Trail
-            $this->sendSubscriptionConfirmationEmailTrail($user);
+            // $this->sendSubscriptionConfirmationEmailTrail($user);
         } else {
             $newSubscription = $user->newSubscription('main', $StripeplanId)
                 ->quantity($quantity)
@@ -321,7 +324,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email
-            $this->sendSubscriptionConfirmationEmail($user);
+            // $this->sendSubscriptionConfirmationEmail($user);
         }
         $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
@@ -339,7 +342,7 @@ class StripeController extends Controller
             //send user email after successfull payment
             // Send confirmation email Trail
 
-            $this->sendSubscriptionConfirmationEmailTrail($user);
+            // $this->sendSubscriptionConfirmationEmailTrail($user);
         } else {
             $newSubscription = $user->newSubscription('main', $StripeplanId)
                 ->quantity($quantity)
@@ -347,7 +350,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email
-            $this->sendSubscriptionConfirmationEmail($user);
+            // $this->sendSubscriptionConfirmationEmail($user);
         }
         $this->handleTierRoomCreation($user, $request);
         return $newSubscription;
@@ -550,6 +553,8 @@ class StripeController extends Controller
                 'plan_type' => $plan_type ?? null,
                 'renewaldatetime' => $renewaldatetime ?? null,
                 'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
+                'canceled' => $subscription->cancel_at_period_end,
+                'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
             ];
 
             $response_to_send['subscription'] = $subscription_data;
@@ -611,9 +616,7 @@ class StripeController extends Controller
                     "message" => "Subscription not found"
                 ], 404);
             }
-            $user->subscription('main')->skipTrial()->cancelNow();
-            $subscription->stripe_status = "canceled";
-            $subscription->save();
+            $user->subscription('main')->cancel();
             DB::commit();
             return response()->json(['response_code' => 200, 'message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
@@ -664,6 +667,11 @@ class StripeController extends Controller
                 $StripeplanId = $request->plan_id;
                 $quantity = $request->quantity ?? 1;
 
+                if ($user->trial_taken == 1) {
+
+                    $trial_days = null;
+
+                }
                 // 1. Create Payment Method
                 $paymentMethod = PaymentMethod::create([
                     'type' => 'card',

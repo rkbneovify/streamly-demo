@@ -117,6 +117,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
+    Route::post('/account-delete/otp', 'Auth\AuthController@deleteAccountOtpSend')->middleware(['jwt.verify']);
+    Route::post('/account-delete/otp/verify', 'Auth\AuthController@deleteAccountOtpVerification')->middleware(['jwt.verify']);
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
@@ -194,6 +196,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 
     });
+
+    // Notification
+    Route::prefix('notification')->middleware('jwt.verify')->group(function () {
+        Route::get("/", "Api\ApiNotificationController@index");
+        Route::get("count", "Api\ApiNotificationController@unreadCount");
+    });
+
+
     Route::post('sub-session/store', 'Api\ApiSubSessionController@store')->middleware(['jwt.verify']);
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
@@ -218,6 +228,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     });
 });
+
 
 
 
