@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\HotelRoomTable;
+use App\Mail\DeleteAccountOtp;
 use App\Traits\ActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -31,6 +32,7 @@ use App\Models\EmailOtp;
 use App\Models\PersonalDevice;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -1313,6 +1315,121 @@ class AuthController extends Controller
         return response()->json([
             'deviceid' => $deviceId
         ]);
+    }
+
+    public function deleteAccountOtpSend()
+    {
+        DB::beginTransaction();
+        try {
+            $otp = random_int(100000, 999999);
+            EmailOtp::where('email', auth()->user()->email)
+                ->whereDate('created_at', '<', Carbon::today())
+                ->delete();
+            $emailOtp = EmailOtp::where('email', auth()->user()->email)->whereNotNull('sent_count')
+                ->first();
+            if ($emailOtp != null) {
+                if ($emailOtp->sent_count >= 3) {
+                    return response()->json([
+                        "status" => true,
+                        "response_code" => 429,
+                        "message" => "Delete account OTP limit reached for today. Try again later ."
+                    ], 429);
+                }
+
+                $emailOtp->update([
+                    'otp' => $otp,
+                    'otp_expire' => now()->addMinutes(15),
+                    "sent_count" => $emailOtp->sent_count += 1
+                ]);
+            } else {
+                EmailOtp::create([
+                    'email' => request('email'),
+                    'otp' => $otp,
+                    'otp_expire' => now()->addMinutes(15),
+                    "sent_count" => 1
+                ]);
+            }
+
+
+            DB::commit();
+            Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+
+            return response()->json([
+                "status" => true,
+                "response_code" => 200,
+                "message" => "OTP sent successfully !"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                "response_code" => 500,
+                "message" => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteAccountOtpVerification(Request $request)
+    {
+        DB::beginTransaction();
+
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'response_code' => 422,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+
+
+            $emailOtp = EmailOtp::where('email', auth()->user()->email)
+                ->where('otp', $request->otp)
+                ->whereNotNull('sent_count')
+                ->first();
+
+
+            if ($emailOtp == null) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 404,
+                    'message' => "Invalid OTP ."
+
+                ], 404);
+
+            }
+
+            if (Carbon::parse($emailOtp->otp_expire)->isPast()) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 410,
+                    'message' => "OTP has expired. Please request a new one."
+                ], 410);
+            }
+
+            $emailOtp->delete();
+            DB::commit();
+
+            return response()->json([
+                "status" => true,
+                "response_code" => 200,
+                "message" => "OTP verified successfully !"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                "response_code" => 500,
+                "message" => $th->getMessage()
+            ], 500);
+        }
     }
 
     public function sendOtp(Request $request)

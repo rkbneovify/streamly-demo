@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ActivityEventType;
 use App\HoaUser;
 use App\HotelRoomTable;
+use App\Mail\DeleteAccount;
 use App\SessionTable;
 use App\Traits\ActivityLogger;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -1225,13 +1226,13 @@ class APIController extends Controller
                         // }
 
 
+                        Mail::to($User->email)->send(new DeleteAccount($User));
                         DB::table('session_table')
                             ->where('users_id', $id)
-                            ->where('status', "1")
-                            ->update(['status' => "0"]);
-
+                            ->delete();
 
                         DB::commit();
+
                         $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
                         return response()->json($response, 200);
                     } else {
