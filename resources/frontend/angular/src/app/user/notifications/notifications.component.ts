@@ -35,6 +35,7 @@ export class NotificationsComponent implements OnInit {
     private toastr: ToastrService,
     private fb: FormBuilder,
     private sweetAlert: SweetalertService,
+    private notificationService: NotificationService
 
   ) {
 
@@ -44,8 +45,7 @@ export class NotificationsComponent implements OnInit {
   ngOnInit() {
 
     this.getList(1);
-
-
+    this.notificationService.fetchCount();
 
 
   }

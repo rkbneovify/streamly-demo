@@ -175,19 +175,25 @@
           </p>
         </div>
         <!-- Silver 34fn sd  -->
-        <div class="acoount_user_email my-4">
+        <div *ngIf="!subscreptionCanceled" class="acoount_user_email my-4">
           <label>Plan Renewal Date</label>
           <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
           <ng-template #formatDate>
             <p>{{ renewalDate | date }}</p>
           </ng-template>
         </div>
+
+        <div *ngIf="subscreptionCanceled" class="acoount_user_email my-4">
+          <label>Plan Expire Date</label>
+          <p>{{ planExpiredAt | date:'dd/MM/yyyy' }}</p>
+        </div>
+
         <div class="acoount_user_password">
           <label for="">Payment Method</label>
           <p>{{ cardDetails }}</p>
         </div>
       </div>
-      <div class="accountbtn_container my-4">
+      <div *ngIf="!subscreptionCanceled" class="accountbtn_container my-4">
         <button class="plan_btn btn-delete w-auto text-nowrap" (click)="showPopCancelSubc()">
           Cancel Subscription
         </button>
