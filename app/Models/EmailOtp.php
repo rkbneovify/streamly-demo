@@ -8,11 +8,11 @@ class EmailOtp extends Model
 {
     /**
      * Database table name
-    */
+     */
     protected $table = 'email_otp';
 
     /**
      * Mass assignable columns
-    */
-    protected $fillable = ['email', 'otp', 'otp_expire'];
+     */
+    protected $fillable = ['email', 'otp', 'otp_expire', 'sent_count'];
 }

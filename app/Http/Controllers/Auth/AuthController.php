@@ -1323,33 +1323,34 @@ class AuthController extends Controller
         try {
             $otp = random_int(100000, 999999);
             EmailOtp::where('email', auth()->user()->email)
-                ->whereDate('created_at', '<', Carbon::today())
-                ->delete();
+                ->whereNull('sent_count')->delete();
             $emailOtp = EmailOtp::where('email', auth()->user()->email)->whereNotNull('sent_count')
                 ->first();
-            if ($emailOtp != null) {
-                if ($emailOtp->sent_count >= 3) {
-                    return response()->json([
-                        "status" => true,
-                        "response_code" => 429,
-                        "message" => "Delete account OTP limit reached for today. Try again later ."
-                    ], 429);
-                }
 
+            if ($emailOtp != null && $emailOtp->sent_count >= 3) {
+                return response()->json([
+                    "status" => true,
+                    "response_code" => 429,
+                    "message" => "Delete account OTP limit reached for today. Try again later ."
+                ], 429);
+
+
+            }
+
+            if ($emailOtp == null) {
+                EmailOtp::create([
+                    'email' => auth()->user()->email,
+                    'otp' => $otp,
+                    'otp_expire' => now()->addMinutes(15),
+                    "sent_count" => 1
+                ]);
+            } else {
                 $emailOtp->update([
                     'otp' => $otp,
                     'otp_expire' => now()->addMinutes(15),
                     "sent_count" => $emailOtp->sent_count += 1
                 ]);
-            } else {
-                EmailOtp::create([
-                    'email' => request('email'),
-                    'otp' => $otp,
-                    'otp_expire' => now()->addMinutes(15),
-                    "sent_count" => 1
-                ]);
             }
-
 
             DB::commit();
             Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
@@ -1398,10 +1399,10 @@ class AuthController extends Controller
             if ($emailOtp == null) {
                 return response()->json([
                     'status' => false,
-                    'response_code' => 404,
+                    'response_code' => 422,
                     'message' => "Invalid OTP ."
 
-                ], 404);
+                ], 422);
 
             }
 
