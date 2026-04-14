@@ -555,6 +555,7 @@ class StripeController extends Controller
                 break;
 
 
+
             case 'payment_intent.succeeded':
 
                 $paymentIntent = $event->data->object;
@@ -567,7 +568,7 @@ class StripeController extends Controller
                 // ✅ Get Invoice
                 $invoice = \Stripe\Invoice::retrieve($paymentIntent->invoice);
 
-                // ❌ Only allow these two cases
+                // ❌ Only allow required cases
                 if (!in_array($invoice->billing_reason, ['subscription_create', 'subscription_cycle'])) {
                     break;
                 }
@@ -575,7 +576,7 @@ class StripeController extends Controller
                 // ✅ Get Subscription
                 $subscription = \Stripe\Subscription::retrieve($invoice->subscription);
 
-                // ✅ Get Plan Details
+                // ✅ Plan Details
                 $plan = $subscription->items->data[0]->plan;
                 $planName = $plan->nickname ?? 'Default Plan';
 
@@ -592,47 +593,82 @@ class StripeController extends Controller
                 $amount = $paymentIntent->amount / 100;
                 $receiptUrl = $paymentIntent->charges->data[0]->receipt_url ?? null;
                 $nextBillingDate = date('d M Y', $subscription->current_period_end);
+                $trialEndDate = $subscription->trial_end
+                    ? date('d M Y', $subscription->trial_end)
+                    : null;
 
                 /**
                  * ----------------------------------------
-                 * 🆕 SUBSCRIPTION CREATED
+                 * 🆕 SUBSCRIPTION CREATE (Trial or Paid)
                  * ----------------------------------------
                  */
                 if ($invoice->billing_reason === 'subscription_create') {
 
-                    $message = "Your subscription has been activated successfully.";
-                    $title = "Subscription Activated";
-                    $subject = 'Welcome! Your Subscription is Active - ' . env('APP_NAME');
+                    // ✅ TRIAL CASE
+                    if ($invoice->amount_paid == 0 && $trialEndDate) {
 
-                    $html = '<html>
-        Hi ' . ucwords($user->name) . ',<br><br>
+                        $message = "Your free trial has started.";
+                        $title = "Free Trial Started";
+                        $subject = 'Your Free Trial Started - ' . env('APP_NAME');
 
-        🎉 Welcome to StreamlyTV!<br>
-        Your subscription has been activated successfully.<br><br>
+                        $html = '<html>
+            Hi ' . ucwords($user->name) . ',<br><br>
 
-        The details are as follows:<br>
-        <strong>
-        Plan: ' . htmlspecialchars($planName) . '<br>
-        Email: ' . $user->email . '<br>
-        Next Billing Date: ' . $nextBillingDate . '<br>
-        Amount: $' . number_format($amount, 2) . '<br>
-        </strong>
-        <br>
+            🎉 Your free trial has started successfully.<br><br>
 
-        Start watching now and enjoy premium content 🚀<br><br>
+            The details are as follows:<br>
+            <strong>
+            Plan: ' . htmlspecialchars($planName) . '<br>
+            Email: ' . $user->email . '<br>
+            Trial Ends On: ' . $trialEndDate . '<br>
+            </strong>
+            <br>
 
-        ' . ($receiptUrl ? 'View your Receipt <a href="' . $receiptUrl . '"><strong>Here</strong></a><br>' : '') . '
+            Enjoy full access during your trial period.<br><br>
 
-        If you have any questions, contact us at 
-        <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+            <b>Note:</b> Cancel before ' . $trialEndDate . ' to avoid charges.<br><br>
 
-        <b>Thanks,<br>
-        Team Streamly</b>
+            If you have any questions, contact us at 
+            <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
 
-        </html>';
+            <b>Thanks,<br>
+            Team Streamly</b>
+            </html>';
+
+                    } else {
+
+                        // ✅ PAID SUBSCRIPTION
+                        $message = "Your subscription has been activated successfully.";
+                        $title = "Subscription Activated";
+                        $subject = 'Welcome! Your Subscription is Active - ' . env('APP_NAME');
+
+                        $html = '<html>
+            Hi ' . ucwords($user->name) . ',<br><br>
+
+            🎉 Welcome to StreamlyTV!<br>
+            Your subscription has been activated successfully.<br><br>
+
+            The details are as follows:<br>
+            <strong>
+            Plan: ' . htmlspecialchars($planName) . '<br>
+            Email: ' . $user->email . '<br>
+            Next Billing Date: ' . $nextBillingDate . '<br>
+            Amount: $' . number_format($amount, 2) . '<br>
+            </strong>
+            <br>
+
+            ' . ($receiptUrl ? 'View your Receipt <a href="' . $receiptUrl . '"><strong>Here</strong></a><br>' : '') . '
+
+            Start watching now 🚀<br><br>
+
+            If you have any questions, contact us at 
+            <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+
+            <b>Thanks,<br>
+            Team Streamly</b>
+            </html>';
+                    }
                 }
-
-
 
                 /**
                  * ----------------------------------------
@@ -662,16 +698,15 @@ class StripeController extends Controller
 
         ' . ($receiptUrl ? 'View your Receipt <a href="' . $receiptUrl . '"><strong>Here</strong></a><br>' : '') . '
 
-        If you have any questions or notice any issues, please contact us at 
+        If you have any questions, contact us at 
         <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
 
         <b>Thanks,<br>
         Team Streamly</b>
-
         </html>';
                 }
 
-                // ✅ Activity Log
+                // ✅ Activity
                 $this->activity($user->id)
                     ->event("Subscription")
                     ->eventType("Subscription Payment")
@@ -701,7 +736,7 @@ class StripeController extends Controller
                     }
                 }
 
-                // ✅ Send Email
+                // ✅ Email
                 Mail::send('emails.general', ["html" => $html], function ($mail) use ($user, $subject) {
                     $mail->to($user->email, $user->name)
                         ->bcc($this->bcc)
@@ -709,6 +744,7 @@ class StripeController extends Controller
                 });
 
                 break;
+
 
             case 'payment_intent.payment_failed':
 
