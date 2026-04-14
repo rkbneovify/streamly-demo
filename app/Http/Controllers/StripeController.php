@@ -273,23 +273,32 @@ class StripeController extends Controller
             case 'customer.subscription.updated':
 
                 $eventObj = $event->data->object;
+                $subscription = DB::table('subscriptions')
+                    ->where('stripe_id', $eventObj->id)
+                    ->latest()
+                    ->first();
+                $user = DB::table('users')->where('id', $subscription->user_id)->first();
+                if (!$subscription)
+                    return;
 
+
+                if (!$user)
+                    return;
+
+                // subscription update status and mode
+
+                $subscription->update([
+                    'stripe_status' => $eventObj->status,
+                    'livemode' => $eventObj->livemode,
+                ]);
                 // ❗ Only handle scheduled cancellation
                 if (!$eventObj->cancel_at_period_end) {
                     return;
                 }
 
-                $subscription = DB::table('subscriptions')
-                    ->where('stripe_id', $eventObj->id)
-                    ->latest()
-                    ->first();
 
-                if (!$subscription)
-                    return;
 
-                $user = DB::table('users')->where('id', $subscription->user_id)->first();
-                if (!$user)
-                    return;
+
 
                 $message = 'Your subscription will be canceled at the end of billing period.';
 
@@ -545,5 +554,7 @@ class StripeController extends Controller
 
                 break;
         }
+
+
     }
 }
