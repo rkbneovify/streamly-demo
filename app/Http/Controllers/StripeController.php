@@ -553,7 +553,256 @@ class StripeController extends Controller
                 });
 
                 break;
+
+
+            case 'payment_intent.succeeded':
+
+                $paymentIntent = $event->data->object;
+
+                // ❌ Skip if not subscription payment
+                if (empty($paymentIntent->invoice)) {
+                    break;
+                }
+
+                // ✅ Get Invoice
+                $invoice = \Stripe\Invoice::retrieve($paymentIntent->invoice);
+
+                // ❌ Only allow these two cases
+                if (!in_array($invoice->billing_reason, ['subscription_create', 'subscription_cycle'])) {
+                    break;
+                }
+
+                // ✅ Get Subscription
+                $subscription = \Stripe\Subscription::retrieve($invoice->subscription);
+
+                // ✅ Get Plan Details
+                $plan = $subscription->items->data[0]->plan;
+                $planName = $plan->nickname ?? 'Default Plan';
+
+                // ✅ Get User
+                $user = DB::table('users')
+                    ->where('stripe_id', $paymentIntent->customer)
+                    ->first();
+
+                if (!$user) {
+                    break;
+                }
+
+                // ✅ Common Data
+                $amount = $paymentIntent->amount / 100;
+                $receiptUrl = $paymentIntent->charges->data[0]->receipt_url ?? null;
+                $nextBillingDate = date('d M Y', $subscription->current_period_end);
+
+                /**
+                 * ----------------------------------------
+                 * 🆕 SUBSCRIPTION CREATED
+                 * ----------------------------------------
+                 */
+                if ($invoice->billing_reason === 'subscription_create') {
+
+                    $message = "Your subscription has been activated successfully.";
+                    $title = "Subscription Activated";
+                    $subject = 'Welcome! Your Subscription is Active - ' . env('APP_NAME');
+
+                    $html = '<html>
+        Hi ' . ucwords($user->name) . ',<br><br>
+
+        🎉 Welcome to StreamlyTV!<br>
+        Your subscription has been activated successfully.<br><br>
+
+        The details are as follows:<br>
+        <strong>
+        Plan: ' . htmlspecialchars($planName) . '<br>
+        Email: ' . $user->email . '<br>
+        Next Billing Date: ' . $nextBillingDate . '<br>
+        Amount: $' . number_format($amount, 2) . '<br>
+        </strong>
+        <br>
+
+        Start watching now and enjoy premium content 🚀<br><br>
+
+        ' . ($receiptUrl ? 'View your Receipt <a href="' . $receiptUrl . '"><strong>Here</strong></a><br>' : '') . '
+
+        If you have any questions, contact us at 
+        <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+
+        <b>Thanks,<br>
+        Team Streamly</b>
+
+        </html>';
+                }
+
+
+
+                /**
+                 * ----------------------------------------
+                 * 🔁 SUBSCRIPTION RENEWAL
+                 * ----------------------------------------
+                 */
+                if ($invoice->billing_reason === 'subscription_cycle') {
+
+                    $message = "Your subscription has been renewed successfully.";
+                    $title = "Subscription Renewed";
+                    $subject = 'Subscription Renewed - ' . env('APP_NAME');
+
+                    $html = '<html>
+        Hi ' . ucwords($user->name) . ',<br><br>
+
+        We hope you are enjoying StreamlyTV.<br>
+        Your subscription has been renewed successfully.<br><br>
+
+        The details are as follows:<br>
+        <strong>
+        Plan: ' . htmlspecialchars($planName) . '<br>
+        Email: ' . $user->email . '<br>
+        Next Billing Date: ' . $nextBillingDate . '<br>
+        Amount: $' . number_format($amount, 2) . '<br>
+        </strong>
+        <br>
+
+        ' . ($receiptUrl ? 'View your Receipt <a href="' . $receiptUrl . '"><strong>Here</strong></a><br>' : '') . '
+
+        If you have any questions or notice any issues, please contact us at 
+        <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+
+        <b>Thanks,<br>
+        Team Streamly</b>
+
+        </html>';
+                }
+
+                // ✅ Activity Log
+                $this->activity($user->id)
+                    ->event("Subscription")
+                    ->eventType("Subscription Payment")
+                    ->descriptionSimple($message)
+                    ->notification()
+                    ->isUser()
+                    ->isAdmin()
+                    ->properties([
+                        "invoice_id" => $invoice->id,
+                        "plan" => $planName,
+                        "payment_intent" => $paymentIntent->id,
+                        "amount" => $amount
+                    ])
+                    ->save();
+
+                // ✅ Push Notification
+                $fcmTokens = DB::table('session_table')
+                    ->where('users_id', $user->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->pluck('fcm_token')
+                    ->toArray();
+
+                if (!empty($fcmTokens)) {
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, $title, $message);
+                    }
+                }
+
+                // ✅ Send Email
+                Mail::send('emails.general', ["html" => $html], function ($mail) use ($user, $subject) {
+                    $mail->to($user->email, $user->name)
+                        ->bcc($this->bcc)
+                        ->subject($subject);
+                });
+
+                break;
+
+            case 'payment_intent.payment_failed':
+
+                $paymentIntent = $event->data->object;
+
+                // ❌ Skip if not subscription payment
+                if (empty($paymentIntent->invoice)) {
+                    break;
+                }
+
+                // ✅ Get Invoice
+                $invoice = \Stripe\Invoice::retrieve($paymentIntent->invoice);
+
+                // ✅ Get Subscription
+                $subscription = \Stripe\Subscription::retrieve($invoice->subscription);
+
+                // ✅ Plan Name
+                $planName = $subscription->items->data[0]->price->nickname ?? 'Default Plan';
+
+                // ✅ Get User
+                $user = DB::table('users')
+                    ->where('stripe_id', $paymentIntent->customer)
+                    ->first();
+
+                if (!$user) {
+                    break;
+                }
+
+                // ✅ Message
+                $message = "Your subscription payment failed.";
+                $title = "Payment Failed";
+                $subject = 'Payment Failed - ' . env('APP_NAME');
+
+                // ✅ Email (your style)
+                $html = '<html>
+    Hi ' . ucwords($user->name) . ',<br><br>
+
+    Your subscription payment could not be processed.<br><br>
+
+    The details are as follows:<br>
+    <strong>
+    Plan: ' . htmlspecialchars($planName) . '<br>
+    Email: ' . $user->email . '<br>
+    </strong>
+    <br>
+
+   
+    If you have any questions, contact us at 
+    <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+
+    <b>Thanks,<br>
+    Team Streamly</b>
+    </html>';
+
+                // 🔔 Activity
+                $this->activity($user->id)
+                    ->event("Subscription")
+                    ->eventType("Payment Failed")
+                    ->descriptionSimple($message)
+                    ->notification()
+                    ->isUser()
+                    ->isAdmin()
+                    ->properties([
+                        "invoice_id" => $invoice->id,
+                        "plan" => $planName,
+                        "payment_intent" => $paymentIntent->id
+                    ])
+                    ->save();
+
+                // 📲 Push Notification
+                $fcmTokens = DB::table('session_table')
+                    ->where('users_id', $user->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->pluck('fcm_token')
+                    ->toArray();
+
+                if (!empty($fcmTokens)) {
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, $title, $message);
+                    }
+                }
+
+                // 📧 Email
+                Mail::send('emails.general', ["html" => $html], function ($mail) use ($user, $subject) {
+                    $mail->to($user->email, $user->name)
+                        ->bcc($this->bcc)
+                        ->subject($subject);
+                });
+
+                break;
         }
+
+
 
 
     }
