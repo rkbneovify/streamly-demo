@@ -1143,7 +1143,60 @@ class APIController extends Controller
         }
     }
 
+
     public function userdeletenew(Request $request)
+    {
+        DB::beginTransaction();
+
+
+        try {
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::DELETED)
+                ->description("User account deleted")
+                ->properties([
+                    "data" => $request->user()
+                ])->save();
+
+
+            $request->user()->subscription('main')->skipTrial()->cancelNow();
+            DB::table('subscriptions')
+                ->where('user_id', auth::id())
+                ->update(['stripe_status' => "canceled"]);
+
+            DB::table('users')
+                ->where('id', Auth::id())
+                ->update([
+                    'is_active' => 0,
+                    'deleted_at' => now()
+                ]);
+            Mail::to($request->user()->email)->send(new DeleteAccount($request->user()));
+            DB::table('session_table')
+                ->where('users_id', $request->user()->id)
+                ->delete();
+
+            DB::commit();
+
+            $response = array('status' => true, 'response_code' => 200, 'message' => "Account deleted successfully !");
+            return response()->json($response, 200);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
+            ], 500);
+        }
+
+
+
+
+
+
+    }
+
+    public function userdeletenew15_04_2026(Request $request)
     {
         DB::beginTransaction();
         try {
@@ -1164,13 +1217,13 @@ class APIController extends Controller
                 if ($User['is_active'] == 1) {
 
                     if ($request->has('password')) {
-                        $credentials = ['email' => $User->email, 'password' => $request->password];
-                        $token = JWTAuth::attempt($credentials);
-                        if (!$token) {
-                            DB::rollBack();
-                            $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
-                            return response()->json($response, 400);
-                        }
+                        // $credentials = ['email' => $User->email, 'password' => $request->password];
+                        // $token = JWTAuth::attempt($credentials);
+                        // if (!$token) {
+                        //     DB::rollBack();
+                        //     $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
+                        //     return response()->json($response, 400);
+                        // }
                         try {
                             $subscriptin = Subscription::where('user_id', $User->id)->first();
 
@@ -1260,6 +1313,8 @@ class APIController extends Controller
             ], 500);
         }
     }
+
+
 
     public function searchOnPlatform(Request $request)
     {
