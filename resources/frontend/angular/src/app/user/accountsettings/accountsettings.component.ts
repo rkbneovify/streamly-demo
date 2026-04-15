@@ -1,6 +1,6 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +14,8 @@ import { noWhitespaceValidator } from '../../services/validators/no-whitespace.v
 import { UtilsService } from '../../services/utils/utils.service';
 import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NotificationService } from '../../services/utils/notification.service';
+import { finalize } from 'rxjs';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -63,7 +65,13 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   hoaMainUserSubscription: any = null;
   subscreptionCanceled: boolean = false;
   planExpiredAt: Date;
-
+  otpArray = [0, 1, 2, 3, 4, 5];
+  otp: string = '';
+  timer: number = 60;
+  interval: any;
+  canResend: boolean = false;
+  isVerifying: boolean = false;
+  isOtpError: boolean = false;
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -71,7 +79,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     private router: Router,
     private renderer: Renderer2,
     private utilsService: UtilsService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private sweetAlert: SweetalertService
 
   ) {
     // console.log('Current url: ', this.router.url)
@@ -95,6 +104,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
     this.isSubscription = JSON.parse(localStorage.getItem('deviceInfo') || '').subscribed;
   }
+
+
 
 
 
@@ -136,6 +147,20 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
     this.subscribed = this.deviceInfo?.subscribed;
     this.notificationService.fetchCount();
+  }
+
+  startTimer() {
+    this.timer = 60;
+    this.canResend = false;
+
+    this.interval = setInterval(() => {
+      this.timer--;
+
+      if (this.timer <= 0) {
+        this.canResend = true;
+        clearInterval(this.interval);
+      }
+    }, 1000);
   }
 
   toggleEditMode() {
@@ -366,7 +391,23 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   // delete user account
   deleteAccountForm: FormGroup;
   showPopDeleteAccount() {
-    document.getElementById('btnShowPopDeleteAccount').click();
+    // document.getElementById('btnShowPopDeleteAccount').click();
+
+    document.getElementById('btn-show-otp-dailog').click();
+    this.isLoading = true;
+    this.crud.postRequest('auth/account-delete/otp').pipe(finalize(() => {
+      this.isLoading = false;
+    })).subscribe({
+      next: (res: any) => {
+        this.startTimer();
+        this.ts.success(res.message)
+        this.isOtpError = false;
+      },
+      error: (err: any) => {
+        this.ts.error(err.error.message)
+        this.isOtpError = true;
+      },
+    })
   }
 
   showPopCancelSubc() {
@@ -374,6 +415,25 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   }
 
   deleteUserAccount(): void {
+    this.isLoading = true;
+    this.crud
+      .postRequest('auth/user/delete').pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.ts.success(res.message);
+          localStorage.clear();
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+
+          this.ts.error(err.error?.message);
+
+        },
+      });
+  }
+  deleteUserAccount_15_04_26(): void {
     this.isLoading = true;
     this.crud
       .postRequest('auth/user/delete', {
@@ -452,6 +512,11 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearTimer() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
 
   ngOnDestroy(): void {
     // Close all open modals on component destroy
@@ -462,6 +527,139 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
         modalInstance.hide();
       }
     });
+
+    this.clearTimer();
   }
+
+  // otp
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
+
+  deleteAccountOtpForm = this.fb.group({
+    otp: ['', [Validators.required, Validators.maxLength(6)]]
+  });
+
+  onOtpInput(event: any, index: number) {
+    const input = event.target;
+    const value = input.value.replace(/[^0-9]/g, '');
+
+    input.value = value;
+
+    if (value && index < 5) {
+      this.otpInputs.toArray()[index + 1].nativeElement.focus();
+    }
+
+    this.updateOtp();
+  }
+
+  onKeyDown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Backspace') {
+      const inputs = this.otpInputs.toArray();
+
+      if (!inputs[index].nativeElement.value && index > 0) {
+        inputs[index - 1].nativeElement.focus();
+      }
+    }
+  }
+
+  onPaste(event: ClipboardEvent) {
+    const pasted = event.clipboardData?.getData('text') || '';
+
+    if (pasted.length === 6) {
+      const inputs = this.otpInputs.toArray();
+
+      pasted.split('').forEach((char, i) => {
+        inputs[i].nativeElement.value = char;
+      });
+
+      this.updateOtp();
+      this.deleteAccountOtpForm.markAsTouched();
+      this.deleteAccountOtpForm.markAsDirty();
+      this.deleteAccountOtpForm.updateValueAndValidity();
+
+
+    }
+  }
+
+  updateOtp() {
+    this.otp = this.otpInputs
+      .toArray()
+      .map(input => input.nativeElement.value)
+      .join('');
+
+
+
+
+  }
+
+  verifyOtp(event?: Event) {
+    // Use optional chaining to prevent errors if event is null
+    event?.preventDefault();
+
+    // It's also good practice to stop propagation
+    event?.stopPropagation();
+
+    if (this.deleteAccountOtpForm.invalid) {
+      this.ts.error("6 digit otp required");
+      return;
+    }
+
+    const data = {
+      otp: this.otp
+    }
+
+    this.isVerifying = true;
+    this.crud.postRequest('auth/account-delete/otp/verify', data).pipe(finalize(() => {
+      this.isVerifying = false;
+    })).subscribe({
+      next: (res: any) => {
+        document.getElementById('btn-show-otp-dailog').click();
+        this.ts.success(res.message)
+        this.sweetAlert.confirm("Delete my account", "Do you want to delete your account ?")
+          .then((res) => {
+            if (res.isConfirmed) {
+              // this.sweetAlert.success("Account deleted successfully !")
+              this.deleteUserAccount();
+            }
+          })
+
+      },
+      error: (err: any) => {
+        this.ts.error(err.error.message)
+
+      },
+    });
+
+
+  }
+
+  resendOtp() {
+    this.isLoading = true;
+    this.crud.postRequest('auth/account-delete/otp').pipe(finalize(() => {
+      this.isLoading = false;
+    })).subscribe({
+      next: (res: any) => {
+        this.startTimer();
+        this.ts.success(res.message)
+        this.isOtpError = false;
+      },
+      error: (err: any) => {
+        this.ts.success(err.error.message)
+        this.isOtpError = true;
+      },
+    });
+  }
+
+  clearOtpDetails() {
+    this.otp = '';
+    this.otpInputs.forEach(input => input.nativeElement.value = '');
+    this.clearTimer();
+  }
+
+
+
+
+
+
+
 
 }
