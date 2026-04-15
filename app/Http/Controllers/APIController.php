@@ -1154,22 +1154,29 @@ class APIController extends Controller
                 ->event("User")
                 ->eventType(ActivityEventType::DELETED)
                 ->description("User account deleted")
+                ->isUser()
+                ->isAdmin()
                 ->properties([
                     "data" => $request->user()
                 ])->save();
 
 
-            $request->user()->subscription('main')->skipTrial()->cancelNow();
+            if ($request->user()->is_custom_user != 1) {
+                $request->user()->subscription('main')->skipTrial()->cancelNow();
+
+
+
+            }
             DB::table('subscriptions')
                 ->where('user_id', auth::id())
                 ->update(['stripe_status' => "canceled"]);
-
             DB::table('users')
                 ->where('id', Auth::id())
                 ->update([
                     'is_active' => 0,
                     'deleted_at' => now()
                 ]);
+
             Mail::to($request->user()->email)->send(new DeleteAccount($request->user()));
             DB::table('session_table')
                 ->where('users_id', $request->user()->id)
