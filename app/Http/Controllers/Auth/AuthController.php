@@ -1323,13 +1323,17 @@ class AuthController extends Controller
         try {
             $otp = random_int(100000, 999999);
             EmailOtp::where('email', auth()->user()->email)
-                ->whereNull('sent_count')->delete();
-            $emailOtp = EmailOtp::where('email', auth()->user()->email)->whereNotNull('sent_count')
+                ->whereNull('sent_count')
+                ->whereDate('created_at', '<', now())
+                ->delete();
+            $emailOtp = EmailOtp::where('email', auth()->user()->email)
+                ->whereNotNull('sent_count')
+                ->whereDate('created_at', now()) // current date
                 ->first();
 
             if ($emailOtp != null && $emailOtp->sent_count >= 3) {
                 return response()->json([
-                    "status" => true,
+                    "status" => false,
                     "response_code" => 429,
                     "message" => "Delete account OTP limit reached for today. Try again later ."
                 ], 429);
