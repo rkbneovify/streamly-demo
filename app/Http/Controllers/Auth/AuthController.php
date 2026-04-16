@@ -186,7 +186,7 @@ class AuthController extends Controller
 
 
         if ($user->is_active == 0) {
-
+            // handle delete accounts
             if ($user->deleted_at != null) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
             }
