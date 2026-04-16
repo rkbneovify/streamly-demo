@@ -1144,22 +1144,47 @@ class APIController extends Controller
     }
 
 
+
+
+    public function handleTwoWayDeleteAccount()
+    {
+        $this->activity()
+            ->event("User")
+            ->eventType(ActivityEventType::DELETED)
+            ->description("User account deleted")
+            ->isUser()
+            ->isAdmin()
+            ->properties([
+                "data" => Auth::user()
+            ])->save();
+
+
+        DB::table('subscriptions')
+            ->where('user_id', Auth::id())
+            ->update(['stripe_status' => "canceled"]);
+        DB::table('users')
+            ->where('id', Auth::id())
+            ->update([
+                'is_active' => 0,
+                'deleted_at' => now()
+            ]);
+
+        Mail::to(Auth::user()->email)->send(new DeleteAccount(Auth::user()));
+        DB::table('session_table')
+            ->where('users_id', Auth::user()->id)
+            ->delete();
+
+        DB::commit();
+
+        $response = array('status' => true, 'response_code' => 200, 'message' => "Account deleted successfully !");
+        return response()->json($response, 200);
+    }
     public function userdeletenew(Request $request)
     {
         DB::beginTransaction();
 
 
         try {
-            $this->activity()
-                ->event("User")
-                ->eventType(ActivityEventType::DELETED)
-                ->description("User account deleted")
-                ->isUser()
-                ->isAdmin()
-                ->properties([
-                    "data" => $request->user()
-                ])->save();
-
 
             if ($request->user()->is_custom_user != 1) {
                 $request->user()->subscription('main')->skipTrial()->cancelNow();
@@ -1167,25 +1192,18 @@ class APIController extends Controller
 
 
             }
-            DB::table('subscriptions')
-                ->where('user_id', auth::id())
-                ->update(['stripe_status' => "canceled"]);
-            DB::table('users')
-                ->where('id', Auth::id())
-                ->update([
-                    'is_active' => 0,
-                    'deleted_at' => now()
-                ]);
 
-            Mail::to($request->user()->email)->send(new DeleteAccount($request->user()));
-            DB::table('session_table')
-                ->where('users_id', $request->user()->id)
-                ->delete();
+            return $this->handleTwoWayDeleteAccount();
 
-            DB::commit();
+        } catch (\Stripe\Exception\InvalidRequestException $th) {
 
-            $response = array('status' => true, 'response_code' => 200, 'message' => "Account deleted successfully !");
-            return response()->json($response, 200);
+            // Handle missing subscription
+            if (str_contains($th->getMessage(), 'No such subscription')) {
+
+
+                return $this->handleTwoWayDeleteAccount();
+
+            }
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -1202,6 +1220,8 @@ class APIController extends Controller
 
 
     }
+
+
 
     public function userdeletenew15_04_2026(Request $request)
     {
