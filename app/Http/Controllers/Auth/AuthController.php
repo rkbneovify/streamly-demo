@@ -183,11 +183,14 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
-        if ($user->deleted_at != null) {
-            return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
-        }
+
 
         if ($user->is_active == 0) {
+
+            if ($user->deleted_at != null) {
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
+            }
+
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
@@ -390,10 +393,11 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
-        if ($user->deleted_at != null) {
-            return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
-        }
+
         if ($user->is_active == 0) {
+            if ($user->deleted_at != null) {
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
+            }
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
