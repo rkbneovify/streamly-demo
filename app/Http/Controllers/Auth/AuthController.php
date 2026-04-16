@@ -183,9 +183,14 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
+        if ($user->deleted_at != null) {
+            return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
+        }
+
         if ($user->is_active == 0) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
+
         $userRole = $user->roles->pluck('name');
 
         if ($user->is_custom_user == 1 && $userRole[0] == 'tieruser') {
@@ -254,6 +259,10 @@ class AuthController extends Controller
 
         if ($user->email_verified_at == null) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
+        }
+
+        if ($user->deleted_at != null) {
+            return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
         }
 
         if ($user->is_active == 0) {
@@ -381,6 +390,9 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
+        if ($user->deleted_at != null) {
+            return response()->json(['success' => false, 'response_code' => 401, 'message' => 'Your account has been deleted. Please contact the admin for assistance.', 'deleted_at' => $user->deleted_at], 401);
+        }
         if ($user->is_active == 0) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
