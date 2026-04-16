@@ -1409,9 +1409,9 @@ class AuthController extends Controller
             if (Carbon::parse($emailOtp->otp_expire)->isPast()) {
                 return response()->json([
                     'status' => false,
-                    'response_code' => 410,
+                    'response_code' => 422,
                     'message' => "OTP has expired. Please request a new one."
-                ], 410);
+                ], 422);
             }
 
             $emailOtp->delete();
