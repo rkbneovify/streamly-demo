@@ -638,6 +638,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     })).subscribe({
       next: (res: any) => {
+        this.clearOtpDetails();
         this.startTimer();
         this.ts.success(res.message)
         this.isOtpError = false;
