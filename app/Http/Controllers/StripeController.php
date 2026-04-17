@@ -285,7 +285,7 @@ class StripeController extends Controller
                 if (!$user)
                     return;
 
-                // subscription update status and mode
+                // subscription: update status and mode
 
                 DB::table('subscriptions')
                     ->where('stripe_id', $eventObj->id)
