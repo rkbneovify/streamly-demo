@@ -25,4 +25,5 @@ final class ActivityEventType
     public const Subscription = 'subscription';
 
     public const Failed = 'failed';
+    public const Resume = 'resume';
 }
