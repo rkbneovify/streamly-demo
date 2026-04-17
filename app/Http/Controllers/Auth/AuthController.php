@@ -10,6 +10,7 @@ use App\Traits\ActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
+use App\Mail\SubscriptionResumeOtp;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
 use App\Models\JwtToken;
@@ -1333,7 +1334,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function accountOtpSend()
+    public function accountOtpSend($slug = null)
     {
         DB::beginTransaction();
         try {
@@ -1350,7 +1351,7 @@ class AuthController extends Controller
                 return response()->json([
                     "status" => false,
                     "response_code" => 429,
-                    "message" => "Delete account OTP limit reached for today. Try again later ."
+                    "message" => "OTP limit reached for today. Try again later ."
                 ], 429);
 
 
@@ -1372,7 +1373,12 @@ class AuthController extends Controller
             }
 
             DB::commit();
-            Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            if (strtolower($slug) == "subscription-resume") {
+                Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
+            } else {
+                Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            }
+
 
             return response()->json([
                 "status" => true,
@@ -1466,15 +1472,15 @@ class AuthController extends Controller
                     ->update(['stripe_status' => "active"]);
 
             }
-            $this->activity()
-                ->event("Subscription")
-                ->eventType(ActivityEventType::Resume)
-                ->description("Subscription ressume successfully .")
-                ->isUser()
-                ->isAdmin()
-                ->properties([
-                    "data" => Auth::user()
-                ])->save();
+            // $this->activity()
+            //     ->event("Subscription")
+            //     ->eventType(ActivityEventType::Resume)
+            //     ->description("Subscription ressume successfully .")
+            //     ->isUser()
+            //     ->isAdmin()
+            //     ->properties([
+            //         "data" => Auth::user()
+            //     ])->save();
 
 
 
