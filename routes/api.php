@@ -119,7 +119,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('user/delete', 'APIController@userdeletenew')->middleware(['jwt.verify']);
     Route::post('/account-delete/otp', 'Auth\AuthController@accountOtpSend')->middleware(['jwt.verify']);
     Route::post('/account-delete/otp/verify', 'Auth\AuthController@accountOtpVerification')->middleware(['jwt.verify']);
-    Route::post('/account/otp-send', 'Auth\AuthController@accountOtpSend')->middleware(['jwt.verify']);
+    Route::post('/account/otp-send/{slug?}', 'Auth\AuthController@accountOtpSend')->middleware(['jwt.verify']);
     Route::post('/account/otp-verify', 'Auth\AuthController@accountOtpVerification')->middleware(['jwt.verify']);
     Route::post('/subscription/resume', 'Auth\AuthController@subscriptionResume')->middleware(['jwt.verify']);
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
