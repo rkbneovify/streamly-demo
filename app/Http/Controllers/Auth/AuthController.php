@@ -1385,8 +1385,8 @@ class AuthController extends Controller
             DB::rollBack();
             return response()->json([
                 "status" => false,
-                "response_code" => 500,
-                "message" => $th->getMessage()
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
             ], 500);
         }
     }
@@ -1447,12 +1447,66 @@ class AuthController extends Controller
             DB::rollBack();
             return response()->json([
                 "status" => false,
-                "response_code" => 500,
-                "message" => $th->getMessage()
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
             ], 500);
         }
     }
 
+
+    public function subscriptionResume(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            if ($request->user()->is_custom_user != 1) {
+                $request->user()->subscription('main')->resume();
+
+                DB::table('subscriptions')
+                    ->where('user_id', Auth::id())
+                    ->update(['stripe_status' => "active"]);
+
+            }
+            $this->activity()
+                ->event("Subscription")
+                ->eventType(ActivityEventType::Resume)
+                ->description("Subscription ressume successfully .")
+                ->isUser()
+                ->isAdmin()
+                ->properties([
+                    "data" => Auth::user()
+                ])->save();
+
+
+
+
+
+
+            DB::commit();
+
+            $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription resume successfully !");
+            return response()->json($response, 200);
+
+        } catch (\Stripe\Exception\InvalidRequestException $th) {
+            DB::rollBack();
+            // Handle missing subscription
+            if (str_contains($th->getMessage(), 'No such subscription')) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "Subscription not found !"
+                ], 404);
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later !"
+            ], 500);
+        }
+    }
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
