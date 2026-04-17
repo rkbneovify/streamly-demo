@@ -392,8 +392,7 @@ class StripeController extends Controller
                     return;
 
 
-                // 🧠 Store previous state (important for detecting resume)
-                $wasCancelAtPeriodEnd = $subscription->ends_at !== null;
+
 
                 // ============================
                 // 🔄 Always update base fields
@@ -409,7 +408,7 @@ class StripeController extends Controller
                 // ============================
                 // 🔁 RESUME SUBSCRIPTION
                 // ============================
-                if (!$eventObj->cancel_at_period_end && $wasCancelAtPeriodEnd) {
+                if (!$eventObj->cancel_at_period_end && $eventObj->canceled_at == null) {
 
                     DB::table('subscriptions')
                         ->where('stripe_id', $eventObj->id)
@@ -434,7 +433,7 @@ class StripeController extends Controller
 
                     // 📝 Activity Log
                     $this->activity($user->id)->event("Subscription")
-                        ->eventType("Subscription Resume")
+                        ->eventType("Subscription")
                         ->descriptionSimple($message)
                         ->notification()
                         ->isUser()
@@ -500,7 +499,7 @@ class StripeController extends Controller
 
                     // 📝 Activity Log
                     $this->activity($user->id)->event("Subscription")
-                        ->eventType("Subscription Cancel Scheduled")
+                        ->eventType("Subscription")
                         ->descriptionSimple($message)
                         ->notification()
                         ->isUser()
