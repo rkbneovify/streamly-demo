@@ -85,6 +85,14 @@ class Subscribed
                 return redirect('/selectplan');
             }
         }
+        if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "past_due") {
+            if ($request->wantsJson()) {
+                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($response, 410);
+            } else {
+                return redirect('/selectplan');
+            }
+        }
         // Test mode
         if ($user->subscription('main') && $user->subscription('main')->livemode == 0 && $user->subscription('main')->plan_duration == null && $user->subscription('main')->stripe_status == "canceled") {
             if ($request->wantsJson()) {
