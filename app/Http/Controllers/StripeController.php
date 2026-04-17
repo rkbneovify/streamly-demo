@@ -287,10 +287,12 @@ class StripeController extends Controller
 
                 // subscription update status and mode
 
-                $subscription->update([
-                    'stripe_status' => $eventObj->status,
-                    'livemode' => $eventObj->livemode,
-                ]);
+                DB::table('subscriptions')
+                    ->where('stripe_id', $eventObj->id)
+                    ->update([
+                        'stripe_status' => $eventObj->status,
+                        'livemode' => $eventObj->livemode,
+                    ]);
                 // ❗ Only handle scheduled cancellation
                 if (!$eventObj->cancel_at_period_end) {
                     return;
