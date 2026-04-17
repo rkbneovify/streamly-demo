@@ -72,6 +72,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   canResend: boolean = false;
   isVerifying: boolean = false;
   isOtpError: boolean = false;
+  otpSvAction: 'subscription-resume' | 'delete';
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -377,7 +378,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
-          this.deviceInfo.subscribed = false;
+          // this.deviceInfo.subscribed = false;
           localStorage.setItem('deviceInfo', JSON.stringify(this.deviceInfo));
           this.isLoading = false;
         },
@@ -608,19 +609,24 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     }
 
     this.isVerifying = true;
-    this.crud.postRequest('auth/account-delete/otp/verify', data).pipe(finalize(() => {
+    this.crud.postRequest('auth/account/otp-verify', data).pipe(finalize(() => {
       this.isVerifying = false;
     })).subscribe({
       next: (res: any) => {
         document.getElementById('btn-show-otp-dailog').click();
         this.ts.success(res.message)
-        this.sweetAlert.confirm("Delete my account", "Do you want to delete your account ?")
-          .then((res) => {
-            if (res.isConfirmed) {
-              // this.sweetAlert.success("Account deleted successfully !")
-              this.deleteUserAccount();
-            }
-          })
+        if (this.otpSvAction == "delete") {
+          this.sweetAlert.confirm("Delete my account", "Do you want to delete your account ?")
+            .then((res) => {
+              if (res.isConfirmed) {
+                // this.sweetAlert.success("Account deleted successfully !")
+                this.deleteUserAccount();
+              }
+            })
+        } if (this.otpSvAction == "subscription-resume") {
+          this.subscriptionResume();
+        }
+
 
       },
       error: (err: any) => {
@@ -634,7 +640,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   resendOtp() {
     this.isLoading = true;
-    this.crud.postRequest('auth/account-delete/otp').pipe(finalize(() => {
+    this.crud.postRequest('auth/account/otp-send').pipe(finalize(() => {
       this.isLoading = false;
     })).subscribe({
       next: (res: any) => {
@@ -657,24 +663,30 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   }
 
   subscriptionResume() {
+    this.isLoading = true;
+    this.crud.postRequest('auth/subscription/resume').pipe(finalize(() => {
+      this.isLoading = false;
+    })).subscribe({
+      next: (res: any) => {
+        this.ts.success(res.message)
+        location.reload();
+
+      },
+      error: (err: any) => {
+        this.ts.success(err.error.message)
+
+      },
+    });
+  }
+  subscriptionAction() {
     this.sweetAlert.confirm("Subscription", "Do you want to resume subscription ?")
       .then((res) => {
 
 
         if (res.isConfirmed) {
-          this.isLoading = true;
-          this.crud.postRequest('auth/subscription/resume').pipe(finalize(() => {
-            this.isLoading = false;
-          })).subscribe({
-            next: (res: any) => {
-              this.ts.success(res.message)
-
-            },
-            error: (err: any) => {
-              this.ts.success(err.error.message)
-
-            },
-          });
+          this.otpSvAction = "subscription-resume";
+          document.getElementById('btn-show-otp-dailog').click();
+          this.resendOtp();
         }
 
       });
