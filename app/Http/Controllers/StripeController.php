@@ -270,103 +270,277 @@ class StripeController extends Controller
                 break;
 
 
+            // case 'customer.subscription.updated':
+
+            //     $eventObj = $event->data->object;
+            //     $subscription = DB::table('subscriptions')
+            //         ->where('stripe_id', $eventObj->id)
+            //         ->latest()
+            //         ->first();
+            //     $user = DB::table('users')->where('id', $subscription->user_id)->first();
+            //     if (!$subscription)
+            //         return;
+
+
+            //     if (!$user)
+            //         return;
+
+            //     // subscription: update status and mode
+
+            //     DB::table('subscriptions')
+            //         ->where('stripe_id', $eventObj->id)
+            //         ->update([
+            //             'stripe_status' => $eventObj->status,
+            //             'livemode' => $eventObj->livemode,
+            //         ]);
+            //     // ❗ Only handle scheduled cancellation
+            //     if (!$eventObj->cancel_at_period_end) {
+            //         return;
+            //     }
+
+
+
+
+
+            //     $message = 'Your subscription will be canceled at the end of billing period.';
+
+            //     // 🔔 Notification
+            //     $fcmTokens = DB::table('session_table')
+            //         ->where('users_id', $user->id)
+            //         ->where('is_main_account', 1)
+            //         ->where('status', 1)
+            //         ->whereNotNull('fcm_token')
+            //         ->pluck('fcm_token')
+            //         ->toArray();
+
+            //     foreach ($fcmTokens as $token) {
+            //         $this->notification->send($token, "Subscription", $message);
+            //     }
+
+            //     // 📝 Activity log
+            //     $this->activity($user->id)->event("Subscription")
+            //         ->eventType("Subscription")
+            //         ->descriptionSimple($message)
+            //         ->notification()
+            //         ->isUser()
+            //         ->isAdmin()
+            //         ->properties([
+            //             "user" => $user,
+            //             "subscription" => $eventObj
+            //         ])->save();
+
+            //     // 🗄️ DB update (still active until period end)
+            //     DB::table('subscriptions')
+            //         ->where('stripe_id', $eventObj->id)
+            //         ->update([
+            //             'stripe_status' => $eventObj->status, // active
+            //             'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
+            //         ]);
+
+
+            //     $endDate = date("d M Y", $eventObj->current_period_end);
+
+            //     $html = '
+            //     <html>
+            //         Hi, ' . ucwords($user->name) . '<br><br>
+
+            //         Your subscription auto-renewal has been successfully cancelled.<br><br>
+
+            //         <b>What this means:</b><br>
+            //         • Your subscription will remain active until <b>' . $endDate . '</b><br>
+            //         • You will not be charged again after this date<br>
+            //         • Your access will end automatically after this period<br><br>
+
+            //         <b>Subscription Ends On:</b> ' . $endDate . '<br><br>
+
+            //         You can continue enjoying all features until the end date.<br><br>
+
+
+
+            //         If you need help, contact us at contact@streamlytv.com.<br><br>
+
+            //         Thanks for being with us,<br>
+            //         <b>Team Streamly</b>
+            //     </html>';
+
+            //     Mail::send('emails.general', ["html" => $html], function ($message) use ($user, $endDate) {
+            //         $message->to($user->email, $user->name)
+            //             ->subject('Subscription Cancelled – Active Until ' . $endDate . ' | ' . env('APP_NAME'));
+            //     });
+            //     break;
+
+
             case 'customer.subscription.updated':
 
                 $eventObj = $event->data->object;
+
+                // 🔍 Get subscription
                 $subscription = DB::table('subscriptions')
                     ->where('stripe_id', $eventObj->id)
                     ->latest()
                     ->first();
-                $user = DB::table('users')->where('id', $subscription->user_id)->first();
+
                 if (!$subscription)
                     return;
 
+                // 👤 Get user
+                $user = DB::table('users')
+                    ->where('id', $subscription->user_id)
+                    ->first();
 
                 if (!$user)
                     return;
 
-                // subscription update status and mode
-
-                $subscription->update([
-                    'stripe_status' => $eventObj->status,
-                    'livemode' => $eventObj->livemode,
-                ]);
-                // ❗ Only handle scheduled cancellation
-                if (!$eventObj->cancel_at_period_end) {
-                    return;
-                }
 
 
 
-
-
-                $message = 'Your subscription will be canceled at the end of billing period.';
-
-                // 🔔 Notification
-                $fcmTokens = DB::table('session_table')
-                    ->where('users_id', $user->id)
-                    ->where('is_main_account', 1)
-                    ->where('status', 1)
-                    ->whereNotNull('fcm_token')
-                    ->pluck('fcm_token')
-                    ->toArray();
-
-                foreach ($fcmTokens as $token) {
-                    $this->notification->send($token, "Subscription", $message);
-                }
-
-                // 📝 Activity log
-                $this->activity($user->id)->event("Subscription")
-                    ->eventType("Subscription")
-                    ->descriptionSimple($message)
-                    ->notification()
-                    ->isUser()
-                    ->isAdmin()
-                    ->properties([
-                        "user" => $user,
-                        "subscription" => $eventObj
-                    ])->save();
-
-                // 🗄️ DB update (still active until period end)
+                // ============================
+                // 🔄 Always update base fields
+                // ============================
                 DB::table('subscriptions')
                     ->where('stripe_id', $eventObj->id)
                     ->update([
-                        'stripe_status' => $eventObj->status, // active
-                        'ends_at' => date("Y-m-d H:i:s", $eventObj->current_period_end)
+                        'stripe_status' => $eventObj->status,
+                        'livemode' => $eventObj->livemode,
                     ]);
 
 
-                $endDate = date("d M Y", $eventObj->current_period_end);
+                // ============================
+                // 🔁 RESUME SUBSCRIPTION
+                // ============================
+                if (!$eventObj->cancel_at_period_end && $eventObj->canceled_at == null) {
 
-                $html = '
-                <html>
-                    Hi, ' . ucwords($user->name) . '<br><br>
+                    DB::table('subscriptions')
+                        ->where('stripe_id', $eventObj->id)
+                        ->update([
+                            'ends_at' => null
+                        ]);
 
-                    Your subscription auto-renewal has been successfully cancelled.<br><br>
+                    $message = 'Your subscription has been resumed successfully.';
 
-                    <b>What this means:</b><br>
-                    • Your subscription will remain active until <b>' . $endDate . '</b><br>
-                    • You will not be charged again after this date<br>
-                    • Your access will end automatically after this period<br><br>
+                    // 🔔 Send Notification
+                    $fcmTokens = DB::table('session_table')
+                        ->where('users_id', $user->id)
+                        ->where('is_main_account', 1)
+                        ->where('status', 1)
+                        ->whereNotNull('fcm_token')
+                        ->pluck('fcm_token')
+                        ->toArray();
 
-                    <b>Subscription Ends On:</b> ' . $endDate . '<br><br>
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, "Subscription", $message);
+                    }
 
-                    You can continue enjoying all features until the end date.<br><br>
+                    // 📝 Activity Log
+                    $this->activity($user->id)->event("Subscription")
+                        ->eventType("Subscription")
+                        ->descriptionSimple($message)
+                        ->notification()
+                        ->isUser()
+                        ->isAdmin()
+                        ->properties([
+                            "user" => $user,
+                            "subscription" => $eventObj
+                        ])->save();
 
-                    
+                    // 📧 Email
+                    $html = '
+        <html>
+            Hi, ' . ucwords($user->name) . '<br><br>
 
-                    If you need help, contact us at contact@streamlytv.com.<br><br>
+            Your subscription has been <b>resumed successfully</b>.<br><br>
 
-                    Thanks for being with us,<br>
-                    <b>Team Streamly</b>
-                </html>';
+            <b>What this means:</b><br>
+            • Auto-renewal is enabled again<br>
+            • Your subscription will continue without interruption<br><br>
 
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($user, $endDate) {
-                    $message->to($user->email, $user->name)
-                        ->subject('Subscription Cancelled – Active Until ' . $endDate . ' | ' . env('APP_NAME'));
-                });
+            Thank you for staying with us!<br><br>
+
+            <b>Team Streamly</b>
+        </html>';
+
+                    Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                        $message->to($user->email, $user->name)
+                            ->subject('Subscription Resumed | ' . env('APP_NAME'));
+                    });
+
+                    break;
+                }
+
+
+                // ============================
+                // ❌ CANCEL AT PERIOD END
+                // ============================
+                if ($eventObj->cancel_at_period_end) {
+
+                    $endDateTime = date("Y-m-d H:i:s", $eventObj->current_period_end);
+                    $endDate = date("d M Y", $eventObj->current_period_end);
+
+                    DB::table('subscriptions')
+                        ->where('stripe_id', $eventObj->id)
+                        ->update([
+                            'ends_at' => $endDateTime
+                        ]);
+
+                    $message = 'Your subscription will be canceled at the end of billing period.';
+
+                    // 🔔 Notification
+                    $fcmTokens = DB::table('session_table')
+                        ->where('users_id', $user->id)
+                        ->where('is_main_account', 1)
+                        ->where('status', 1)
+                        ->whereNotNull('fcm_token')
+                        ->pluck('fcm_token')
+                        ->toArray();
+
+                    foreach ($fcmTokens as $token) {
+                        $this->notification->send($token, "Subscription", $message);
+                    }
+
+                    // 📝 Activity Log
+                    $this->activity($user->id)->event("Subscription")
+                        ->eventType("Subscription")
+                        ->descriptionSimple($message)
+                        ->notification()
+                        ->isUser()
+                        ->isAdmin()
+                        ->properties([
+                            "user" => $user,
+                            "subscription" => $eventObj
+                        ])->save();
+
+                    // 📧 Email
+                    $html = '
+        <html>
+            Hi, ' . ucwords($user->name) . '<br><br>
+
+            Your subscription auto-renewal has been successfully cancelled.<br><br>
+
+            <b>What this means:</b><br>
+            • Your subscription will remain active until <b>' . $endDate . '</b><br>
+            • You will not be charged again after this date<br>
+            • Your access will end automatically after this period<br><br>
+
+            <b>Subscription Ends On:</b> ' . $endDate . '<br><br>
+
+            You can continue enjoying all features until the end date.<br><br>
+
+            If you need help, contact us at contact@streamlytv.com.<br><br>
+
+            Thanks for being with us,<br>
+            <b>Team Streamly</b>
+        </html>';
+
+                    Mail::send('emails.general', ["html" => $html], function ($message) use ($user, $endDate) {
+                        $message->to($user->email, $user->name)
+                            ->subject('Subscription Cancelled – Active Until ' . $endDate . ' | ' . env('APP_NAME'));
+                    });
+
+
+                }
+
+
                 break;
-
 
 
             case 'invoice.payment_failed':

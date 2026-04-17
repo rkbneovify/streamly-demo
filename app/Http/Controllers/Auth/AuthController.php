@@ -10,6 +10,7 @@ use App\Traits\ActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
+use App\Mail\SubscriptionResumeOtp;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
 use App\Models\JwtToken;
@@ -1333,13 +1334,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function deleteAccountOtpSend()
+    public function accountOtpSend($slug = null)
     {
         DB::beginTransaction();
         try {
             $otp = random_int(100000, 999999);
             EmailOtp::where('email', auth()->user()->email)
-                ->whereNull('sent_count')
                 ->whereDate('created_at', '<', now())
                 ->delete();
             $emailOtp = EmailOtp::where('email', auth()->user()->email)
@@ -1351,7 +1351,7 @@ class AuthController extends Controller
                 return response()->json([
                     "status" => false,
                     "response_code" => 429,
-                    "message" => "Delete account OTP limit reached for today. Try again later ."
+                    "message" => "OTP limit reached for today. Try again later ."
                 ], 429);
 
 
@@ -1373,7 +1373,12 @@ class AuthController extends Controller
             }
 
             DB::commit();
-            Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            if (strtolower($slug) == "subscription-resume") {
+                Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
+            } else {
+                Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            }
+
 
             return response()->json([
                 "status" => true,
@@ -1385,13 +1390,13 @@ class AuthController extends Controller
             DB::rollBack();
             return response()->json([
                 "status" => false,
-                "response_code" => 500,
-                "message" => $th->getMessage()
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
             ], 500);
         }
     }
 
-    public function deleteAccountOtpVerification(Request $request)
+    public function accountOtpVerification(Request $request)
     {
         DB::beginTransaction();
 
@@ -1447,12 +1452,66 @@ class AuthController extends Controller
             DB::rollBack();
             return response()->json([
                 "status" => false,
-                "response_code" => 500,
-                "message" => $th->getMessage()
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
             ], 500);
         }
     }
 
+
+    public function subscriptionResume(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+
+            if ($request->user()->is_custom_user != 1) {
+                $request->user()->subscription('main')->resume();
+
+                DB::table('subscriptions')
+                    ->where('user_id', Auth::id())
+                    ->update(['stripe_status' => "active"]);
+
+            }
+            // $this->activity()
+            //     ->event("Subscription")
+            //     ->eventType(ActivityEventType::Resume)
+            //     ->description("Subscription ressume successfully .")
+            //     ->isUser()
+            //     ->isAdmin()
+            //     ->properties([
+            //         "data" => Auth::user()
+            //     ])->save();
+
+
+
+
+
+
+            DB::commit();
+
+            $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription resume successfully !");
+            return response()->json($response, 200);
+
+        } catch (\Stripe\Exception\InvalidRequestException $th) {
+            DB::rollBack();
+            // Handle missing subscription
+            if (str_contains($th->getMessage(), 'No such subscription')) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "Subscription not found !"
+                ], 404);
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later !"
+            ], 500);
+        }
+    }
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
