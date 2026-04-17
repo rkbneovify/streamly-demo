@@ -640,7 +640,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   resendOtp() {
     this.isLoading = true;
-    this.crud.postRequest('auth/account/otp-send').pipe(finalize(() => {
+
+    this.crud.postRequest('auth/account/otp-send/subscription-resume').pipe(finalize(() => {
       this.isLoading = false;
     })).subscribe({
       next: (res: any) => {
