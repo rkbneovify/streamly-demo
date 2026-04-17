@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, ɵEmptyOutletComponent } from '@angular/router';
+import { Router, ɵEmptyOutletComponent, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
@@ -23,7 +23,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent, LocalDatePipe],
+  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent, LocalDatePipe, RouterLink],
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
@@ -654,6 +654,31 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     this.otp = '';
     this.otpInputs.forEach(input => input.nativeElement.value = '');
     this.clearTimer();
+  }
+
+  subscriptionResume() {
+    this.sweetAlert.confirm("Subscription", "Do you want to resume subscription ?")
+      .then((res) => {
+
+
+        if (res.isConfirmed) {
+          this.isLoading = true;
+          this.crud.postRequest('auth/subscription/resume').pipe(finalize(() => {
+            this.isLoading = false;
+          })).subscribe({
+            next: (res: any) => {
+              this.ts.success(res.message)
+
+            },
+            error: (err: any) => {
+              this.ts.success(err.error.message)
+
+            },
+          });
+        }
+
+      });
+
   }
 
 
