@@ -1333,13 +1333,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function deleteAccountOtpSend()
+    public function accountOtpSend()
     {
         DB::beginTransaction();
         try {
             $otp = random_int(100000, 999999);
             EmailOtp::where('email', auth()->user()->email)
-                ->whereNull('sent_count')
                 ->whereDate('created_at', '<', now())
                 ->delete();
             $emailOtp = EmailOtp::where('email', auth()->user()->email)
@@ -1391,7 +1390,7 @@ class AuthController extends Controller
         }
     }
 
-    public function deleteAccountOtpVerification(Request $request)
+    public function accountOtpVerification(Request $request)
     {
         DB::beginTransaction();
 
