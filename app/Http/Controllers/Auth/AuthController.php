@@ -1334,50 +1334,83 @@ class AuthController extends Controller
         ]);
     }
 
-    public function accountOtpSend($slug = null)
+    public function accountOtpSend(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'action' => 'nullable|string|max:225'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    "status" => false,
+                    "response_code" => 422,
+                    "message" => $validator->errors()->first()
+                ],
+                422
+
+            );
+        }
+
         DB::beginTransaction();
+
         try {
             $otp = random_int(100000, 999999);
             EmailOtp::where('email', auth()->user()->email)
                 ->whereDate('created_at', '<', now())
                 ->delete();
             $emailOtp = EmailOtp::where('email', auth()->user()->email)
-                ->whereNotNull('sent_count')
-                ->whereDate('created_at', now()) // current date
+
                 ->first();
 
             if ($emailOtp != null && $emailOtp->sent_count >= 3) {
                 return response()->json([
                     "status" => false,
-                    "response_code" => 429,
+                    "response_code" => 422,
                     "message" => "OTP limit reached for today. Try again later ."
-                ], 429);
+                ], 422);
 
 
             }
 
-            if ($emailOtp == null) {
-                EmailOtp::create([
-                    'email' => auth()->user()->email,
+            EmailOtp::updateOrCreate(
+                ['email' => auth()->user()->email],
+                [
                     'otp' => $otp,
                     'otp_expire' => now()->addMinutes(15),
-                    "sent_count" => 1
-                ]);
-            } else {
-                $emailOtp->update([
-                    'otp' => $otp,
-                    'otp_expire' => now()->addMinutes(15),
-                    "sent_count" => $emailOtp->sent_count += 1
-                ]);
-            }
-
+                    'sent_count' => DB::raw('sent_count + 1'),
+                ]
+            );
             DB::commit();
-            if (strtolower($slug) == "subscription-resume") {
+
+            if (strtolower($request->action) === "resume_subscription") {
                 Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
+            } elseif (strtolower($request->action) === "delete_account") {
+                Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+
             } else {
                 Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
             }
+
+            // switch (strtolower($request->action)) {
+            //     case 'resume_subscription':
+            //         Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
+            //         break;
+
+            //     case 'delete_account':
+            //         Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            //         break;
+
+            //     default:
+            //         return response()->json([
+            //             "status" => false,
+            //             "response_code" => 422,
+            //             "message" => "Invalid action."
+            //         ], 422);
+
+
+            // }
 
 
             return response()->json([
@@ -1391,7 +1424,7 @@ class AuthController extends Controller
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
-                "message" => "Something went wrong. Please try again later."
+                "message" => $th->getMessage()
             ], 500);
         }
     }
