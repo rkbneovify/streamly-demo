@@ -1360,9 +1360,8 @@ class AuthController extends Controller
             EmailOtp::where('email', auth()->user()->email)
                 ->whereDate('created_at', '<', now())
                 ->delete();
-            $emailOtp = EmailOtp::where('email', auth()->user()->email)
 
-                ->first();
+            $emailOtp = EmailOtp::where('email', auth()->user()->email)->first();
 
             if ($emailOtp != null && $emailOtp->sent_count >= 3) {
                 return response()->json([
@@ -1379,7 +1378,7 @@ class AuthController extends Controller
                 [
                     'otp' => $otp,
                     'otp_expire' => now()->addMinutes(15),
-                    'sent_count' => DB::raw('sent_count + 1'),
+                    'sent_count' => $emailOtp == null ? 1 : $emailOtp->sent_count + 1,
                 ]
             );
             DB::commit();
