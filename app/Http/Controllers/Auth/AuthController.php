@@ -1593,8 +1593,10 @@ class AuthController extends Controller
             ->first();
 
         if ($otpRecord) {
+
             // OTP is valid
             // Implement your further verification logic here
+            $otpRecord->delete();
             return response()->json(['message' => 'OTP verification successful']);
         }
 
