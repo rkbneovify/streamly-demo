@@ -1361,7 +1361,9 @@ class AuthController extends Controller
                 ->whereDate('created_at', '<', now())
                 ->delete();
 
-            $emailOtp = EmailOtp::where('email', auth()->user()->email)->first();
+            $emailOtp = EmailOtp::where('email', auth()->user()->email)
+                ->where('action', $request->action)
+                ->first();
 
             if ($emailOtp != null && $emailOtp->sent_count >= 3) {
                 return response()->json([
@@ -1374,13 +1376,18 @@ class AuthController extends Controller
             }
 
             EmailOtp::updateOrCreate(
-                ['email' => auth()->user()->email],
+                [
+                    'email' => auth()->user()->email,
+                    'action' => $request->action
+                ],
                 [
                     'otp' => $otp,
                     'otp_expire' => now()->addMinutes(15),
+                    'action' => $request->action,
                     'sent_count' => $emailOtp == null ? 1 : $emailOtp->sent_count + 1,
                 ]
             );
+
             DB::commit();
 
             if (strtolower($request->action) === "resume_subscription") {
@@ -1392,24 +1399,7 @@ class AuthController extends Controller
                 Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
             }
 
-            // switch (strtolower($request->action)) {
-            //     case 'resume_subscription':
-            //         Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
-            //         break;
 
-            //     case 'delete_account':
-            //         Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
-            //         break;
-
-            //     default:
-            //         return response()->json([
-            //             "status" => false,
-            //             "response_code" => 422,
-            //             "message" => "Invalid action."
-            //         ], 422);
-
-
-            // }
 
 
             return response()->json([
@@ -1558,22 +1548,17 @@ class AuthController extends Controller
             // Generate OTP
             $otp = random_int(100000, 999999);
 
+
+
+            // delete old 
+            EmailOtp::where('email', $request->email)
+                ->whereNull('sent_count')->delete();
             // Save OTP to the database
-            $user = EmailOtp::where('email', $request->email)->first();
-            if (!$user) {
-                EmailOtp::create([
-                    'email' => request('email'),
-                    'otp' => $otp,
-                    'otp_expire' => now()->addMinutes(1),
-                ]);
-            } else {
-                EmailOtp::where('email', $request->email)->update(
-                    [
-                        'otp' => $otp,
-                        'otp_expire' => Carbon::now()->addMinutes(1),
-                    ]
-                );
-            }
+            EmailOtp::create([
+                'email' => request('email'),
+                'otp' => $otp,
+                'otp_expire' => now()->addMinutes(1),
+            ]);
             // Send OTP to the email
             $this->sendOtpEmail(request('email'), $otp);
 
@@ -1608,8 +1593,10 @@ class AuthController extends Controller
             ->first();
 
         if ($otpRecord) {
+
             // OTP is valid
             // Implement your further verification logic here
+            $otpRecord->delete();
             return response()->json(['message' => 'OTP verification successful']);
         }
 
