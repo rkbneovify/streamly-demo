@@ -1596,7 +1596,7 @@ class AuthController extends Controller
 
             // OTP is valid
             // Implement your further verification logic here
-            $otpRecord->delete();
+            // $otpRecord->delete();
             return response()->json(['message' => 'OTP verification successful']);
         }
 
