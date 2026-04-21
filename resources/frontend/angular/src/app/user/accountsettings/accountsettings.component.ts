@@ -656,34 +656,35 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   }
 
   subscriptionResume() {
-    this.isLoading = true;
-    this.crud.postRequest('auth/subscription/resume').pipe(finalize(() => {
-      this.isLoading = false;
-    })).subscribe({
-      next: (res: any) => {
-        this.ts.success(res.message)
-        location.reload();
 
-      },
-      error: (err: any) => {
-        this.ts.success(err.error.message)
-
-      },
-    });
-  }
-  subscriptionAction() {
     this.sweetAlert.confirm("Subscription", "Do you want to resume subscription ?")
       .then((res) => {
-
-
         if (res.isConfirmed) {
-          this.otpSvAction = "resume_subscription";
-          this.otpSvActionText = "resume your subscription";
-          document.getElementById('btn-show-otp-dailog').click();
-          this.resendOtp();
+          this.isLoading = true;
+          this.crud.postRequest('auth/subscription/resume').pipe(finalize(() => {
+            this.isLoading = false;
+          })).subscribe({
+            next: (res: any) => {
+              this.ts.success(res.message)
+              location.reload();
+
+            },
+            error: (err: any) => {
+              this.ts.success(err.error.message)
+
+            },
+          });
         }
 
       });
+
+
+  }
+  subscriptionAction() {
+    this.otpSvAction = "resume_subscription";
+    this.otpSvActionText = "resume your subscription";
+    document.getElementById('btn-show-otp-dailog').click();
+    this.resendOtp();
 
   }
 
