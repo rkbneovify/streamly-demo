@@ -14,5 +14,5 @@ class EmailOtp extends Model
     /**
      * Mass assignable columns
      */
-    protected $fillable = ['email', 'otp', 'otp_expire', 'sent_count'];
+    protected $fillable = ['email', 'otp', 'otp_expire', 'action', 'sent_count'];
 }
