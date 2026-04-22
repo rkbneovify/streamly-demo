@@ -1424,6 +1424,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'otp' => 'required',
+            'action' => 'required|string|max:225'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1439,6 +1440,7 @@ class AuthController extends Controller
 
             $emailOtp = EmailOtp::where('email', auth()->user()->email)
                 ->where('otp', $request->otp)
+                ->where('action', $request->action)
                 ->whereNotNull('sent_count')
                 ->first();
 
