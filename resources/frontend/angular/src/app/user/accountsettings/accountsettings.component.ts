@@ -603,7 +603,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     }
 
     const data = {
-      otp: this.otp
+      otp: this.otp,
+      action: this.otpSvAction
     }
 
     this.isVerifying = true;
@@ -632,8 +633,10 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   resendOtp() {
     this.isLoading = true;
-
-    this.crud.postRequest(`auth/account/otp-send?action=${this.otpSvAction}`).pipe(finalize(() => {
+    const data = {
+      action: this.otpSvAction
+    };
+    this.crud.postRequest('auth/account/otp-send', data).pipe(finalize(() => {
       this.isLoading = false;
     })).subscribe({
       next: (res: any) => {
