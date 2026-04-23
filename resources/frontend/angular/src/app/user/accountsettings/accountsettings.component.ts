@@ -360,7 +360,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           // this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
-          // this.deviceInfo.subscribed = false;
+          this.deviceInfo.subscribed = true;
           localStorage.setItem('deviceInfo', JSON.stringify(this.deviceInfo));
           this.isLoading = false;
           location.reload();
