@@ -18,10 +18,12 @@ class SubscriptionResumeOtp extends Mailable
      */
     public $user;
     public $otp;
+
     public function __construct($user, $otp)
     {
         $this->user = $user;
         $this->otp = $otp;
+
     }
 
     /**
@@ -32,6 +34,6 @@ class SubscriptionResumeOtp extends Mailable
     public function build()
     {
         return $this->view('emails.otp.subscription-resume')
-            ->subject('Subscription resume OTP Request');
+            ->subject('Subscription resume OTP request');
     }
 }

@@ -1,6 +1,6 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +16,7 @@ import { LocalDatePipe } from '../../pipe/localDate/local-date.pipe';
 import { NotificationService } from '../../services/utils/notification.service';
 import { finalize } from 'rxjs';
 import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
+import { OtpModelComponent } from "../../components/otp-model/otp-model.component";
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -23,7 +24,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent, LocalDatePipe, RouterLink],
+  imports: [ReactiveFormsModule, NgClass, NgIf, DatePipe, NgFor, ɵEmptyOutletComponent, LocalDatePipe, RouterLink, OtpModelComponent],
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
@@ -65,15 +66,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   hoaMainUserSubscription: any = null;
   subscreptionCanceled: boolean = false;
   planExpiredAt: Date;
-  otpArray = [0, 1, 2, 3, 4, 5];
-  otp: string = '';
-  timer: number = 60;
-  interval: any;
-  canResend: boolean = false;
-  isVerifying: boolean = false;
-  isOtpError: boolean = false;
-  otpSvAction: 'resume_subscription' | 'delete_account' = "delete_account";
-  otpSvActionText: string = "";
+
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
@@ -151,19 +144,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     this.notificationService.fetchCount();
   }
 
-  startTimer() {
-    this.timer = 60;
-    this.canResend = false;
 
-    this.interval = setInterval(() => {
-      this.timer--;
-
-      if (this.timer <= 0) {
-        this.canResend = true;
-        clearInterval(this.interval);
-      }
-    }, 1000);
-  }
 
   toggleEditMode() {
     this.editMode = !this.editMode;
@@ -392,14 +373,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
   // delete user account
   deleteAccountForm: FormGroup;
-  showPopDeleteAccount() {
-    // document.getElementById('btnShowPopDeleteAccount').click();
-    this.otpSvAction = "delete_account";
-    this.otpSvActionText = "delete your account";
-    document.getElementById('btn-show-otp-dailog').click();
-    this.isLoading = true;
-    this.resendOtp();
-  }
+
 
   showPopCancelSubc() {
     document.getElementById('btnShowPopCancelSubsc').click();
@@ -511,11 +485,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearTimer() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
+
 
   ngOnDestroy(): void {
     // Close all open modals on component destroy
@@ -527,136 +497,10 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.clearTimer();
-  }
-
-  // otp
-  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
-
-  deleteAccountOtpForm = this.fb.group({
-    otp: ['', [Validators.required, Validators.maxLength(6)]]
-  });
-
-  onOtpInput(event: any, index: number) {
-    const input = event.target;
-    const value = input.value.replace(/[^0-9]/g, '');
-
-    input.value = value;
-
-    if (value && index < 5) {
-      this.otpInputs.toArray()[index + 1].nativeElement.focus();
-    }
-
-    this.updateOtp();
-  }
-
-  onKeyDown(event: KeyboardEvent, index: number) {
-    if (event.key === 'Backspace') {
-      const inputs = this.otpInputs.toArray();
-
-      if (!inputs[index].nativeElement.value && index > 0) {
-        inputs[index - 1].nativeElement.focus();
-      }
-    }
-  }
-
-  onPaste(event: ClipboardEvent) {
-    const pasted = event.clipboardData?.getData('text') || '';
-
-    if (pasted.length === 6) {
-      const inputs = this.otpInputs.toArray();
-
-      pasted.split('').forEach((char, i) => {
-        inputs[i].nativeElement.value = char;
-      });
-
-      this.updateOtp();
-      this.deleteAccountOtpForm.markAsTouched();
-      this.deleteAccountOtpForm.markAsDirty();
-      this.deleteAccountOtpForm.updateValueAndValidity();
-
-
-    }
-  }
-
-  updateOtp() {
-    this.otp = this.otpInputs
-      .toArray()
-      .map(input => input.nativeElement.value)
-      .join('');
-
-
-
 
   }
 
-  verifyOtp(event?: Event) {
-    // Use optional chaining to prevent errors if event is null
-    event?.preventDefault();
 
-    // It's also good practice to stop propagation
-    event?.stopPropagation();
-
-    if (this.deleteAccountOtpForm.invalid) {
-      this.ts.error("6 digit otp required");
-      return;
-    }
-
-    const data = {
-      otp: this.otp,
-      action: this.otpSvAction
-    }
-
-    this.isVerifying = true;
-    this.crud.postRequest('auth/account/otp-verify', data).pipe(finalize(() => {
-      this.isVerifying = false;
-    })).subscribe({
-      next: (res: any) => {
-        document.getElementById('btn-show-otp-dailog').click();
-        this.ts.success(res.message)
-        if (this.otpSvAction == "delete_account") {
-          this.deleteUserAccount();
-        } if (this.otpSvAction == "resume_subscription") {
-          this.subscriptionResume();
-        }
-
-
-      },
-      error: (err: any) => {
-        this.ts.error(err.error.message)
-
-      },
-    });
-
-
-  }
-
-  resendOtp() {
-    this.isLoading = true;
-    const data = {
-      action: this.otpSvAction
-    };
-    this.crud.postRequest('auth/account/otp-send', data).pipe(finalize(() => {
-      this.isLoading = false;
-    })).subscribe({
-      next: (res: any) => {
-        this.clearOtpDetails();
-        this.startTimer();
-        this.ts.success(res.message)
-        this.isOtpError = false;
-      },
-      error: (err: any) => {
-        this.ts.error(err.error.message)
-        this.isOtpError = true;
-      },
-    });
-  }
-
-  clearOtpDetails() {
-    this.otp = '';
-    this.otpInputs.forEach(input => input.nativeElement.value = '');
-    this.clearTimer();
-  }
 
   subscriptionResume() {
 
@@ -683,12 +527,40 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
 
 
   }
-  subscriptionAction() {
-    this.otpSvAction = "resume_subscription";
-    this.otpSvActionText = "resume your subscription";
-    document.getElementById('btn-show-otp-dailog').click();
-    this.resendOtp();
 
+  @ViewChild(OtpModelComponent) otpModelChild!: OtpModelComponent;
+
+
+  showPopDeleteAccount() {
+    this.otpModelChild.action = "delete_account";
+    this.otpModelChild.displayText = "delete your account";
+    this.otpModelChild.resendOtp();
+  }
+
+  subscriptionAction() {
+    this.otpModelChild.action = "resume_subscription";
+    this.otpModelChild.displayText = "resume your subscription";
+    this.otpModelChild.resendOtp();
+
+  }
+
+
+
+  onOtpVerified(event: any) {
+    if (event.isOtpVeriefied) {
+      switch (this.otpModelChild.action) {
+        case 'resume_subscription':
+          this.subscriptionResume();
+          break;
+        case 'delete_account':
+          this.deleteUserAccount();
+          break;
+
+        default:
+
+          break;
+      }
+    }
   }
 
 
