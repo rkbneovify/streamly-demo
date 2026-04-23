@@ -3,38 +3,24 @@
     <div class="plans_options">
       <h1>Available Plans</h1>
       <div class="plans_buttons">
-        <div
-        class="pointer"
-          [ngClass]="{
+        <div class="pointer" [ngClass]="{
             plan_btn_1: true,
             btn_avtive: selectTab == 'basicPlans'
-          }"
-          (click)="selectTab = 'basicPlans'"
-        >
+          }" (click)="selectTab = 'basicPlans'">
           Basic Plan
         </div>
-        <div
-        class="pointer"
-          [ngClass]="{
+        <div class="pointer" [ngClass]="{
             plan_btn_2: true,
             btn_avtive: selectTab == 'otherPlans'
-          }"
-          (click)="otherPlan()"
-        >
+          }" (click)="otherPlan()">
           Other Plan
         </div>
       </div>
     </div>
 
-    <div
-      *ngIf="selectTab == 'basicPlans'"
-      [ngClass]="{ plans_categories1: true }"
-    >
+    <div *ngIf="selectTab == 'basicPlans'" [ngClass]="{ plans_categories1: true }">
       <!-- daily start -->
-      <div
-      *ngFor="let plan of basic_plans"     
-        class="col_2_s_3 h-auto d-flex flex-column justify-content-between"
-      >
+      <div *ngFor="let plan of basic_plans" class="col_2_s_3 h-auto d-flex flex-column justify-content-between">
         <div class="col_2_gap d-flex pb-4">
           <div>
             <img loading="lazy" src="../../../assets/dummy-img/daily_plan.svg" alt="" />
@@ -51,14 +37,15 @@
               <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p *ngIf="plan.trial_period_days ">
-              Trial days: {{plan.trial_period_days?plan.trial_period_days + (plan.trial_period_days >1? ' Days':' Day') :'No trial Days'}}
+              Trial days: {{plan.trial_period_days?plan.trial_period_days + (plan.trial_period_days >1? ' Days':' Day')
+              :'No trial Days'}}
             </p>
             <p *ngIf="plan.nickname == null">
               Trial days: No trial Days.
             </p>
           </div>
           <div *ngFor="let metadata of plan.metadata | keyvalue" class="d-flex flex-nowrap">
-                  
+
             <div *ngIf="plan.type == 'tiered'">
               <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
@@ -88,14 +75,16 @@
         </div>
 
         <div class="res-step3-btn">
-          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId && isSubscribe">
-            <svg class="d-inline-block" *ngIf="plan.id ==this.setActivePlanId && isSubscribe" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
+          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId && isSubscribe}"
+            (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId && isSubscribe">
+            <svg class="d-inline-block" *ngIf="plan.id ==this.setActivePlanId && isSubscribe"
+              xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
               <g fill="none" stroke="#4CAF50" stroke-width="4">
                 <circle cx="32" cy="32" r="30" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 33l8 8 16-16" />
               </g>
-            </svg>            
-            {{plan.id ==this.setActivePlanId && isSubscribe  ?'Active Plan':'Select Plan'}}
+            </svg>
+            {{plan.id ==this.setActivePlanId && isSubscribe ?'Active Plan':'Select Plan'}}
 
           </button>
         </div>
@@ -109,14 +98,14 @@
         <div class="col_2_gap pb-4">
           <div class="d-flex flex-column justify-content-between">
             <h3 class="text-center my-3">Tiers 1 Months</h3>
-            
+
             <div class="otherPlansDetails">
-            <div class="other_plan_tier row my-2">
-              <div class="col-4 text-nowrap">Quantity</div>
-              <div class="col-4 text-nowrap">Price per unit</div>
-              <div class="col-4 text-nowrap">Flat Amount</div>
-            </div>
-            <!-- <div class="other_plan_tier row my-2">
+              <div class="other_plan_tier row my-2">
+                <div class="col-4 text-nowrap">Quantity</div>
+                <div class="col-4 text-nowrap">Price per unit</div>
+                <div class="col-4 text-nowrap">Flat Amount</div>
+              </div>
+              <!-- <div class="other_plan_tier row my-2">
               <div class="col-4 text-nowrap">
                 <div>For the first</div>
                 <div class="ps-3">1 to 10</div>
@@ -140,16 +129,16 @@
               <div class="col-4 text-nowrap">$ 0.00</div>
             </div> -->
 
-            <div *ngFor="let tPlans of data.tiers" class="other_plan_tier row my-2">
-              <div class="col-4 text-wrap" *ngIf="tPlans.up_to">
-                For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
-                {{ tPlans.up_to }}
+              <div *ngFor="let tPlans of data.tiers" class="other_plan_tier row my-2">
+                <div class="col-4 text-wrap" *ngIf="tPlans.up_to">
+                  For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
+                  {{ tPlans.up_to }}
+                </div>
+                <div class="col-4 text-nowrap" *ngIf="tPlans.up_to == null">For the rest</div>
+                <div class="col-4 text-nowrap">${{ +tPlans.unit_amount / 100 }}</div>
+                <div class="col-4 text-nowrap">${{ +tPlans.flat_amount / 100 }}</div>
               </div>
-              <div class="col-4 text-nowrap" *ngIf="tPlans.up_to == null">For the rest</div>
-              <div class="col-4 text-nowrap">${{ +tPlans.unit_amount / 100 }}</div>
-              <div class="col-4 text-nowrap">${{ +tPlans.flat_amount / 100 }}</div>
             </div>
-          </div>
 
           </div>
         </div>
@@ -182,80 +171,60 @@
         </div>
 
         <div class="res-step3-btn">
-          <button [ngClass]="{'cursor-not-allow':data.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(data?.id,data?.type)" [disabled]="data.id == this.setActivePlanId && isSubscribe" >
-            <svg class="d-inline-block" *ngIf="data.id ==this.setActivePlanId && isSubscribe" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
+          <button [ngClass]="{'cursor-not-allow':data.id ==this.setActivePlanId && isSubscribe}"
+            (click)="selectedplanData(data?.id,data?.type)" [disabled]="data.id == this.setActivePlanId && isSubscribe">
+            <svg class="d-inline-block" *ngIf="data.id ==this.setActivePlanId && isSubscribe"
+              xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
               <g fill="none" stroke="#4CAF50" stroke-width="4">
                 <circle cx="32" cy="32" r="30" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 33l8 8 16-16" />
               </g>
-            </svg>            
+            </svg>
             {{data.id ==this.setActivePlanId && isSubscribe ?'Active Plan':'Select Plan'}}</button>
         </div>
       </div>
       <!-- daily ends -->
     </div>
-    
+
   </div>
+
 </main>
 
 
+<app-otp-model (onOtpVerified)="onOtpVerified($event)">
+
+</app-otp-model>
 
 <!-- Modal for Cancel-subsc-->
-<button
-  type="button"
-  class="btn btn-primary d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#ShowPopCancelSubsc"
-  id="btnShowPopCancelSubsc"
-></button>
-<div
-  class="modal fade"
-  id="ShowPopCancelSubsc"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel"
-  aria-hidden="true"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#ShowPopCancelSubsc"
+  id="btnShowPopCancelSubsc"></button>
+<div class="modal fade" id="ShowPopCancelSubsc" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
   <div class="modal-dialog m-auto modal-dialog-centered zipcode_correct">
     <div class="modal-content showPopConf popup_bg margin-left-3">
       <div class="modal-header border-0 p-0 mt-2 me-2 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            loading="lazy"
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg" alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
-        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
-          <div class="zip_bottom_p d-flex align-items-center justify-content-center flex-column gap-2 p-3" >
-            <h3 class="d-flex gap-2 mt-2 mb-0">
-              <span class="d-flex gap-3">
-                <img
-                  loading="lazy"
-                  src="../../../assets/dummy-img/check-circle-broken.svg"
-                  alt=""
-                />
-                <span class="text-color-white">
-                  Cancel your subscription then you can purchase a new plan.
+          <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+            <div class="zip_bottom_p d-flex align-items-center justify-content-center flex-column gap-2 p-3">
+              <h3 class="d-flex gap-2 mt-2 mb-0">
+                <span class="d-flex gap-3">
+                  <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+                  <span class="text-color-white">
+                    Cancel your subscription then you can purchase a new plan.
+                  </span>
                 </span>
-              </span>
-            </h3>
-            <button
-            class="btn_2 w-auto align-self-center"
-            [ngClass]="{ 'btn-bg-gold':true }"
-            data-bs-dismiss="modal"
-            type="submit"
-          >
-            Okay
-          </button>
-          </div>
+              </h3>
+              <button class="btn_2 w-auto align-self-center" [ngClass]="{ 'btn-bg-gold':true }" data-bs-dismiss="modal"
+                type="submit">
+                Okay
+              </button>
+            </div>
           </div>
         </div>
       </div>
