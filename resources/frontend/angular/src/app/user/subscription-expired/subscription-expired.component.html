@@ -17,7 +17,7 @@
         </div>
         <div class="flex">
           <div *ngIf="error.plan_count >1" class="pnf-button">
-            <button [routerLink]="'/user/plan'">Upgrade Plan</button>
+            <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
           <div *ngIf="error" class="pnf-button">
             <a [href]="error.url" target="_blank">
