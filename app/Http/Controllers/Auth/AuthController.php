@@ -10,6 +10,7 @@ use App\Traits\ActivityLogger;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
+use App\Mail\SubscriptionCancelOtp;
 use App\Mail\SubscriptionResumeOtp;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
@@ -1394,9 +1395,8 @@ class AuthController extends Controller
                 Mail::to(auth()->user()->email)->send(new SubscriptionResumeOtp(auth()->user(), $otp));
             } elseif (strtolower($request->action) === "delete_account") {
                 Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
-
-            } else {
-                Mail::to(auth()->user()->email)->send(new DeleteAccountOtp(auth()->user(), $otp));
+            } elseif (strtolower($request->action) === "cancel_subscription") {
+                Mail::to(auth()->user()->email)->send(new SubscriptionCancelOtp(auth()->user(), $otp));
             }
 
 
@@ -1464,6 +1464,12 @@ class AuthController extends Controller
             }
 
             $emailOtp->delete();
+
+
+
+
+
+
             DB::commit();
 
             return response()->json([
@@ -1483,6 +1489,37 @@ class AuthController extends Controller
     }
 
 
+    public function subscriptionTerminate(Request $request)
+    {
+        try {
+            if ($request->user()->is_custom_user != 1) {
+                $request->user()->subscription('main')->skipTrial()->cancelNow();
+            }
+            $this->activity()
+                ->event("User")
+                ->eventType(ActivityEventType::Terminated)
+                ->description("User subscription terminated")
+                ->isUser()
+                ->isAdmin()
+                ->properties([
+                    "data" => Auth::user()
+                ])->save();
+
+
+            DB::table('subscriptions')
+                ->where('user_id', Auth::id())
+                ->update(['stripe_status' => "canceled"]);
+            DB::commit();
+            $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription terminated successfully !");
+            return response()->json($response, 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
+            ], 500);
+        }
+    }
     public function subscriptionResume(Request $request)
     {
         DB::beginTransaction();
@@ -1559,7 +1596,7 @@ class AuthController extends Controller
             EmailOtp::create([
                 'email' => request('email'),
                 'otp' => $otp,
-                'otp_expire' => now()->addMinutes(1),
+                'otp_expire' => now()->addMinutes(15),
             ]);
             // Send OTP to the email
             $this->sendOtpEmail(request('email'), $otp);

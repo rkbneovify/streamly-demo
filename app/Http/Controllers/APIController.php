@@ -1172,7 +1172,14 @@ class APIController extends Controller
         Mail::to(Auth::user()->email)->send(new DeleteAccount(Auth::user()));
         DB::table('session_table')
             ->where('users_id', Auth::user()->id)
-            ->delete();
+            ->where('status', 1)
+            ->get()->map(function ($item) {
+                JWTAuth::setToken($item->access_token)->invalidate();
+
+            });
+        DB::table('session_table')
+            ->where('users_id', Auth::user()->id)->delete();
+
 
         DB::commit();
 
@@ -1194,16 +1201,6 @@ class APIController extends Controller
             }
 
             return $this->handleTwoWayDeleteAccount();
-
-        } catch (\Stripe\Exception\InvalidRequestException $th) {
-
-            // Handle missing subscription
-            if (str_contains($th->getMessage(), 'No such subscription')) {
-
-
-                return $this->handleTwoWayDeleteAccount();
-
-            }
 
         } catch (\Throwable $th) {
             DB::rollBack();
