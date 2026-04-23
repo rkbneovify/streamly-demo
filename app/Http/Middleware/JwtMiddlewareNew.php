@@ -34,6 +34,7 @@ class JwtMiddlewareNew extends BaseMiddleware
             ])->first();
 
 
+
             // if found token
             if ($session != null) {
                 config([
