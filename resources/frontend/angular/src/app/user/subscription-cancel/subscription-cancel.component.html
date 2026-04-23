@@ -18,7 +18,7 @@
         <div class="flex">
           @if(error.plan_count > 1){
           <div class="pnf-button">
-            <button [routerLink]="'/user/plan'">Upgrade Plans</button>
+            <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
           }@else if ( error && error.url) {
           <div class="pnf-button">
@@ -30,7 +30,7 @@
           @else {
 
           <div class="pnf-button">
-            <button [routerLink]="'/user/plan'">Upgrade Plans</button>
+            <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
           }
 
