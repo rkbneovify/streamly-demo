@@ -1170,6 +1170,7 @@ class APIController extends Controller
             ]);
 
         Mail::to(Auth::user()->email)->send(new DeleteAccount(Auth::user()));
+        // invalidate active session
         DB::table('session_table')
             ->where('users_id', Auth::user()->id)
             ->where('status', 1)
@@ -1177,6 +1178,7 @@ class APIController extends Controller
                 JWTAuth::setToken($item->access_token)->invalidate();
 
             });
+        // delete session
         DB::table('session_table')
             ->where('users_id', Auth::user()->id)->delete();
 

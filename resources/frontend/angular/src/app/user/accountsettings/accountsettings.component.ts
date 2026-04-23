@@ -358,11 +358,12 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
       .deleteRequest('cancel-subscription/616', this.getAuthHeaders())
       .subscribe({
         next: (res: any) => {
-          this.router.navigate(['user/plan']);
+          // this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
           // this.deviceInfo.subscribed = false;
           localStorage.setItem('deviceInfo', JSON.stringify(this.deviceInfo));
           this.isLoading = false;
+          location.reload();
         },
         error: (err) => {
           this.ts.error(err.error?.error);
