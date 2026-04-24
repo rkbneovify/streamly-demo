@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Closure;
 use Exception;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Subscribed
 {
@@ -23,6 +24,16 @@ class Subscribed
      */
     public function handle($request, Closure $next)
     {
+
+        $qrcode = route('qrcode.generate') . '?url=' . url('/');
+        $defaultRes = [
+            'success' => false,
+            'response_code' => 410,
+            'message' => KindlySubscribeMsg(),
+            'qrcode' => $qrcode
+
+        ];
+
         $token = $request->bearerToken();//get token from header
         if (empty($token)) {
             $user = Auth::user();
@@ -54,13 +65,16 @@ class Subscribed
                 $planCount = $stripe->getPlans()->count();
                 $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
+
+
                 if ($request->wantsJson()) {
                     $response = array(
                         'success' => false,
                         'response_code' => 410,
                         'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
                         "url" => $url,
-                        'plan_count' => $planCount
+                        'plan_count' => $planCount,
+                        'qrcode' => route('qrcode.generate') . '?url=' . $url
                     );
                     return response()->json($response, 410);
                 } else {
@@ -70,8 +84,8 @@ class Subscribed
             }
 
             if ($request->wantsJson()) {
-                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($response, 410);
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($defaultRes, 410);
             } else {
                 return redirect('/selectplan');
             }
@@ -79,16 +93,16 @@ class Subscribed
         // Live mode
         if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "canceled") {
             if ($request->wantsJson()) {
-                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($response, 410);
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($defaultRes, 410);
             } else {
                 return redirect('/selectplan');
             }
         }
         if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "past_due") {
             if ($request->wantsJson()) {
-                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($response, 410);
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($defaultRes, 410);
             } else {
                 return redirect('/selectplan');
             }
@@ -96,8 +110,8 @@ class Subscribed
         // Test mode
         if ($user->subscription('main') && $user->subscription('main')->livemode == 0 && $user->subscription('main')->plan_duration == null && $user->subscription('main')->stripe_status == "canceled") {
             if ($request->wantsJson()) {
-                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($response, 410);
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($defaultRes, 410);
             } else {
                 return redirect('/selectplan');
             }
@@ -106,8 +120,8 @@ class Subscribed
         // Custom mode
         if ($user->subscription('main')->is_custom == 1 && !$user->hasActiveSubscription()) {
             if ($request->wantsJson()) {
-                $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($response, 410);
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                return response()->json($defaultRes, 410);
             } else {
                 return redirect('/selectplan');
             }
