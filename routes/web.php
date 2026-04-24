@@ -21,7 +21,20 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Api\ApiHoaController;
 use App\Http\Controllers\GracenoteCron\GracenoteCronController;
 use FontLib\Table\Type\name;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+Route::get('qrcode/generate', function (Request $request) {
+    $url = $request->get('url', $request->url);
+
+    $qr = QrCode::format('png')
+        ->size(300)
+        ->generate($url);
+
+    return response($qr)
+        ->header('Content-Type', 'image/png');
+})->name('qrcode.generate');
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -539,3 +552,5 @@ Route::get('/admin/clear', function () {
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
+
+
