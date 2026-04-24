@@ -30,6 +30,7 @@ class Subscribed
             'success' => false,
             'response_code' => 410,
             'message' => KindlySubscribeMsg(),
+            'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
             'qrcode' => $qrcode
 
         ];
@@ -74,6 +75,7 @@ class Subscribed
                         'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
                         "url" => $url,
                         'plan_count' => $planCount,
+                        'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
                         'qrcode' => route('qrcode.generate') . '?url=' . $url
                     );
                     return response()->json($response, 410);
