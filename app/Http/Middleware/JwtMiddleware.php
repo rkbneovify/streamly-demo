@@ -27,11 +27,18 @@ class JwtMiddleware extends BaseMiddleware
 
             JWTAuth::parseToken()->authenticate();
             $token = $request->bearerToken();
-            $acctoken = SessionTable::where([
-                ['status', '=', '0'],
-                ['access_token', '=', $token],
-            ]);
-            if ($acctoken->exists()) {
+
+            $acctoken = SessionTable::where('access_token', $request->bearerToken())->first();
+
+            if ($acctoken == null) {
+                $response = [
+                    'success' => false,
+                    'status' => false,
+                    'message' => 'Token is Invalid',
+                    'response_code' => 401,
+                ];
+                return response()->json($response, 401);
+            } elseif ($acctoken->status == 0) {
 
                 config([
                     'jwt.blacklist_enabled' => true
