@@ -13,7 +13,7 @@ npm-debug.log
 yarn-error.log
 .history
 .vscode
-/public/assets/img/qrcode
+/public/assets/img/qrcodeimg
 /public/assets/angular
 /public/uploads/channel_slider
 resources/frontend/angular/src/environments/environment.prod.ts
