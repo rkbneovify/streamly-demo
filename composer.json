@@ -31,7 +31,7 @@
         "pbmedia/laravel-ffmpeg": "^7.0",
         "piwik/device-detector": "^3.12",
         "realrashid/sweet-alert": "^7.3",
-        "simplesoftwareio/simple-qrcode": "^4.1",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^3.0",
         "stevebauman/location": "^6.6",
         "tymon/jwt-auth": "^1.0",
