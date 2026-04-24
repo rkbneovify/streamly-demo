@@ -485,79 +485,10 @@
 </div>
 
 
-<!-- OTP Modal -->
-<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#show-otp-dialog"
-  id="btn-show-otp-dailog"></button>
-<div class="modal fade" id="show-otp-dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered zipcode_correct">
-    <div class="modal-content showPopConf popup_bg margin-left-3">
-
-      <!-- Close -->
-      <div class="modal-header p-0 m-0 d-flex justify-content-end">
-        <div class="btn-cl" (click)="clearOtpDetails()">
-          <img class="pointer" data-bs-dismiss="modal" src="../../../assets/dummy-img/x-circle.svg" />
-        </div>
-      </div>
-
-      <div class="modal-body p-0 m-0">
-
-        <!-- Title -->
-        <div class="zip_top">
-          <h3 class="mt-2 mb-0 text-center">
-            Enter OTP to {{ otpSvActionText }}
-          </h3>
-          <p class="text-center mb-3">Please check your registered email for the OTP.</p>
-        </div>
-
-        <!-- Content -->
-        <form [formGroup]="deleteAccountOtpForm" (ngSubmit)="verifyOtp($event)">
-
-          <div class="zip_bottom d-flex flex-column gap-3 align-items-center">
-
-            <p>Enter 6-digit OTP</p>
-
-            <!-- OTP Boxes -->
-            <div class="d-flex gap-2">
-              <input *ngFor="let box of otpArray; let i = index" #otpInput type="text" maxlength="1" class="otp-box"
-                (input)="onOtpInput($event, i)" (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)"
-                formControlName="otp" />
-            </div>
-
-            <!-- Resend -->
-            <div class="text-center">
-
-              <!-- Timer -->
-              <small *ngIf="!canResend && !isOtpError" class="text-white fs-bold">
-                Resend OTP in {{ timer }}s
-              </small>
-
-              <!-- Resend Button -->
-              <small *ngIf="canResend" class="pointer text-info fs-bold" (click)="resendOtp()">
-                Resend OTP
-              </small>
-
-            </div>
-
-            <!-- Submit -->
-            <button class="btn_2 w-auto align-self-center mt-2"
-              [ngClass]="{ 'btn-bg-gold': !deleteAccountOtpForm.invalid }" [disabled]="deleteAccountOtpForm.invalid"
-              type="submit">
-              <span *ngIf="isVerifying" class="spinner-border spinner-border-sm text-white me-2 "
-                aria-hidden="true"></span>
-              {{ isVerifying ? 'Verify...' : 'Verify OTP' }}
-            </button>
 
 
-
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div>
-
+<app-otp-model (onOtpVerified)="onOtpVerified($event)">
+</app-otp-model>
 
 <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>

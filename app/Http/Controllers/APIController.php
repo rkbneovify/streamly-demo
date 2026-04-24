@@ -31,6 +31,7 @@ use App\Models\Gracenote;
 use App\Models\Subscription;
 use App\Setting;
 use Exception;
+use Illuminate\Support\Facades\Artisan;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class APIController extends Controller
@@ -1162,23 +1163,37 @@ class APIController extends Controller
         DB::table('subscriptions')
             ->where('user_id', Auth::id())
             ->update(['stripe_status' => "canceled"]);
+
+
+        Mail::to(Auth::user()->email)->send(new DeleteAccount(Auth::user()));
+        // invalidate active session
+        config(['jwt.blacklist_enabled' => true]);
+
+        DB::table('session_table')
+            ->where('users_id', Auth::user()->id)
+            ->where('status', 1)
+            ->get()->map(function ($item) {
+                JWTAuth::setToken($item->access_token)->invalidate();
+
+            });
+        // delete session
+        DB::table('session_table')
+            ->where('users_id', Auth::user()->id)->delete();
+
+
+
         DB::table('users')
             ->where('id', Auth::id())
             ->update([
                 'is_active' => 0,
                 'deleted_at' => now()
             ]);
-
-        Mail::to(Auth::user()->email)->send(new DeleteAccount(Auth::user()));
-        DB::table('session_table')
-            ->where('users_id', Auth::user()->id)
-            ->delete();
-
         DB::commit();
-
+        Artisan::call('optimize:clear');
         $response = array('status' => true, 'response_code' => 200, 'message' => "Account deleted successfully !");
         return response()->json($response, 200);
     }
+
     public function userdeletenew(Request $request)
     {
         DB::beginTransaction();
@@ -1194,16 +1209,6 @@ class APIController extends Controller
             }
 
             return $this->handleTwoWayDeleteAccount();
-
-        } catch (\Stripe\Exception\InvalidRequestException $th) {
-
-            // Handle missing subscription
-            if (str_contains($th->getMessage(), 'No such subscription')) {
-
-
-                return $this->handleTwoWayDeleteAccount();
-
-            }
 
         } catch (\Throwable $th) {
             DB::rollBack();
