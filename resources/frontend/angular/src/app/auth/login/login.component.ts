@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
-import { catchError, interval, of, startWith, Subscription, switchMap } from 'rxjs';
+import { catchError, finalize, interval, of, startWith, Subscription, switchMap } from 'rxjs';
 
 interface QrCode {
   key: string;
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   showPasscode = false;
   userDeviceID!: string;
   loading = false;
+  isLoading = false;
   queryTab: string | null = null;
   qrCodeImage: string = null;
   qrcodeKey: string = null;
@@ -318,22 +319,28 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   createQRCode() {
-    this.crudService.postRequest('login/create/qrcode', {}).subscribe({
-      next: (res: QrCode) => {
-        this.qrCodeImage = res.msg;
-        this.qrcodeKey = res.key;
-        this.scanQrcodeCheck();
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
+    this.isLoading = true;
+    this.crudService.postRequest('login/create/qrcode', {})
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res: QrCode) => {
+          this.qrCodeImage = res.msg;
+          this.qrcodeKey = res.key;
+
+          this.scanQrcodeCheck();
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
   }
 
 
   scanQrcodeCheck() {
+
     const data = {
-      deviceid: this.userDeviceID,
       key: this.qrcodeKey
     };
     this.subscription = interval(15000)
@@ -345,7 +352,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           }))
       )).subscribe((res: any) => {
         if (res && res.status == 1) {
-          this.authenticateUser('login/entry/login')
+          const data = {
+            deviceid: this.userDeviceID,
+            key: this.qrcodeKey
+          };
+          this.authenticateUser('login/entry/login', data)
         }
       })
   }
