@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loading = false;
   queryTab: string | null = null;
   qrCodeImage: string = null;
+  qrcodeKey: string = null;
   private subscription!: Subscription;
 
   constructor(
@@ -320,6 +321,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.crudService.postRequest('login/create/qrcode', {}).subscribe({
       next: (res: QrCode) => {
         this.qrCodeImage = res.msg;
+        this.qrcodeKey = res.key;
       },
       error: (err) => {
         console.log(err);
@@ -329,9 +331,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   scanQrcodeCheck() {
+    const data = {
+      key: this.qrcodeKey
+    };
     this.subscription = interval(15000)
       .pipe(startWith(0), switchMap(() =>
-        this.crudService.postRequest('login/scan/qrcode')
+        this.crudService.postRequest('login/scan/qrcode', data)
           .pipe(catchError(err => {
             console.log("Apierror log:", err)
             return of(null);
