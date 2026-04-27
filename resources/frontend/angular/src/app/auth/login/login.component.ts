@@ -333,6 +333,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   scanQrcodeCheck() {
     const data = {
+      deviceid: this.userDeviceID,
       key: this.qrcodeKey
     };
     this.subscription = interval(15000)
