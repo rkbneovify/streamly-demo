@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
-  private authenticateUser(apiEndpoint: string, formData: any) {
+  private authenticateUser(apiEndpoint: string, formData?: any) {
     this.loading = true;
 
     this.crudService.postRequest(apiEndpoint, formData).subscribe({
@@ -333,12 +333,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(startWith(0), switchMap(() =>
         this.crudService.postRequest('login/scan/qrcode')
           .pipe(catchError(err => {
-            console.log("Api error log:", err)
+            console.log("Apierror log:", err)
             return of(null);
           }))
-      )).subscribe(res => {
-        if (res) {
-          console.log('API Response:', res);
+      )).subscribe((res: any) => {
+        if (res && res.status == 1) {
+          this.authenticateUser('login/entry/login')
         }
       })
   }
