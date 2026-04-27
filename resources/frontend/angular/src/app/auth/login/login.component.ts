@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
+import { catchError, interval, of, startWith, Subscription, switchMap } from 'rxjs';
 
 interface QrCode {
   key: string;
@@ -19,7 +20,7 @@ interface QrCode {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginFormWithEmail!: FormGroup;
   loginPasscodeForm!: FormGroup;
   selectedTab: string = 'loginwithpassword';
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   queryTab: string | null = null;
   qrCodeImage: string = null;
+  private subscription!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -60,6 +62,7 @@ export class LoginComponent implements OnInit {
         this.selectedTab = "loginwithpassword";
         break;
     }
+    this.scanQrcodeCheck();
   }
 
 
@@ -112,7 +115,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  private authenticateUser(apiEndpoint: string, formData: any) {
+  private authenticateUser(apiEndpoint: string, formData?: any) {
     this.loading = true;
 
     this.crudService.postRequest(apiEndpoint, formData).subscribe({
@@ -323,4 +326,25 @@ export class LoginComponent implements OnInit {
       }
     })
   }
+
+
+  scanQrcodeCheck() {
+    this.subscription = interval(15000)
+      .pipe(startWith(0), switchMap(() =>
+        this.crudService.postRequest('login/scan/qrcode')
+          .pipe(catchError(err => {
+            console.log("Apierror log:", err)
+            return of(null);
+          }))
+      )).subscribe((res: any) => {
+        if (res && res.status == 1) {
+          this.authenticateUser('login/entry/login')
+        }
+      })
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
 }
