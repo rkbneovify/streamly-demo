@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.selectedTab = "loginwithpassword";
         break;
     }
-    this.scanQrcodeCheck();
+
   }
 
 
@@ -322,6 +322,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       next: (res: QrCode) => {
         this.qrCodeImage = res.msg;
         this.qrcodeKey = res.key;
+        this.scanQrcodeCheck();
       },
       error: (err) => {
         console.log(err);
