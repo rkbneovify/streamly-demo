@@ -73,8 +73,14 @@ export class RemoveDeviceComponent implements OnInit {
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id);
           this.response = this.connectedDevice;
           const userDetials = JSON.parse(localStorage.getItem('loginDetails'));
+          console.log("user details:", userDetials);
+
           if (userDetials.email) {
             this.onSubmit(userDetials);
+            localStorage.removeItem('loggedInDeviceDetail');
+            localStorage.removeItem('loginDetails');
+          } else if (userDetials.key) {
+            this.loginWithQrcode(userDetials);
             localStorage.removeItem('loggedInDeviceDetail');
             localStorage.removeItem('loginDetails');
           } else {
@@ -159,6 +165,60 @@ export class RemoveDeviceComponent implements OnInit {
     if (data) {
       const formData = data;
       this.apiService.postRequest('auth/login-with-passcode', formData).subscribe({
+        next: (res: any) => {
+          if (res.response_code == 200) {
+            if (res.user.forced_change == 1) {
+              localStorage.setItem('changeToken', res?.access_token);
+              this.router.navigateByUrl(`auth/change-password`);
+            } else {
+              this.toastr.success(res?.message);
+              const token = res?.access_token;
+              let deviceInfo = {
+                access_token: res?.access_token,
+                device_info: res?.device_info,
+                personaldeviceid: res?.personaldeviceid,
+                sessionid: res?.sessionid,
+                timezone: res?.timezone,
+                token_type: res?.token_type,
+                userrole: res?.userrole,
+                subscribed: res?.subscribed
+              };
+              localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
+              this.setToken.setAuthorizationToken(token);
+              localStorage.setItem('userDetails', JSON.stringify(res?.user));
+              this.router.navigateByUrl('/user');
+            }
+          }
+        },
+        error: (err: any) => {
+          if (err.status == 479) {
+            localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+            localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
+            localStorage.setItem('loginDetails', JSON.stringify(formData));
+            this.router.navigate(['auth/remove-device']);
+            this.toastr.error(err.error.message, null, {
+              closeButton: true,
+              tapToDismiss: false,
+              timeOut: 3000
+            });
+          } else {
+            this.toastr.error(err.error.message);
+          }
+
+          if (err.status == 429) {
+            this.router.navigate(['user']);
+          }
+        }
+      });
+    } else {
+      console.log('Form Invalid');
+    }
+  }
+
+  loginWithQrcode(data: any) {
+    if (data) {
+      const formData = data;
+      this.apiService.postRequest('login/entry/login', formData).subscribe({
         next: (res: any) => {
           if (res.response_code == 200) {
             if (res.user.forced_change == 1) {
