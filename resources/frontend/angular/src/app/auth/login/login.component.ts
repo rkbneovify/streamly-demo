@@ -129,16 +129,16 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    // this.checkLocationAccess(() => {
-    //   if (this.loginFormWithEmail.valid) {
-    //     const formData = { ...this.loginFormWithEmail.value };
-    //     this.authenticateUser('auth/login', formData);
-    //   }
-    // });
-    if (this.loginFormWithEmail.valid) {
-      const formData = { ...this.loginFormWithEmail.value };
-      this.authenticateUser('auth/login', formData);
-    }
+    this.checkLocationAccess(() => {
+      if (this.loginFormWithEmail.valid) {
+        const formData = { ...this.loginFormWithEmail.value };
+        this.authenticateUser('auth/login', formData);
+      }
+    });
+    // if (this.loginFormWithEmail.valid) {
+    //   const formData = { ...this.loginFormWithEmail.value };
+    //   this.authenticateUser('auth/login', formData);
+    // }
   }
 
   onSubmitpasscode() {
