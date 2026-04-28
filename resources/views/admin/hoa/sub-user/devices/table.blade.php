@@ -150,7 +150,7 @@
                              </td>
                              <td style="vertical-align: middle;">
 
-                                 {{ getPlatform($user->useragent, $user->device_title) ?? 'N/A' }}
+                                 {{ $user->device_title ?? (getPlatform($user->useragent, $user->device_title) ?? 'N/A') }}
 
 
 

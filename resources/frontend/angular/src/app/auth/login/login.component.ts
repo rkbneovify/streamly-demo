@@ -6,7 +6,8 @@ import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
 import { catchError, finalize, interval, of, startWith, Subscription, switchMap } from 'rxjs';
-
+import { LocationxService } from '../../services/location/locationx.service';
+import Bowser from 'bowser';
 interface QrCode {
   key: string;
   msg: string;
@@ -33,6 +34,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   qrCodeImage: string = null;
   qrcodeKey: string = null;
   private subscription!: Subscription;
+  zipcode: string = null;
+  deviceInfo: Bowser.Parser.Parser = null;
 
   constructor(
     private fb: FormBuilder,
@@ -40,12 +43,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private locationxService: LocationxService
   ) {
     this.initializeForms();
   }
 
   ngOnInit(): void {
+    this.getDeviceInfo();
     this.checkStoredDeviceId();
     this.createQRCode();
     this.queryTab = this.activatedRoute.snapshot.queryParamMap.get('tab');
@@ -65,9 +70,34 @@ export class LoginComponent implements OnInit, OnDestroy {
         break;
     }
 
+    this.getLocalZipcode();
   }
 
 
+  // new getlocation function
+  private async getLocalZipcode() {
+    this.isLoading = true;
+    try {
+      this.zipcode = await this.locationxService.getCurrentPincode();
+      // console.log("zipcode:", this.zipcode);
+    } catch (err: any) {
+      this.toastr.error(err);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
+
+  private getDeviceInfo() {
+    this.deviceInfo = Bowser.getParser(window.navigator.userAgent);
+    console.log("OS Name:", this.deviceInfo.getOSName());
+    console.log("OS Version:", this.deviceInfo.getOSVersion());
+    console.log("Browser Name:", this.deviceInfo.getBrowserName());
+
+
+
+  }
 
   private initializeForms() {
     this.loginFormWithEmail = this.fb.group({
@@ -99,18 +129,22 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.checkLocationAccess(() => {
-      if (this.loginFormWithEmail.valid) {
-        const formData = { ...this.loginFormWithEmail.value, deviceid: this.userDeviceID };
-        this.authenticateUser('auth/login', formData);
-      }
-    });
+    // this.checkLocationAccess(() => {
+    //   if (this.loginFormWithEmail.valid) {
+    //     const formData = { ...this.loginFormWithEmail.value };
+    //     this.authenticateUser('auth/login', formData);
+    //   }
+    // });
+    if (this.loginFormWithEmail.valid) {
+      const formData = { ...this.loginFormWithEmail.value };
+      this.authenticateUser('auth/login', formData);
+    }
   }
 
   onSubmitpasscode() {
     this.checkLocationAccess(() => {
       if (this.loginPasscodeForm.valid) {
-        const formData = { ...this.loginPasscodeForm.value, deviceid: this.userDeviceID };
+        const formData = { ...this.loginPasscodeForm.value };
         this.authenticateUser('auth/login-with-passcode', formData);
       }
     });
@@ -119,10 +153,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private authenticateUser(apiEndpoint: string, formData?: any) {
     this.loading = true;
-
-    this.crudService.postRequest(apiEndpoint, formData).subscribe({
+    const data = {
+      ...formData,
+      deviceid: this.userDeviceID,
+      zipcode: this.zipcode,
+      device_title: `${this.deviceInfo.getOSName()}(${this.deviceInfo.getBrowserName()})`,
+      device_os_version: this.deviceInfo.getOSVersion()
+    }
+    this.crudService.postRequest(apiEndpoint, data).subscribe({
       next: (res: any) => this.handleSuccessResponse(res),
-      error: (err: any) => this.handleErrorResponse(err, formData),
+      error: (err: any) => this.handleErrorResponse(err, data),
     });
   }
 
@@ -353,8 +393,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       )).subscribe((res: any) => {
         if (res && res.status == 1) {
           const data = {
-            deviceid: this.userDeviceID,
-            key: this.qrcodeKey
+            key: this.qrcodeKey,
           };
           this.authenticateUser('login/entry/login', data)
         }
@@ -362,7 +401,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
