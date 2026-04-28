@@ -56,80 +56,54 @@ class Subscribed
         }
 
         $userRole = $user->roles->pluck('name');
-        // dump(in_array($userRole[0], array("user","tieruser")));
-        // dd($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin")));
+
+
+
+        // custom subscription
         if ($user && !$user->subscribed('main') && !in_array($userRole[0], array("admin", "superadmin"))) {
+            if ($user->subscription('main')->is_custom == 1 || $user->subscription('main')->plan_duration != null) {
+                if (!$user->hasActiveSubscription()) {
+                    if ($request->wantsJson()) {
+                        // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                        return response()->json($defaultRes, 410);
+                    } else {
+                        return redirect('/selectplan');
+                    }
+                }
+            } else {
+                // for live subscription
+                if ($user->subscription('main')->stripe_status == 'past_due') {
+                    $stripe = new StripeService();
+                    $planCount = $stripe->getPlans()->count();
+                    $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
-            // if subscription payment pending
-            if ($user->subscription('main')->stripe_status == 'past_due') {
-                $stripe = new StripeService();
-                $planCount = $stripe->getPlans()->count();
-                $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
 
+                    if ($request->wantsJson()) {
+                        $response = array(
+                            'success' => false,
+                            'response_code' => 410,
+                            'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
+                            "url" => $url,
+                            'plan_count' => $planCount,
+                            'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+                            'qrcode' => route('qrcode.generate') . '?url=' . $url
+                        );
+                        return response()->json($response, 410);
+                    } else {
+                        return redirect('/selectplan');
+                    }
+
+                }
 
                 if ($request->wantsJson()) {
-                    $response = array(
-                        'success' => false,
-                        'response_code' => 410,
-                        'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
-                        "url" => $url,
-                        'plan_count' => $planCount,
-                        'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
-                        'qrcode' => route('qrcode.generate') . '?url=' . $url
-                    );
-                    return response()->json($response, 410);
+                    // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                    return response()->json($defaultRes, 410);
                 } else {
                     return redirect('/selectplan');
                 }
-
-            }
-
-            if ($request->wantsJson()) {
-                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($defaultRes, 410);
-            } else {
-                return redirect('/selectplan');
             }
         }
-        // Live mode
-        if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "canceled") {
-            if ($request->wantsJson()) {
-                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($defaultRes, 410);
-            } else {
-                return redirect('/selectplan');
-            }
-        }
-        if ($user->subscription('main') && $user->subscription('main')->livemode == 1 && $user->subscription('main')->stripe_status == "past_due") {
-            if ($request->wantsJson()) {
-                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($defaultRes, 410);
-            } else {
-                return redirect('/selectplan');
-            }
-        }
-        // Test mode
-        if ($user->subscription('main') && $user->subscription('main')->livemode == 0 && $user->subscription('main')->plan_duration == null && $user->subscription('main')->stripe_status == "canceled") {
-            if ($request->wantsJson()) {
-                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($defaultRes, 410);
-            } else {
-                return redirect('/selectplan');
-            }
-        }
-
-        // Custom mode
-        if ($user->subscription('main')->is_custom == 1 && !$user->hasActiveSubscription()) {
-            if ($request->wantsJson()) {
-                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-                return response()->json($defaultRes, 410);
-            } else {
-                return redirect('/selectplan');
-            }
-        }
-
-
 
 
 
