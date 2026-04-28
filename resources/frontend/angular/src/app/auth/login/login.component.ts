@@ -383,21 +383,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     const data = {
       key: this.qrcodeKey
     };
-    this.subscription = interval(15000)
-      .pipe(startWith(0), switchMap(() =>
-        this.crudService.postRequest('login/scan/qrcode', data)
-          .pipe(catchError(err => {
-            console.log("Apierror log:", err)
-            return of(null);
-          }))
-      )).subscribe((res: any) => {
-        if (res && res.status == 1) {
-          const data = {
-            key: this.qrcodeKey,
-          };
-          this.authenticateUser('login/entry/login', data)
-        }
-      })
+
+    this.checkLocationAccess(() => {
+      this.subscription = interval(15000)
+        .pipe(startWith(0), switchMap(() =>
+          this.crudService.postRequest('login/scan/qrcode', data)
+            .pipe(catchError(err => {
+              console.log("Apierror log:", err)
+              return of(null);
+            }))
+        )).subscribe((res: any) => {
+          if (res && res.status == 1) {
+            const data = {
+              key: this.qrcodeKey,
+            };
+            this.authenticateUser('login/entry/login', data)
+          }
+        })
+    });
+
   }
 
   ngOnDestroy(): void {
