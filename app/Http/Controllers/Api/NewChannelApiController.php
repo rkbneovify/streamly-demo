@@ -465,6 +465,7 @@ class NewChannelApiController extends Controller
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
             'day' => 'nullable',
+            'zipcode' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
