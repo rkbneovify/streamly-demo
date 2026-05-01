@@ -11,6 +11,19 @@
  - php artisan db:seed
  - You are ready to go
 
+### Docker (Apache + PHP 7.4)
+
+ - Copy env:
+   - PowerShell: `Copy-Item .env.docker.example .env.docker`
+   - Bash: `cp .env.docker.example .env.docker`
+ - Build + start: `docker compose up --build`
+ - App URL: `http://localhost:8080`
+ - phpMyAdmin: `http://localhost:8081` (server: `db`, user: `root`, pass: `root`)
+ - Run commands inside container:
+   - `docker compose exec app composer install`
+    - `docker compose exec app php artisan key:generate`
+    - `docker compose exec app php artisan migrate --seed`
+
 ### Quick Guide
 
 Once you host your project you can use any rest client like Postman and start making requests

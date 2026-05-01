@@ -1,21 +1,24 @@
 <?php
 
-$servername = "127.0.0.1";
+$servername = env('DB_HOST', '127.0.0.1');
+$port = (int) env('DB_PORT', 3306);
 $username = env('DB_USERNAME');
 $password = env('DB_PASSWORD');
 $dbname = env('DB_DATABASE');
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Best-effort: avoid taking down the whole app if DB isn't reachable yet (e.g. Docker startup)
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+if (!$conn->connect_error) {
+    $sql = "SELECT stripe_key, stripe_secret FROM Stripe_keys WHERE status = 'active'";
+    if ($result = $conn->query($sql)) {
+        if ($row = mysqli_fetch_assoc($result)) {
+            $stripeKey = $row['stripe_key'];
+            $stripeSecret = $row['stripe_secret'];
+        }
+        $result->free();
+    }
+    $conn->close();
 }
-
-$sql = "SELECT stripe_key, stripe_secret FROM Stripe_keys WHERE status = 'active'";
-$result = $conn->query($sql);
-
-$row = mysqli_fetch_assoc($result);
 
 return [
 
@@ -53,8 +56,8 @@ return [
 
     'stripe' => [
         'model' => env('CASHIER_MODEL'),
-        'key' => $row['stripe_key'],
-        'secret' => $row['stripe_secret'],
+        'key' => $stripeKey,
+        'secret' => $stripeSecret,
         'webhook' => [
             'secret' => env('STRIPE_WEBHOOK_SECRET'),
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
@@ -62,9 +65,9 @@ return [
     ],
 
     'google' => [
-        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect'      => env('GOOGLE_REDIRECT')
+        'redirect' => env('GOOGLE_REDIRECT')
     ],
     'usps' => [
 
