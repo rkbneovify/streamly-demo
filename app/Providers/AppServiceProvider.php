@@ -7,7 +7,6 @@ use App\Console\DebugKernel;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
-use App\Services\GracenoteService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -26,10 +25,7 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.debug')) {
             $this->app->singleton(DebugKernel::class);
         }
-        // for gracenote sync
-        $this->app->singleton(GracenoteService::class, function ($app) {
-            return new GracenoteService();
-        });
+
     }
 
     /**
