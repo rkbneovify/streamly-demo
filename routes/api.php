@@ -209,6 +209,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
 
     Route::post('sub-session/store', 'Api\ApiSubSessionController@store')->middleware(['jwt.verify']);
+    Route::post('upload/file', 'Api\ApiSubSessionController@upload');
     // Hoa routes
     Route::group(['prefix' => 'hoa'], function () {
         Route::get("sub-user", "Api\ApiHoaController@subUserDetail")->middleware(['jwt.verify']);
