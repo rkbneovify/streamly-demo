@@ -600,7 +600,7 @@ class ReportController extends Controller
 
 
 
-            $subscriptionId = Subscription::where('user_id', $id)->first()->stripe_id;
+            $subscriptionId = Subscription::where('user_id', $id)->latest()->first()->stripe_id;
             $isLiveMode = $stripeService->isLiveSubscription($subscriptionId);
 
             if ($isLiveMode) {

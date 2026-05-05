@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Services\FileUploadService;
 use App\SessionTable;
 use App\SubSession;
 use App\Traits\ApiResponseTrait;
@@ -9,6 +10,7 @@ use App\Traits\DbTransactionTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class ApiSubSessionController extends Controller
 {
@@ -52,6 +54,29 @@ class ApiSubSessionController extends Controller
 
         });
 
+    }
+
+    public function upload(Request $request, FileUploadService $uploadService)
+    {
+        $request->validate([
+            'file' => 'required|file'
+        ]);
+
+        try {
+            $fileData = $uploadService->upload($request->file('file'), [
+                'path' => 'tickets',
+                'allowed_types' => ['jpg', 'png', 'pdf', 'docx'],
+                'max_size' => 2048, // KB
+            ]);
+
+            // Save in DB if needed
+            // Attachment::create($fileData);
+
+            return response()->json($fileData);
+        } catch (Throwable $th) {
+            return response()->json($th->getMessage());
+
+        }
     }
 
 
