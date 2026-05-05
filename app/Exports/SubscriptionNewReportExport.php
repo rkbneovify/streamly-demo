@@ -61,13 +61,11 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
                 'Subscription Type' => $item->livemode === null ? 'Admin(Custom)' : ($item->livemode === 1 ? 'Stripe(Live)' : 'Stripe(Test)'),
                 'Status' => $item->stripe_status,
                 'Amount' => $item->amount,
-                'Subscribe At' => $item->current_period_start instanceof \Carbon\Carbon
-                    ? $item->current_period_start->format('d/m/Y')
-                    : $item->current_period_start,
+                'Subscribe At' =>
+                    date('d/m/Y', strtotime($item->current_period_start)),
 
-                'Subscription Expire At' => $item->ends_at instanceof \Carbon\Carbon
-                    ? $item->ends_at->format('d/m/Y')
-                    : $item->ends_at,
+                'Subscription Expire At' =>
+                    date('d/m/Y', strtotime($item->renews_at))
             ];
         });
 
