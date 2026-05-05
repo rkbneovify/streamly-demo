@@ -49,8 +49,7 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
                 'Sl. No.' => $key + 1,
                 'Name' => $item->user->name,
                 'Email' => $item->user->email,
-                'User Type' => getUserType($item->user),
-                'Subscription Type' => $item->livemode === null ? 'Admin/Custom' : ($item->livemode === 1 ? 'Stripe/Live' : 'Stripe/Test'),
+                'Subscription Type' => $item->livemode === null ? 'Admin(Custom)' : ($item->livemode === 1 ? 'Stripe(Live)' : 'Stripe(Test)'),
                 'Status' => $item->stripe_status,
                 'Subscribe At' => $item->created_at ? $item->created_at->format('d/m/Y') : '',
                 'Subscription Expire At' => getSubscriptionExpireAt($item) != null ? getSubscriptionExpireAt($item) : 'Never',
@@ -61,7 +60,7 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
     }
     public function headings(): array
     {
-        return ['Sl. No.', 'Name', 'Email', 'User Type', 'Subscription Type', 'Status', 'Subscribe At', 'Subscription Expire At'];
+        return ['Sl. No.', 'Name', 'Email', 'Subscription Type', 'Status', 'Subscribe At', 'Subscription Expire At'];
     }
 
 

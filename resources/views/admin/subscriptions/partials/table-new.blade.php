@@ -67,11 +67,13 @@
                      </td>
 
                      <td>
-                         {{-- @if ($mode == 'Testing' || $mode == 'Test')
+                         @if ($subscription->plan_duration != null)
                              Custom
-                         @else
+                         @elseif($subscription->livemode)
                              Live
-                         @endif --}}
+                         @else
+                             Testing
+                         @endif
 
                      </td>
                      <td>
