@@ -67,11 +67,11 @@
                      </td>
 
                      <td>
-                         @if ($mode == 'Testing' || $mode == 'Test')
+                         {{-- @if ($mode == 'Testing' || $mode == 'Test')
                              Custom
                          @else
                              Live
-                         @endif
+                         @endif --}}
 
                      </td>
                      <td>

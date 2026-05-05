@@ -1,79 +1,85 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Laravel\Cashier\Subscription;
 
 class StripeSyncRenewals extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'stripe:sync-renewals';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Updates the renews_at column on stripe subscriptions to reflect the end of the current billing period.';
+    protected $description = 'Sync Stripe subscriptions and update renews_at column.';
 
     protected $updatedCount = 0;
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-    }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
-        $apiOptions = ['limit' => 100];
+        try {
+            // ✅ Get Stripe Secret
+            $secret = DB::table('Stripe_keys')
+                ->where('status', 'active')
+                ->value('stripe_secret');
 
-        while ($response = \Stripe\Subscription::all($apiOptions)) {
-            foreach ($response->data as $subscription) {
-                $this->updateSubscription($subscription);
+            if (!$secret) {
+                $this->error('Stripe secret not found.');
+                return;
             }
 
-            if (!$response->has_more) {
-                break;
-            }
+            \Stripe\Stripe::setApiKey($secret);
 
-            $apiOptions['starting_after'] = $subscription->id;
+            $apiOptions = ['limit' => 100];
+
+            do {
+                $response = \Stripe\Subscription::all($apiOptions);
+
+                foreach ($response->data as $subscription) {
+                    $this->updateSubscription($subscription);
+                }
+
+                // ✅ Pagination fix
+                if ($response->has_more && count($response->data) > 0) {
+                    $last = end($response->data);
+                    $apiOptions['starting_after'] = $last->id;
+                } else {
+                    break;
+                }
+
+            } while (true);
+
+            $this->info("Successfully updated {$this->updatedCount} subscriptions.");
+
+        } catch (Exception $e) {
+            $this->error('Error: ' . $e->getMessage());
         }
-
-        $this->info('Successfully updated ' . $this->updatedCount . ' subscriptions.');
-
     }
 
     protected function updateSubscription($subscription)
     {
-        $updated = DB::table('subscriptions')
-            ->where('stripe_id', $subscription->id)
-            ->update([
-                'stripe_plan' => $subscription->plan->id,
-                'stripe_status' => $subscription->status,
-                'quantity' => $subscription->quantity,
-                'livemode' => (int) $subscription->livemode,
-                'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
-            ]);
+        try {
+            // ✅ Safe access to price (new Stripe structure)
+            $priceId = $subscription->items->data[0]->price->id ?? null;
 
-        if ($updated) {
-            $this->updatedCount++;
+            $updated = DB::table('subscriptions')
+                ->where('stripe_id', $subscription->id)
+                ->update([
+                    'stripe_plan' => $priceId,
+                    'stripe_status' => $subscription->status,
+                    'quantity' => $subscription->quantity ?? 1,
+                    'livemode' => (int) $subscription->livemode,
+                    'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
+                    'updated_at' => now(),
+                ]);
+
+
+
+            if ($updated) {
+                $this->updatedCount++;
+            }
+
+        } catch (Exception $e) {
+            $this->error("Failed for subscription {$subscription->id}: " . $e->getMessage());
         }
     }
 }
