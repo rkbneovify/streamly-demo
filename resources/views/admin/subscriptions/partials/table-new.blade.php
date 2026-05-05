@@ -81,7 +81,7 @@
                      </td>
 
 
-                     <td>{{ date('d/m/Y', strtotime($subscription->updated_at)) }}
+                     <td>{{ date('d/m/Y', strtotime($subscription->current_period_start)) }}
                      </td>
                      <td>
 

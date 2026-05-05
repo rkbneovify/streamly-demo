@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -24,13 +25,21 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
     {
 
 
-        $query = Subscription::query()
-            ->whereHas('user')   // only subscriptions with a related user
-            ->with('user')    // still eager load user data
+        $latestSubscriptions = Subscription::query()
+            ->select('user_id', DB::raw('MAX(created_at) as latest_created_at'))
             ->where('livemode', 1)
             ->whereNull('plan_duration')
-            ->whereNotNull('renews_at');
+            ->whereNotNull('renews_at')
+            ->whereNotNull('current_period_start')
+            ->groupBy('user_id');
 
+        $query = Subscription::query()
+            ->with('user')
+            ->joinSub($latestSubscriptions, 'latest', function ($join) {
+                $join->on('subscriptions.user_id', '=', 'latest.user_id')
+                    ->on('subscriptions.created_at', '=', 'latest.latest_created_at');
+            })
+            ->whereHas('user');
 
 
         // // Filter by status if provided
@@ -51,8 +60,14 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
                 'Email' => $item->user->email,
                 'Subscription Type' => $item->livemode === null ? 'Admin(Custom)' : ($item->livemode === 1 ? 'Stripe(Live)' : 'Stripe(Test)'),
                 'Status' => $item->stripe_status,
-                'Subscribe At' => $item->created_at ? $item->created_at->format('d/m/Y') : '',
-                'Subscription Expire At' => getSubscriptionExpireAt($item) != null ? getSubscriptionExpireAt($item) : 'Never',
+                'Amount' => $item->amount,
+                'Subscribe At' => $item->current_period_start instanceof \Carbon\Carbon
+                    ? $item->current_period_start->format('d/m/Y')
+                    : $item->current_period_start,
+
+                'Subscription Expire At' => $item->ends_at instanceof \Carbon\Carbon
+                    ? $item->ends_at->format('d/m/Y')
+                    : $item->ends_at,
             ];
         });
 
@@ -60,7 +75,7 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
     }
     public function headings(): array
     {
-        return ['Sl. No.', 'Name', 'Email', 'Subscription Type', 'Status', 'Subscribe At', 'Subscription Expire At'];
+        return ['Sl. No.', 'Name', 'Email', 'Subscription Type', 'Status', 'Amount', 'Subscribe At', 'Subscription Expire At'];
     }
 
 

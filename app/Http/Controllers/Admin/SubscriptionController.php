@@ -61,13 +61,24 @@ class SubscriptionController extends Controller
     {
         $statusTypes = Subscription::pluck('stripe_status')->unique()->values();
 
-        $query = Subscription::query()
-            ->with('user')
+
+
+        $latestSubscriptions = Subscription::query()
+            ->select('user_id', DB::raw('MAX(created_at) as latest_created_at'))
             ->where('livemode', 1)
             ->whereNull('plan_duration')
             ->whereNotNull('renews_at')
-            // ->where('stripe_status', 'active')
-            ->whereHas('user'); // ensures user is not null
+            ->whereNotNull('current_period_start')
+            ->groupBy('user_id');
+
+        $query = Subscription::query()
+            ->with('user')
+            ->joinSub($latestSubscriptions, 'latest', function ($join) {
+                $join->on('subscriptions.user_id', '=', 'latest.user_id')
+                    ->on('subscriptions.created_at', '=', 'latest.latest_created_at');
+            })
+            ->whereHas('user');
+
 
 
         // Filter by status if provided
