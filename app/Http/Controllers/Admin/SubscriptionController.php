@@ -42,9 +42,10 @@ class SubscriptionController extends Controller
 {
     // https://hotexamples.com/examples/stripe/Plan/-/php-plan-class-examples.html
     // https://hotexamples.com/examples/stripe/Customer/all/php-customer-all-method-examples.html
-    public function __construct()
+    protected $stripeService;
+    public function __construct(StripeService $stripeService)
     {
-
+        $this->stripeService = $stripeService;
         Stripe::setApiKey(config('services.stripe.secret'));
     }
     /**
@@ -54,7 +55,49 @@ class SubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
+
     public function index(Request $request)
+    {
+        $statusTypes = Subscription::pluck('stripe_status')->unique()->values();
+
+        $query = Subscription::query()
+            ->with('user')
+            ->where('livemode', 1)
+            ->whereNull('plan_duration')
+            ->whereNotNull('renews_at')
+            // ->where('stripe_status', 'active')
+            ->whereHas('user'); // ensures user is not null
+
+
+        // Filter by status if provided
+        if (!empty($request->status)) {
+
+            $query->where('stripe_status', $request->status);
+        }
+
+        // Apply search filter if provided
+        if (!empty($request->search)) {
+
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        $subscriptions = $query->paginate(10)->appends($request->query());
+        // return response()->json($subscriptions);
+
+
+        if ($request->ajax()) {
+            return view('admin.subscriptions.partials.table-new', compact('subscriptions', 'statusTypes'));
+        }
+
+        return view('admin.subscriptions.tierindex', compact('subscriptions', 'statusTypes'));
+    }
+
+    public function index_05_05_26(Request $request)
     {
 
         $stripePlans = \Stripe\Plan::all();
@@ -1002,7 +1045,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         // $data = $stripeService->getAllCustomerById("cus_T591UwSy7wB178");
         // return response()->json($data);
 
-        return response()->json(config('app.timezone'));
+        // return response()->json(config('app.timezone'));
         try {
 
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;

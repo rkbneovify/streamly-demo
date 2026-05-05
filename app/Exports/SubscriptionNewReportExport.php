@@ -26,7 +26,10 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
-            ->with('user');      // still eager load user data
+            ->with('user')    // still eager load user data
+            ->where('livemode', 1)
+            ->whereNull('plan_duration')
+            ->whereNotNull('renews_at');
 
 
 
