@@ -66,9 +66,7 @@ class SubscriptionController extends Controller
         $latestSubscriptions = Subscription::query()
             ->select('user_id', DB::raw('MAX(created_at) as latest_created_at'))
             ->where('livemode', 1)
-            ->whereNull('plan_duration')
-            ->whereNotNull('renews_at')
-            ->whereNotNull('current_period_start')
+
             ->groupBy('user_id');
 
         $query = Subscription::query()
@@ -84,7 +82,13 @@ class SubscriptionController extends Controller
         // Filter by status if provided
         if (!empty($request->status)) {
 
+
             $query->where('stripe_status', $request->status);
+            if (strtolower($request->status) == 'active') {
+                $query->whereNull('plan_duration')
+                    ->whereNotNull('renews_at')
+                    ->whereNotNull('current_period_start');
+            }
         }
 
         // Apply search filter if provided
