@@ -14,7 +14,12 @@ class StripeService
         $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
         $stripe = new StripeClient($key);
 
-        return $stripe->subscriptions->cancel($subscriptionId);
+        $subscription = $stripe->subscriptions->cancel($subscriptionId, [
+            'invoice_now' => true,
+            'prorate' => true,
+        ]);
+
+        return $subscription;
     }
     public function getPlans($mode = 'Live')
     {
