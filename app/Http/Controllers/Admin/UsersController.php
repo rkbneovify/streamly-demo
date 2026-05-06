@@ -952,14 +952,23 @@ class UsersController extends Controller
 
                 $subscription = Subscription::where('user_id', $id)->first();
 
-                if ($user->is_custom_user == 0) {
+                $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+
+
+
+                if ($subscription->plan_duration == null) {
+                    // if user have stripe Subscription cancel then apply custom subscription
                     $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
-                    if (count($stripeSubscription) > 0) {
-                        if ($stripeSubscription->first()->livemode == true && $stripeSubscription->first()->status != 'canceled') {
+                    // return response()->json($stripeSubscription);
+
+                    if (count($stripeSubscription) > 0 && in_array($stripeSubscription->first()->status, ['active', 'past_due'])) {
+
+                        if ($stripeSubscription->first()->livemode == true) {
                             $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
-                        } elseif ($stripeSubscription->first()->livemode == false && $stripeSubscription->first()->status != 'canceled') {
+                        } elseif ($stripeSubscription->first()->livemode == false) {
                             $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
                         }
+
                         $user->is_custom_user = 1;
                         $user->mode = 'custom';
                         $user->save();
