@@ -45,6 +45,12 @@ class SubscriptionNewReportExport implements FromCollection, WithHeadings
         // // Filter by status if provided
         if (!empty($this->filters->status)) {
             $query->where('stripe_status', $this->filters->status);
+
+            if (strtolower($this->filters->status) == 'active') {
+                $query->whereNull('plan_duration')
+                    ->whereNotNull('renews_at')
+                    ->whereNotNull('current_period_start');
+            }
         }
 
 

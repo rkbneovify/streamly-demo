@@ -55,7 +55,7 @@ class StripeSyncRenewals extends Command
             $this->info("✅ Successfully updated {$this->updatedCount} subscriptions.");
 
         } catch (Exception $e) {
-            $this->error('❌ Error: ' . $e->getMessage());
+            // $this->error('❌ Error: ' . $e->getMessage());
         }
     }
 
@@ -106,12 +106,8 @@ class StripeSyncRenewals extends Command
                     'stripe_status' => $subscription->status,
                     'quantity' => $subscription->quantity ?? 1,
                     'livemode' => (int) $subscription->livemode,
-
                     'current_period_start' => Carbon::createFromTimestamp($subscription->current_period_start),
                     'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
-
-
-                    // ✅ Actual charged amount
                     'amount' => $invoiceAmount,
                     'updated_at' => now(),
                 ]);

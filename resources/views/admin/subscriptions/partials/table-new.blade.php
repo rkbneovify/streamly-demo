@@ -81,7 +81,7 @@
                      </td>
 
 
-                     <td>{{ date('d/m/Y', strtotime($subscription->current_period_start)) }}
+                     <td>{{ $subscription->current_period_start == null ? 'N/A' : date('d/m/Y', strtotime($subscription->current_period_start)) }}
                      </td>
                      <td>
 
@@ -89,7 +89,7 @@
                              {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
                          @elseif ($subscription->ends_at != null)
                              {{ date('d/m/Y', strtotime($subscription->ends_at)) }}
-                         @elseif ($subscription->trial_ends_at != null && $subscription->user->is_custom_user != 1)
+                         @elseif ($subscription->trial_ends_at != null)
                              {{ date('d/m/Y', strtotime($subscription->trial_ends_at)) }}
                          @else
                              <span class="badge badge-success">
