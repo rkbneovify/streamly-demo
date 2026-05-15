@@ -1668,7 +1668,7 @@ class AuthController extends Controller
                         return redirect('/selectplan');
                     }
                 }
-            } else {
+            } elseif ($user->subscription('main')->stripe_status != 'active') {
                 // for live subscription
                 if ($user->subscription('main')->stripe_status == 'past_due') {
                     $stripe = new StripeService();
