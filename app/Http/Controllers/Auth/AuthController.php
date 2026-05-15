@@ -198,11 +198,12 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
-        $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        // subscription check and verify before login
+        // $subsCheck = $this->isSubscriptionExpired($request, $user->id);
 
-        if ($subsCheck->getData()->response_code == 410) {
-            return $subsCheck;
-        }
+        // if ($subsCheck->getData()->response_code == 410) {
+        //     return $subsCheck;
+        // }
 
         $userRole = $user->roles->pluck('name');
 
