@@ -32,6 +32,8 @@ use App\Models\Zipcode;
 use App\Models\DeclineZipInquiry;
 use App\Models\EmailOtp;
 use App\Models\PersonalDevice;
+use App\Models\Subscription;
+use App\Services\StripeService;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -196,6 +198,12 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
+        $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+
+        if ($subsCheck->getData()->response_code == 410) {
+            return $subsCheck;
+        }
+
         $userRole = $user->roles->pluck('name');
 
         if ($user->is_custom_user == 1 && $userRole[0] == 'tieruser') {
@@ -352,12 +360,10 @@ class AuthController extends Controller
             // hoa main user status checking
             if ($user->is_active == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin'], 401);
-
             }
             // hoa sub user checking
             if ($hoaUser->status == 0) {
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
-
             }
 
             //hoa sub user device limit check
@@ -373,7 +379,6 @@ class AuthController extends Controller
             }
 
             $uid = $hoaUser->user_id;
-
         }
 
 
@@ -442,7 +447,6 @@ class AuthController extends Controller
 
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
-
         }
         //  hoa main login limit
 
@@ -723,14 +727,14 @@ class AuthController extends Controller
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "Hoa sub user logout<br>" .
-                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
-                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
-                        "Passcode: " . $hoauser->passcode . "<br>" .
-                        "Email: " . $hoauser->email . "<br>" .
-                        "House No: " . $houseNo
+                            "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                            ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
+                            "Passcode: " . $hoauser->passcode . "<br>" .
+                            "Email: " . $hoauser->email . "<br>" .
+                            "House No: " . $houseNo
                     )->properties([
-                            "data" => $session
-                        ])
+                        "data" => $session
+                    ])
                     ->passcode($hoauser->passcode)
                     ->isUser()
                     ->save();
@@ -740,14 +744,14 @@ class AuthController extends Controller
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "user logout <br>" .
-                        "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
-                        ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
-                        "Email: " . $user->email . "<br>" .
-                        "Role: " . $userRole[0]
+                            "Device: " . ($session->device_title ?? explode('#~', $session->mac_address)[0]) . "<br>" .
+                            ($session->device_title != null ? ("Device Name: " . $personalDevice->personal_devicename . "<br>") : '') .
+                            "Email: " . $user->email . "<br>" .
+                            "Role: " . $userRole[0]
 
                     )->properties([
-                            "data" => $session
-                        ])
+                        "data" => $session
+                    ])
                     ->isUser()
                     ->save();
             }
@@ -796,9 +800,6 @@ class AuthController extends Controller
                 JWTAuth::parseToken()->invalidate();
                 return response()->json(['success' => true, 'response_code' => 200, 'message' => 'Successfully logged out'], 200);
             }
-
-
-
         } catch (Exception $ex) { // Anything that went wrong
             return response()->json([
                 'error' => true,
@@ -870,14 +871,14 @@ class AuthController extends Controller
                 if ($session->device_title != null) {
                     $this->descriptionSimple(
                         "Device limit exceed. Device removed <br>"
-                        . "Device: {$device} <br>"
-                        . "Device name: {$session->pdInfo->personal_devicename}"
+                            . "Device: {$device} <br>"
+                            . "Device name: {$session->pdInfo->personal_devicename}"
 
                     );
                 } else {
                     $this->descriptionSimple(
                         "Device limit exceed. Device removed <br>"
-                        . "Device: {$device} <br>"
+                            . "Device: {$device} <br>"
 
 
                     );
@@ -899,14 +900,14 @@ class AuthController extends Controller
                 if ($session->device_title != null) {
                     $this->descriptionSimple(
                         "Device limit exceed. Device removed <br>"
-                        . "Device: {$device} <br>"
-                        . "Device name: {$session->pdInfo->personal_devicename}"
+                            . "Device: {$device} <br>"
+                            . "Device name: {$session->pdInfo->personal_devicename}"
 
                     );
                 } else {
                     $this->descriptionSimple(
                         "Device limit exceed. Device removed <br>"
-                        . "Device: {$device} <br>"
+                            . "Device: {$device} <br>"
 
 
                     );
@@ -920,8 +921,6 @@ class AuthController extends Controller
                     ->isUser()
                     ->save();
             }
-
-
         } elseif ($request->email != null) {
 
 
@@ -932,14 +931,14 @@ class AuthController extends Controller
             if ($session->device_title != null) {
                 $this->descriptionSimple(
                     "Device limit exceed. Device removed <br>"
-                    . "Device: {$device} <br>"
-                    . "Device name: {$session->pdInfo->personal_devicename}"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
 
                 );
             } else {
                 $this->descriptionSimple(
                     "Device limit exceed. Device removed <br>"
-                    . "Device: {$device} <br>"
+                        . "Device: {$device} <br>"
 
 
                 );
@@ -966,14 +965,14 @@ class AuthController extends Controller
             if ($session->device_title != null) {
                 $this->descriptionSimple(
                     "Device limit exceed. Device removed"
-                    . "Device: {$device} <br>"
-                    . "Device name: {$session->pdInfo->personal_devicename}"
+                        . "Device: {$device} <br>"
+                        . "Device name: {$session->pdInfo->personal_devicename}"
 
                 );
             } else {
                 $this->descriptionSimple(
                     "Device limit exceed. Device removed <br>"
-                    . "Device: {$device} <br>"
+                        . "Device: {$device} <br>"
 
 
                 );
@@ -1203,8 +1202,7 @@ class AuthController extends Controller
         $jwtToken = new JwtToken();
         $jwtToken->user_id = $user->id;
         $jwtToken->token = $token;
-        $jwtToken->browser = $agent->browser();
-        ;
+        $jwtToken->browser = $agent->browser();;
         $jwtToken->platform = $agent->platform();
         $jwtToken->device = $agent->device();
         $mobileHeader = $request->header('x_platform');
@@ -1372,8 +1370,6 @@ class AuthController extends Controller
                     "response_code" => 422,
                     "message" => "OTP limit reached for today. Try again later ."
                 ], 422);
-
-
             }
 
             EmailOtp::updateOrCreate(
@@ -1452,7 +1448,6 @@ class AuthController extends Controller
                     'message' => "Invalid OTP ."
 
                 ], 422);
-
             }
 
             if (Carbon::parse($emailOtp->otp_expire)->isPast()) {
@@ -1531,7 +1526,6 @@ class AuthController extends Controller
                 DB::table('subscriptions')
                     ->where('user_id', Auth::id())
                     ->update(['stripe_status' => "active"]);
-
             }
             // $this->activity()
             //     ->event("Subscription")
@@ -1552,7 +1546,6 @@ class AuthController extends Controller
 
             $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription resume successfully !");
             return response()->json($response, 200);
-
         } catch (\Stripe\Exception\InvalidRequestException $th) {
             DB::rollBack();
             // Handle missing subscription
@@ -1563,7 +1556,6 @@ class AuthController extends Controller
                     "message" => "Subscription not found !"
                 ], 404);
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -1589,7 +1581,7 @@ class AuthController extends Controller
 
 
 
-            // delete old 
+            // delete old
             EmailOtp::where('email', $request->email)
                 ->whereNull('sent_count')->delete();
             // Save OTP to the database
@@ -1641,5 +1633,78 @@ class AuthController extends Controller
 
         // Invalid OTP or expired
         return response()->json(['error' => 'Invalid OTP or expired'], 401);
+    }
+
+
+    public function isSubscriptionExpired(Request $request, $userId)
+    {
+        $user = User::where('id', $userId)->first();
+        $userRole = $user->roles->pluck('name');
+
+        $qrcode = route('qrcode.generate') . '?url=' . url('/');
+        $stripe = new StripeService();
+        $planDetails = $stripe->getPlanDetails($request->user()->subscription('main')->stripe_plan);
+        $subscriptionDetails = $stripe->getSubscriptionDetilasById($request->user()->subscription('main')->stripe_id);
+        $planCount = $stripe->getPlans()->count();
+        $defaultRes = [
+            'success' => false,
+            'response_code' => 410,
+            'message' => KindlySubscribeMsg(),
+            'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+            'qrcode' => $qrcode,
+            'plan_count' => $planCount,
+            "url" => url('/'),
+            'plan' => $planDetails,
+            'subscription' => $subscriptionDetails
+        ];
+
+        if ($user && !$user->subscribed('main') && !in_array($userRole[0], array("admin", "superadmin"))) {
+            if ($user->subscription('main')->is_custom == 1 || $user->subscription('main')->plan_duration != null) {
+                if (!$user->hasActiveSubscription()) {
+                    if ($request->wantsJson()) {
+                        // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                        return response()->json($defaultRes, 410);
+                    } else {
+                        return redirect('/selectplan');
+                    }
+                }
+            } elseif ($user->subscription('main')->stripe_status != 'active') {
+                // for live subscription
+                if ($user->subscription('main')->stripe_status == 'past_due') {
+                    $stripe = new StripeService();
+                    $planCount = $stripe->getPlans()->count();
+                    $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
+
+
+
+                    if ($request->wantsJson()) {
+                        // $response = array(
+                        //     'success' => false,
+                        //     'response_code' => 410,
+                        //     'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
+                        //     "url" => $url,
+                        //     'plan_count' => $planCount,
+                        //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+                        //     'qrcode' => route('qrcode.generate') . '?url=' . $url
+                        // );
+                        $defaultRes['message'] = "Payment pending. Your subscription will resume once the payment is successfully processed.";
+                        // $defaultRes['plan_count'] = $planCount;
+                        $defaultRes['url'] = $url;
+                        $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
+                        return response()->json($defaultRes, 410);
+                    } else {
+                        return redirect('/selectplan');
+                    }
+                }
+
+                if ($request->wantsJson()) {
+                    // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+
+                    return response()->json($defaultRes, 410);
+                } else {
+                    return redirect('/selectplan');
+                }
+            }
+        }
     }
 }
