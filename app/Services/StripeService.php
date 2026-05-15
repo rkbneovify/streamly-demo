@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
@@ -63,8 +64,25 @@ class StripeService
         try {
 
             return $stripe->subscriptions->retrieve($subscriptionId, []);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
+    public function getSubscriptionDetilasById(string $subscriptionId, string $mode = 'Live')
+    {
+        $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
+        $stripe = new StripeClient($key);
 
+        try {
+
+            $subscription =  $stripe->subscriptions->retrieve($subscriptionId, []);
+            return [
+                'status' => $subscription->status,
+                'cancel_at' => $subscription->cancel_at,
+                'cancel_at_period_end' => $subscription->cancel_at_period_end,
+                'canceled_at' => $subscription->canceled_at,
+            ];
         } catch (\Exception $e) {
             return null;
         }
@@ -89,7 +107,24 @@ class StripeService
     public function getPlanMode($planId)
     {
         return $this->getPlansAndStore()->where('id', $planId)->first()->livemode;
+    }
 
+    public function getPlanDetails(string $planId)
+    {
+        $plan = $this->getPlansAndStore()
+            ->where('id', $planId)
+            ->first();
+
+        if (!$plan) {
+            return null;
+        }
+        return [
+            'amount' => $plan->unit_amount / 100,
+            'product_name' => $plan->product->name,
+            'nickname' => $plan->nickname,
+            'interval' => $plan->recurring->interval ?? null,
+            'interval_count' => $plan->recurring->interval_count ?? null,
+        ];
     }
 
 
@@ -123,15 +158,11 @@ class StripeService
             if (count($subscriptions) > 0) {
                 if ($subscriptions->last()->livemode) {
                     return "Stripe/Live";
-
                 } else {
                     return "Stripe/Testing";
-
                 }
             }
         }
-
-
     }
     public function isLiveSubscription($subscriptionId)
     {
@@ -142,15 +173,11 @@ class StripeService
             if (count($subscriptions) > 0) {
                 if ($subscriptions->last()->livemode) {
                     return 1;
-
                 } else {
                     return 0;
-
                 }
             }
         }
-
-
     }
     protected function findCustomers(string $email, string $mode = 'Live')
     {
@@ -253,13 +280,4 @@ class StripeService
         }
         return null;
     }
-
-
-
-
-
-
-
 }
-
-
