@@ -20,7 +20,7 @@
           <div class="pnf-button">
             <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
-          }@else if ( error && error.url) {
+          }@else if (stripe_status == 'past_due') {
           <div class="pnf-button">
             <a [href]="error.url" target="_blank">
               <button>Pay Now</button>
