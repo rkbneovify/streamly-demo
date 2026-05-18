@@ -367,6 +367,12 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
             }
 
+            // hoa sub user subscription check
+            $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
+            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                return $subsCheck;
+            }
+
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
                 ->whereNotNull('passcode')
@@ -1740,6 +1746,29 @@ class AuthController extends Controller
                 } else {
                     return redirect('/selectplan');
                 }
+            }
+        }
+    }
+
+    public function isHoaSubUserSubscription($passcode)
+    {
+        $hoaUser = HoaUser::where('passcode', $passcode)->first();
+        if ($hoaUser != null) {
+
+            if ($hoaUser->subscription_expire_in === null) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 410,
+                    'hoa_sub_user' => true,
+                    'message' => "Subscription expired !"
+                ], 410);
+            } elseif ($hoaUser->subscription_expire_in === 0) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 410,
+                    'hoa_sub_user' => true,
+                    'message' => "Subscription expired !"
+                ], 410);
             }
         }
     }
