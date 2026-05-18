@@ -199,10 +199,12 @@ class AuthController extends Controller
         }
 
         // subscription check and verify before login
-        $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        if (!str_starts_with($request->deviceid, 'web')) {
+            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
 
-        if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-            return $subsCheck;
+            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                return $subsCheck;
+            }
         }
 
         $userRole = $user->roles->pluck('name');
@@ -368,9 +370,11 @@ class AuthController extends Controller
             }
 
             // hoa sub user subscription check
-            $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
-            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                return $subsCheck;
+            if (!str_starts_with($request->deviceid, 'web')) {
+                $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
+                if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                    return $subsCheck;
+                }
             }
 
             //hoa sub user device limit check
@@ -418,9 +422,11 @@ class AuthController extends Controller
 
         // subscription check and verify before login
         // return response()->json($user);
-        $subsCheck = $this->isSubscriptionExpired($request, $user->id);
-        if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-            return $subsCheck;
+        if (!str_starts_with($request->deviceid, 'web')) {
+            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                return $subsCheck;
+            }
         }
 
         $userRole = $user->roles->pluck('name');
