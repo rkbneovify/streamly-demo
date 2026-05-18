@@ -410,6 +410,13 @@ class AuthController extends Controller
         }
 
 
+        // subscription check and verify before login
+        // return response()->json($user);
+        $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+            return $subsCheck;
+        }
+
         $userRole = $user->roles->pluck('name');
         //todo hotel check
 
@@ -1642,16 +1649,18 @@ class AuthController extends Controller
         $user = User::where('id', $userId)->first();
         $userRole = $user->roles->pluck('name');
 
+
+
         $qrcode = route('qrcode.generate') . '?url=' . url('/');
         $stripe = new StripeService();
-        $planDetails = $stripe->getPlanDetails($request->user()->subscription('main')->stripe_plan);
-        $subscriptionDetails = $stripe->getSubscriptionDetilasById($request->user()->subscription('main')->stripe_id, $request->user()->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
+        $planDetails = $stripe->getPlanDetails($user->subscription('main')->stripe_plan);
+        $subscriptionDetails = $stripe->getSubscriptionDetilasById($user->subscription('main')->stripe_id, $user->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
         $planCount = $stripe->getPlans()->count();
         $defaultRes = [
             'success' => false,
             'response_code' => 410,
             'message' => KindlySubscribeMsg(),
-            'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+            'stripe_status' => $user->subscription('main')->stripe_status ?? null,
             'qrcode' => $qrcode,
             'plan_count' => 0,
             "url" => url('/'),
