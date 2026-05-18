@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
         'access_premium_channel'
     ];
 
-    /** 
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -164,7 +164,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(SessionTable::class, 'users_id', 'id')
             ->where('status', 1);
-
     }
 
     public function rooms()
@@ -175,26 +174,22 @@ class User extends Authenticatable implements JWTSubject
     public function hoaHouses()
     {
         return $this->hasMany(HoaUser::class, 'user_id', 'id');
-
     }
 
     public function local()
     {
         return $this->hasMany(LocalZipcode::class, 'zipcode', 'zipcode')
             ->where('status', 1);
-
     }
 
     public function zipcodeRule()
     {
         return $this->hasMany(UserZipcodeRule::class, 'email', 'email');
-
     }
     public function premium()
     {
         return $this->hasMany(PremiumChannelAccess::class, 'user_id', 'id')
             ->where('status', 1);
-
     }
 
     // user type
@@ -216,7 +211,6 @@ class User extends Authenticatable implements JWTSubject
                 });
         } elseif ($value == 'all_premium') {
             $query->having('local_count', '<=', 0)->having('premium_count', '>', 0);
-
         } elseif ($value == 'local_premium') {
             $query->having('local_count', '>', 0)->having('premium_count', '>', 0)
                 ->wherehas('zipcodeRule', function ($q) {
@@ -230,15 +224,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasActiveSubscription()
     {
-        if ($this->customSubscription->is_custom == 1 && strtolower($this->customSubscription->plan_duration) == 'never') {
-            return true;
+        if ($this->customSubscription->plan_duration != null && strtolower($this->customSubscription->plan_duration) == 'never') {
+            return false;
         }
-        return $this->customSubscription &&
-            $this->customSubscription->renews_at > now();
+        return !($this->customSubscription &&
+            $this->customSubscription->renews_at > now());
     }
-
-
-
-
-
 }
