@@ -1645,7 +1645,7 @@ class AuthController extends Controller
         $qrcode = route('qrcode.generate') . '?url=' . url('/');
         $stripe = new StripeService();
         $planDetails = $stripe->getPlanDetails($request->user()->subscription('main')->stripe_plan);
-        $subscriptionDetails = $stripe->getSubscriptionDetilasById($request->user()->subscription('main')->stripe_id);
+        $subscriptionDetails = $stripe->getSubscriptionDetilasById($request->user()->subscription('main')->stripe_id, $request->user()->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
         $planCount = $stripe->getPlans()->count();
         $defaultRes = [
             'success' => false,
