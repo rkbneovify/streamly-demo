@@ -29,7 +29,7 @@ export class SubscriptionCancelComponent implements OnInit {
   // setData
   ngOnInit() {
     this.error = history.state.error;
-
+    // console.log('subscription Errorxxxx : ', history.state.error)
     this.currentData.currentData.subscribe(data => {
       this.receivedData = data;
     });
