@@ -71,7 +71,7 @@ class StripeService
 
     public function getSubscriptionDetilasById(string $subscriptionId, string $mode = 'Live')
     {
-        
+
         $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
         $stripe = new StripeClient($key);
 
@@ -80,9 +80,9 @@ class StripeService
             $subscription =  $stripe->subscriptions->retrieve($subscriptionId, []);
             return [
                 'status' => $subscription->status,
-                'cancel_at' => $subscription->cancel_at,
+                'cancel_at' => $subscription->cancel_at == null ? $subscription->cancel_at :  date('Y-m-d H:i:s', $subscription->cancel_at),
                 'cancel_at_period_end' => $subscription->cancel_at_period_end,
-                'canceled_at' => $subscription->canceled_at,
+                'canceled_at' => $subscription->canceled_at == null ? $subscription->canceled_at :  date('Y-m-d H:i:s', $subscription->canceled_at),
             ];
         } catch (\Exception $e) {
             return null;
