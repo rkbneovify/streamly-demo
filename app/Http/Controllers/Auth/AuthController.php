@@ -199,11 +199,13 @@ class AuthController extends Controller
         }
 
         // subscription check and verify before login
-        // $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        if (!str_starts_with($request->deviceid, 'web')) {
+            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
 
-        // if ($subsCheck->getData()->response_code == 410) {
-        //     return $subsCheck;
-        // }
+            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                return $subsCheck;
+            }
+        }
 
         $userRole = $user->roles->pluck('name');
 
@@ -367,6 +369,14 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
             }
 
+            // hoa sub user subscription check
+            if (!str_starts_with($request->deviceid, 'web')) {
+                $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
+                if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                    return $subsCheck;
+                }
+            }
+
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
                 ->whereNotNull('passcode')
@@ -409,6 +419,15 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
+
+        // subscription check and verify before login
+        // return response()->json($user);
+        if (!str_starts_with($request->deviceid, 'web')) {
+            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                return $subsCheck;
+            }
+        }
 
         $userRole = $user->roles->pluck('name');
         //todo hotel check
@@ -1642,38 +1661,62 @@ class AuthController extends Controller
         $user = User::where('id', $userId)->first();
         $userRole = $user->roles->pluck('name');
 
+
+
         $qrcode = route('qrcode.generate') . '?url=' . url('/');
         $stripe = new StripeService();
-        $planDetails = $stripe->getPlanDetails($request->user()->subscription('main')->stripe_plan);
-        $subscriptionDetails = $stripe->getSubscriptionDetilasById($request->user()->subscription('main')->stripe_id);
+        $planDetails = $stripe->getPlanDetails($user->subscription('main')->stripe_plan);
+        $subscriptionDetails = $stripe->getSubscriptionDetilasById($user->subscription('main')->stripe_id, $user->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
         $planCount = $stripe->getPlans()->count();
         $defaultRes = [
             'success' => false,
             'response_code' => 410,
             'message' => KindlySubscribeMsg(),
-            'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+            'stripe_status' => $user->subscription('main')->stripe_status ?? null,
             'qrcode' => $qrcode,
-            'plan_count' => $planCount,
+            'plan_count' => 0,
             "url" => url('/'),
-            'plan' => $planDetails,
-            'subscription' => $subscriptionDetails
+            'plan' => null,
+            'subscription' => null,
+            'custom_subscription_expired' => null,
+            'custom_subscription_expired_at' => null,
         ];
 
-        if ($user && !$user->subscribed('main') && !in_array($userRole[0], array("admin", "superadmin"))) {
-            if ($user->subscription('main')->is_custom == 1 || $user->subscription('main')->plan_duration != null) {
-                if (!$user->hasActiveSubscription()) {
+        //  $defaultRes = [
+        //     'success' => false,
+        //     'response_code' => 410,
+        //     'message' => KindlySubscribeMsg(),
+        //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+        //     'qrcode' => $qrcode,
+        //     'plan_count' => $planCount,
+        //     "url" => url('/'),
+        //     'plan' => $planDetails,
+        //     'subscription' => $subscriptionDetails,
+        //     'custom_subscription_expired' => $user->hasActiveSubscription(),
+        //     'custom_subscription_expired_at' => $user->subscription('main')->renews_at,
+        // ];
+
+
+
+
+        if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
+            if ($user->subscription('main')->plan_duration != null) {
+                if ($user->hasActiveSubscription()) {
                     if ($request->wantsJson()) {
                         // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                        $defaultRes['stripe_status'] = 'expired';
+                        $defaultRes['custom_subscription_expired'] = $user->hasActiveSubscription();
+                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+
                         return response()->json($defaultRes, 410);
                     } else {
                         return redirect('/selectplan');
                     }
                 }
-            } elseif ($user->subscription('main')->stripe_status != 'active') {
+            } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
                 // for live subscription
                 if ($user->subscription('main')->stripe_status == 'past_due') {
                     $stripe = new StripeService();
-                    $planCount = $stripe->getPlans()->count();
                     $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
 
@@ -1689,7 +1732,9 @@ class AuthController extends Controller
                         //     'qrcode' => route('qrcode.generate') . '?url=' . $url
                         // );
                         $defaultRes['message'] = "Payment pending. Your subscription will resume once the payment is successfully processed.";
-                        // $defaultRes['plan_count'] = $planCount;
+                        $defaultRes['plan_count'] = $planCount;
+                        $defaultRes['plan'] = $planDetails;
+                        $defaultRes['subscription'] = $subscriptionDetails;
                         $defaultRes['url'] = $url;
                         $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
                         return response()->json($defaultRes, 410);
@@ -1700,11 +1745,36 @@ class AuthController extends Controller
 
                 if ($request->wantsJson()) {
                     // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
-
+                    $defaultRes['plan_count'] = $planCount;
+                    $defaultRes['plan'] = $planDetails;
+                    $defaultRes['subscription'] = $subscriptionDetails;
                     return response()->json($defaultRes, 410);
                 } else {
                     return redirect('/selectplan');
                 }
+            }
+        }
+    }
+
+    public function isHoaSubUserSubscription($passcode)
+    {
+        $hoaUser = HoaUser::where('passcode', $passcode)->first();
+        if ($hoaUser != null) {
+
+            if ($hoaUser->subscription_expire_in === null) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 410,
+                    'hoa_sub_user' => true,
+                    'message' => "Subscription expired !"
+                ], 410);
+            } elseif ($hoaUser->subscription_expire_in === 0) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 410,
+                    'hoa_sub_user' => true,
+                    'message' => "Subscription expired !"
+                ], 410);
             }
         }
     }
