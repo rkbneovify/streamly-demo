@@ -54,7 +54,7 @@ export class SubscriptionCancelComponent implements OnInit {
         error: (err) => {
           this.sweetAlert.close();
           this.error = err.error;
-          // console.log('subscription Error : ', err.error)
+          console.log('subscription Error : ', err.error)
 
         }
       });
