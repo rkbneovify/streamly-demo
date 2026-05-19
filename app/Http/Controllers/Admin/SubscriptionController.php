@@ -35,7 +35,7 @@ use Stripe\Subscription as StripeSubscription;
 /**
  * Description of SubscriptionController
  *
- * 
+ *
  */
 
 class SubscriptionController extends Controller
@@ -66,7 +66,7 @@ class SubscriptionController extends Controller
         $latestSubscriptions = Subscription::query()
             ->select('user_id', DB::raw('MAX(created_at) as latest_created_at'))
             ->where('livemode', 1)
-
+            ->whereNull('plan_duration')
             ->groupBy('user_id');
 
         $query = Subscription::query()
@@ -75,7 +75,8 @@ class SubscriptionController extends Controller
                 $join->on('subscriptions.user_id', '=', 'latest.user_id')
                     ->on('subscriptions.created_at', '=', 'latest.latest_created_at');
             })
-            ->whereHas('user');
+            ->whereHas('user')
+            ->whereNull('plan_duration');
 
 
 
@@ -101,7 +102,7 @@ class SubscriptionController extends Controller
             });
         }
 
-        $subscriptions = $query->paginate(10)->appends($request->query());
+        $subscriptions = $query->latest()->paginate(10)->appends($request->query());
         // return response()->json($subscriptions);
 
 
@@ -512,7 +513,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $starting_after = $request->query('lastid') == 1 ? NULL : $request->query('lastid');
         $customer = $request->query('customer') ?? NULL;
         $plan = $request->query('plan') ?? NULL;
-        // dd($starting_after); 
+        // dd($starting_after);
         $increment = 3;
         $customersJSON = \Stripe\Subscription::all(array(
             "customer" => $customer,
@@ -525,7 +526,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         return ['fulldata' => $customersJSON->data, 'has_more' => $customersJSON->has_more, 'lastid' => end($customersJSON->data)];
     }
     public function show($id)
-    {   //$subscription = Subscription::find($id); 
+    {   //$subscription = Subscription::find($id);
         $user = User::all()->pluck('name', 'id');
         $subscription = Subscription::find($id);
         $plans = \Stripe\Plan::all();
@@ -634,8 +635,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     //                                       $query->where('expiry_date', '>=', $end);
     //                                   })->count();
     //  if($existsActive > 0 ){
-    //     // "Already exists"; 
-    //     $user = User::pluck('name', 'id'); 
+    //     // "Already exists";
+    //     $user = User::pluck('name', 'id');
     //     $u=$user[$userid];
     //     $start=Carbon::parse($request->input('start_date'))->format('d M Y');
     //     $end=Carbon::parse($request->input('expiry_date'))->format('d M Y');
@@ -744,8 +745,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     //                                       $query->where('expiry_date', '>=', $end);
     //                                   })->count();
     //  if($existsActive > 0 ){
-    //     // "Already exists"; 
-    //     $user = User::pluck('name', 'id'); 
+    //     // "Already exists";
+    //     $user = User::pluck('name', 'id');
     //     $u=$user[$userid];
     //     $start=Carbon::parse($request->input('start_date'))->format('d M Y');
     //     $end=Carbon::parse($request->input('expiry_date'))->format('d M Y');
@@ -770,7 +771,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
 
     //     if(!$model){
-    //         return redirect('admin/subscriptions')->with('info','subscription with id ' . $id . ' cannot be found.'); 
+    //         return redirect('admin/subscriptions')->with('info','subscription with id ' . $id . ' cannot be found.');
     //     }
     //     else{$model->update($input); //update the subscription info
 
@@ -909,7 +910,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                     'user_id' => $request->user_id ?? 'N/A',
                 ],
             ]);
-            // update user Stripe customer id 
+            // update user Stripe customer id
             if ($user != null && $user->is_custom_user == 1) {
                 $user->update([
                     'stripe_id' => $customer->id
