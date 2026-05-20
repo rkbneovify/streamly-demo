@@ -17,6 +17,7 @@ class HoaSubUserSubscription
      */
     public function handle($request, Closure $next)
     {
+        $message = 'Your subscription has expired. Please contact your service provider to continue using Streamly.';
         $token = $request->bearerToken() ?: $request->header('Authorization');
         if ($token && stripos($token, 'bearer ') === 0) {
             $token = preg_replace('/^bearer\s+/i', '', $token);
@@ -32,19 +33,18 @@ class HoaSubUserSubscription
                             'status' => false,
                             'response_code' => 410,
                             'hoa_sub_user' => true,
-                            'message' => "Subscription expired !"
+                            'message' => $message
                         ], 410);
                     } elseif ($hoaUser->subscription_expire_in === 0) {
                         return response()->json([
                             'status' => false,
                             'response_code' => 410,
                             'hoa_sub_user' => true,
-                            'message' => "Subscription expired !"
+                            'message' => $message
                         ], 410);
                     }
                 }
             }
-
         }
 
         return $next($request);
