@@ -22,7 +22,6 @@ use Crypt;
 use Hash;
 use Mail;
 use Carbon\Carbon;
-use Validator;
 use Illuminate\Support\Arr;
 use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -37,6 +36,7 @@ use App\Services\StripeService;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -49,7 +49,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminateWithoutLogin']]);
     }
 
     public function register(Request $request)
@@ -1535,6 +1535,94 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function subscriptionTerminateWithoutLogin(Request $request)
+    {
+
+        if ($request->has('email')) {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email|max:225',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 422,
+                    'message' => 'Validation error !',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+        }
+
+        if ($request->has('passcode')) {
+            $validator = Validator::make($request->all(), [
+                'passcode' => 'required|string|max:225',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 422,
+                    'message' => 'Validation error !',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+        }
+
+
+
+        try {
+            $user = null;
+            if ($request->email != null) {
+                $user =   User::where('email', $request->email)->first();
+            } elseif ($request->passcode != null) {
+                $uid = UnHashUserID($request->passcode);
+                $user =   User::where('id', $uid)->first();
+            }
+
+            if ($user == null) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "Something went wrong. Please try again later."
+                ], 404);
+            }
+
+            if ($user->is_active == 0) {
+                return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin'], 401);
+            }
+
+            if ($user->subscription('main')->plan_duration == null) {
+                $user->subscription('main')->skipTrial()->cancelNow();
+            }
+
+            $this->activity($user->id)
+                ->event("User")
+                ->eventType(ActivityEventType::Terminated)
+                ->description("User subscription terminated")
+                ->isUser()
+                ->isAdmin()
+                ->properties([
+                    "data" => $user
+                ])->save();
+
+
+            DB::table('subscriptions')
+                ->where('user_id', $user->id)
+                ->update(['stripe_status' => "canceled"]);
+            DB::commit();
+            $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription terminated successfully !");
+            return response()->json($response, 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                // "message" => "Something went wrong. Please try again later."
+                "message" => $th->getMessage()
+            ], 500);
+        }
+    }
+
     public function subscriptionResume(Request $request)
     {
         DB::beginTransaction();
