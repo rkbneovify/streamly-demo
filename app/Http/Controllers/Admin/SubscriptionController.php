@@ -272,6 +272,78 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.index-new', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
     }
 
+    public function index3(Request $request, StripeService $stripeService)
+    {
+
+
+        $query = Subscription::query()
+            ->whereHas('user')   // only subscriptions with a related user
+            ->with('user')      // still eager load user data
+            ->whereNotNull('plan_duration');
+
+        // Filter by status if provided
+        if (!empty($request->status)) {
+
+            $query->where('stripe_status', $request->status);
+        }
+
+        // Apply search filter if provided
+        if (!empty($request->search)) {
+
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
+            $query->orderByDesc('created_at');
+        } else {
+            $query->orderBy('created_at');
+        }
+        $subscriptions = $query->paginate(10)
+            ->appends($request->query());
+
+        // $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
+
+        //     $item->mode = $stripeService->hasSubscription($item->stripe_id);
+        //     return $item;
+        // });
+        // return response()->json($query->get());
+
+
+
+
+
+        $stripePlans = \Stripe\Plan::all();
+        $stripePlanData = collect($stripePlans->data)
+            ->groupBy('billing_scheme');
+        $plankey = $stripePlanData->keys();
+
+        $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+        // Extracting subscription status types
+        $statusTypes = Subscription::whereHas('user')->pluck('stripe_status')->unique()->values();
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if ($request->ajax()) {
+            return view('admin.subscriptions.partials.custom-table', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+        }
+
+        return view('admin.subscriptions.custom-index', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
+    }
+
     public function showAllcustomer()
     {
         $arrayStripeEmail = array();
