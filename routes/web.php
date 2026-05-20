@@ -89,6 +89,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     //subscription
     Route::resource('subscriptions', 'Admin\SubscriptionController');
     Route::get('subscriptions-new', 'Admin\SubscriptionController@index2');
+     Route::get('custom-subscriptions', 'Admin\SubscriptionController@index3');
     Route::get('subscriptions/custom/user/{id}', 'Admin\SubscriptionController@customUserView')->name('subscriptions.custom.view');
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
@@ -335,7 +336,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/logs', [AdminServerLogController::class, 'index']);
     Route::get('/logs/clear', [AdminServerLogController::class, 'clear']);
 
-    // Gracenote sync 
+    // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
 
 });

@@ -123,6 +123,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/account/otp-verify', 'Auth\AuthController@accountOtpVerification')->middleware(['jwt.verify']);
     Route::post('/subscription/resume', 'Auth\AuthController@subscriptionResume')->middleware(['jwt.verify']);
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate')->middleware(['jwt.verify']);
+    Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
@@ -197,8 +198,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
     // Roku info routes
     Route::group(['prefix' => 'roku-info'], function () {
         Route::post("store", "Api\ApiRokuInfoController@store")->middleware(['jwt.verify']);
-
-
     });
 
     // Notification
@@ -230,7 +229,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("plan-subscription", "Api\ApiHoaController@subscriptionPlan")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
-
     });
 });
 
@@ -285,7 +283,7 @@ Route::get('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@redirectToSt
 
 Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
 Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned
-Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
+Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whether the login has been confirmed ,and return the token in response
 
 // Route::fallback(function(){
 //     return response()->json([
