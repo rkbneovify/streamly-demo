@@ -1584,7 +1584,7 @@ class AuthController extends Controller
                 return response()->json([
                     "status" => false,
                     'response_code' => 404,
-                    "message" => "Something went wrong. Please try again later."
+                    "message" => "User not found !"
                 ], 404);
             }
 
@@ -1617,8 +1617,8 @@ class AuthController extends Controller
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
-                // "message" => "Something went wrong. Please try again later."
-                "message" => $th->getMessage()
+                "message" => "Something went wrong. Please try again later."
+                // "message" => $th->getMessage()
             ], 500);
         }
     }
