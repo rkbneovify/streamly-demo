@@ -1846,6 +1846,7 @@ class AuthController extends Controller
 
     public function isHoaSubUserSubscription($passcode)
     {
+        $message = 'Your subscription has expired. Please contact your service provider to continue using Streamly.';
         $hoaUser = HoaUser::where('passcode', $passcode)->first();
         if ($hoaUser != null) {
 
@@ -1854,14 +1855,14 @@ class AuthController extends Controller
                     'status' => false,
                     'response_code' => 410,
                     'hoa_sub_user' => true,
-                    'message' => "Subscription expired !"
+                    'message' => $message
                 ], 410);
             } elseif ($hoaUser->subscription_expire_in === 0) {
                 return response()->json([
                     'status' => false,
                     'response_code' => 410,
                     'hoa_sub_user' => true,
-                    'message' => "Subscription expired !"
+                    'message' => $message
                 ], 410);
             }
         }
