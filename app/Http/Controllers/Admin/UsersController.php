@@ -92,9 +92,7 @@ class UsersController extends Controller
                 $query->orderByDesc('sessions_count');
             } elseif ($request->sort_device == 'asc') {
                 $query->orderBy('sessions_count');
-
             }
-
         }
 
 
@@ -117,7 +115,6 @@ class UsersController extends Controller
             } else {
                 $query->whereIn('mode', ['Testing', 'Test', null]);
             }
-
         }
         // elseif (empty($request->mode)) {
         //     $query->where(function ($q) {
@@ -142,7 +139,6 @@ class UsersController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
-
             });
         }
 
@@ -153,9 +149,6 @@ class UsersController extends Controller
                 $end = Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
                 $q->whereBetween('created_at', [$start, $end]);
             });
-
-
-
         }
 
 
@@ -331,9 +324,7 @@ class UsersController extends Controller
                                     $localZipcode->longitude = $allZipcode->longitude;
                                     $localZipcode->status = 1;
                                     $localZipcode->save();
-
                                 }
-
                             }
 
                             Log::info("ZIP $newZip added to channel $channelId");
@@ -401,7 +392,7 @@ class UsersController extends Controller
             // Auto-add Local Channels if All Channels selected AND ZIP is local
             // if (in_array(1, $channelAvailability) && in_array($request->zipcode, $predefinedLocalZipcodes) && !in_array(2, $channelAvailability)) {
             //     $channelAvailability[] = 2;
-            // } 
+            // }
 
             foreach ($channelAvailability as $availability) {
                 DB::table('user_zipcode_rules')->insert([
@@ -446,14 +437,14 @@ class UsersController extends Controller
             //     return [
             //         'id' => $plan->id,
             //         'metadata' => $plan->metadata,
-            //     ]; 
+            //     ];
             // });
 
             // $roleType = ((int)$request->roles === 5) ? 'tieruser' : 'user';
 
             // $matchedPlan = $formattedPlans->first(function ($plan) use ($roleType) {
             //     return isset($plan['metadata']['role']) && $plan['metadata']['role'] === $roleType;
-            // }); 
+            // });
 
             // foreach ($formattedPlans as $plan) {
             //     Log::info("Plan: {$plan['id']} | Role: " . ($plan['metadata']['role'] ?? 'none'));
@@ -502,6 +493,8 @@ class UsersController extends Controller
                 'plan_duration' => $request->plan_duration,
                 'quantity' => $request->number_of_devices ?? 1,
                 'ends_at' => null,
+                'status' => 'active',
+                'current_period_start' => now(),
                 'renews_at' => $endsAt,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -580,7 +573,7 @@ class UsersController extends Controller
             $user->roles;
             $user->subscriptionLatest;
 
-            // Premium channels 
+            // Premium channels
             if ($request->premium_channels != null) {
                 foreach ($request->premium_channels as $item) {
                     $channel = Channel::where('id', $item)->first();
@@ -591,10 +584,9 @@ class UsersController extends Controller
                     $premiumChannel->status = 1;
                     $premiumChannel->save();
                 }
-
             }
 
-            // Phx channels 
+            // Phx channels
             if ($request->phx_channels != null) {
                 foreach ($request->phx_channels as $item) {
                     $channel = Channel::where('id', $item)->first();
@@ -605,7 +597,6 @@ class UsersController extends Controller
                     $phxChannel->status = 1;
                     $phxChannel->save();
                 }
-
             }
 
 
@@ -740,20 +731,13 @@ class UsersController extends Controller
                                     $localZipcode->longitude = $allZipcode->longitude;
                                     $localZipcode->status = 1;
                                     $localZipcode->save();
-
                                 }
-
                             }
 
                             Log::info("ZIP $newZip added to channel $channelId");
                         }
-
-
                     }
-
                 }
-
-
             }
 
 
@@ -801,7 +785,6 @@ class UsersController extends Controller
 
                 HoaUser::where('user_id', $user->id)->delete();
                 HotelRoomTable::where('user_id', $user->id)->delete();
-
             }
 
             // Step 2: Update roles
@@ -844,16 +827,11 @@ class UsersController extends Controller
                             JWTAuth::setToken($session->access_token)->invalidate();
                             $session->delete();
                         }
-
                     }
 
                     foreach ($extraRooms as $room) {
                         DB::table('hotel_rooms')->where('id', $room->id)->delete();
                     }
-
-
-
-
                 }
             } else {
                 // Not a tier user — delete all hotel rooms
@@ -924,7 +902,6 @@ class UsersController extends Controller
                 if ($updateStatus != null && $updateStatus['status'] === false) {
                     return redirect('admin/users')->with('info', $updateStatus['message']);
                 }
-
             }
 
             // subscription logic
@@ -980,6 +957,8 @@ class UsersController extends Controller
                                 'plan_duration' => $request->plan_duration,
                                 'is_custom' => 1,
                                 'ends_at' => null,
+                                'status' => 'active',
+                                'current_period_start' => now(),
                                 'renews_at' => $endsAt,
                                 'quantity' => $newDeviceCount,
                                 'updated_at' => now(),
@@ -998,16 +977,14 @@ class UsersController extends Controller
                             'plan_duration' => $request->plan_duration,
                             'is_custom' => 1,
                             'ends_at' => null,
+                            'status' => 'active',
+                            'current_period_start' => now(),
                             'renews_at' => $endsAt,
                             'quantity' => $newDeviceCount,
                             'updated_at' => now(),
                         ]
                     );
                 }
-
-
-
-
             }
 
 
@@ -1040,7 +1017,6 @@ class UsersController extends Controller
                 PremiumChannelAccess::where('user_id', $user->id)->whereNotIn('channel_id', $request->premium_channels)->update([
                     'status' => 0
                 ]);
-
             }
 
 
@@ -1073,7 +1049,6 @@ class UsersController extends Controller
                 PhxLocalChannelAccess::where('user_id', $user->id)->whereNotIn('channel_id', $request->phx_channels)->update([
                     'status' => 0
                 ]);
-
             }
 
 
@@ -1147,12 +1122,10 @@ class UsersController extends Controller
         // tier user
         if ($userRoles && in_array(5, $userRoles)) {
             $currentDeviceCount = DB::table('hotel_rooms')->where('user_id', $user->id)->count();
-
         }
         // Hoa user
         if ($userRoles && in_array(7, $userRoles)) {
             $currentDeviceCount = HoaUser::getActiveHousesCount($user->id);
-
         }
 
         // premium channel list
@@ -1261,8 +1234,6 @@ class UsersController extends Controller
                 $months = $renewsAt->diffInMonths($updatedAt);
                 $planDuration = $months == 0 ? 1 . ' Month' : $months . ' Month' . ($months > 1 ? 's' : '');
             }
-
-
         }
 
         try {
@@ -1288,9 +1259,6 @@ class UsersController extends Controller
             Alert::error('Oops !', "Something went wrong. Please try again later.");
             return redirect()->back();
         }
-
-
-
     }
 
     // public function destroy($id)
@@ -1381,7 +1349,7 @@ class UsersController extends Controller
     //     //      ])->orderBy('connected_devices', 'asc');
     //     //     $s='';$numofdevice='';
     //     // $s=$prevConnectDevicecount->toSql();
-    //     // echo $s; 
+    //     // echo $s;
     //     // $numofdevice=$prevConnectDevicecount->count();
 
 
@@ -1541,7 +1509,7 @@ class UsersController extends Controller
                 'pdInfo' => fn($query) => $query->where('user_id', $id),
                 'subSession'
             ]);
-            $query->selectRaw("*, 
+            $query->selectRaw("*,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('users_id', $id)
@@ -1557,7 +1525,6 @@ class UsersController extends Controller
                         ->orWhere('device_model', 'like', '%' . $request->search . '%')
                         ->orWhere('build_version', 'like', '%' . $request->search . '%')
                         ->orWhere('zipcode', 'like', '%' . $request->search . '%');
-
                 });
 
 
@@ -1769,7 +1736,6 @@ class UsersController extends Controller
             if ($sessionCount == 1) {
                 DB::commit();
                 return redirect()->route('admin.users');
-
             }
             DB::commit();
             return redirect()->back();
@@ -1778,9 +1744,6 @@ class UsersController extends Controller
             toast("Something went wrong ! Try again later.")->timerProgressBar()->autoClose(3000);
             return redirect()->back();
         }
-
-
-
     }
 
 
@@ -1932,7 +1895,6 @@ class UsersController extends Controller
                     ->properties([
                         "data" => $user
                     ])->save();
-
             } else {
                 $user->is_active = 1;
                 $this->eventType(ActivityEventType::STATUSENABLE)
@@ -1953,7 +1915,6 @@ class UsersController extends Controller
 
             Alert::error('Oop !', $th->getMessage());
             return redirect()->back();
-
         }
     }
 
@@ -2090,7 +2051,6 @@ class UsersController extends Controller
                         ->timerProgressBar()
                         ->autoClose(5000);
                     return redirect()->back()->with('remove-all', true);
-
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     Alert::success("Error ", "Something went wrong !");
@@ -2114,7 +2074,6 @@ class UsersController extends Controller
                         ->timerProgressBar()
                         ->autoClose(5000);
                     return redirect()->back()->with('remove-all', true);
-
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     Alert::success("Error ", "Something went wrong !");
@@ -2145,7 +2104,6 @@ class UsersController extends Controller
                         ->timerProgressBar()
                         ->autoClose(5000);
                     return redirect()->back()->with('remove-all', true);
-
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     Alert::success("Error ", "Something went wrong !");
@@ -2186,10 +2144,7 @@ class UsersController extends Controller
                     ->timerProgressBar()
                     ->autoClose(5000);
                 return redirect()->back();
-
         }
-
-
     }
 
     public function exportUser(Request $request, $type)
@@ -2229,6 +2184,4 @@ class UsersController extends Controller
         $filename = 'custom-users_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
         return Excel::download(new CustomUserExport($filters), $filename);
     }
-
-
 }
