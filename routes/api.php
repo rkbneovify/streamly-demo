@@ -122,7 +122,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/account/otp-send', 'Auth\AuthController@accountOtpSend')->middleware(['jwt.verify']);
     Route::post('/account/otp-verify', 'Auth\AuthController@accountOtpVerification')->middleware(['jwt.verify']);
     Route::post('/subscription/resume', 'Auth\AuthController@subscriptionResume')->middleware(['jwt.verify']);
-    Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate')->middleware(['jwt.verify']);
+    Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
