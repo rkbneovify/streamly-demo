@@ -67,8 +67,7 @@ import {
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
-{
+  implements OnInit, AfterViewInit, AfterViewChecked {
   // stripe: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
@@ -124,10 +123,14 @@ export class RegisterComponent
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
-      email: ['', [Validators.required, Validators.email, this.noWhitespaceValidator]],
+      email: ['', [Validators.required,
+      Validators.pattern(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      )
+        , this.noWhitespaceValidator]],
       zipcode: [
         null,
-        [Validators.required, Validators.maxLength(5), Validators.minLength(5),this.noWhitespaceValidator,this.onlyDigitValidator],
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5), this.noWhitespaceValidator, this.onlyDigitValidator],
       ],
       city: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
       state: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
@@ -184,10 +187,10 @@ export class RegisterComponent
     return isValid ? null : { onlyString: true };
   }
 
-  replaceNonDigits(input:any) {
+  replaceNonDigits(input: any) {
     return input.replace(/\D/g, ''); // Replace any non-digit character with ''
-}
-  
+  }
+
 
   async ngOnInit() {
     this.searchTerms
@@ -354,7 +357,7 @@ export class RegisterComponent
       next: (res) => {
         this.all_Plans = res;
         if (this.all_Plans.length > 0) {
-          this.all_Plans[0].forEach((el: any) => {});
+          this.all_Plans[0].forEach((el: any) => { });
         }
       },
       error: (err) => {
@@ -435,7 +438,7 @@ export class RegisterComponent
 
   allowOnlyStrings(event: KeyboardEvent): void {
     const charCode = event.charCode || event.keyCode || event.which;
-  
+
     // Allow only alphabet characters (A-Z, a-z)
     if (
       !(charCode >= 65 && charCode <= 90) && // Uppercase A-Z
@@ -445,8 +448,8 @@ export class RegisterComponent
       event.preventDefault();
     }
   }
-  
-  
+
+
 
   // getotp
   getOtpWithMail(verifiMailDetails: any) {
@@ -624,6 +627,7 @@ export class RegisterComponent
       },
       error: (error) => {
         this.loading = false;
+        this.ts.error(error.error.message)
         console.error(error);
       },
     });
@@ -696,43 +700,43 @@ export class RegisterComponent
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
 
- 
+
   getTotalPrice() {
     if (this.checkoutPlans?.plandetails?.tiers?.length > 0) {
       this.totalPrice = 0;
-  
+
       const tiers = this.checkoutPlans.plandetails.tiers;
       let selectedTier: any = null;
-  
+
       // Loop through each tier to find the correct one
       for (let i = 0; i < tiers.length; i++) {
         const tier = tiers[i];
         const upTo = tier.up_to;
-  
+
         if (upTo === null || this.device_per_unit <= upTo) {
           selectedTier = tier;
           break; // Stop at the first matching tier
         }
       }
-  
+
       // If no tier matched (very unlikely unless data is invalid), use the last tier
       if (!selectedTier) {
         selectedTier = tiers[tiers.length - 1];
       }
-  
+
       const unitAmount = selectedTier.unit_amount || 0;
       this.devicePlanAmount = unitAmount / 100;
       this.totalPrice = this.devicePlanAmount * this.device_per_unit;
-  
+
       this.grandTotalPrice = this.totalPrice;
-  
+
       this.discountCode();
     }
   }
 
   getTierUnitAmount(tiers: any[], devices: number): number {
     if (!tiers || !devices) return 0;
-  
+
     for (let tier of tiers) {
       if (tier.up_to === null || devices <= +tier.up_to) {
         return +tier.unit_amount;
@@ -740,15 +744,15 @@ export class RegisterComponent
     }
     return 0;
   }
-  
-  
+
+
 
   onCouponInputChange(event: any) {
     this.searchCoupnTerm.next(event.target.value);
   }
 
-  couponCode:string = '';
-  isCouPonApply:boolean = false;
+  couponCode: string = '';
+  isCouPonApply: boolean = false;
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -782,7 +786,7 @@ export class RegisterComponent
 
           this.couponCode = '';
         },
-        complete:()=>{
+        complete: () => {
           // this.couponFormControl.reset();
         }
       });
@@ -796,13 +800,13 @@ export class RegisterComponent
     // }
   }
 
-  cancelDisCount(){
+  cancelDisCount() {
     this.couponDataDetails = null;
-      this.couponCode = ''
-      this.discount = 0;
-      this.grandTotalPrice = this.totalPrice;
-      this.isCouPonApply = false;
-      this.couponFormControl.reset();
+    this.couponCode = ''
+    this.discount = 0;
+    this.grandTotalPrice = this.totalPrice;
+    this.isCouPonApply = false;
+    this.couponFormControl.reset();
   }
 
   // {
@@ -860,7 +864,7 @@ export class RegisterComponent
   submitPaymentDetails(token: any) {
     const formData = this.paymentFormDetails.value;
     let trial_day;
-    let quantity = this.selectedPlanType == 'per_unit' ? 1:this.device_per_unit;
+    let quantity = this.selectedPlanType == 'per_unit' ? 1 : this.device_per_unit;
     if (this.checkoutPlans.plandetails?.trial_period_days) {
       trial_day = this.checkoutPlans.plandetails?.trial_period_days;
     } else {
@@ -899,7 +903,7 @@ export class RegisterComponent
           this.completed = 7;
         } else {
           const errorMessage = res?.message || 'Something went wrong. Please try again.';
-        this.ts.error(errorMessage);
+          this.ts.error(errorMessage);
           this.loading = false;
         }
       },
@@ -1052,29 +1056,29 @@ export class RegisterComponent
   //   }
   // }
 
-        // Function to prevent input of more than 5 digits
-        onZipcodeKeyPress(event: any) {
-          const input = event.target.value;
-          console.log('===',input)
-          if (input.length >= 5) {
-            event.preventDefault(); // Prevents user from entering more than 5 characters
-          }
-        }
-    
-    onZipcodeInput(event: any): void {
-      const input = event.target.value;
-    
-      // Remove any non-numeric characters
-      const sanitizedInput = input.replace(/[^0-9]/g, '');
-      
-      // Limit input to 5 characters
-      if (input > 5) {
-        event.target.value = sanitizedInput.substring(0, 5);
-      } else {
-        event.target.value = sanitizedInput;
-      }
-      this.paymentFormDetails.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
-      console.log('Sanitized Input:', event.target.value);
+  // Function to prevent input of more than 5 digits
+  onZipcodeKeyPress(event: any) {
+    const input = event.target.value;
+    console.log('===', input)
+    if (input.length >= 5) {
+      event.preventDefault(); // Prevents user from entering more than 5 characters
     }
-  
+  }
+
+  onZipcodeInput(event: any): void {
+    const input = event.target.value;
+
+    // Remove any non-numeric characters
+    const sanitizedInput = input.replace(/[^0-9]/g, '');
+
+    // Limit input to 5 characters
+    if (input > 5) {
+      event.target.value = sanitizedInput.substring(0, 5);
+    } else {
+      event.target.value = sanitizedInput;
+    }
+    this.paymentFormDetails.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
+    console.log('Sanitized Input:', event.target.value);
+  }
+
 }

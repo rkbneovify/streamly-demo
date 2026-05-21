@@ -1333,6 +1333,19 @@ class AuthController extends Controller
 
     public function checkEmail(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email:rfc,dns|max:225'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'response_code' => 422,
+                'message' => $validator->errors()->first(),
+                'error' => $validator->errors()
+            ], 422);
+        }
+
         $email = $request->email;
 
         $userExists = User::where('email', $email)->exists();
@@ -1613,9 +1626,7 @@ class AuthController extends Controller
                 'message' => "Subscription terminated successfully !"
             ], 200);
         } catch (\Throwable $th) {
-
             DB::rollBack();
-
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
