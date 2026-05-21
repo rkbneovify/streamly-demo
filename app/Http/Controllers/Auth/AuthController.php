@@ -49,7 +49,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminateWithoutLogin']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminate', 'subscriptionTerminateWithoutLogin']]);
     }
 
     public function register(Request $request)
@@ -201,7 +201,6 @@ class AuthController extends Controller
         // subscription check and verify before login
         if (!str_starts_with($request->deviceid, 'web')) {
             $subsCheck = $this->isSubscriptionExpired($request, $user->id);
-
             if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
                 return $subsCheck;
             }
@@ -1504,7 +1503,129 @@ class AuthController extends Controller
     }
 
 
+
     public function subscriptionTerminate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'nullable|email|max:225',
+            'passcode' => 'nullable|string|max:225',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false,
+                'response_code' => 422,
+                'message' => 'Validation error !',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+
+
+
+
+
+        try {
+            DB::beginTransaction();
+
+            $user = null;
+
+            // Logged-in user
+            if ($request->bearerToken()) {
+
+                $session = SessionTable::where('access_token', $request->bearerToken())->first();
+                if ($session != null) {
+                    $user = User::where('id', $session->users_id)->first();
+                }
+            }
+
+            // User by email
+            elseif ($request->filled('email')) {
+                $user = User::where('email', $request->email)->first();
+            }
+
+            // User by passcode
+            elseif ($request->filled('passcode')) {
+                $uid = UnHashUserID($request->passcode);
+                $user = User::where('id', $uid)->first();
+            }
+
+            if (!$user) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "User not found !"
+                ], 404);
+            }
+
+            if ($user->is_active == 0) {
+                return response()->json([
+                    'success' => false,
+                    'response_code' => 401,
+                    'message' => 'You are deactivated, kindly contact admin'
+                ], 401);
+            }
+
+            $subscription = $user->subscription('main');
+            if ($subscription == null) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "Subscription not found !"
+                ], 404);
+            }
+            if ($subscription->plan_duration != null) {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 404,
+                    "message" => "Subscription not found !"
+                ], 404);
+            }
+
+
+            // Cancel stripe subscription for normal users
+            $subscription->skipTrial()->cancelNow();
+
+            // Update local subscription status
+            DB::table('subscriptions')
+                ->where('user_id', $user->id)
+                ->update([
+                    'stripe_status' => 'canceled'
+                ]);
+
+
+            $this->activity($user->id)
+                ->event("User")
+                ->eventType(ActivityEventType::Terminated)
+                ->description("User subscription terminated")
+                ->isUser()
+                ->isAdmin()
+                ->properties([
+                    "data" => $user
+                ])->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'response_code' => 200,
+                'message' => "Subscription terminated successfully !"
+            ], 200);
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
+                // "message" => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function subscriptionTerminate21_05_2026(Request $request)
     {
         try {
             if ($request->user()->is_custom_user != 1) {
@@ -1528,6 +1649,7 @@ class AuthController extends Controller
             $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription terminated successfully !");
             return response()->json($response, 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
@@ -1614,6 +1736,7 @@ class AuthController extends Controller
             $response = array('status' => true, 'response_code' => 200, 'message' => "Subscription terminated successfully !");
             return response()->json($response, 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
@@ -1676,14 +1799,17 @@ class AuthController extends Controller
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required|email|max:225',
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'error' => 'validation_error',
                 'message' => $validator->errors()
             ], 400);
-        } else {
+        }
+
+
+        try {
             // Generate OTP
             $otp = random_int(100000, 999999);
 
@@ -1702,6 +1828,14 @@ class AuthController extends Controller
             $this->sendOtpEmail(request('email'), $otp);
 
             return response()->json(['message' => 'OTP sent successfully']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status" => false,
+                'response_code' => 500,
+                "message" => "Something went wrong. Please try again later."
+                // "message" => $th->getMessage()
+            ], 500);
         }
     }
 
