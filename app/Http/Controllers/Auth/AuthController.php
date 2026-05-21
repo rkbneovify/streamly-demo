@@ -1613,9 +1613,7 @@ class AuthController extends Controller
                 'message' => "Subscription terminated successfully !"
             ], 200);
         } catch (\Throwable $th) {
-
             DB::rollBack();
-
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
