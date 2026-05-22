@@ -8,6 +8,7 @@ use App\HotelRoomTable;
 use App\Models\Subscription;
 use App\Models\Zipcode;
 use App\Models\PersonalDevice;
+use App\Services\StripeService;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
 use App\User;
@@ -36,8 +37,6 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             ->where('status', 1)
             ->where('users_id', $user_id)
             ->get()->toArray();
-
-
     } elseif ($userRole == "hoa" && HoaUser::getCurrentHoaUser()) {
         // Hoa sub user session count
 
@@ -47,8 +46,6 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             ->where('status', 1)
             ->where('users_id', $user_id)
             ->get()->toArray();
-
-
     }
 
 
@@ -192,9 +189,8 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                 'timezone' => $timezone,
                 'loggedindeviceinfolist' => $response,
             ], 479)->withHeaders([
-                        'Access-Control-Allow-Origin' => '*',
-                    ])->send();
-
+                'Access-Control-Allow-Origin' => '*',
+            ])->send();
         } else {
             $prevConnectDevicecount = SessionTable::with([
                 'pdname' => function ($q) use ($uid) {
@@ -224,7 +220,6 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     unset($address['id']);
                     return $address;
                 });
-
         }
         $numofdevice = $prevConnectDevicecount->count();
 
@@ -248,12 +243,9 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             'timezone' => $timezone,
             'loggedindeviceinfolist' => $response,
         ], 479)->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
     }
-
-
-
 }
 
 
@@ -550,8 +542,8 @@ function hotelusersessionTable($user_id, $token, $deviceDetails, $connected_devi
             // 'personaldevicename_popup'=>$personal_device_data['show_popup'],
             'passcode' => $passcode,
         ], 200)->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
     }
 }
 
@@ -924,13 +916,179 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
             'subscribedmsgis' => $kindlysubscribemsg
         ];
 
+        // hoa sub user subscription check
+        if (HoaUser::getCurrentHoaUser()) {
+
+            if (!str_starts_with(request()->deviceid, 'web')) {
+                $subsCheck = isHoaSubUserSubscription(HoaUser::getCurrentHoaUser()->passcode);
+                if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+                    return response()->json(
+                        array_merge(
+                            $response,
+                            (array) $subsCheck->getData()
+                        ),
+                        410
+                    )->withHeaders([
+                        'Access-Control-Allow-Origin' => '*',
+                    ])->send();
+                }
+            }
+        }
+
+        // subscription check and verify before login
+        if (!str_starts_with(request()->deviceid, 'web')) {
+
+            $subsCheck = isSubscriptionExpired($user->id);
+
+            if (
+                $subsCheck != null &&
+                $subsCheck->getData()->response_code == 410
+            ) {
+
+                return response()->json(
+                    array_merge(
+                        $response,
+                        (array) $subsCheck->getData()
+                    ),
+                    410
+                )->withHeaders([
+                    'Access-Control-Allow-Origin' => '*',
+                ])->send();
+            }
+        }
+
 
         return response()->json(
             $response,
             200
         )->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
+    }
+}
+
+
+function isSubscriptionExpired($userId)
+{
+    $user = User::where('id', $userId)->first();
+    $userRole = $user->roles->pluck('name');
+
+
+
+    $qrcode = route('qrcode.generate') . '?url=' . url('/');
+    $stripe = new StripeService();
+    $planDetails = $stripe->getPlanDetails($user->subscription('main')->stripe_plan);
+    $subscriptionDetails = $stripe->getSubscriptionDetilasById($user->subscription('main')->stripe_id, $user->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
+    $planCount = $stripe->getPlans()->count();
+    $defaultRes = [
+        'success' => false,
+        'response_code' => 410,
+        'message' => KindlySubscribeMsg(),
+        'stripe_status' => $user->subscription('main')->stripe_status ?? null,
+        'qrcode' => $qrcode,
+        'plan_count' => 0,
+        "url" => url('/'),
+        'plan' => null,
+        'subscription' => null,
+        'custom_subscription_expired' => null,
+        'custom_subscription_expired_at' => null,
+    ];
+
+    //  $defaultRes = [
+    //     'success' => false,
+    //     'response_code' => 410,
+    //     'message' => KindlySubscribeMsg(),
+    //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+    //     'qrcode' => $qrcode,
+    //     'plan_count' => $planCount,
+    //     "url" => url('/'),
+    //     'plan' => $planDetails,
+    //     'subscription' => $subscriptionDetails,
+    //     'custom_subscription_expired' => $user->hasActiveSubscription(),
+    //     'custom_subscription_expired_at' => $user->subscription('main')->renews_at,
+    // ];
+
+
+
+
+    if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
+        if ($user->subscription('main')->plan_duration != null) {
+            if ($user->hasActiveSubscription()) {
+                if (request()->wantsJson()) {
+                    // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                    $defaultRes['stripe_status'] = 'expired';
+                    $defaultRes['custom_subscription_expired'] = $user->hasActiveSubscription();
+                    $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+
+                    return response()->json($defaultRes, 410);
+                } else {
+                    return redirect('/selectplan');
+                }
+            }
+        } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
+            // for live subscription
+            if ($user->subscription('main')->stripe_status == 'past_due') {
+                $stripe = new StripeService();
+                $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
+
+
+
+                if (request()->wantsJson()) {
+                    // $response = array(
+                    //     'success' => false,
+                    //     'response_code' => 410,
+                    //     'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
+                    //     "url" => $url,
+                    //     'plan_count' => $planCount,
+                    //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+                    //     'qrcode' => route('qrcode.generate') . '?url=' . $url
+                    // );
+                    $defaultRes['message'] = "Payment pending. Your subscription will resume once the payment is successfully processed.";
+                    $defaultRes['plan_count'] = $planCount;
+                    $defaultRes['plan'] = $planDetails;
+                    $defaultRes['subscription'] = $subscriptionDetails;
+                    $defaultRes['url'] = $url;
+                    $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
+                    return response()->json($defaultRes, 410);
+                } else {
+                    return redirect('/selectplan');
+                }
+            }
+
+            if (request()->wantsJson()) {
+                // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                $defaultRes['plan_count'] = $planCount;
+                $defaultRes['plan'] = $planDetails;
+                $defaultRes['subscription'] = $subscriptionDetails;
+                return response()->json($defaultRes, 410);
+            } else {
+                return redirect('/selectplan');
+            }
+        }
+    }
+}
+
+function isHoaSubUserSubscription($passcode)
+{
+    $message = 'Your subscription has expired. Please contact your service provider to continue using Streamly.';
+    $hoaUser = HoaUser::where('passcode', $passcode)->first();
+    if ($hoaUser != null) {
+
+        if ($hoaUser->subscription_expire_in === null) {
+            return response()->json([
+                'success' => false,
+                "stripe_status" => "expired",
+                'response_code' => 410,
+                'message' => $message
+            ], 410);
+        } elseif ($hoaUser->subscription_expire_in === 0) {
+            return response()->json([
+                'success' => false,
+                "stripe_status" => "expired",
+                'response_code' => 410,
+                'message' => $message
+            ], 410);
+        }
     }
 }
 
@@ -1013,8 +1171,8 @@ function sessionTable2($user_id, $token, $deviceDetails, $connected_devices)
 
 
         ], 200)->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
     }
 }
 
@@ -1037,8 +1195,8 @@ function duplicateDeviceId($user_id, $deviceDetails)
             'access_token' => $checkDeviceDetails->get('access_token')[0]->access_token
             //'loggedindeviceinfointheseId'=>$myarr,
         ], 429)->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
         // exists
     } else {
         return false;
@@ -1219,7 +1377,6 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
         if ($hoaUser != null) {
             $session_tab->is_main_account = 0;
         }
-
     }
     $result = $session_tab->save();
 
@@ -1792,7 +1949,6 @@ function personaldeviceTableStore($user_id, $deviceDetails)
                 ['device_id', '=', $deviceid],
                 ['passcode', '=', request()->passcode],
             ])->get();
-
     }
     if (count($device_count) == 0) {
         $personalDevice = new PersonalDevice();
@@ -2199,7 +2355,6 @@ function getUserType($user)
 
 
     return $userType;
-
 }
 
 
@@ -2306,11 +2461,6 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
         'timezone' => $timezone,
         'loggedindeviceinfolist' => $response,
     ], 479)->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-            ])->send();
-
+        'Access-Control-Allow-Origin' => '*',
+    ])->send();
 }
-
-
-
-
