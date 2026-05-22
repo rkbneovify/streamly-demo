@@ -124,6 +124,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/subscription/resume', 'Auth\AuthController@subscriptionResume')->middleware(['jwt.verify']);
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
+    Route::post('/subscription/check', 'Auth\AuthController@subscriptionCheck')->middleware(['jwt.verify']);
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
