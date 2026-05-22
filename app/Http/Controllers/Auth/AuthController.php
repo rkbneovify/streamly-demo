@@ -198,13 +198,13 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
-        // subscription check and verify before login
-        if (!str_starts_with($request->deviceid, 'web')) {
-            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
-            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                return $subsCheck;
-            }
-        }
+        // // subscription check and verify before login
+        // if (!str_starts_with($request->deviceid, 'web')) {
+        //     $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        //     if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+        //         return $subsCheck;
+        //     }
+        // }
 
         $userRole = $user->roles->pluck('name');
 
@@ -368,13 +368,13 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
             }
 
-            // hoa sub user subscription check
-            if (!str_starts_with($request->deviceid, 'web')) {
-                $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
-                if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                    return $subsCheck;
-                }
-            }
+            // // hoa sub user subscription check
+            // if (!str_starts_with($request->deviceid, 'web')) {
+            //     $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
+            //     if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+            //         return $subsCheck;
+            //     }
+            // }
 
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
