@@ -421,12 +421,12 @@ class AuthController extends Controller
 
         // subscription check and verify before login
         // return response()->json($user);
-        if (!str_starts_with($request->deviceid, 'web')) {
-            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
-            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                return $subsCheck;
-            }
-        }
+        // if (!str_starts_with($request->deviceid, 'web')) {
+        //     $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        //     if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+        //         return $subsCheck;
+        //     }
+        // }
 
         $userRole = $user->roles->pluck('name');
         //todo hotel check
