@@ -39,6 +39,8 @@ class Subscription extends Model
         'stripe_plan',
         'quantity',
         'livemode',
+        'current_period_start',
+        'custom_status',
         'trial_ends_at',
         'renews_at',
         'ends_at'
@@ -69,8 +71,5 @@ class Subscription extends Model
         }
 
         return $isCustom;
-
     }
-
-
 }

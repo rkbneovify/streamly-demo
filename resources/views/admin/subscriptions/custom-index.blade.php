@@ -178,7 +178,7 @@
                         </div>
 
                         <div class="col-md-2 mb-3">
-                            <a class=" btn btn-warning" href="{{ url('stripesync') }}">Stripe Sync</a>
+                            <a class=" btn btn-warning" href="{{ url('sync-custom-subscription') }}">Subscription Sync</a>
                         </div>
                     </div>
 
