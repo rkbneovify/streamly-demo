@@ -198,13 +198,13 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.', 'deleted_at' => $user->deleted_at], 401);
         }
 
-        // subscription check and verify before login
-        if (!str_starts_with($request->deviceid, 'web')) {
-            $subsCheck = $this->isSubscriptionExpired($request, $user->id);
-            if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                return $subsCheck;
-            }
-        }
+        // // subscription check and verify before login
+        // if (!str_starts_with($request->deviceid, 'web')) {
+        //     $subsCheck = $this->isSubscriptionExpired($request, $user->id);
+        //     if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+        //         return $subsCheck;
+        //     }
+        // }
 
         $userRole = $user->roles->pluck('name');
 
@@ -368,13 +368,13 @@ class AuthController extends Controller
                 return response()->json(['success' => false, 'response_code' => 401, 'message' => 'You are deactivated, kindly contact admin.'], 401);
             }
 
-            // hoa sub user subscription check
-            if (!str_starts_with($request->deviceid, 'web')) {
-                $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
-                if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
-                    return $subsCheck;
-                }
-            }
+            // // hoa sub user subscription check
+            // if (!str_starts_with($request->deviceid, 'web')) {
+            //     $subsCheck = $this->isHoaSubUserSubscription($hoaUser->passcode);
+            //     if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
+            //         return $subsCheck;
+            //     }
+            // }
 
             //hoa sub user device limit check
             $hoaUserActiveDevices = SessionTable::where('users_id', $hoaUser->user_id)
@@ -1636,6 +1636,7 @@ class AuthController extends Controller
         }
     }
 
+
     public function subscriptionTerminate21_05_2026(Request $request)
     {
         try {
@@ -1807,6 +1808,9 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+
+
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -1889,6 +1893,15 @@ class AuthController extends Controller
     }
 
 
+    public function subscriptionCheck(Request $request)
+    {
+        if (HoaUser::getCurrentSubUserByToken()) {
+            return $this->isHoaSubUserSubscription(HoaUser::getCurrentSubUserByToken()->passcode);
+        } else {
+            return $this->isSubscriptionExpired($request, Auth::id());
+        }
+    }
+
     public function isSubscriptionExpired(Request $request, $userId)
     {
         $user = User::where('id', $userId)->first();
@@ -1945,6 +1958,19 @@ class AuthController extends Controller
                     } else {
                         return redirect('/selectplan');
                     }
+                } else {
+                    if ($request->wantsJson()) {
+                        // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                        $defaultRes['stripe_status'] = 'active';
+                        $defaultRes['custom_subscription_expired'] = $user->hasActiveSubscription();
+                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+                        $defaultRes['response_code'] = 200;
+                        $defaultRes['success'] = true;
+                        $defaultRes['message'] = 'You already have an active subscription available on your account.';
+                        return response()->json($defaultRes, 200);
+                    } else {
+                        return redirect('/selectplan');
+                    }
                 }
             } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
                 // for live subscription
@@ -1985,6 +2011,19 @@ class AuthController extends Controller
                 } else {
                     return redirect('/selectplan');
                 }
+            } else {
+                if ($request->wantsJson()) {
+                    // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
+                    $defaultRes['plan_count'] = $planCount;
+                    $defaultRes['plan'] = $planDetails;
+                    $defaultRes['subscription'] = $subscriptionDetails;
+                    $defaultRes['response_code'] = 200;
+                    $defaultRes['success'] = true;
+                    $defaultRes['message'] = 'You already have an active subscription available on your account.';
+                    return response()->json($defaultRes, 200);
+                } else {
+                    return redirect('/selectplan');
+                }
             }
         }
     }
@@ -2000,6 +2039,7 @@ class AuthController extends Controller
                     'status' => false,
                     'response_code' => 410,
                     'hoa_sub_user' => true,
+                    'subscription_status' => 'expired',
                     'message' => $message
                 ], 410);
             } elseif ($hoaUser->subscription_expire_in === 0) {
@@ -2007,9 +2047,18 @@ class AuthController extends Controller
                     'status' => false,
                     'response_code' => 410,
                     'hoa_sub_user' => true,
+                    'subscription_status' => 'expired',
                     'message' => $message
                 ], 410);
             }
         }
+
+        return response()->json([
+            'status' => true,
+            'response_code' => 200,
+            'hoa_sub_user' => true,
+            'subscription_status' => 'active',
+            'message' => 'You already have an active subscription available on your account.'
+        ], 200);
     }
 }

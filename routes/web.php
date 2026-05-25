@@ -20,6 +20,8 @@ use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Api\ApiHoaController;
 use App\Http\Controllers\GracenoteCron\GracenoteCronController;
+use App\Models\Subscription;
+use Carbon\Carbon;
 use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -89,7 +91,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     //subscription
     Route::resource('subscriptions', 'Admin\SubscriptionController');
     Route::get('subscriptions-new', 'Admin\SubscriptionController@index2');
-     Route::get('custom-subscriptions', 'Admin\SubscriptionController@index3');
+    Route::get('custom-subscriptions', 'Admin\SubscriptionController@index3');
     Route::get('subscriptions/custom/user/{id}', 'Admin\SubscriptionController@customUserView')->name('subscriptions.custom.view');
     Route::get('subscriptions/user/{id}/mail/upgrade', 'Admin\SubscriptionController@subscriptionUpgradeMail')->name('subscriptions.user.mail.upgrade');
     Route::get('subscriptions/user/{id}/cancel', 'Admin\SubscriptionController@subscriptionCancelById')->name('subscriptions.user.cancel');
@@ -319,8 +321,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::post('/faq/update/{id}', 'Admin\FaqChatboatController@update')->name('faq.update');
     Route::get('/faq/destroy/{id}', 'Admin\FaqChatboatController@destroy')->name('faq.destroy');
 
-    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');
-    ;
+    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');;
 
     Route::post('/ajax-sendmail', 'Admin\SendMailController@handleRequest')->name('admin.sendmail');
 
@@ -338,7 +339,6 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
-
 });
 
 /*Prev Next channel*/
@@ -446,8 +446,7 @@ Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
-Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');
-;
+Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
@@ -487,6 +486,12 @@ Route::get('/stripesync', function (Request $request) {
     return redirect()->back()->with('info', Artisan::output());
     //return Artisan::output();
 });
+
+Route::get('/sync-custom-subscription', function () {
+    Artisan::call('custom-subscription:sync');
+    return redirect()->back()->with('info', Artisan::output());
+});
+
 //  Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
 
 Route::post('admin/multisessiondestroy', 'Admin\UsersController@multisessiondestroy')->name('multisessiondestroy')->middleware(['auth']);
@@ -554,5 +559,3 @@ Route::get('/admin/clear', function () {
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
-
-
