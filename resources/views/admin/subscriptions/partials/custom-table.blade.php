@@ -58,14 +58,14 @@
                 <th>
                     Email
                 </th>
-                <th>
+                {{-- <th>
                     User Type
-                </th>
-                <th>
+                </th> --}}
+                {{-- <th>
                     Subscription
                     <br>
                     Type
-                </th>
+                </th> --}}
                 <th>
                     Status
                 </th>
@@ -117,10 +117,10 @@
                     </td>
 
 
-                    <td style="vertical-align: middle;">
-                        {{ getUserType($subscription->user) }}</td>
-                    <td style="vertical-align: middle;">
-                        {{-- {{ $subscription->livemode ?? 'Admin/Custom' }} --}}
+                    {{-- <td style="vertical-align: middle;">
+                        {{ getUserType($subscription->user) }}</td> --}}
+                    {{-- <td style="vertical-align: middle;">
+
                         @if ($subscription->livemode === null)
                             Admin/Custom
                         @elseif ($subscription->livemode === 1)
@@ -129,11 +129,11 @@
                             Stripe/Test
                         @endif
 
-                        {{-- {{ getSubscriptionType($subscription) }} --}}
 
-                    </td>
+
+                    </td> --}}
                     <td style="vertical-align: middle;">
-                        {{ Str::ucfirst($subscription->stripe_status ?? '') }}
+                        {{ Str::ucfirst($subscription->custom_status ?? '') }}
                     </td>
 
 

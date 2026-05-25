@@ -274,17 +274,18 @@ class SubscriptionController extends Controller
 
     public function index3(Request $request, StripeService $stripeService)
     {
+        // custom subscription
 
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
             ->with('user')      // still eager load user data
-            ->whereNotNull('plan_duration');
+            ->whereNotNull('custom_status');
 
         // Filter by status if provided
         if (!empty($request->status)) {
 
-            $query->where('stripe_status', $request->status);
+            $query->where('custom_status', $request->status);
         }
 
         // Apply search filter if provided
