@@ -138,12 +138,12 @@
 
 
                     <td style="vertical-align: middle;">
-                        {{ date('d/m/Y', strtotime($subscription->created_at)) }}
+                        {{ date('d/m/Y', strtotime($subscription->current_period_start)) }}
                     </td>
                     <td style="vertical-align: middle;">
 
-                        @if (getSubscriptionExpireAt($subscription) != null)
-                            {{ getSubscriptionExpireAt($subscription) }}
+                        @if ($subscription->renews_at != null)
+                            {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
                         @else
                             <span class="badge badge-success">Never</span>
                         @endif
