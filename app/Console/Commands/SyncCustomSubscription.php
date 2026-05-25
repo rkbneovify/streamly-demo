@@ -60,7 +60,7 @@ class SyncCustomSubscription extends Command
 
         foreach ($subscriptions as $subscription) {
             $subscription->update([
-                'current_period_start' => $subscription->updated_at
+                'current_period_start' => $subscription->created_at
             ]);
         }
 
