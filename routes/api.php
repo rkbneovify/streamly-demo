@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ApiSubscriptionPlanController;
+use App\Http\Controllers\Api\ApiSubscriptionPlanRequestController;
 use Illuminate\Http\Request;
 
 /*
@@ -125,6 +127,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('/subscription/check', 'Auth\AuthController@subscriptionCheck')->middleware(['jwt.verify']);
+    Route::post('/subscription/plan-request', [ApiSubscriptionPlanRequestController::class, 'planRequestByUser'])->middleware(['jwt.verify']);
+    Route::get('/custom/subscription/plan', [ApiSubscriptionPlanController::class, 'index']);
+
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
