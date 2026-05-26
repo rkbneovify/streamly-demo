@@ -27,4 +27,5 @@ final class ActivityEventType
     public const Failed = 'failed';
     public const Resume = 'resume';
     public const Terminated = 'terminated';
+    public const PlanRequest = 'plan request';
 }
