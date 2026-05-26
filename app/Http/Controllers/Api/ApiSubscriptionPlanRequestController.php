@@ -29,7 +29,9 @@ class ApiSubscriptionPlanRequestController extends Controller
         }
 
         DB::beginTransaction();
+
         try {
+
             $planReq = new SubscriptionPlanRequest();
             $planReq->user_id = Auth::id();
             $planReq->plan_id = $request->plan_id;
