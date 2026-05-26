@@ -17,7 +17,7 @@ class ApiSubscriptionPlanRequestController extends Controller
     public function planRequestByUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'plan_duration' => 'required|string|max:225'
+            'plan_id' => 'required|string|max:225'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -32,7 +32,7 @@ class ApiSubscriptionPlanRequestController extends Controller
         try {
             $planReq = new SubscriptionPlanRequest();
             $planReq->user_id = Auth::id();
-            $planReq->plan_duration = $request->plan_duration;
+            $planReq->plan_id = $request->plan_id;
             $planReq->status = 'under_review';
             $planReq->save();
 
