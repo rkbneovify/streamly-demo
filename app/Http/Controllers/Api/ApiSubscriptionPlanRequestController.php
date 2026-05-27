@@ -34,6 +34,20 @@ class ApiSubscriptionPlanRequestController extends Controller
 
         try {
 
+
+            $planReq = SubscriptionPlanRequest::where('user_id', Auth::id())
+                ->where('status', 'under_review')
+                ->get()->last();
+            if ($planReq != null) {
+                return response()->json([
+                    'status' => false,
+                    'response_code' => 409,
+                    'message' => "Your previous plan request is under review.",
+
+                ], 409);
+            }
+
+
             $planReq = new SubscriptionPlanRequest();
             $planReq->user_id = Auth::id();
             $planReq->plan_id = $request->plan_id;
