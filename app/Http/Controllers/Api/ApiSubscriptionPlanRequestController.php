@@ -17,7 +17,9 @@ class ApiSubscriptionPlanRequestController extends Controller
     public function planRequestByUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'plan_duration' => 'required|string|max:225'
+            'plan_id' => 'required|string|max:225|exists:subscription_plans,id'
+        ], [
+            'plan_id.exists' => 'Plan id invalid.',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -29,14 +31,17 @@ class ApiSubscriptionPlanRequestController extends Controller
         }
 
         DB::beginTransaction();
+
         try {
+
             $planReq = new SubscriptionPlanRequest();
             $planReq->user_id = Auth::id();
-            $planReq->plan_duration = $request->plan_duration;
+            $planReq->plan_id = $request->plan_id;
             $planReq->status = 'under_review';
             $planReq->save();
 
-            $this->activity()->event("Subscription")
+            $this->activity()
+                ->event("Subscription")
                 ->eventType(ActivityEventType::PlanRequest)
                 ->isAdmin()
                 ->description("Subscription plan request by user")
