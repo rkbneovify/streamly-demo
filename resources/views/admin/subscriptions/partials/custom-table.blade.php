@@ -150,8 +150,19 @@
 
                     </td>
 
-                    <td style="vertical-align: middle;text-align: center;">
-                        @if ($subscription->livemode == null || $subscription->stripe_status == 'canceled')
+                    <td style="vertical-align: middle; text-align: center;">
+
+                        @if ($subscription->planRequest != null)
+                            <a class="btn btn-danger btn-xs w-100 mb-1" href="{{ url('admin/subscriptions/create') }} ">
+                                Plan Request
+                            </a>
+                        @endif
+                        <br>
+                        <a class="btn btn-secondary btn-xs w-100" href="{{ url('admin/subscriptions/create') }}">
+                            Cancel
+                        </a>
+
+                        {{-- @if ($subscription->livemode == null || $subscription->stripe_status == 'canceled')
                             <a href="{{ route('admin.subscriptions.custom.view', $subscription->user_id) }}"
                                 class="btn btn-xs btn-link mb-1 w-75">Subscribe Now</a>
                             <br>
@@ -186,7 +197,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input style="width: 80px;" type="submit" class="btn btn-xs btn-danger" value="Cancel">
                             </form>
-                        @endif
+                        @endif --}}
 
 
 
