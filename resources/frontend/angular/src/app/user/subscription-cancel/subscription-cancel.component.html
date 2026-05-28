@@ -10,21 +10,42 @@
           <img loading="lazy" src="../../../assets/dummy-img/subExp.svg" alt="" />
         </div>
         <div class="pnf-bottom-text">
+          @if ( error && error.stripe_status=='past_due') {
+          <h2>Auto Renewal Failed</h2>
+
+          <ul>
+            <li>1. We were unable to process your subscription auto-renewal payment, so your Streamly service is
+              currently inactive.</li>
+            <li>2. To continue using Streamly, please cancel your current subscription billing cycle and purchase a new
+              subscription plan.</li>
+            <li>3. After activating a new subscription, your Streamly service will be available again.</li>
+          </ul>
+
+          }
+          @else{
           <h2 *ngIf="!receivedData">Your subscription has expired</h2>
           <p>
             {{receivedData}}
           </p>
+          }
+
+
+
         </div>
         <div class="flex">
+
           @if(error.plan_count > 1){
           <div class="pnf-button">
             <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
           }@else if ( error && error.stripe_status=='past_due') {
-          <div class="pnf-button">
+          <!-- <div class="pnf-button">
             <a [href]="error.url" target="_blank">
               <button>Pay Now</button>
             </a>
+          </div> -->
+          <div class="btn-danger">
+            <button type="button" (click)="subscriptionTerminate()">Cancel Subscription</button>
           </div>
           }
           @else {
