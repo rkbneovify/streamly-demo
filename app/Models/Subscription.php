@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\SubscriptionPlanRequest;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -59,6 +60,15 @@ class Subscription extends Model
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id');
+    }
+
+    public function planRequest()
+    {
+        return $this->hasOne(
+            SubscriptionPlanRequest::class,
+            'user_id',
+            'user_id'
+        )->where('status', 'under_review')->latest();
     }
 
     public static function isSubscriptionCustom($subscription)

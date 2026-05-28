@@ -1024,10 +1024,7 @@ function isSubscriptionExpired($userId)
                 } else {
                     return redirect('/selectplan');
                 }
-            }
-        } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
-            // for live subscription
-            if ($user->subscription('main')->stripe_status == 'past_due') {
+            } elseif ($user->subscription('main')->stripe_status == 'past_due') {
                 $stripe = new StripeService();
                 $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
@@ -1047,13 +1044,16 @@ function isSubscriptionExpired($userId)
                     $defaultRes['plan_count'] = $planCount;
                     $defaultRes['plan'] = $planDetails;
                     $defaultRes['subscription'] = $subscriptionDetails;
-                    $defaultRes['url'] = $url;
-                    $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
+                    // $defaultRes['url'] = $url;
+                    // $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
                     return response()->json($defaultRes, 410);
                 } else {
                     return redirect('/selectplan');
                 }
             }
+        } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
+            // for live subscription
+
 
             if (request()->wantsJson()) {
                 // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
