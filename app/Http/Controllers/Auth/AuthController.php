@@ -1595,7 +1595,15 @@ class AuthController extends Controller
                     "message" => "Subscription not found !"
                 ], 404);
             }
+            $stripeSubscription = $subscription->asStripeSubscription();
 
+            if ($stripeSubscription->status === 'canceled') {
+                return response()->json([
+                    "status" => false,
+                    'response_code' => 409,
+                    "message" => "Subscription already canceled"
+                ], 409);
+            }
 
             // Cancel stripe subscription for normal users
             $subscription->skipTrial()->cancelNow();
