@@ -171,11 +171,11 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 mb-3">
+                        {{-- <div class="col-md-2 mb-3">
                             <a class="btn btn-primary w-100" href="{{ url('admin/subscriptions/create') }} ">
                                 New Subscription
                             </a>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-2 mb-3">
                             <a class=" btn btn-warning" href="{{ url('sync-custom-subscription') }}">Subscription Sync</a>
