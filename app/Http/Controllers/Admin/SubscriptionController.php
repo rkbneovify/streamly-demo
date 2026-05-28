@@ -279,7 +279,7 @@ class SubscriptionController extends Controller
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
-            ->with('user')      // still eager load user data
+            ->with(['user', 'planRequest'])      // still eager load user data
             ->whereNotNull('custom_status');
 
         // Filter by status if provided
@@ -303,6 +303,7 @@ class SubscriptionController extends Controller
         } else {
             $query->orderBy('created_at');
         }
+        // return response()->json($query->get());
         $subscriptions = $query->paginate(10)
             ->appends($request->query());
 
@@ -324,7 +325,7 @@ class SubscriptionController extends Controller
 
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Extracting subscription status types
-        $statusTypes = Subscription::whereHas('user')->pluck('stripe_status')->unique()->values();
+        $statusTypes = Subscription::whereHas('user')->whereNotNull('custom_status')->pluck('custom_status')->unique()->values();
 
 
 
