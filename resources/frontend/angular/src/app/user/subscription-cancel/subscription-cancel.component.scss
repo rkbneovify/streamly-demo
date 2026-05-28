@@ -167,7 +167,7 @@ button.btn {
   padding: 20px 20px;
   align-items: center;
   // height: 90vh;
-  text-align: center;
+  text-align: justify;
   background-image: url('../../../assets/dummy-img/expBg.png');
   background-position: center;
   background-size: cover;
@@ -197,7 +197,7 @@ button.btn {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  flex-basis: 55%;
+  flex-basis: 65%;
   padding: 0 1rem;
 
 }
@@ -245,6 +245,19 @@ button.btn {
   outline: none;
 }
 
+.btn-danger button {
+  width: 200px;
+  height: 55px;
+  padding: 14px 20px 14px 20px;
+  border-radius: 4px;
+  gap: 10px;
+  background: #eb5757;
+  color: #ffffff;
+  font-weight: 500;
+  border: none;
+  outline: none;
+}
+
 
 .pnf-button a {
   font-family: Poppins;
@@ -254,6 +267,22 @@ button.btn {
   letter-spacing: 0em;
   text-align: center;
   color: #FAC700;
+}
+
+ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  margin-top: 10px;
+  gap: 5px;
+
+  li {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+  }
 }
 
 @media screen and (max-width: 992px) {
