@@ -14,12 +14,14 @@ use App\Http\Controllers\Controller;
 use App\Mail\SubscriptionUpgradeMail;
 use App\Models\Subscription;
 use App\Models\SubscriptionPack;
+use App\Models\SubscriptionPlan;
 use App\Models\Zipcode;
 use App\Services\StripeService;
 use App\SubscriptionPlanRequest;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use RealRashid\SweetAlert\Toaster;
 use Stripe\Coupon;
@@ -1232,6 +1234,105 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
             DB::commit();
             Alert::success('Success', 'Plan request rejected  !');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            Alert::error('Error', 'Something went wrong ! Please try again later.');
+            return redirect()->back();
+        }
+    }
+
+    public function planRequestAccept($id)
+    {
+        DB::beginTransaction();
+        try {
+            $planReq =   SubscriptionPlanRequest::where('id', $id)->first();
+            if ($planReq == null) {
+                Alert::error('Error', 'Plan request not found !');
+                return redirect()->back();
+            }
+            $planReq->status = 'accepted';
+            $planReq->save();
+
+            $subPlan =  SubscriptionPlan::where('id', $planReq->plan_id)->first();
+            if ($subPlan == null) {
+                Alert::error('Error', 'Plan not found !');
+                return redirect()->back();
+            }
+
+            $subscription = Subscription::where('user_id', Auth::id())->latest()->first();
+            if ($subPlan == null) {
+                Alert::error('Error', 'Subscription not found !');
+                return redirect()->back();
+            }
+
+            $interval = $subPlan->interval;
+            $intervalCount = $subPlan->interval_count;
+            $planDuration = '';
+            if ($intervalCount > 1) {
+                $planDuration =   $intervalCount . ' ' . $interval . 's';
+            }
+            $renewsAt = null;
+            if ($interval == 'month') {
+
+                switch ($intervalCount) {
+                    case 1:
+                        $renewsAt = Carbon::now()->addMonth();
+                        break;
+                    case 3:
+                        $renewsAt = Carbon::now()->addMonths(3);
+                        break;
+                    case 6:
+                        $renewsAt = Carbon::now()->addMonths(6);
+                        break;
+                    case 12:
+                        $renewsAt = Carbon::now()->addMonths(12);
+                        break;
+
+                    default:
+                        $renewsAt = null;
+                        break;
+                }
+            }
+
+
+
+            $subscription->plan_id = $subPlan->id;
+            $subscription->plan_duration = $planDuration;
+            $subscription->current_period_start = now();
+            $subscription->custom_status = 'active';
+            $subscription->renews_at = $renewsAt;
+            $subscription->amount = $subPlan->amount;
+            $subscription->is_custom = 1;
+            $subscription->save();
+
+
+
+            $this->activity()
+                ->event("Subscription")
+                ->eventType(ActivityEventType::PlanRequest)
+                ->isAdmin()
+                ->description("Subscription plan request accepted.")
+                ->properties([
+                    "data" => $planReq
+                ])
+                ->save();
+
+            $this->activity($planReq->user_id)
+                ->event("Subscription")
+                ->eventType(ActivityEventType::PlanRequest)
+                ->notification()
+                ->isUser()
+                ->descriptionSimple("Subscription plan request accepted.")
+                ->properties([
+                    "data" => $planReq
+                ])
+                ->save();
+
+
+            DB::commit();
+            Alert::success('Success', 'Plan request accepted  !');
             return redirect()->back();
         } catch (\Throwable $th) {
             //throw $th;
