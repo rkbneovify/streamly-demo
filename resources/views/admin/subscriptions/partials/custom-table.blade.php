@@ -153,9 +153,10 @@
                     <td style="vertical-align: middle; text-align: center;">
 
                         @if ($subscription->planRequest != null)
-                            <a class="btn btn-danger btn-xs w-100 mb-1" href="{{ url('admin/subscriptions/create') }} ">
+                            <button class="btn btn-danger btn-xs w-100 mb-1"
+                                onclick="openModal('{{ $subscription->planRequest->id }}','{{ $subscription->planRequest->plan->product_name }}','{{ $subscription->planRequest->plan->interval_count . ' ' . $subscription->planRequest->plan->interval }}','{{ $subscription->planRequest->plan->amount }}')">
                                 Plan Request
-                            </a>
+                            </button>
                         @endif
                         <br>
                         <a class="btn btn-secondary btn-xs w-100" href="{{ url('admin/subscriptions/create') }}">
@@ -256,3 +257,82 @@
         </tbody>
     </table>
 @endif
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Subscription Plan Request</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col"><b>Plan Name</b></div>
+                    <div id="txtPlanName" class="col">Test</div>
+                </div>
+                <div class="row">
+                    <div class="col"><b>Plan Duration</b></div>
+                    <div id="txtPlanDuration" class="col">Test</div>
+                </div>
+                <div class="row">
+                    <div class="col"><b>Amount</b></div>
+                    <div id="txtAmount" class="col">Test</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input id="txtPlanReqId" type="text" hidden>
+                {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                <button id="btnAccept" type="button" class="btn btn-primary">Accept</button>
+                <button id="btnReject" type="button" class="btn btn-danger">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(planReqId, planName, planDuration, amount) {
+        console.log(planName)
+        document.getElementById('txtPlanName').innerText = planName;
+        document.getElementById('txtPlanDuration').innerText = planDuration;
+        document.getElementById('txtAmount').innerText = amount;
+        document.getElementById('txtPlanReqId').value = planReqId;
+        const modal = new bootstrap.Modal(
+            document.getElementById('myModal')
+        );
+
+        modal.show();
+    }
+
+    document.getElementById('btnAccept').addEventListener('click', () => {
+        const planReqId = document.getElementById('txtPlanReqId').value;
+        alert(planReqId)
+    })
+    document.getElementById('btnReject').addEventListener('click', () => {
+        const planReqId = document.getElementById('txtPlanReqId').value;
+
+        let url = "{{ route('admin.subscriptions.plan.request.reject', ':id') }}";
+        url = url.replace(':id', planReqId);
+        const modal = new bootstrap.Modal(
+            document.getElementById('myModal')
+        );
+
+        modal.hide();
+
+        Swal.fire({
+            title: 'Please wait...',
+            text: 'Processing request',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        location.href = url;
+    });
+</script>
