@@ -33,6 +33,7 @@ use App\Models\EmailOtp;
 use App\Models\PersonalDevice;
 use App\Models\Subscription;
 use App\Services\StripeService;
+use App\SubscriptionPlanRequest;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -1913,8 +1914,20 @@ class AuthController extends Controller
     public function isSubscriptionExpired(Request $request, $userId)
     {
         $user = User::where('id', $userId)->first();
-        $userRole = $user->roles->pluck('name');
+        $userRole = $user->roles->pluck('name')[0];
+        $deviceLimit = 0;
+        switch (strtolower($userRole)) {
+            case 'hoa':
+                $deviceLimit =   HoaUser::getTotalDeviceCount($userId);
+                break;
+            case 'tieruser':
+                $deviceLimit = HotelRoomTable::getTotalRoomCount($userId);
+                break;
 
+            default:
+                $deviceLimit = 5;
+                break;
+        }
 
 
         $qrcode = route('qrcode.generate') . '?url=' . url('/');
@@ -1934,6 +1947,8 @@ class AuthController extends Controller
             'subscription' => null,
             'custom_subscription_expired' => null,
             'custom_subscription_expired_at' => null,
+            'device_limit' => $deviceLimit,
+            'plan_request' => SubscriptionPlanRequest::getPlanRequest()
         ];
 
         //  $defaultRes = [
