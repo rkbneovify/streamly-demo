@@ -117,7 +117,6 @@ class HoaUser extends Model
                         ->get();
                 }
             }
-
         }
 
         if (request()->has('email')) {
@@ -130,13 +129,10 @@ class HoaUser extends Model
                         ->get();
                 }
             }
-
         }
 
 
         return [];
-
-
     }
 
     public static function getCurrentHoaUser()
@@ -153,7 +149,6 @@ class HoaUser extends Model
 
 
         return null;
-
     }
 
     public static function isHoaMainUser()
@@ -182,22 +177,15 @@ class HoaUser extends Model
                     return true;
                 }
             }
-
         }
 
         return false;
-
-
-
-
-
     }
 
     public static function getActiveHousesCount($userId)
     {
         return HoaUser::where('user_id', $userId)
             ->count();
-
     }
 
     public static function isHouseAvailable()
@@ -209,7 +197,6 @@ class HoaUser extends Model
             return false;
         }
         return true;
-
     }
 
     public static function updateDevice($user, Request $request)
@@ -247,14 +234,12 @@ class HoaUser extends Model
                     JWTAuth::setToken($item->access_token)->invalidate(true);
                     $item->delete();
                 }
-
             }
         }
         $user->num_of_houses = $request->num_of_houses;
         $user->device_per_house = $request->device_per_house;
         $user->save();
         return null;
-
     }
 
     public static function getCurrentSubUserByToken()
@@ -296,7 +281,6 @@ class HoaUser extends Model
                 unset($address['pdname'], $address['device'], $address['id']);
                 return $address;
             });
-
     }
 
     public static function activeHouseCount()
@@ -324,7 +308,6 @@ class HoaUser extends Model
 
         $remainingDevices = $totalDevices - $allotedDevices;
         return $remainingDevices;
-
     }
 
     public static function getDeviceCount()
@@ -333,9 +316,13 @@ class HoaUser extends Model
         return (int) HoaUser::where('user_id', auth()->id())
             ->whereNotNull('device_limit')
             ->sum('device_limit');
+    }
 
-
-
+    public static function getTotalDeviceCount($userId)
+    {
+        return (int) User::where('id', $userId)
+            ->selectRaw('num_of_houses * device_per_house as total')
+            ->value('total');
     }
 
     public function scopeStatus($query, $status)
@@ -401,5 +388,4 @@ class HoaUser extends Model
         }
         return null;
     }
-
 }
