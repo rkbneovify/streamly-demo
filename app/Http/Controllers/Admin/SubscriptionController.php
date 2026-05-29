@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActivityEventType;
 use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
 use App\Mail\SubscriptionNotificationMail;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\SubscriptionUpgradeMail;
@@ -14,6 +16,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPack;
 use App\Models\Zipcode;
 use App\Services\StripeService;
+use App\SubscriptionPlanRequest;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -42,6 +45,8 @@ class SubscriptionController extends Controller
 {
     // https://hotexamples.com/examples/stripe/Plan/-/php-plan-class-examples.html
     // https://hotexamples.com/examples/stripe/Customer/all/php-customer-all-method-examples.html
+
+    use ActivityLogger;
     protected $stripeService;
     public function __construct(StripeService $stripeService)
     {
@@ -279,7 +284,7 @@ class SubscriptionController extends Controller
 
         $query = Subscription::query()
             ->whereHas('user')   // only subscriptions with a related user
-            ->with(['user', 'planRequest'])      // still eager load user data
+            ->with(['user', 'planRequest.plan'])      // still eager load user data
             ->whereNotNull('custom_status');
 
         // Filter by status if provided
@@ -1188,5 +1193,51 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         //     //throw $th;
         //     dd($th->getMessage());
         // }
+    }
+
+    public function planRequestReject($id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $planReq =   SubscriptionPlanRequest::where('id', $id)->first();
+            if ($planReq == null) {
+                Alert::error('Error', 'Plan request not found !');
+                return redirect()->back();
+            }
+            $planReq->status = 'rejected';
+            $planReq->save();
+
+            $this->activity()
+                ->event("Subscription")
+                ->eventType(ActivityEventType::PlanRequest)
+                ->isAdmin()
+                ->description("Subscription plan request rejected.")
+                ->properties([
+                    "data" => $planReq
+                ])
+                ->save();
+
+            $this->activity($planReq->user_id)
+                ->event("Subscription")
+                ->eventType(ActivityEventType::PlanRequest)
+                ->notification()
+                ->isUser()
+                ->descriptionSimple("Subscription plan request rejected.")
+                ->properties([
+                    "data" => $planReq
+                ])
+                ->save();
+
+
+            DB::commit();
+            Alert::success('Success', 'Plan request rejected  !');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            Alert::error('Error', 'Something went wrong ! Please try again later.');
+            return redirect()->back();
+        }
     }
 }
