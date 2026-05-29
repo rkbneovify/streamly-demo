@@ -261,7 +261,6 @@ class StripeController extends Controller
                         $user->trial_taken = 1;
                         $user->save();
                     }
-
                 } catch (\Exception $e) {
 
                     DB::rollBack();
@@ -493,7 +492,6 @@ class StripeController extends Controller
             if ($hoaSubscription != null) {
                 $response_to_send['hoa_sub_user_subscription'] = $hoaSubscription;
             }
-
         }
 
 
@@ -569,20 +567,17 @@ class StripeController extends Controller
 
             if ($user_data['is_hoa_sub_user'] == null && $request->user()->is_custom_user == 1) {
                 $hoaMainSubscription = \App\Models\Subscription::where('user_id', $userinfo->id)
-                    ->where('stripe_status', 'active')
+                    // ->where('stripe_status', 'active')
                     ->first();
                 if ($hoaMainSubscription != null) {
 
                     $response_to_send['hoa_main_custom_subscription'] =
                         [
-                            "plan" => getPlanNameForCustomUser($hoaMainSubscription),
+                            "plan" => $hoaMainSubscription->plan_duration,
                             "renews_at" => $hoaMainSubscription->renews_at,
                         ];
                 }
             }
-
-
-
         }
 
         $card_details = [
@@ -670,7 +665,6 @@ class StripeController extends Controller
                 if ($user->trial_taken == 1) {
 
                     $trial_days = null;
-
                 }
                 // 1. Create Payment Method
                 $paymentMethod = PaymentMethod::create([
