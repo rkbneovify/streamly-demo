@@ -98,6 +98,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::post('subscriptions/users/bulk/action', 'Admin\SubscriptionController@bulkAction')->name('subscriptions.users.bulk.action');
     Route::get('subscriptions/users/export/{type}', 'Admin\SubscriptionController@exportUsersSubscription')->name('subscriptions.users.export');
     Route::get('subscriptions/plan-request/reject/{id}', 'Admin\SubscriptionController@planRequestReject')->name('subscriptions.plan.request.reject');
+    Route::get('subscriptions/plan-request/accept/{id}', 'Admin\SubscriptionController@planRequestAccept')->name('subscriptions.plan.request.accept');
 
     Route::post('subscriptions/custom/user/store', 'Admin\SubscriptionController@storeUserAndSubscription')->name('subscriptions.custom.store');
     Route::get('/subscriptionsstripe', 'Admin\SubscriptionController@subscriptionstripe')->name('ss');
