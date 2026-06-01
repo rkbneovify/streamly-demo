@@ -311,7 +311,25 @@
 
     document.getElementById('btnAccept').addEventListener('click', () => {
         const planReqId = document.getElementById('txtPlanReqId').value;
-        alert(planReqId)
+
+        let url = "{{ route('admin.subscriptions.plan.request.accept', ':id') }}";
+        url = url.replace(':id', planReqId);
+        const modal = new bootstrap.Modal(
+            document.getElementById('myModal')
+        );
+
+        modal.hide();
+
+        Swal.fire({
+            title: 'Please wait...',
+            text: 'Processing request',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        location.href = url;
     })
     document.getElementById('btnReject').addEventListener('click', () => {
         const planReqId = document.getElementById('txtPlanReqId').value;
