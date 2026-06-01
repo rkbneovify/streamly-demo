@@ -1062,7 +1062,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     {
         try {
             $user = User::find($id);
-            if ($user->is_live_on_stripe == 1) {
+            // $user->subscription('default')->cancel();
+            if ($user->subscription('default')->livemode == 1) {
                 $userSubs = Subscription::where('user_id', $user->id)->first();
                 if ($userSubs == null) {
                     Alert::error("Error !", "Subscription not found !.");
@@ -1081,6 +1082,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 $userSubs->stripe_status = "canceled";
                 $userSubs->save();
             }
+
+
+
             Alert::success("Success ", "Subscription Canceled successfully !");
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -1339,6 +1343,25 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             DB::rollBack();
             Alert::error('Error', 'Something went wrong ! Please try again later.');
             return redirect()->back();
+        }
+    }
+
+
+    public function subscriptionCancel($id)
+    {
+        try {
+            $user = User::find($id);
+            $user->subscription('default')->cancel();
+            return response()->json([
+                'status' => true,
+                'message' => 'Subscription canceled successfully !'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
         }
     }
 }
