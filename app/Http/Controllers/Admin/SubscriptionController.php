@@ -1292,7 +1292,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
             $interval = $subPlan->interval;
             $intervalCount = $subPlan->interval_count;
-            $planDuration = '';
+
+            $planDuration =   $intervalCount . ' ' . $interval;
             if ($intervalCount > 1) {
                 $planDuration =   $intervalCount . ' ' . $interval . 's';
             }
