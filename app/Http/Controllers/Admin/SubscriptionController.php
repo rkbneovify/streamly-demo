@@ -8,6 +8,7 @@ use App\Exports\UsersSubscriptionExport;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
 use App\Mail\SubscriptionNotificationMail;
+use App\Models\Invoice;
 use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPack;
 use App\Models\SubscriptionPlan;
 use App\Models\Zipcode;
+use App\Services\NotificationService;
 use App\Services\StripeService;
 use App\SubscriptionPlanRequest;
 use App\User;
@@ -50,8 +52,10 @@ class SubscriptionController extends Controller
 
     use ActivityLogger;
     protected $stripeService;
-    public function __construct(StripeService $stripeService)
+    protected $notification;
+    public function __construct(StripeService $stripeService, NotificationService $notification)
     {
+        $this->notification = $notification;
         $this->stripeService = $stripeService;
         Stripe::setApiKey(config('services.stripe.secret'));
     }
@@ -1215,11 +1219,13 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             $planReq->status = 'rejected';
             $planReq->save();
 
+            $message = "Subscription plan request rejected.";
+
             $this->activity()
                 ->event("Subscription")
                 ->eventType(ActivityEventType::PlanRequest)
                 ->isAdmin()
-                ->description("Subscription plan request rejected.")
+                ->description($message)
                 ->properties([
                     "data" => $planReq
                 ])
@@ -1230,11 +1236,23 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 ->eventType(ActivityEventType::PlanRequest)
                 ->notification()
                 ->isUser()
-                ->descriptionSimple("Subscription plan request rejected.")
+                ->descriptionSimple($message)
                 ->properties([
                     "data" => $planReq
                 ])
                 ->save();
+
+            $fcmTokens = DB::table('session_table')
+                ->where('users_id', $planReq->user_id)
+                ->where('is_main_account', 1)
+                ->where('status', 1)
+                ->whereNotNull('fcm_token')
+                ->pluck('fcm_token')->toArray();
+            if ($fcmTokens != null && count($fcmTokens) > 0) {
+                foreach ($fcmTokens as $token) {
+                    $this->notification->send($token, "Subscription", $message);
+                }
+            }
 
 
             DB::commit();
@@ -1302,10 +1320,11 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             }
 
 
+            $planStartedAt = now();
 
-            $subscription->plan_id = $subPlan->id;
+            $subscription->custom_plan_id = $subPlan->id;
             $subscription->plan_duration = $planDuration;
-            $subscription->current_period_start = now();
+            $subscription->current_period_start = $planStartedAt;
             $subscription->custom_status = 'active';
             $subscription->renews_at = $renewsAt;
             $subscription->amount = $subPlan->amount;
@@ -1313,12 +1332,22 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             $subscription->save();
 
 
+            $invoice = new Invoice();
+            $invoice->user_id = $planReq->user_id;
+            $invoice->subscription_id = $subscription->id;
+            $invoice->plan_id = $planReq->plan_id;
+            $invoice->bill_no = Invoice::generateBillNum();
+            $invoice->started_at = $planStartedAt;
+            $invoice->ended_at = $renewsAt;
+            $invoice->save();
+
+            $message = "Subscription plan request accepted";
 
             $this->activity()
                 ->event("Subscription")
                 ->eventType(ActivityEventType::PlanRequest)
                 ->isAdmin()
-                ->description("Subscription plan request accepted.")
+                ->description($message)
                 ->properties([
                     "data" => $planReq
                 ])
@@ -1329,11 +1358,24 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 ->eventType(ActivityEventType::PlanRequest)
                 ->notification()
                 ->isUser()
-                ->descriptionSimple("Subscription plan request accepted.")
+                ->descriptionSimple($message)
                 ->properties([
                     "data" => $planReq
                 ])
                 ->save();
+
+
+            $fcmTokens = DB::table('session_table')
+                ->where('users_id', $planReq->user_id)
+                ->where('is_main_account', 1)
+                ->where('status', 1)
+                ->whereNotNull('fcm_token')
+                ->pluck('fcm_token')->toArray();
+            if ($fcmTokens != null && count($fcmTokens) > 0) {
+                foreach ($fcmTokens as $token) {
+                    $this->notification->send($token, "Subscription", $message);
+                }
+            }
 
 
             DB::commit();
@@ -1342,7 +1384,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            Alert::error('Error', 'Something went wrong ! Please try again later.');
+            Alert::error('Error', $th->getMessage());
+            // Alert::error('Error', 'Something went wrong ! Please try again later.');
             return redirect()->back();
         }
     }
