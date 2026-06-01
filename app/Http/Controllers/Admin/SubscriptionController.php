@@ -876,7 +876,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $user = User::find($id);
 
         try {
-            $user->subscription('main')->skipTrial()->cancelNow();
+            // $user->subscription('main')->skipTrial()->cancelNow();
+            $user->subscription('default')->cancel();
             return redirect('admin/subscriptions')->with('info', 'Subscription Cancel Successfully');
         } catch (Exception $e) {
             return redirect('admin/subscriptions')->with('info', 'Error' . json_encode($e->getMessage(), true));
