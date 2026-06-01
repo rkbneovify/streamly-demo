@@ -39,7 +39,6 @@ class ReportController extends Controller
 
         $this->middleware('auth');
         Stripe::setApiKey(config('services.stripe.secret'));
-
     }
 
     public function userdetails(Request $request)
@@ -524,8 +523,7 @@ class ReportController extends Controller
             // dd($arry);
             // die();
             array_push($array, $arry);
-        }
-        ;
+        };
 
         $resultCount = [
             'newuser' => $arrayRes1,
@@ -794,8 +792,7 @@ class ReportController extends Controller
             // dd($arry);
             // die();
             array_push($array, $arry);
-        }
-        ;
+        };
 
         $resultCount = [
             'newuser' => $arrayRes1,
@@ -862,8 +859,7 @@ class ReportController extends Controller
                 'userCount' => $Activecount
             ];
             array_push($arrayactive, $arryactive);
-        }
-        ;
+        };
 
         $array = [];
         foreach ($zipCode as $data) {
@@ -887,8 +883,7 @@ class ReportController extends Controller
                 'userCount' => $count
             ];
             array_push($array, $arry);
-        }
-        ;
+        };
 
         $key_values = array_column($array, 'userCount');
         array_multisort($key_values, SORT_DESC, $array);
@@ -929,8 +924,8 @@ class ReportController extends Controller
                 $q->select('id', 'personal_devicename', 'device_id', 'user_id');
             }
         ])->where([
-                    ['status', '=', '1'],
-                ])->orderBy('connected_devices', 'asc')->get();
+            ['status', '=', '1'],
+        ])->orderBy('connected_devices', 'asc')->get();
 
         $device1 = [];
         $device2 = [];

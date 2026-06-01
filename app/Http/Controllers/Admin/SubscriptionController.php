@@ -876,8 +876,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $user = User::find($id);
 
         try {
-            // $user->subscription('main')->skipTrial()->cancelNow();
-            $user->subscription('default')->cancel();
+            $user->subscription('main')->skipTrial()->cancelNow();
+            // $user->subscription('main')->cancel();
             return redirect('admin/subscriptions')->with('info', 'Subscription Cancel Successfully');
         } catch (Exception $e) {
             return redirect('admin/subscriptions')->with('info', 'Error' . json_encode($e->getMessage(), true));
@@ -1064,7 +1064,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         try {
             $user = User::find($id);
             // $user->subscription('default')->cancel();
-            if ($user->subscription('default')->livemode == 1) {
+            if ($user->subscription('main')->livemode == 1) {
                 $userSubs = Subscription::where('user_id', $user->id)->first();
                 if ($userSubs == null) {
                     Alert::error("Error !", "Subscription not found !.");
