@@ -1292,7 +1292,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
             $interval = $subPlan->interval;
             $intervalCount = $subPlan->interval_count;
-            $planDuration = '';
+
+            $planDuration =   $intervalCount . ' ' . $interval;
             if ($intervalCount > 1) {
                 $planDuration =   $intervalCount . ' ' . $interval . 's';
             }
@@ -1384,8 +1385,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            Alert::error('Error', $th->getMessage());
-            // Alert::error('Error', 'Something went wrong ! Please try again later.');
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', 'Something went wrong ! Please try again later.');
             return redirect()->back();
         }
     }
