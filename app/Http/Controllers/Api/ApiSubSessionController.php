@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use App\Services\FileUploadService;
 use App\SessionTable;
@@ -27,6 +28,7 @@ class ApiSubSessionController extends Controller
                 //  1 HOUR INTERVAL
                 $alreadyExists = SubSession::where('session_id', $session->id)
                     ->where('created_at', '>=', Carbon::now()->subHour())
+                    ->where('build_version', $request->build_version)
                     ->exists();
 
                 if (!$alreadyExists) {
@@ -44,16 +46,11 @@ class ApiSubSessionController extends Controller
                     $sub->save();
 
                     return $this->successResponse("Data store successfully !");
-
                 } else {
                     return $this->validationErrorResponse("Session already exits");
                 }
-
             }
-
-
         });
-
     }
 
     public function upload(Request $request, FileUploadService $uploadService)
@@ -75,9 +72,6 @@ class ApiSubSessionController extends Controller
             return response()->json($fileData);
         } catch (Throwable $th) {
             return response()->json($th->getMessage());
-
         }
     }
-
-
 }
