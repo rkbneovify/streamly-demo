@@ -1384,8 +1384,8 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            Alert::error('Error', $th->getMessage());
-            // Alert::error('Error', 'Something went wrong ! Please try again later.');
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', 'Something went wrong ! Please try again later.');
             return redirect()->back();
         }
     }
