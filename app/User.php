@@ -224,10 +224,21 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasActiveSubscription()
     {
-        if ($this->customSubscription->plan_duration != null && strtolower($this->customSubscription->plan_duration) == 'never') {
+        // if ($this->customSubscription->plan_duration != null && strtolower($this->customSubscription->plan_duration) == 'never') {
+        //     return false;
+        // }
+        // return !($this->customSubscription &&
+        //     $this->customSubscription->renews_at > now());
+
+        if (
+            $this->customSubscription &&
+            $this->customSubscription->plan_duration !== null &&
+            strtolower($this->customSubscription->plan_duration) === 'never'
+        ) {
             return false;
         }
-        return !($this->customSubscription &&
-            $this->customSubscription->renews_at > now());
+
+        return $this->customSubscription &&
+            $this->customSubscription->renews_at <= now();
     }
 }
