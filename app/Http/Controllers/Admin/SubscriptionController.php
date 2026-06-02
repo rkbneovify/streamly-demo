@@ -1392,11 +1392,32 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     }
 
 
+    public function customSubscriptionCancel($id)
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            $subscription  =  $user->subscription('main');
+            $subscription->custom_status = 'expired';
+            $subscription->canceled_at = now();
+            $subscription->save();
+            DB::commit();
+            Alert::success('Success', 'Subscription canceled successfully !');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            // Alert::error('Error', $th->getMessage());
+            Alert::error('Error', 'Something went wrong ! Please try again later.');
+            return redirect()->back();
+        }
+    }
+
     public function subscriptionCancel($id)
     {
         try {
             $user = User::find($id);
-            $user->subscription('default')->cancel();
+            $user->subscription('main')->cancel();
             return response()->json([
                 'status' => true,
                 'message' => 'Subscription canceled successfully !'

@@ -236,6 +236,11 @@ class User extends Authenticatable implements JWTSubject
             strtolower($this->customSubscription->plan_duration) === 'never'
         ) {
             return false;
+        } elseif (
+            $this->customSubscription &&
+            $this->customSubscription->custom_status == 'expired'
+        ) {
+            return true;
         }
 
         return $this->customSubscription &&
