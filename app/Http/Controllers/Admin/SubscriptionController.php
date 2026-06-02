@@ -1284,7 +1284,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 return redirect()->back();
             }
 
-            $subscription = Subscription::where('user_id', Auth::id())->latest()->first();
+            $subscription = Subscription::where('user_id', $planReq->user_id)->latest()->first();
             if ($subPlan == null) {
                 Alert::error('Error', 'Subscription not found !');
                 return redirect()->back();
