@@ -159,9 +159,13 @@
                             </button>
                         @endif
                         <br>
-                        <a class="btn btn-secondary btn-xs w-100" href="{{ url('admin/subscriptions/create') }}">
-                            Cancel
-                        </a>
+                        @if ($subscription->custom_status == 'active')
+                            <a class="btn btn-secondary btn-xs w-100 btn-cancel-subscription"
+                                href="{{ route('admin.custom.subscriptions.cancel', $subscription->user_id) }}">
+                                Cancel
+                            </a>
+                        @endif
+
 
                         {{-- @if ($subscription->livemode == null || $subscription->stripe_status == 'canceled')
                             <a href="{{ route('admin.subscriptions.custom.view', $subscription->user_id) }}"
@@ -352,5 +356,34 @@
         });
 
         location.href = url;
+    });
+</script>
+<script>
+    document.querySelectorAll('.btn-cancel-subscription').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const url = this.href;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to cancel this subscription.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    window.location.href = url;
+                }
+            });
+        });
     });
 </script>
