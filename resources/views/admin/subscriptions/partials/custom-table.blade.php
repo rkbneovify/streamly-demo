@@ -276,7 +276,7 @@
                     <div id="txtPlanDuration" class="col"></div>
                 </div>
                 <div class="row">
-                    <div class="col"><b>Allowted Devices</b></div>
+                    <div class="col"><b>Allotted Devices</b></div>
                     <div id="txtDeviceLimit" class="col"></div>
                 </div>
                 {{-- <div class="row">
