@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\SubscriptionPlanRequest;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
    @property bigint unsigned $user_id user id
@@ -90,5 +92,27 @@ class Subscription extends Model
         }
 
         return $isCustom;
+    }
+
+    public static function syncExpired()
+    {
+        DB::beginTransaction();
+        try {
+            $subscriptions = Subscription::whereHas('user')   // only subscriptions with a related user
+                ->with('user')      // still eager load user data
+                ->whereNotNull('custom_status')
+                ->where('renews_at', '<', Carbon::now())
+                ->get();
+
+            foreach ($subscriptions as $subscription) {
+                $subscription->update([
+                    'custom_status' => 'expired'
+                ]);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
     }
 }
