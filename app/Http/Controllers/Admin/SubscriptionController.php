@@ -288,7 +288,7 @@ class SubscriptionController extends Controller
     public function index3(Request $request, StripeService $stripeService)
     {
         // custom subscription
-
+        Subscription::syncExpired();
 
         $query = Subscription::query()
             ->whereHas('user')
