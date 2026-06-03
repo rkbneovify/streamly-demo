@@ -58,14 +58,12 @@
                 <th>
                     Email
                 </th>
-                {{-- <th>
-                    User Type
-                </th> --}}
-                {{-- <th>
-                    Subscription
-                    <br>
-                    Type
-                </th> --}}
+                <th>
+                    Role
+                </th>
+                <th>
+                    Plan Duration
+                </th>
                 <th>
                     Status
                 </th>
@@ -117,21 +115,14 @@
                     </td>
 
 
-                    {{-- <td style="vertical-align: middle;">
-                        {{ getUserType($subscription->user) }}</td> --}}
-                    {{-- <td style="vertical-align: middle;">
+                    <td style="vertical-align: middle;">
+                        {{ $subscription->user->roles[0]->name }}</td>
+                    <td style="vertical-align: middle;">
 
-                        @if ($subscription->livemode === null)
-                            Admin/Custom
-                        @elseif ($subscription->livemode === 1)
-                            Stripe/Live
-                        @elseif ($subscription->livemode === 0)
-                            Stripe/Test
-                        @endif
+                        {{ $subscription->plan_duration }}</td>
 
 
-
-                    </td> --}}
+                    </td>
                     <td style="vertical-align: middle;">
                         {{ Str::ucfirst($subscription->custom_status ?? '') }}
                     </td>
@@ -154,7 +145,7 @@
 
                         @if ($subscription->planRequest != null)
                             <button class="btn btn-danger btn-xs w-100 mb-1"
-                                onclick="openModal('{{ $subscription->planRequest->id }}','{{ $subscription->planRequest->plan->product_name }}','{{ $subscription->planRequest->plan->interval_count . ' ' . $subscription->planRequest->plan->interval }}','{{ $subscription->planRequest->plan->amount }}')">
+                                onclick="openModal('{{ $subscription->planRequest->id }}','{{ $subscription->planRequest->plan->product_name }}','{{ $subscription->planRequest->plan->interval_count . ' ' . $subscription->planRequest->plan->interval }}','{{ $subscription->planRequest->plan->amount }}','{{ $subscription->user->roles[0]->name }}','{{ $subscription->user->device_limit }}')">
                                 Plan Request
                             </button>
                         @endif
@@ -278,16 +269,20 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col"><b>Plan Name</b></div>
-                    <div id="txtPlanName" class="col">Test</div>
+                    <div id="txtPlanName" class="col"></div>
                 </div>
                 <div class="row">
                     <div class="col"><b>Plan Duration</b></div>
-                    <div id="txtPlanDuration" class="col">Test</div>
+                    <div id="txtPlanDuration" class="col"></div>
                 </div>
                 <div class="row">
+                    <div class="col"><b>Allowted Devices</b></div>
+                    <div id="txtDeviceLimit" class="col"></div>
+                </div>
+                {{-- <div class="row">
                     <div class="col"><b>Amount</b></div>
                     <div id="txtAmount" class="col">Test</div>
-                </div>
+                </div> --}}
             </div>
             <div class="modal-footer">
                 <input id="txtPlanReqId" type="text" hidden>
@@ -300,11 +295,12 @@
 </div>
 
 <script>
-    function openModal(planReqId, planName, planDuration, amount) {
+    function openModal(planReqId, planName, planDuration, amount, role, deviceLimit) {
         console.log(planName)
-        document.getElementById('txtPlanName').innerText = planName;
+        document.getElementById('txtPlanName').innerText = planName += `(${role})`;
         document.getElementById('txtPlanDuration').innerText = planDuration;
-        document.getElementById('txtAmount').innerText = amount;
+        // document.getElementById('txtAmount').innerText = amount;
+        document.getElementById('txtDeviceLimit').innerText = deviceLimit;
         document.getElementById('txtPlanReqId').value = planReqId;
         const modal = new bootstrap.Modal(
             document.getElementById('myModal')
