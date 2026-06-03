@@ -52,17 +52,17 @@ class SyncCustomSubscription extends Command
         }
 
         // if only subscription current_period_start is null
-        $subscriptions = Subscription::whereHas('user')   // only subscriptions with a related user
-            ->with('user')      // still eager load user data
-            ->whereNotNull('custom_status')
-            ->whereNull('current_period_start')
-            ->get();
+        // $subscriptions = Subscription::whereHas('user')   // only subscriptions with a related user
+        //     ->with('user')      // still eager load user data
+        //     ->whereNotNull('custom_status')
+        //     ->whereNull('current_period_start')
+        //     ->get();
 
-        foreach ($subscriptions as $subscription) {
-            $subscription->update([
-                'current_period_start' => $subscription->created_at
-            ]);
-        }
+        // foreach ($subscriptions as $subscription) {
+        //     $subscription->update([
+        //         'current_period_start' => $subscription->created_at
+        //     ]);
+        // }
 
         $this->info('Subscription sync completed');
 
