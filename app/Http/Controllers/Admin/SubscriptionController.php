@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\ActivityEventType;
 use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
+use App\HoaUser;
+use App\HotelRoomTable;
 use App\Jobs\CancelStripeSubscriptionJob;
 use App\Jobs\SendUpgradeMailJob;
 use App\Mail\SubscriptionNotificationMail;
@@ -289,9 +291,11 @@ class SubscriptionController extends Controller
 
 
         $query = Subscription::query()
-            ->whereHas('user')   // only subscriptions with a related user
-            ->with(['user', 'planRequest.plan'])      // still eager load user data
-            ->whereNotNull('custom_status');
+            ->whereHas('user')
+            ->with(['user.roles', 'planRequest.plan'])
+            ->withCount('planRequest')
+            ->whereNotNull('custom_status')
+            ->orderByDesc('plan_request_count');
 
         // Filter by status if provided
         if (!empty($request->status)) {
@@ -318,12 +322,19 @@ class SubscriptionController extends Controller
         $subscriptions = $query->paginate(10)
             ->appends($request->query());
 
-        // $subscriptions->getCollection()->transform(function ($item) use ($stripeService) {
+        $subscriptions->getCollection()->transform(function ($item) {
 
-        //     $item->mode = $stripeService->hasSubscription($item->stripe_id);
-        //     return $item;
-        // });
-        // return response()->json($query->get());
+            $role =  $item->user->roles[0]->id;
+            $item->user->device_limit = 5;
+            if (strtolower($role) == 5) {
+                $item->user->device_limit =  HotelRoomTable::getTotalRoomCount($item->user->id);
+            } elseif (strtolower($role) == 7) {
+                $item->user->device_limit =  HoaUser::getTotalDeviceCount($item->user->id);
+            }
+
+            return $item;
+        });
+        // return response()->json($subscriptions);
 
 
 
@@ -1159,7 +1170,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             return Excel::download(new SubscriptionNewReportExport($request), $filename);
         } catch (\Throwable $th) {
             //throw $th;
-            Alert::error('Oops !', $th->getMessage());
+            Alert::error('Error', $th->getMessage());
             return redirect()->back();
         }
     }
@@ -1428,6 +1439,119 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 'status' => false,
                 'message' => $th->getMessage()
             ]);
+        }
+    }
+
+    public function exportCustomSubscription(Request $request)
+    {
+        $data = Subscription::query()
+            ->where('livemode', 1)
+            ->whereNull('plan_duration')->get();
+        return response()->json($data);
+        // $query = Subscription::query()
+        //     ->whereHas('user')   // only subscriptions with a related user
+        //     ->with(['user.roles', 'plan'])      // still eager load user data
+        //     ->whereNotNull('custom_status');
+        // return response()->json($query->get());
+
+
+        // $query = Subscription::query()
+        //     ->whereHas('user')   // only subscriptions with a related user
+        //     ->with(['user.roles', 'plan'])      // still eager load user data
+        //     ->whereNotNull('custom_status');
+        // return response()->json($query->get());
+
+
+
+
+        try {
+
+            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+            // return Excel::download(new UsersSubscriptionExport($filters), $filename);
+            return Excel::download(new SubscriptionNewReportExport($request), $filename);
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert::error('Error', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+
+    public function stripeSyncById($id)
+    {
+        try {
+            // Get Stripe Secret
+            $secret = DB::table('Stripe_keys')
+                ->where('status', 'active')
+                ->value('stripe_secret');
+
+            if (!$secret) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stripe secret not found.',
+                ], 500);
+            }
+
+            \Stripe\Stripe::setApiKey($secret);
+
+            // Fetch subscription from Stripe by ID
+            $subscription = \Stripe\Subscription::retrieve([
+                'id'     => $id,
+                'expand' => ['latest_invoice'],
+            ]);
+
+            $item = $subscription->items->data[0] ?? null;
+
+            if (!$item || !isset($item->price)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "No price found for subscription: {$id}",
+                ], 422);
+            }
+
+            $priceId    = $item->price->id ?? null;
+            $planAmount = isset($item->price->unit_amount)
+                ? $item->price->unit_amount / 100
+                : 0;
+
+            $updated = DB::table('subscriptions')
+                ->where('stripe_id', $id)
+                ->update([
+                    'stripe_plan'          => $priceId,
+                    'stripe_status'        => $subscription->status,
+                    'quantity'             => $subscription->quantity ?? 1,
+                    'livemode'             => (int) $subscription->livemode,
+                    'current_period_start' => Carbon::createFromTimestamp($subscription->current_period_start),
+                    'renews_at'            => Carbon::createFromTimestamp($subscription->current_period_end),
+                    'amount'               => $planAmount,
+                    'updated_at'           => now(),
+                ]);
+
+            if (!$updated) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "No local record found for subscription: {$id}",
+                ], 404);
+            }
+
+            return response()->json([
+                'success'         => true,
+                'message'         => 'Subscription synced successfully.',
+                'subscription_id' => $id,
+                'stripe_status'   => $subscription->status,
+                'renews_at'       => Carbon::createFromTimestamp($subscription->current_period_end)->toDateTimeString(),
+                'amount'          => $planAmount,
+            ]);
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stripe subscription not found: ' . $e->getMessage(),
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ], 500);
         }
     }
 }

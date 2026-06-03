@@ -49,11 +49,9 @@ class StripeSyncRenewals extends Command
                 } else {
                     break;
                 }
-
             } while (true);
 
             $this->info("✅ Successfully updated {$this->updatedCount} subscriptions.");
-
         } catch (Exception $e) {
             // $this->error('❌ Error: ' . $e->getMessage());
         }
@@ -81,7 +79,7 @@ class StripeSyncRenewals extends Command
             // ============================================
             // ✅ INVOICE (CURRENT MONTH ACTUAL PAYMENT)
             // ============================================
-            $invoiceAmount = 0;
+            /*invoiceAmount = 0;
             $invoiceId = null;
             $currency = null;
 
@@ -94,7 +92,7 @@ class StripeSyncRenewals extends Command
 
                 // $invoiceId = $invoice->id ?? null;
                 // $currency = $invoice->currency ?? null;
-            }
+            }*/
 
             // ============================================
             // ✅ UPDATE DB
@@ -108,7 +106,7 @@ class StripeSyncRenewals extends Command
                     'livemode' => (int) $subscription->livemode,
                     'current_period_start' => Carbon::createFromTimestamp($subscription->current_period_start),
                     'renews_at' => Carbon::createFromTimestamp($subscription->current_period_end),
-                    'amount' => $invoiceAmount,
+                    'amount' => $planAmount,
                     'updated_at' => now(),
                 ]);
 
@@ -117,7 +115,6 @@ class StripeSyncRenewals extends Command
             } else {
                 $this->warn("⚠️ No record found for {$subscription->id}");
             }
-
         } catch (Exception $e) {
             // $this->error("❌ Failed for {$subscription->id}: " . $e->getMessage());
         }
