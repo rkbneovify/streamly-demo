@@ -71,6 +71,15 @@ class Subscription extends Model
         )->where('status', 'under_review')->latest();
     }
 
+    public function plan()
+    {
+        return $this->hasOne(
+            SubscriptionPlan::class,
+            'id',
+            'custom_plan_id'
+        );
+    }
+
     public static function isSubscriptionCustom($subscription)
     {
         $isCustom = false;
