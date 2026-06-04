@@ -288,7 +288,7 @@ class SubscriptionController extends Controller
     public function index3(Request $request, StripeService $stripeService)
     {
         // custom subscription
-        Subscription::syncExpired();
+        Subscription::syncCustomExpired();
 
         $query = Subscription::query()
             ->whereHas('user')
@@ -1446,7 +1446,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     {
         $data = Subscription::query()
             ->where('livemode', 1)
-            ->whereNull('plan_duration')->get();
+            ->whereNull('plan_duration')
+            ->where('updated_at', '>=', now()->subMonth())
+            ->get();
         return response()->json($data);
         // $query = Subscription::query()
         //     ->whereHas('user')   // only subscriptions with a related user
@@ -1486,10 +1488,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 ->value('stripe_secret');
 
             if (!$secret) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Stripe secret not found.',
-                ], 500);
+
+                Alert::error('Error', 'Stripe secret not found.');
+                return redirect()->back();
             }
 
             \Stripe\Stripe::setApiKey($secret);
@@ -1503,10 +1504,10 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             $item = $subscription->items->data[0] ?? null;
 
             if (!$item || !isset($item->price)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "No price found for subscription: {$id}",
-                ], 422);
+
+
+                Alert::error('Error', "No price found for subscription");
+                return redirect()->back();
             }
 
             $priceId    = $item->price->id ?? null;
@@ -1528,30 +1529,22 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
                 ]);
 
             if (!$updated) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "No local record found for subscription: {$id}",
-                ], 404);
+
+                Alert::error('Error', "No local record found for subscription");
+                return redirect()->back();
             }
 
-            return response()->json([
-                'success'         => true,
-                'message'         => 'Subscription synced successfully.',
-                'subscription_id' => $id,
-                'stripe_status'   => $subscription->status,
-                'renews_at'       => Carbon::createFromTimestamp($subscription->current_period_end)->toDateTimeString(),
-                'amount'          => $planAmount,
-            ]);
+
+            Alert::error('Success', 'Subscription synced successfully.');
+            return redirect()->back();
         } catch (\Stripe\Exception\InvalidRequestException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Stripe subscription not found: ' . $e->getMessage(),
-            ], 404);
+
+            Alert::error('Error', "Stripe subscription not found !");
+            return redirect()->back();
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sync failed: ' . $e->getMessage(),
-            ], 500);
+
+            Alert::error('Error', 'Sync failed: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
 }
