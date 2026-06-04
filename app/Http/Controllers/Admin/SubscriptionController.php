@@ -1535,7 +1535,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             }
 
 
-            Alert::error('Success', 'Subscription synced successfully.');
+            Alert::success('Success', 'Subscription synced successfully.');
             return redirect()->back();
         } catch (\Stripe\Exception\InvalidRequestException $e) {
 

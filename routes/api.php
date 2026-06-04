@@ -101,13 +101,13 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify', 'subscribed']);
-    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'hoa.subuser.subscription', 'subscribed']);
-    Route::post('epg-guide-roku', 'Api\RokuEpgGuideApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
-    Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify']);
-    Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'subscribed']);
+    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'hoa.subuser.subscription',  'stripe.sync', 'subscribed']);
+    Route::post('epg-guide-roku', 'Api\RokuEpgGuideApiController@epgGuide')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
+    Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify', 'stripe.sync']);
+    Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
     Route::get('all-genre', 'Api\NewChannelApiController@allGenre')->middleware(['jwt.verify']);
-    Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify']);
-    Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify', 'subscribed']);
+    Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify', 'stripe.sync']);
+    Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
     Route::post('channel-program-details', 'Api\NewChannelApiController@ChannelProgramDetails')->middleware(['jwt.verify']);
     Route::get('faq', 'Api\User\FooterApiController@faq');
     Route::post('bugReport', 'Api\User\FooterApiController@sendBugReportAPI');
@@ -198,7 +198,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/get-hotelroom', 'Admin\HotelController@getHotelRoomspagination')->middleware(['jwt.verify']);
 
     /** Channel SLider API */
-    Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
+    Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 
     // Roku info routes
