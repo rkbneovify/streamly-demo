@@ -77,6 +77,7 @@ class Kernel extends HttpKernel
         'subscribed' => \App\Http\Middleware\Subscribed::class,
         'hoa.subuser.subscription' => \App\Http\Middleware\HoaSubUserSubscription::class,
         'hoa.admin.check' => \App\Http\Middleware\HoaAdminCheck::class,
+        'stripe.sync' => \App\Http\Middleware\StripeSync::class,
     ];
 
     /**
