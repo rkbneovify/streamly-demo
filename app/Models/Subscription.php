@@ -94,7 +94,7 @@ class Subscription extends Model
         return $isCustom;
     }
 
-    public static function syncExpired()
+    public static function syncCustomExpired()
     {
         DB::beginTransaction();
         try {
