@@ -41,6 +41,8 @@ use Stripe\Stripe;
 use Stripe\StripeClient;
 use Stripe\Subscription as StripeSubscription;
 
+use function PHPSTORM_META\type;
+
 /**
  * Description of SubscriptionController
  *
@@ -72,13 +74,21 @@ class SubscriptionController extends Controller
 
     public function index(Request $request)
     {
+
+        $type = DB::table('Stripe_keys')
+            ->where('status', 'active')
+            ->value('type');
+        $mode = strtolower($type) == 'live' ? 1 : 0;
+
+        // dd($mode);
+
         $statusTypes = Subscription::pluck('stripe_status')->unique()->values();
 
 
 
         $latestSubscriptions = Subscription::query()
             ->select('user_id', DB::raw('MAX(created_at) as latest_created_at'))
-            ->where('livemode', 1)
+            ->where('livemode', $mode)
             ->whereNull('plan_duration')
             ->groupBy('user_id');
 
@@ -1444,17 +1454,12 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function exportCustomSubscription(Request $request)
     {
-        $data = Subscription::query()
-            ->where('livemode', 1)
-            ->whereNull('plan_duration')
-            ->where('updated_at', '>=', now()->subMonth())
-            ->get();
-        return response()->json($data);
-        // $query = Subscription::query()
-        //     ->whereHas('user')   // only subscriptions with a related user
-        //     ->with(['user.roles', 'plan'])      // still eager load user data
-        //     ->whereNotNull('custom_status');
-        // return response()->json($query->get());
+
+        $query = Subscription::query()
+            ->whereHas('user')   // only subscriptions with a related user
+            ->with(['user.roles', 'plan'])      // still eager load user data
+            ->whereNotNull('custom_status');
+        return response()->json($query->get());
 
 
         // $query = Subscription::query()
