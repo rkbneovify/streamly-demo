@@ -154,7 +154,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function customSubscription()
     {
-        return $this->hasOne(Subscription::class)->latest();
+        return $this->hasOne(Subscription::class)->whereNotNull('plan_duration')->latest();
     }
     public function subscriptionLatest()
     {
@@ -224,26 +224,60 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasActiveSubscription()
     {
-        // if ($this->customSubscription->plan_duration != null && strtolower($this->customSubscription->plan_duration) == 'never') {
-        //     return false;
-        // }
-        // return !($this->customSubscription &&
-        //     $this->customSubscription->renews_at > now());
 
         if (
+            $this->customSubscription &&
+            strtolower($this->customSubscription->custom_status) == 'expired'
+        ) {
+            return true;
+        }
+        if (
+            $this->customSubscription &&
+            strtolower($this->customSubscription->custom_status) == 'expired'
+            && strtolower($this->customSubscription->plan_duration) === 'never'
+        ) {
+            return true;
+        } elseif (
             $this->customSubscription &&
             $this->customSubscription->plan_duration !== null &&
             strtolower($this->customSubscription->plan_duration) === 'never'
         ) {
             return false;
-        } elseif (
-            $this->customSubscription &&
-            $this->customSubscription->custom_status == 'expired'
-        ) {
-            return true;
         }
 
         return $this->customSubscription &&
             $this->customSubscription->renews_at <= now();
+    }
+
+    public function hasSubscriptionExpired()
+    {
+
+        if (
+            $this->customSubscription &&
+            $this->customSubscription->renews_at <= now()
+        ) {
+            return true;
+        } elseif (
+            $this->customSubscription &&
+            strtolower($this->customSubscription->custom_status) == 'expired'
+        ) {
+            return true;
+        }
+        if (
+            $this->customSubscription &&
+            strtolower($this->customSubscription->custom_status) == 'expired'
+            && strtolower($this->customSubscription->plan_duration) === 'never'
+        ) {
+            return true;
+        } elseif (
+            $this->customSubscription &&
+            $this->customSubscription->plan_duration !== null &&
+            strtolower($this->customSubscription->plan_duration) === 'never'
+        ) {
+            return false;
+        }
+
+        // return $this->customSubscription &&
+        //     $this->customSubscription->renews_at <= now();
     }
 }
