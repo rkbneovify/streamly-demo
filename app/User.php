@@ -252,28 +252,26 @@ class User extends Authenticatable implements JWTSubject
     public function hasSubscriptionExpired()
     {
 
+
         if (
             $this->customSubscription &&
+            strtolower($this->customSubscription->custom_status) == 'expired'
+        ) {
+            return true;
+        } elseif (
+            $this->customSubscription &&
+            $this->customSubscription->canceled_at != null
+        ) {
+            return true;
+        } elseif (
+            $this->customSubscription
+            &&
+            $this->customSubscription->renews_at != null
+            &&
             $this->customSubscription->renews_at <= now()
         ) {
-            return true;
-        } elseif (
-            $this->customSubscription &&
-            strtolower($this->customSubscription->custom_status) == 'expired'
-        ) {
-            return true;
-        }
-        if (
-            $this->customSubscription &&
-            strtolower($this->customSubscription->custom_status) == 'expired'
-            && strtolower($this->customSubscription->plan_duration) === 'never'
-        ) {
-            return true;
-        } elseif (
-            $this->customSubscription &&
-            $this->customSubscription->plan_duration !== null &&
-            strtolower($this->customSubscription->plan_duration) === 'never'
-        ) {
+            return false;
+        } else {
             return false;
         }
 
