@@ -68,46 +68,48 @@ class Subscribed
         $userRole = $user->roles->pluck('name');
 
 
+
         // custom subscription check
         if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
             if ($user->subscription('main')->plan_duration != null) {
-                if ($user->hasActiveSubscription()) {
+                if ($user->hasSubscriptionExpired()) {
                     if ($request->wantsJson()) {
                         // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                         $defaultRes['stripe_status'] = 'expired';
-                        $defaultRes['custom_subscription_expired'] = $user->hasActiveSubscription();
+                        $defaultRes['custom_subscription_expired'] = $user->hasSubscriptionExpired();
                         $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
 
                         return response()->json($defaultRes, 410);
                     } else {
                         return redirect('/selectplan');
                     }
-                } elseif ($user->subscription('main')->stripe_status == 'past_due') {
-                    $stripe = new StripeService();
-                    $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
+                }
+            } elseif ($user->subscription('main')->stripe_status == 'past_due') {
+                // for live subscription
+                $stripe = new StripeService();
+                $url = $stripe->getLatestInvoiceByCustomerId($user->stripe_id)->first()->hosted_invoice_url;
 
 
 
-                    if ($request->wantsJson()) {
-                        // $response = array(
-                        //     'success' => false,
-                        //     'response_code' => 410,
-                        //     'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
-                        //     "url" => $url,
-                        //     'plan_count' => $planCount,
-                        //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
-                        //     'qrcode' => route('qrcode.generate') . '?url=' . $url
-                        // );
-                        $defaultRes['message'] = "Payment pending. Your subscription will resume once the payment is successfully processed.";
-                        $defaultRes['plan_count'] = $planCount;
-                        $defaultRes['plan'] = $planDetails;
-                        $defaultRes['subscription'] = $subscriptionDetails;
-                        // $defaultRes['url'] = $url;
-                        // $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
-                        return response()->json($defaultRes, 410);
-                    } else {
-                        return redirect('/selectplan');
-                    }
+                if ($request->wantsJson()) {
+                    // $response = array(
+                    //     'success' => false,
+                    //     'response_code' => 410,
+                    //     'message' => "Payment pending. Your subscription will resume once the payment is successfully processed.",
+                    //     "url" => $url,
+                    //     'plan_count' => $planCount,
+                    //     'stripe_status' => $request->user()->subscription('main')->stripe_status ?? null,
+                    //     'qrcode' => route('qrcode.generate') . '?url=' . $url
+                    // );
+                    $defaultRes['message'] = "Payment pending. Your subscription will resume once the payment is successfully processed.";
+                    $defaultRes['plan_count'] = $planCount;
+                    $defaultRes['plan'] = $planDetails;
+                    $defaultRes['subscription'] = $subscriptionDetails;
+                    // $defaultRes['url'] = $url;
+                    // $defaultRes['qrcode'] = route('qrcode.generate') . '?url=' . $url;
+                    return response()->json($defaultRes, 410);
+                } else {
+                    return redirect('/selectplan');
                 }
             } elseif (!in_array($user->subscription('main')->stripe_status, ['active', 'trialing'])) {
                 // for live subscription
