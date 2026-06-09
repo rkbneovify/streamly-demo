@@ -46,7 +46,8 @@ class Subscription extends Model
         'custom_status',
         'trial_ends_at',
         'renews_at',
-        'ends_at'
+        'ends_at',
+        'canceled_at'
     ];
 
     /**
