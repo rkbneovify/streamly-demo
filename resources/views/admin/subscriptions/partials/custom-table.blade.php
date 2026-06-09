@@ -135,6 +135,8 @@
 
                         @if ($subscription->renews_at != null)
                             {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
+                        @elseif($subscription->canceled_at != null)
+                            {{ date('d/m/Y', strtotime($subscription->canceled_at)) }}
                         @else
                             <span class="badge badge-success">Never</span>
                         @endif
