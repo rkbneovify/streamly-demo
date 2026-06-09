@@ -1351,6 +1351,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             $subscription->renews_at = $renewsAt;
             $subscription->amount = $subPlan->amount;
             $subscription->is_custom = 1;
+            $subscription->canceled_at = null;
             $subscription->save();
 
 
@@ -1421,6 +1422,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
             $subscription  =  $user->subscription('main');
             $subscription->custom_status = 'expired';
             $subscription->canceled_at = now();
+            $subscription->renews_at = null;
             $subscription->save();
             DB::commit();
             Alert::success('Success', 'Subscription canceled successfully !');
