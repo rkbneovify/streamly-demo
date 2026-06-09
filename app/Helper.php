@@ -1013,11 +1013,11 @@ function isSubscriptionExpired($userId)
 
     if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
         if ($user->subscription('main')->plan_duration != null) {
-            if ($user->hasActiveSubscription()) {
+            if ($user->hasSubscriptionExpired()) {
                 if (request()->wantsJson()) {
                     // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                     $defaultRes['stripe_status'] = 'expired';
-                    $defaultRes['custom_subscription_expired'] = $user->hasActiveSubscription();
+                    $defaultRes['custom_subscription_expired'] = $user->hasSubscriptionExpired();
                     $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
 
                     return response()->json($defaultRes, 410);
