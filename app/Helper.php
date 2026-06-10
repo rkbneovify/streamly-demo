@@ -46,6 +46,11 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
             ->where('status', 1)
             ->where('users_id', $user_id)
             ->get()->toArray();
+    } elseif ($userRole == "tieruser") {
+        $login_limit = HotelRoomTable::getTotalRoomCount($user_id);
+        $active_session = SessionTable::where('status', 1)
+            ->where('users_id', $user_id)
+            ->get()->toArray();
     }
 
 
