@@ -52,6 +52,7 @@ class StripeSync
 
                 DB::table('subscriptions')
                     ->where('id', $localSubscription->id)
+                    ->whereNull('plan_duration')
                     ->update([
                         'stripe_plan' => $item->price->id,
                         'stripe_status' => $stripeSubscription->status,
