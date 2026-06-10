@@ -947,9 +947,7 @@ class UsersController extends Controller
                             $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
                         }
 
-                        $user->is_custom_user = 1;
-                        $user->mode = 'custom';
-                        $user->save();
+
                         DB::table('subscriptions')->updateOrInsert(
                             ['user_id' => $user->id],
                             [
@@ -965,11 +963,15 @@ class UsersController extends Controller
                                 'updated_at' => now(),
                             ]
                         );
+
+                        $user->is_custom_user = 1;
+                        $user->mode = 'custom';
+                        $user->save();
                     }
                 }
 
 
-                if ($request->plan_duration != $subscription->plan_duration) {
+                if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
                     DB::table('subscriptions')->updateOrInsert(
                         ['user_id' => $user->id],
                         [
@@ -986,6 +988,9 @@ class UsersController extends Controller
                             'updated_at' => now(),
                         ]
                     );
+                    $user->is_custom_user = 1;
+                    $user->mode = 'custom';
+                    $user->save();
                 }
             }
 
