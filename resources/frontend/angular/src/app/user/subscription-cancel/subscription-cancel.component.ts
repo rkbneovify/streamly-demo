@@ -61,6 +61,11 @@ export class SubscriptionCancelComponent implements OnInit {
       });
   }
 
+  handleBtnPlanRequest() {
+    document.getElementById('btnShowPopPlan').click();
+    // alert('ok');
+  }
+
   subscriptionTerminate() {
 
     this.sweetAlert.confirm("Subscription", "Do you want to cancel the subscription?").then((result) => {
