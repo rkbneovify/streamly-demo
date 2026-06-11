@@ -38,6 +38,11 @@
           <div class="pnf-button">
             <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
+          }@else if ( error && error.custom_subscription_expired) {
+
+          <div class="pnf-button">
+            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
+          </div>
           }@else if ( error && error.stripe_status=='past_due') {
           <!-- <div class="pnf-button">
             <a [href]="error.url" target="_blank">
@@ -56,6 +61,46 @@
           }
 
 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  -->
+
+<!-- Modal for Cancel-subsc-->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#ShowPopPlan"
+  id="btnShowPopPlan"></button>
+<div class="modal fade" id="ShowPopPlan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered zipcode_correct">
+    <div class="modal-content showPopConf popup_bg margin-left-3">
+      <div class="modal-header p-0 m-0 d-flex justify-content-end">
+        <div class="btn-cl">
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg" alt="" />
+        </div>
+      </div>
+      <div class="modal-body p-0 m-0">
+        <div class="zip_top">
+          <h3 class="d-flex gap-2 mt-2 mb-0">
+            <span class="d-flex gap-2">
+              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              Enter password to cancel your
+            </span>
+          </h3>
+        </div>
+        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+          <div class="zip_bottom_p">
+            <!-- <form class="d-flex flex-column gap-2 justify-content-evenly" [formGroup]="cancelSubscription"
+              (ngSubmit)="cancelSubscriptionUserAccount()">
+              <input type="text" class="input_standred" placeholder="Enter Password" formControlName="password" />
+              <button class="btn_2 w-auto align-self-center" data-bs-dismiss="modal" type="submit">
+                Submit
+              </button>
+            </form> -->
+          </div>
         </div>
       </div>
     </div>
