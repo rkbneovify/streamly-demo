@@ -1975,7 +1975,8 @@ class AuthController extends Controller
                         // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                         $defaultRes['stripe_status'] = 'expired';
                         $defaultRes['custom_subscription_expired'] = $user->hasSubscriptionExpired();
-                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at ?? $user->subscription('main')->canceled_at;
+
 
                         return response()->json($defaultRes, 410);
                     } else {
@@ -1986,7 +1987,8 @@ class AuthController extends Controller
                         // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                         $defaultRes['stripe_status'] = 'active';
                         $defaultRes['custom_subscription_expired'] = $user->hasSubscriptionExpired();
-                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at ?? $user->subscription('main')->canceled_at;
+
                         $defaultRes['response_code'] = 200;
                         $defaultRes['success'] = true;
                         $defaultRes['message'] = 'You already have an active subscription available on your account.';
