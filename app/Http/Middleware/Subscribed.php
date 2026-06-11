@@ -77,7 +77,8 @@ class Subscribed
                         // $response = array('success' => false, 'response_code' => 410, 'message' => KindlySubscribeMsg());
                         $defaultRes['stripe_status'] = 'expired';
                         $defaultRes['custom_subscription_expired'] = $user->hasSubscriptionExpired();
-                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at;
+                        $defaultRes['custom_subscription_expired_at'] = $user->subscription('main')->renews_at ?? $user->subscription('main')->canceled_at;
+
 
                         return response()->json($defaultRes, 410);
                     } else {
