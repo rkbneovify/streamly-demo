@@ -948,8 +948,7 @@ class UsersController extends Controller
                         }
 
 
-                        DB::table('subscriptions')->updateOrInsert(
-                            ['user_id' => $user->id],
+                        DB::table('subscriptions')->where('user_id', $user->id)->update(
                             [
                                 'name' => 'main',
                                 'stripe_status' => 'canceled',
@@ -972,8 +971,7 @@ class UsersController extends Controller
 
 
                 if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
-                    DB::table('subscriptions')->updateOrInsert(
-                        ['user_id' => $user->id],
+                    DB::table('subscriptions')->where('user_id', $user->id)->update(
                         [
                             'name' => 'main',
                             'stripe_status' => 'canceled',
