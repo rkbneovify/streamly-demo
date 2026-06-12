@@ -1015,8 +1015,8 @@ function isSubscriptionExpired($userId)
 
 
 
-
-    if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
+    // if ($user && !in_array($userRole[0], array("admin", "superadmin"))) {
+    if ($user && !in_array($userRole[0], array("superadmin"))) {
         if ($user->subscription('main')->plan_duration != null) {
             if ($user->hasSubscriptionExpired()) {
                 if (request()->wantsJson()) {
