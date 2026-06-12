@@ -1813,6 +1813,7 @@ class AuthController extends Controller
             return response()->json([
                 "status" => false,
                 'response_code' => 500,
+                "mesg" => $th->getMessage(),
                 "message" => "Something went wrong. Please try again later !"
             ], 500);
         }
