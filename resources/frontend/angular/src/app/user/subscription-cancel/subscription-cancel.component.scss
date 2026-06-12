@@ -290,100 +290,7 @@ ul {
   color: #ffffff;
 }
 
-.flex-1 {
-  flex: 1 !important;
-}
 
-.showPopConf {
-  padding: 40px;
-  border-radius: 20px;
-  overflow: hidden;
-  border: none;
-
-  .modal-header {
-    border: none;
-
-    .btn-close {
-      img {
-        width: 24px;
-        height: 24px;
-      }
-    }
-  }
-
-  .modal-body {
-    font-family: Poppins;
-
-    .zip_top {
-      h3 {
-        font-size: 18px;
-        font-weight: 600;
-        line-height: 36px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #ffffff;
-        margin-bottom: 20px;
-
-        span {
-          img {
-            width: 34px;
-            height: 34px;
-          }
-        }
-      }
-    }
-
-    .zip_bottom {
-      .zip_bottom_p {
-        margin: 20px 0;
-      }
-
-      p {
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 24px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #f2f2f2;
-      }
-
-      .zip_bottom_cs {
-        margin: 30px 0;
-        gap: 20px;
-
-        p {
-          span {
-            color: #e0e0e0;
-            font-weight: 500;
-          }
-        }
-      }
-
-      .zip_bottom_mail {
-        form {
-          label {
-            font-family: Poppins;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 21px;
-            letter-spacing: 0em;
-            text-align: left;
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-}
-
-.zipcode_correct {
-  width: auto !important;
-  max-width: 600px !important;
-}
-
-.m-r-20 {
-  margin-right: 20px;
-}
 
 
 @media screen and (max-width: 992px) {
@@ -411,5 +318,137 @@ ul {
 @media (max-width: 768px) {
   .flex {
     flex-direction: column;
+  }
+}
+
+.flex-1 {
+  flex: 1 !important;
+}
+
+.showPopConf {
+  padding: 40px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: none;
+
+  .modal-header {
+    border: none;
+
+    .btn-close,
+    .btn-cl {
+      img {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .modal-body {
+    font-family: Poppins;
+
+    .zip_top {
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 36px;
+        color: #ffffff;
+        margin-bottom: 20px;
+
+        span {
+          img {
+            width: 34px;
+            height: 34px;
+          }
+        }
+      }
+    }
+
+    .zip_bottom {
+      .zip_bottom_p {
+        margin: 20px 0;
+      }
+
+      p {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        color: #f2f2f2;
+      }
+
+      .zip_bottom_cs {
+        margin: 30px 0;
+        gap: 20px;
+
+        p {
+          span {
+            color: #e0e0e0;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .zip_bottom_mail {
+        form {
+          label {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 21px;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Fix modal centering */
+.zipcode_correct {
+  max-width: 600px;
+  margin: auto; // Bootstrap uses this for horizontal centering
+}
+
+/* Ensure vertical centering */
+#ShowPopPlan {
+  .modal-dialog {
+    min-height: calc(100vh - 1rem);
+    display: flex;
+    align-items: center;
+  }
+}
+
+.m-r-20 {
+  margin-right: 20px;
+}
+
+@media (max-width: 576px) {
+  .showPopConf {
+    padding: 24px;
+  }
+
+  .zipcode_correct {
+    max-width: calc(100% - 1rem);
+  }
+}
+
+
+.duration-wrapper {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+
+.duration-btn {
+  min-width: 120px;
+  padding: 15px;
+  border-radius: 18px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  font-size: 18px;
+
+  &.active {
+    border-color: #ffd84d;
   }
 }
