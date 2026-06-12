@@ -555,10 +555,52 @@ class StripeController extends Controller
                 'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
             ];
 
-            if ($request->user()->subscription('main')->plan_duration != null) {
+            // // if user is main user and custom subscription
+            // if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
+            //     if (strtolower($request->user()->roles[0]->name) == 'hoa') {
+            //         $response_to_send['hoa_main_custom_subscription'] =
+            //             [
+            //                 "plan" => $request->user()->subscription('main')->plan_duration,
+            //                 "renews_at" => $request->user()->subscription('main')->renews_at ?? $request->user()->subscription('main')->canceled_at,
+            //             ];
+            //         $response_to_send['is_custom_subscription'] = true;
+            //         $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
+            //         if ($request->user()->subscription('main')->renews_at != null) {
+            //             $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
+            //         } elseif ($request->user()->subscription('main')->canceled_at != null) {
+            //             $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
+            //         }
+            //     } else {
+            //         $response_to_send['is_custom_subscription'] = true;
+            //         $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
+            //         if ($request->user()->subscription('main')->renews_at != null) {
+            //             $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
+            //         } elseif ($request->user()->subscription('main')->canceled_at != null) {
+            //             $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
+            //         }
+            //     }
+            // }
+
+
+
+
+            if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
+                if (strtolower($request->user()->roles[0]->name) == 'hoa') {
+                    $response_to_send['hoa_main_custom_subscription'] =
+                        [
+                            "plan" => $request->user()->subscription('main')->plan_duration,
+                            "renews_at" => $request->user()->subscription('main')->renews_at ?? $request->user()->subscription('main')->canceled_at,
+                        ];
+                }
+            }
+            if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
                 $subscription_data['name'] =   $request->user()->subscription('main')->plan_duration;
-                $subscription_data['plan_expired_at'] =   $request->user()->subscription('main')->renews_at ??  $request->user()->subscription('main')->canceled_at;
+                if ($request->user()->subscription('main')->renews_at != null) {
+                    $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
+                } elseif ($request->user()->subscription('main')->canceled_at != null) {
+                    $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
+                }
             }
 
             $response_to_send['subscription'] = $subscription_data;
@@ -584,10 +626,26 @@ class StripeController extends Controller
             //             ];
             //     }
             // }
-            if ($request->user()->subscription('main')->plan_duration != null) {
+
+            // if user is main user and custom subscription
+            if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
+                if (strtolower($request->user()->roles[0]->name) == 'hoa') {
+                    $response_to_send['hoa_main_custom_subscription'] =
+                        [
+                            "plan" => $request->user()->subscription('main')->plan_duration,
+                            "renews_at" => $request->user()->subscription('main')->renews_at ?? $request->user()->subscription('main')->canceled_at,
+                        ];
+                }
+            }
+
+            if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
                 $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
-                $response_to_send['subscription']['plan_expired_at'] =   $request->user()->subscription('main')->renews_at ??  $request->user()->subscription('main')->canceled_at;
+                if ($request->user()->subscription('main')->renews_at != null) {
+                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
+                } elseif ($request->user()->subscription('main')->canceled_at != null) {
+                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
+                }
             }
         }
 
