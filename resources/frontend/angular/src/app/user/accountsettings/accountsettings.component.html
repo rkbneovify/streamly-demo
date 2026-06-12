@@ -304,7 +304,7 @@
   </ng-container>
 
   <!-- custom subscription details -->
-  <ng-container *ngIf="isCustomSubscription">
+  <ng-container *ngIf="isCustomSubscription && !isHoaSubUser">
     <div class="account_details_container account_subscription_container">
       <p class="account-heading mb-4">Subscription</p>
       <div class="accountdetails">
