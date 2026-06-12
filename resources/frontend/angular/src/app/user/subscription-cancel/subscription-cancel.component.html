@@ -38,12 +38,8 @@
           <div class="pnf-button">
             <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
-          }@else if ( error && error.custom_subscription_expired) {
-
-          <div class="pnf-button">
-            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
-          </div>
-          }@else if ( error && error.stripe_status=='past_due') {
+          }
+          @else if ( error && error.stripe_status=='past_due') {
           <!-- <div class="pnf-button">
             <a [href]="error.url" target="_blank">
               <button>Pay Now</button>
@@ -100,9 +96,40 @@
                 Submit
               </button>
             </form> -->
+
+            <!-- Duration -->
+            <div class="duration-wrapper">
+
+              <button class="duration-btn active">
+                1 month
+              </button>
+
+              <button class="duration-btn">
+                3 month
+              </button>
+
+              <button class="duration-btn">
+                6 month
+              </button>
+
+              <button class="duration-btn">
+                12 month
+              </button>
+
+            </div>
+
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<!-- @else if ( error && error.custom_subscription_expired) {
+
+          <div class="pnf-button">
+            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
+          </div>
+          } -->
