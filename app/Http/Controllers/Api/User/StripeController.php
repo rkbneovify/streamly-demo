@@ -555,6 +555,12 @@ class StripeController extends Controller
                 'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
             ];
 
+            if ($request->user()->subscription('main')->plan_duration != null) {
+                $response_to_send['is_custom_subscription'] = true;
+                $subscription_data['name'] =   $request->user()->subscription('main')->plan_duration;
+                $subscription_data['plan_expired_at'] =   $request->user()->subscription('main')->renews_at ??  $request->user()->subscription('main')->canceled_at;
+            }
+
             $response_to_send['subscription'] = $subscription_data;
             $response_to_send['plan'] = $plan ?? [];
             $response_to_send['invoices'] = $invoices;
@@ -565,18 +571,23 @@ class StripeController extends Controller
             $response_to_send['invoices'] = [];
             $response_to_send['error'] = $e->getMessage();
 
-            if ($user_data['is_hoa_sub_user'] == null && $request->user()->is_custom_user == 1) {
-                $hoaMainSubscription = \App\Models\Subscription::where('user_id', $userinfo->id)
-                    // ->where('stripe_status', 'active')
-                    ->first();
-                if ($hoaMainSubscription != null) {
+            // if ($user_data['is_hoa_sub_user'] == null && $request->user()->is_custom_user == 1) {
+            //     $hoaMainSubscription = \App\Models\Subscription::where('user_id', $userinfo->id)
+            //         // ->where('stripe_status', 'active')
+            //         ->first();
+            //     if ($hoaMainSubscription != null) {
 
-                    $response_to_send['hoa_main_custom_subscription'] =
-                        [
-                            "plan" => $hoaMainSubscription->plan_duration,
-                            "renews_at" => $hoaMainSubscription->renews_at,
-                        ];
-                }
+            //         $response_to_send['hoa_main_custom_subscription'] =
+            //             [
+            //                 "plan" => $hoaMainSubscription->plan_duration,
+            //                 "renews_at" => $hoaMainSubscription->renews_at?? $hoaMainSubscription->canceled_at,
+            //             ];
+            //     }
+            // }
+            if ($request->user()->subscription('main')->plan_duration != null) {
+                $response_to_send['is_custom_subscription'] = true;
+                $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
+                $response_to_send['subscription']['plan_expired_at'] =   $request->user()->subscription('main')->renews_at ??  $request->user()->subscription('main')->canceled_at;
             }
         }
 
