@@ -66,6 +66,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   hoaMainUserSubscription: any = null;
   subscreptionCanceled: boolean = false;
   planExpiredAt: Date;
+  isCustomSubscription: boolean = false;
+  subscriptionData: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -289,6 +291,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
             this.cardDetails1 = res?.card_details;
             this.tiredPlansDetails = res?.plan.tiers;
             this.subscreptionCanceled = res?.subscription.canceled;
+            this.isCustomSubscription = res?.is_custom_subscription;
+            this.subscriptionData = res?.subscription;
 
 
             this.planExpiredAt = new Date(res?.subscription.plan_expired_at);
@@ -470,7 +474,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
     this.cancelSubscription.get('password').reset();
   }
 
-  // get currnet time zone 
+  // get currnet time zone
   getUserTimezoneName(): string {
     try {
       // Get the full timezone name using Intl.DateTimeFormat API
