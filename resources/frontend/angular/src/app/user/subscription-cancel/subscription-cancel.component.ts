@@ -18,6 +18,10 @@ export class SubscriptionCancelComponent implements OnInit {
   receivedData: string;
   access_Token: any;
   error: any;
+  durations: any[] = [];
+  selectedDuration: any = null; // no default selection
+
+
 
   constructor(private route: Router,
     private currentData: DataSharingService,
@@ -29,12 +33,14 @@ export class SubscriptionCancelComponent implements OnInit {
 
   // setData
   ngOnInit() {
+
     this.error = history.state.error;
     // console.log('subscription Errorxxxx : ', history.state.error)
     this.currentData.currentData.subscribe(data => {
       this.receivedData = data;
     });
     this.loginSliders();
+    this.getCustomSubscriptionPlans();
   }
 
 
@@ -61,9 +67,30 @@ export class SubscriptionCancelComponent implements OnInit {
       });
   }
 
+  getCustomSubscriptionPlans() {
+
+    this.crud.getRequest('auth/custom/subscription/plan')
+      .subscribe({
+        next: (res: any) => {
+          // console.log('res : ', res.data)
+          this.durations = res.data.map((item: any) => ({
+            ...item,
+            duration: `${item.interval_count} ${item.interval}${item.interval_count > 1 ? 's' : ''
+              }`
+          }));
+        },
+        error: (err: any) => {
+
+          // console.log('subscription Error : ', err.error)
+
+        }
+      });
+  }
+
   handleBtnPlanRequest() {
     document.getElementById('btnShowPopPlan').click();
     // alert('ok');
+    // console.log("plan", this.durations);
   }
 
   subscriptionTerminate() {
@@ -92,6 +119,9 @@ export class SubscriptionCancelComponent implements OnInit {
     });
   }
 
+  selectDuration(duration: string): void {
+    this.selectedDuration = duration;
+  }
 
 }
 

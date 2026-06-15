@@ -39,6 +39,12 @@
             <button [routerLink]="'/user/plan'">Subscribe Now</button>
           </div>
           }
+          @else if ( error && error.custom_subscription_expired) {
+
+          <div class="pnf-button">
+            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
+          </div>
+          }
           @else if ( error && error.stripe_status=='past_due') {
           <!-- <div class="pnf-button">
             <a [href]="error.url" target="_blank">
@@ -83,7 +89,7 @@
           <h3 class="d-flex gap-2 mt-2 mb-0">
             <span class="d-flex gap-2">
               <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
-              Enter password to cancel your
+              Select your plan
             </span>
           </h3>
         </div>
@@ -99,25 +105,12 @@
 
             <!-- Duration -->
             <div class="duration-wrapper">
-
-              <button class="duration-btn active">
-                1 month
+              <button *ngFor="let item of durations" class="duration-btn"
+                [class.active]="selectedDuration?.id === item.id" (click)="selectedDuration = item">
+                {{ item.duration }}
               </button>
-
-              <button class="duration-btn">
-                3 month
-              </button>
-
-              <button class="duration-btn">
-                6 month
-              </button>
-
-              <button class="duration-btn">
-                12 month
-              </button>
-
             </div>
-
+            <!-- end -->
 
           </div>
         </div>
@@ -125,11 +118,3 @@
     </div>
   </div>
 </div>
-
-
-<!-- @else if ( error && error.custom_subscription_expired) {
-
-          <div class="pnf-button">
-            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
-          </div>
-          } -->
