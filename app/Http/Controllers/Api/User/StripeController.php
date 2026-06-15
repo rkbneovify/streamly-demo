@@ -552,8 +552,7 @@ class StripeController extends Controller
                 'renewaldatetime' => $renewaldatetime ?? null,
                 'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
                 'canceled' => $subscription->cancel_at_period_end,
-                // 'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
-                'plan_expired_at' => date('Y-m-d\TH:i:s.000000\Z', $subscription->current_period_end)
+                'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
             ];
 
             // // if user is main user and custom subscription
@@ -598,9 +597,9 @@ class StripeController extends Controller
                 $response_to_send['is_custom_subscription'] = true;
                 $subscription_data['name'] =   $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
-                    $subscription_data['plan_expired_at'] = date('Y-m-d\TH:i:s.000000\Z', strtotime($request->user()->subscription('main')->renews_at));
+                    $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
-                    $subscription_data['plan_expired_at'] = date('Y-m-d\TH:i:s.000000\Z', strtotime($request->user()->subscription('main')->canceled_at));
+                    $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
                 }
             }
 
@@ -643,9 +642,9 @@ class StripeController extends Controller
                 $response_to_send['is_custom_subscription'] = true;
                 $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
-                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d\TH:i:s.000000\Z', strtotime($request->user()->subscription('main')->renews_at));
+                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
-                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d\TH:i:s.000000\Z', strtotime($request->user()->subscription('main')->canceled_at));
+                    $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
                 }
             }
         }
