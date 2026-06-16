@@ -27,6 +27,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
     const currentRoute = state?.url;
 
     if (
+      currentRoute?.includes('support-ticket') ||
       currentRoute?.includes('user-settings') ||
       currentRoute?.includes('user/plan') ||
       currentRoute?.includes('user/subscription-expired') ||
@@ -35,6 +36,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
       currentRoute?.includes('user/connected-houses') ||
       currentRoute?.includes('user/downloadapp') ||
       currentRoute?.includes('user/payment-subscription')
+
     ) {
       return true;
     }

@@ -31,6 +31,7 @@ import { SubscriptionCancelComponent } from './subscription-cancel/subscription-
 import { LocationAccessComponent } from './location-access/location-access.component';
 import { ConnectedHousesComponent } from './connected-houses/connected-houses.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -64,6 +65,7 @@ const routes: Routes = [
       { path: 'supported-devices', component: SupportedDevicesComponent },
       { path: 'location-access', component: LocationAccessComponent },
       { path: 'search', component: SearchComponent, canActivate: [authguardGuard] },
+      { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
     ]
   }
 ];
