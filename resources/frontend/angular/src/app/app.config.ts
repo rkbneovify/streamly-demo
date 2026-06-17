@@ -12,6 +12,7 @@ import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/
 import { NgSelectModule } from '@ng-select/ng-select';
 import { authInterceptor } from './_interceptor/auth.interceptor';
 import { SweetalertService } from './services/SweetAlert/sweetalert.service';
+import { QuillModule } from 'ngx-quill';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       BrowserAnimationsModule,
       BrowserModule,
       SweetalertService,
+      QuillModule.forRoot(),
       ToastrModule.forRoot({
         timeOut: 4000,
         positionClass: 'toast-top-right',
@@ -34,5 +36,6 @@ export const appConfig: ApplicationConfig = {
         closeButton: true
       })
     ),
+
   ],
 };

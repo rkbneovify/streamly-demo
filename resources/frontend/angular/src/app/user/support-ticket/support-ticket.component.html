@@ -8,84 +8,63 @@
 
   <div class="xcontainer">
     <!-- Form Card -->
-    <div class="ticket-card">
+    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket()">
 
       <!-- Category -->
       <div class="form-group">
         <label>Category</label>
+        <select class="input-field" formControlName="category" (change)="onCategoryChange()">
 
-        <div class="option-grid two-col">
-          <button type="button" class="option-btn active">
-            Technical
-          </button>
+          <option [ngValue]="null">
+            Select Category
+          </option>
 
-          <button type="button" class="option-btn">
-            Billing
-          </button>
-        </div>
+          <option *ngFor="let category of categories" [value]="category">
+
+            {{ category }}
+          </option>
+        </select>
       </div>
+
+
 
       <!-- Sub Category -->
       <div class="form-group">
         <label>Sub Category</label>
+        <select class="input-field" formControlName="subCategory">
 
-        <div class="option-grid three-col">
-          <button type="button" class="option-btn underline active">
-            Login Issue
-          </button>
+          <option [ngValue]="null">
+            Select Sub Category
+          </option>
 
-          <button type="button" class="option-btn underline active">
-            System Error
-          </button>
+          <option *ngFor="let item of filteredSubCategories" [value]="item">
 
-          <button type="button" class="option-btn">
-            Payment Issue
-          </button>
-        </div>
+            {{ item }}
+          </option>
+        </select>
       </div>
 
       <!-- Subject -->
       <div class="form-group">
         <label>Subject</label>
+        <input type="text" class="input-field" placeholder="Subject" formControlName="subject">
 
-        <input type="text" class="input-field" placeholder="Enter Subject">
       </div>
-
       <!-- Description -->
       <div class="form-group">
         <label>Description</label>
-
-        <div class="editor">
-
-          <div class="editor-toolbar">
-            <button type="button"><strong>B</strong></button>
-
-            <button type="button">
-              <u>U</u>
-            </button>
-          </div>
-
-          <textarea placeholder="Describe your issue . . .">
-                </textarea>
-
-        </div>
+        <quill-editor formControlName="description" [modules]="quillConfig" theme="snow">
+        </quill-editor>
       </div>
 
       <!-- Attachment -->
-      <div class="form-group">
-        <label>Attachment</label>
+      <input type="file" (change)="onFileSelected($event)">
 
-        <div class="upload-box">
-          Click to upload or drag file here
-        </div>
-      </div>
-
-      <!-- Submit -->
-      <button class="submit-btn">
+      <button type="submit">
         Submit Ticket
       </button>
 
-    </div>
+    </form>
 
     <!-- Support Info -->
     <div class="support-info">
@@ -114,7 +93,7 @@
           </div>
 
           <div class="value">
-            Contactstreamlytv.com
+            {{ 'support@streamlytv.com' }}
           </div>
         </div>
 
