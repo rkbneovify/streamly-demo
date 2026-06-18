@@ -286,6 +286,23 @@ button[type='submit'] {
     grid-template-columns: 1fr;
   }
 
+  .contact-card {
+    width: 100%;
+    padding: 10px;
+
+    .icon {
+      width: 30px;
+      height: 30px;
+      color: #002749;
+      margin-bottom: 18px;
+    }
+
+    .value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
   .submit-btn {
     font-size: 20px;
   }
