@@ -1,8 +1,9 @@
 import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { FileUploadComponent } from '../../components/file-upload/file-upload.component';
+import { CrudService } from '../../services/crud.service';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
@@ -10,7 +11,7 @@ import { FileUploadComponent } from '../../components/file-upload/file-upload.co
   templateUrl: './support-ticket.component.html',
   styleUrl: './support-ticket.component.scss'
 })
-export class SupportTicketComponent {
+export class SupportTicketComponent implements OnInit {
   ticketForm!: FormGroup;
   description = '';
   selectedFiles: File[] = [];
@@ -41,29 +42,52 @@ export class SupportTicketComponent {
     ]
   };
 
-  categories: string[] = [
-    'Technical',
-    'Billing'
-  ];
+  categories: any[] = [];
 
-  subCategories: { [key: string]: string[] } = {
-    Technical: [
-      'Login Issue',
-      'System Error'
-    ],
-    Billing: [
-      'Payment Issue',
-      'Refund Request'
-    ]
-  };
+  subCategories: any[] = [];
 
   selectedCategory = '';
   selectedSubCategory = '';
 
   filteredSubCategories: string[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private api: CrudService) {
     this.initializeForm();
+  }
+
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  getCategories() {
+    this.api.getRequest('blogs/categories')
+      .subscribe({
+        next: (res: any) => {
+          console.log("res :", res)
+          this.categories = res.data;
+        },
+        error: (err: any) => {
+          console.log("error :", err.error)
+        },
+      })
+  }
+
+  getSubCategories(category: string) {
+    this.api.getRequest(`blogs/${category}/sub-categories`)
+      .subscribe({
+        next: (res: any) => {
+          console.log("res :", res)
+          this.subCategories = res.data;
+        },
+        error: (err: any) => {
+          console.log("error :", err.error)
+        },
+      })
+  }
+
+  onCategoryChange(event: Event) {
+    this.selectedCategory = (event.target as HTMLSelectElement).value;
+    this.getSubCategories(this.selectedCategory);
   }
 
   initializeForm(): void {
@@ -79,13 +103,7 @@ export class SupportTicketComponent {
     });
   }
 
-  onCategoryChange(): void {
-    this.filteredSubCategories =
-      this.subCategories[this.selectedCategory] || [];
 
-    // Reset sub-category when category changes
-    this.selectedSubCategory = '';
-  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -146,7 +164,7 @@ export class SupportTicketComponent {
     //   console.log(`${key}: ${value}`);
     // }
     // console.log(this.ticketForm.value);
-    
+
 
     // API Call
     // this.ticketService.createTicket(formData).subscribe(...)

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
 
 interface PreviewFile {
   file: File;
@@ -20,6 +21,10 @@ export class FileUploadComponent {
 
   isDragging = false;
   files: PreviewFile[] = [];
+
+  constructor(private sweetAlert: SweetalertService) {
+
+  }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -52,9 +57,48 @@ export class FileUploadComponent {
     input.value = '';
   }
 
+  // processFiles(fileList: FileList): void {
+
+  //   Array.from(fileList).forEach(file => {
+
+  //     let type: 'image' | 'video' | 'other' = 'other';
+
+  //     if (file.type.startsWith('image/')) {
+  //       type = 'image';
+  //     } else if (file.type.startsWith('video/')) {
+  //       type = 'video';
+  //     }
+
+  //     this.files.push({
+  //       file,
+  //       preview: URL.createObjectURL(file),
+  //       type
+  //     });
+  //   });
+
+  //   this.emitFiles();
+  // }
+
   processFiles(fileList: FileList): void {
 
     Array.from(fileList).forEach(file => {
+
+      const allowedTypes = [
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/heic',
+        'image/heif',
+        'video/mp4',
+        'video/webm',
+        'video/quicktime'
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        // console.error('Unsupported file:', file.name);
+        this.sweetAlert.toast("Unsupported file", "error");
+        return;
+      }
 
       let type: 'image' | 'video' | 'other' = 'other';
 

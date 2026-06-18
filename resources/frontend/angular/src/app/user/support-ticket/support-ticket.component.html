@@ -13,7 +13,7 @@
       <!-- Category -->
       <div class="form-group">
         <label>Category</label>
-        <select class="input-field" formControlName="category" (change)="onCategoryChange()">
+        <select class="input-field" formControlName="category" (change)="onCategoryChange($event)">
 
           <option [ngValue]="null">
             Select Category
@@ -37,7 +37,7 @@
             Select Sub Category
           </option>
 
-          <option *ngFor="let item of filteredSubCategories" [value]="item">
+          <option *ngFor="let item of subCategories" [value]="item">
 
             {{ item }}
           </option>
@@ -58,8 +58,12 @@
       </div>
 
       <!-- Attachment -->
-      <app-file-upload (filesChange)="onFilesSelected($event)">
-      </app-file-upload>
+      <div class="form-group">
+        <label>Attachment</label>
+        <app-file-upload (filesChange)="onFilesSelected($event)">
+        </app-file-upload>
+      </div>
+
 
       <button type="submit">
         Submit Ticket
