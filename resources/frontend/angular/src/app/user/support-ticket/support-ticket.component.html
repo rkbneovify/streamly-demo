@@ -58,7 +58,8 @@
       </div>
 
       <!-- Attachment -->
-      <input type="file" (change)="onFileSelected($event)">
+      <app-file-upload (filesChange)="onFilesSelected($event)">
+      </app-file-upload>
 
       <button type="submit">
         Submit Ticket

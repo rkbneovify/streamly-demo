@@ -1,0 +1,72 @@
+<div
+  class="upload-box"
+  [class.dragging]="isDragging"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+
+  <input
+    #fileInput
+    type="file"
+    multiple
+    accept="image/*,video/*"
+    hidden
+    (change)="onFileSelected($event)"
+  />
+
+  <div class="upload-content" (click)="fileInput.click()">
+    <h2>Click to upload or drag file here</h2>
+    <p>Images & Videos Supported</p>
+  </div>
+
+</div>
+
+<div class="preview-grid" *ngIf="files.length">
+
+  <div class="preview-card" *ngFor="let item of files; let i = index">
+
+    <button
+      type="button"
+      class="remove-btn"
+      (click)="removeFile(i)">
+      ×
+    </button>
+
+    <img
+      *ngIf="item.type === 'image'"
+      [src]="item.preview"
+      alt="preview"
+    />
+
+    <video
+      *ngIf="item.type === 'video'"
+      [src]="item.preview"
+      muted
+      controls>
+    </video>
+
+    <div
+      class="file-info"
+      [title]="item.file.name">
+      {{ item.file.name }}
+    </div>
+
+  </div>
+
+</div>
+
+<div class="action-bar" *ngIf="files.length">
+
+  <span>
+    {{ files.length }} file(s) selected
+  </span>
+
+  <button
+    type="button"
+    class="clear-btn"
+    (click)="clearAll()">
+    Clear All
+  </button>
+
+</div>
