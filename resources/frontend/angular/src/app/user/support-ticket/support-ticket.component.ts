@@ -2,16 +2,19 @@ import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
+import { FileUploadComponent } from '../../components/file-upload/file-upload.component';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgFor, QuillModule],
+  imports: [FormsModule, ReactiveFormsModule, NgFor, QuillModule, FileUploadComponent],
   templateUrl: './support-ticket.component.html',
   styleUrl: './support-ticket.component.scss'
 })
 export class SupportTicketComponent {
   ticketForm!: FormGroup;
   description = '';
+  selectedFiles: File[] = [];
+
 
   quillConfig = {
     toolbar: [
@@ -94,11 +97,17 @@ export class SupportTicketComponent {
     }
   }
 
+  onFilesSelected(files: File[]) {
+    this.selectedFiles = files;
+
+    console.log('Selected Files:', files);
+  }
+
   submitTicket(): void {
-    if (this.ticketForm.invalid) {
-      this.ticketForm.markAllAsTouched();
-      return;
-    }
+    // if (this.ticketForm.invalid) {
+    //   this.ticketForm.markAllAsTouched();
+    //   return;
+    // }
 
     const formData = new FormData();
 
@@ -122,15 +131,22 @@ export class SupportTicketComponent {
       this.ticketForm.value.description
     );
 
-    if (this.ticketForm.value.attachment) {
-      formData.append(
-        'attachment',
-        this.ticketForm.value.attachment
-      );
-    }
+    // if (this.ticketForm.value.attachment) {
+    //   formData.append(
+    //     'attachment',
+    //     this.ticketForm.value.attachment
+    //   );
+    // }
 
-    console.log(this.ticketForm.value);
-    console.log(formData);
+    this.selectedFiles.forEach(file => {
+      formData.append('attachment[]', file);
+    });
+
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`);
+    // }
+    // console.log(this.ticketForm.value);
+    
 
     // API Call
     // this.ticketService.createTicket(formData).subscribe(...)
