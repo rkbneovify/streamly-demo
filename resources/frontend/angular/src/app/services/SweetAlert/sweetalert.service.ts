@@ -13,7 +13,9 @@ export class SweetalertService {
       icon: icon,
       title: message,
       showConfirmButton: false,
-      timer: 2000
+      showCloseButton: true,
+      timer: 5000,
+      timerProgressBar: true
     });
   }
   success(message: string, title: string = 'Success') {
