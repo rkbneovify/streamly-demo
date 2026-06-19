@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\SupportTicket;
 use App\Traits\ApiResponseTrait;
+use App\Traits\FileUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SupportTicketController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait, FileUploadTrait;
     public function store(Request $request, SupportTicket $supportTicket)
     {
         $validator = Validator::make($request->all(), [
@@ -45,5 +46,20 @@ class SupportTicketController extends Controller
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
+    }
+
+    public function fileUpload(Request $request)
+    {
+        $request->validate([
+            'attachment' => 'required|file|max:512000'
+        ]);
+
+        $file = $this->uploadFile(
+            $request->file('attachment'),
+            'uploads/images',   // folder
+            's3'     // public or 's3'
+        );
+
+        return response()->json($file);
     }
 }
