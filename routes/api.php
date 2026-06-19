@@ -310,3 +310,9 @@ Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
 });
+
+// Support Ticket
+Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
+    Route::get('/', 'Api\SupportTicketController@index');
+    Route::post('/store', 'Api\SupportTicketController@store');
+});
