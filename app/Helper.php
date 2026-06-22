@@ -1835,7 +1835,7 @@ function isTV($device)
 
 function KindlySubscribeMsg()
 {
-    return "We're having some trouble with your current subscription.We'll try again, but in meantime you may want to update your subscription. For more help, please visit https://streamlytv.com or contact at https://streamlytv.com/helpandsupport";
+    return "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit https://streamlytv.com or contact at https://streamlytv.com/help-and-support";
 }
 function GetSubscriptionStatusOfUser($user_id)
 {
