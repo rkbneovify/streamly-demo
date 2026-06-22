@@ -980,7 +980,7 @@ function isSubscriptionExpired($userId)
 
 
 
-    $qrcode = route('qrcode.generate') . '?url=' . url('/');
+    $qrcode = route('qrcode.generate') . '?url=' . url('/') . '/auth/login';
     $stripe = new StripeService();
     $planDetails = $stripe->getPlanDetails($user->subscription('main')->stripe_plan);
     $subscriptionDetails = $stripe->getSubscriptionDetilasById($user->subscription('main')->stripe_id, $user->subscription('main')->livemode == 1 ? 'Live' : 'Testing');
