@@ -49,7 +49,7 @@ export class OtpModelComponent implements OnInit, OnDestroy {
 
 
   resendOtp() {
-    document.getElementById('btn-show-otp-dailog').click();
+
     this.isLoading = true;
     const data = {
       action: this.action
@@ -62,6 +62,7 @@ export class OtpModelComponent implements OnInit, OnDestroy {
         this.startTimer();
         this.ts.success(res.message)
         this.isOtpError = false;
+        document.getElementById('btn-show-otp-dailog').click();
       },
       error: (err: any) => {
         this.ts.error(err.error.message)
