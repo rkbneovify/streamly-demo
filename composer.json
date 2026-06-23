@@ -8,32 +8,30 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "botman/botman": "^2.6",
         "botman/driver-web": "^1.5",
         "cboden/ratchet": "^0.4.3",
-        "doctrine/dbal": "^2.10",
-        "fideloper/proxy": "^4.0",
-        "fruitcake/laravel-cors": "^1.0",
+        "doctrine/dbal": "^3.0",
         "garygreen/pretty-routes": "^1.0",
         "gghughunishvili/entrust": "^10.0",
         "guzzlehttp/psr7": "^2.8",
         "hashids/hashids": "^4.1",
         "intervention/image": "^2.7",
         "jenssegers/agent": "^2.6",
-        "kreait/laravel-firebase": "^2.4",
+        "kreait/laravel-firebase": "^4.0",
         "laravel/cashier": "^12.17",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^9.0",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.0",
-        "league/flysystem-aws-s3-v3": "~1.0",
+        "laravel/ui": "^4.2",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
-        "pbmedia/laravel-ffmpeg": "^7.5",
+        "pbmedia/laravel-ffmpeg": "8",
         "piwik/device-detector": "^3.12",
         "realrashid/sweet-alert": "^7.3",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/laravel-permission": "^3.0",
+        "spatie/laravel-permission": "^5.0",
         "stevebauman/location": "^6.6",
         "tymon/jwt-auth": "^1.0",
         "yajra/laravel-datatables-oracle": "^9.10"
@@ -42,20 +40,10 @@
         "barryvdh/laravel-debugbar": "^3.5",
         "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
-        "fzaninotto/faker": "^1.4",
+        "fakerphp/faker": "^1.20",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^4.1",
-        "phpunit/phpunit": "^8.5"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
+        "nunomaduro/collision": "^6.0",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
@@ -75,8 +63,16 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -88,5 +84,7 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

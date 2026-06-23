@@ -2,23 +2,19 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Laravel CORS
-    |--------------------------------------------------------------------------
-    |
-    | allowedOrigins, allowedHeaders and allowedMethods can be set to array('*')
-    | to accept any value.
-    |
-    */
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'], // ensure your routes are covered
-    'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
-    'allowedOriginsPatterns' => [],
-    'allowedHeaders' => ['*'],
-    'allowedMethods' => ['*'],
-    'exposedHeaders' => [],
-    'maxAge' => 0,
+    'allowed_methods' => ['*'],
 
+    'allowed_origins' => ['*'],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => true,
 ];
