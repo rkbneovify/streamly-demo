@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        Paginator::useBootstrap();
+        Paginator::useBootstrap(); // for bootstrap pagination
         $keys = DB::table('Stripe_keys')->where('status', 'active')->first();
 
         if ($keys != null) {
