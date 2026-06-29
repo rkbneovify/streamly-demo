@@ -36,7 +36,7 @@ class GracenoteScheduleProgram extends Model
      */
     protected $casts = [
         'date' => 'date:Y-m-d',
-        'time' => 'time',
+        'time' => 'datetime:H:i:s',
         'start' => 'integer',
         'end' => 'integer',
         'assets' => 'array',

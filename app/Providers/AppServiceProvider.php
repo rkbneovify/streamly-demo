@@ -7,6 +7,7 @@ use App\Console\DebugKernel;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -25,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.debug')) {
             $this->app->singleton(DebugKernel::class);
         }
-
     }
 
     /**
@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        Paginator::useBootstrap(); // for bootstrap pagination
         $keys = DB::table('Stripe_keys')->where('status', 'active')->first();
 
         if ($keys != null) {
@@ -44,12 +45,8 @@ class AppServiceProvider extends ServiceProvider
                 'cashier.key' => $keys->stripe_key,
                 'cashier.secret' => $keys->stripe_secret,
             ]);
-
         }
 
         Subscription::observe(SubscriptionsObserver::class);
-
-
-
     }
 }
