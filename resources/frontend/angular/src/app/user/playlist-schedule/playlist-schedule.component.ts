@@ -598,7 +598,7 @@ export class PlaylistScheduleComponent
       zipcode: zipcode,
     };
 
-    this.apiService.postRequest('auth/epg-guide', body).subscribe({
+    this.apiService.postRequest('auth/epg-guide-v2', body).subscribe({
       next: (res: any) => {
         this.ngZone.run(() => {
           this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
