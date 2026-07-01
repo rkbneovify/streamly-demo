@@ -505,7 +505,6 @@ class NewChannelApiController extends Controller
                 $zipcode = $zipcodeRule->zipcode;
             } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
-
             }
 
             if ($urlType == 'manifest') {
@@ -555,7 +554,6 @@ class NewChannelApiController extends Controller
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -710,6 +708,264 @@ class NewChannelApiController extends Controller
         }
     }
 
+    public function epgGuideWithPagination(Request $request)
+    {
+
+        // abort(500);
+        $validator = Validator::make($request->all(), [
+            'typeurl' => 'required',
+            'day' => 'nullable',
+            'zipcode' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $user = JWTAuth::user();
+            $urlType = $request->get('typeurl');
+            $zipcode = $request->input('zipcode');
+            $genre = $request->get('genre');
+            $hoursoffset = $request->get('hoursoffset');
+            $pattern = '/^(-?\d{2}:\d{2})$/';
+
+            $limit = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
+
+            // Insert zipcode only if it doesn't already exist for this user
+            if ($zipcode && $user) {
+                UserZipcode::firstOrCreate([
+                    'user_id' => $user->id,
+                    'zipcode' => $zipcode
+                ]);
+            }
+
+            if (preg_match($pattern, $hoursoffset, $matches)) {
+                // String matches the format, and $matches[1] contains the matched value
+                $hoursofset = $matches[1];
+            } else {
+                // String does not match the format
+                $hoursofset = '00:00';
+            }
+            $day = $request->day;
+            $validate = 0;
+
+            // Check DB for email-specific zipcode rules
+            $zipcodeRule = UserZipcodeRule::where('email', $user->email)->first();
+            if ($zipcodeRule) {
+                $validate = $zipcodeRule->validate;
+                $zipcode = $zipcodeRule->zipcode;
+            } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+                $validate = 1;
+            }
+
+            if ($urlType == 'manifest') {
+                $type = 'smooth_url';
+            } else if ($urlType == 'm3u8') {
+                $type = 'url';
+            } else if ($urlType == "mpd") {
+                $type = 'dash_url';
+            } else {
+                $type = 'dash_url';
+            }
+            $query = Channel::with([
+                'zipcode',
+                'premium',
+                'phxLocal'
+            ])
+                ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'channels.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
+
+
+
+            // $query->where('channels.status', 1);
+            // // return response()->json([$query->where('channels.status', 1)->toSql(), $query->getBindings()]);
+
+            // $query->where(function ($q) use ($zipcode) {
+
+            //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+
+            //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+            // });
+            // ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
+            // $query->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
+
+            if ($validate == 1) {
+                if (!empty($zipcode)) {
+
+
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->phxLocalStatus($user)
+                        ->orwhere('channels.type', 'all')
+                        ->where('channels.status', 1)
+                        ->orwhereNull('channels.type')
+                        ->where('channels.status', 1);
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+
+                    $query->localZipcode($zipcode)
+                        ->premiumStatus($user)
+                        ->phxLocalStatus($user)
+                        ->where('channels.status', 1);
+                }
+            }
+
+            // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+            // $query->where('channels.status', 1)->where(function ($q) use ($user) {
+            //     if ($user->access_premium_channel == 1) {
+            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
+            //             ->orWhereNull('channels.type');
+            //     } else {
+            //         $q->whereIn('channels.type', ['all', 'local'])
+            //             ->orWhereNull('channels.type');
+            //     }
+
+            // });
+
+
+            // $query->premium($user);
+
+            $query->where('channels.status', 1);
+
+
+
+
+
+            if (!empty($genre) && $genre != 'Others') {
+                $query->where('genre.name', '=', $genre);
+            } else if ($genre == 'Others') {
+                $query->whereNull('genre.name');
+            }
+            $query->groupBy('channels.id');
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $query->orderBy('channels.id', 'desc');
+            } else {
+                $query->orderBy('channels.id', 'asc');
+            }
+            $channels =  $query->paginate($limit, ['*'], 'page', $page);
+            $channels->getCollection()->transform(function ($channel) use ($day) {
+                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
+                    ->where('user_id', JWTAuth::user()->id)
+                    ->exists();
+
+                $assetData = $this->getURIFromAsset($channel->assets);
+
+                $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                $channel->ratio = $assetData['ratio'] ?? 'NA';
+
+                $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
+                    // station name inside program
+                    $item->stationName = $channel->stationName;
+                    return $item;
+                });
+                unset($channel->assets);
+
+                if ($channel->stationName == null) {
+                    $channel->stationName = "NA";
+                }
+                if ($channel->callSign == null) {
+                    $channel->callSign = "NA";
+                }
+                if ($channel->timeZone == null) {
+                    $channel->timeZone = "NA";
+                }
+                if ($channel->channel_url == null) {
+                    $channel->channel_url = "NA";
+                }
+                if ($channel->prgSvcId == null) {
+                    $channel->prgSvcId = "NA";
+                }
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/No Image.png';
+                }
+
+
+
+
+                if ($channel->id == 11) {
+                    $channel->stationName = 'FanDuel';
+                    // $channel->image = env('APP_URL') . '/uploads/fandue.png';
+                }
+                if ($channel->id == 6) {
+                    $channel->stationName = 'Trinity Broadcasting Network';
+                    // $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
+                }
+                if ($channel->id == 19) {
+                    $channel->stationName = 'Hallmark Family';
+                    // $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
+                }
+                if ($channel->id == 45) {
+                    $channel->stationName = 'Fuse Music';
+                    // $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
+                }
+
+                // if ($channel->id == 134) {
+                //     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
+                // }
+                // if ($channel->id == 135) {
+                //     $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
+                // }
+                // if ($channel->id == 136) {
+
+                //     $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
+                // }
+                // if ($channel->id == 137) {
+                //     $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
+                // }
+                // if ($channel->id == 138) {
+                //     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
+                // }
+                // if ($channel->id == 139) {
+                //     $channel->image = env('APP_URL') . '/uploads/fox-139.png';
+                // }
+                // if ($channel->id == 140) {
+                //     $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
+                // }
+
+                if ($channel->is_logo_from_gracenote == 0) {
+                    $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
+                }
+
+
+                // just for additional data hiding
+                unset($channel->zipcode);
+                unset($channel->primium);
+                unset($channel->is_logo_from_gracenote);
+                unset($channel->local_image);
+                unset($channel->db_image);
+
+
+                return $channel;
+            });
+
+
+            $response = [];
+            $response['success'] = true;
+            $response['response_code'] = 200;
+            $response['message'] = 'Epg Guide Retrieved successfully.';
+            if ($day == 'tomorrow') {
+                $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
+                $start_time = GracenoteScheduleProgram::select('start')->where('date', $gmdate)->orderBy('start', 'asc')->first();
+                // var_dump($start_time);
+                $response['start'] = $start_time->start;
+            }
+            $response['data'] = $channels->items();
+            $response['last_page'] = $channels->lastPage();
+            $response['current_page'] = $channels->currentPage();
+            $response['per_page'] = $channels->perPage();
+            $response['has_more'] = $channels->hasMorePages();
+            return response()->json($response, 200);
+        }
+    }
+
 
     private function getProgramScheduleById($prgSvcId, $day)
     {
@@ -799,8 +1055,6 @@ class NewChannelApiController extends Controller
                                 ->where('channels.status', 1)
                                 ->orwhereNull('channels.type')
                                 ->where('channels.status', 1);
-
-
                         }
                     } elseif ($validate == 2) {
                         if (!empty($zipcode)) {
@@ -842,8 +1096,7 @@ class NewChannelApiController extends Controller
                     // Sort so the one with play_icon = true comes first
                     return $group->sortByDesc('play_icon')->first();
                 })
-                ->values();
-            ;
+                ->values();;
             // Sorting in ascending order by 'price'
             $sortedPrograms = $filteredPrograms->sortByDesc('play_icon');
 
@@ -855,7 +1108,7 @@ class NewChannelApiController extends Controller
                 'channel',
                 'channels.zipcode',
                 'channels.premium'
-            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
+            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%")
 
@@ -904,8 +1157,6 @@ class NewChannelApiController extends Controller
                                 ->where('channels.status', 1)
                                 ->orwhereNull('channels.type')
                                 ->where('channels.status', 1);
-
-
                         }
                     } elseif ($validate == 2) {
                         if (!empty($zipcode)) {
@@ -1287,7 +1538,6 @@ class NewChannelApiController extends Controller
 
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('uploads/channellogo') . '/' . $channel->local_image;
-
                 }
 
                 unset($channel->db_image);
@@ -1344,7 +1594,6 @@ class NewChannelApiController extends Controller
 
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('uploads/channellogo') . '/' . $channel->local_image;
-
                 }
 
                 unset($channel->db_image);
@@ -1385,7 +1634,6 @@ class NewChannelApiController extends Controller
                         "image" => env('APP_URL') . '/uploads/fandue.png', // your custom FanDuel logo
                         "up_next" => $up_next
                     ];
-
                 } else {
                     $data = [
                         "title" => $program->title,
@@ -1397,7 +1645,6 @@ class NewChannelApiController extends Controller
                         "up_next" => $up_next
                     ];
                 }
-
             } else {
                 $data = NULL;
             }

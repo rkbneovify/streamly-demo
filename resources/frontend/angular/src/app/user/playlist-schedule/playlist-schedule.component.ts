@@ -33,11 +33,12 @@ import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
-import { NotificationService } from '../../services/utils/notification.service';
+import { CacheService } from '../../services/cacheService/cacheservice.service';
+
 
 declare let window: Window;
 
@@ -58,6 +59,7 @@ declare let window: Window;
     JsonPipe,
     NgClass,
     ExtractFirstTwoPipe,
+
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -94,6 +96,9 @@ export class PlaylistScheduleComponent
   isMobileChrom: boolean = false;
   currentWidth: number = 0;
   private screenSizeSubscription!: Subscription;
+  page: number = 1;
+  resChannelList: any[] = [];
+  hasMore: boolean = true;
 
   previousRoute: string | null = null;
 
@@ -168,31 +173,35 @@ export class PlaylistScheduleComponent
   // get category list
   getAllCategories() {
     this.isLoading = true;
-    this.apiService.getRequest('auth/all-genre').subscribe({
-      next: (res: any) => {
-        this.categories = res.data;
-        const allCategory = {
-          name: 'All',
-          image: '../../../assets/dummy-img/All.svg',
-        };
-        if (!this.categories.some((category) => category.name === 'All')) {
-          this.categories.unshift(allCategory);
-        }
+    this.apiService.getRequest('auth/all-genre')
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.categories = res.data;
+          const allCategory = {
+            name: 'All',
+            image: '../../../assets/dummy-img/All.svg',
+          };
+          if (!this.categories.some((category) => category.name === 'All')) {
+            this.categories.unshift(allCategory);
+          }
 
-        // Add 'Others' category at the end if it doesn't already exist
-        const othersCategory = { name: 'Others', image: '' };
-        if (!this.categories.some((category) => category.name === 'Others')) {
-          this.categories.push(othersCategory);
-        }
+          // Add 'Others' category at the end if it doesn't already exist
+          const othersCategory = { name: 'Others', image: '' };
+          if (!this.categories.some((category) => category.name === 'Others')) {
+            this.categories.push(othersCategory);
+          }
 
-        this.cacheService.setCategories(this.categories);
-        this.isLoading = true;
-      },
-      error: (err: any) => {
-        console.log(err);
-        this.isLoading = true;
-      },
-    });
+          this.cacheService.setCategories(this.categories);
+          // this.isLoading = true;
+        },
+        error: (err: any) => {
+          console.log(err);
+          // this.isLoading = false;
+        },
+      });
   }
 
   // this is not using anywhere nouse
@@ -306,6 +315,7 @@ export class PlaylistScheduleComponent
     private ngZone: NgZone,
     private cacheService: PlaylistCacheService,
     private routeTrackingService: RouteTrackingService,
+    private channelCache: CacheService
 
   ) { }
   ngOnInit(): void {
@@ -441,7 +451,23 @@ export class PlaylistScheduleComponent
   count: number = 0;
   isProcessing: boolean = false;
 
-  onScrollChannelPostion(): void {
+  onScrollChannelPostion(event: Event): void {
+
+    const element = event.target as HTMLElement;
+    const scrollTop = element.scrollTop;
+    const clientHeight = element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+
+    // User reached the bottom
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      // console.log('Scroll Down');
+      if (this.hasMore) {
+        this.page++;
+        this.getScheduleData();
+      }
+
+    }
+
     // Store the current scroll position whenever the user scrolls
     localStorage.setItem(
       'scrollPosition',
@@ -582,8 +608,9 @@ export class PlaylistScheduleComponent
   limit: number = 10;
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+    this.isLoading = true;
     setTimeout(() => {
-      this.isLoading = true;
+
       this.cdr.markForCheck(); // Force UI update
     }, 100);
     this.cdr.markForCheck();
@@ -596,34 +623,64 @@ export class PlaylistScheduleComponent
       start: this.startIndex,
       limit: this.limit,
       zipcode: zipcode,
+      page: this.page
     };
 
-    this.apiService.postRequest('auth/epg-guide', body).subscribe({
-      next: (res: any) => {
-        this.ngZone.run(() => {
-          this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
-          this.filteredPrograms = [...res.data];
-          this.cacheService.setFilterData(this.filteredPrograms);
-          this.cacheService.setSchedule(this.getScheduleChannelLogo);
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        });
-      },
-      error: (err: any) => {
-        console.error(err);
 
-        this.ngZone.run(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        });
-
-
-      },
+    const cacheKey = JSON.stringify({
+      genre: genre === 'All' ? '' : genre,
+      page: this.page,
+      start: this.startIndex,
+      limit: this.limit,
+      zipcode
     });
+
+    const cachedData = this.channelCache.get(cacheKey);
+
+    if (cachedData) {
+      this.resChannelList = [...this.resChannelList, ...cachedData];
+      this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+      this.filteredPrograms = [...this.resChannelList];
+      this.isLoading = false;
+      return;
+    }
+
+
+    this.apiService.postRequest('auth/epg-guide-v2', body)
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.hasMore = res.has_more;
+          this.channelCache.set(cacheKey, res.data);
+          // this.isLoading = false;
+          this.resChannelList = [...this.resChannelList, ...res.data];
+          this.ngZone.run(() => {
+            this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+            this.filteredPrograms = [...this.resChannelList];
+            this.cacheService.setFilterData(this.filteredPrograms);
+            this.cacheService.setSchedule(this.getScheduleChannelLogo);
+
+            this.cdr.detectChanges();
+          });
+        },
+        error: (err: any) => {
+          console.error(err);
+
+          this.ngZone.run(() => {
+            this.isLoading = false;
+            this.cdr.detectChanges();
+          });
+
+
+        },
+      });
   }
 
   changeCategory(genre?: string) {
     this.cacheService.clearCache();
+    this.channelCache.clear();
     this.getScheduleData(genre);
     this.active_categories(genre);
     this.changeDays('Today');
@@ -632,6 +689,7 @@ export class PlaylistScheduleComponent
 
   // Listen to scroll event
   onScroll() {
+
     if (this.isNearBottom()) {
       // Increase the startIndex for the next batch of data
       this.startIndex += this.limit;
@@ -1103,4 +1161,7 @@ export class PlaylistScheduleComponent
 
     return intervals;
   }
+
+
+
 }
