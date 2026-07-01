@@ -121,7 +121,7 @@ class RokuChannelImagesCronController extends Controller
         $folderPath = storage_path('app/public/channel_roku_images/');
 
         // Load the image from the URL
-        $image = @imagecreatefrompng($imageUrl);
+        $image = imagecreatefrompng($imageUrl);
 
         if (!$image) {
             return 'Unable to load image';
