@@ -70,7 +70,7 @@ Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronContro
 /** Gracenote API data into db cron code end here */
 
 /** Gracenote channel images optimization cron code start here */
-Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCron');
+Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCronNew');
 
 /** Gracenote channel images optimization cron code end here */
 
