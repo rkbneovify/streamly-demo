@@ -618,3 +618,7 @@ Route::get('/admin/export-db', function () {
 
     return response()->download($filePath)->deleteFileAfterSend(true);
 });
+
+Route::get('/admin/php-info', function () {
+    phpinfo();
+});

@@ -461,11 +461,11 @@ export class PlaylistScheduleComponent
     // User reached the bottom
     if (scrollTop + clientHeight >= scrollHeight - 10) {
       // console.log('Scroll Down');
-      if (this.hasMore) {
-        this.page++;
-        this.getScheduleData();
+      if (!this.hasMore || this.isLoading) {
+        return;
       }
-
+      this.page++;
+      this.getScheduleData();
     }
 
     // Store the current scroll position whenever the user scrolls
