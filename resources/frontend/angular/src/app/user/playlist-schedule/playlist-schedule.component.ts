@@ -465,7 +465,13 @@ export class PlaylistScheduleComponent
         return;
       }
       this.page++;
-      this.getScheduleData();
+      if (this.selected_category === 'All') {
+        this.getScheduleData();
+
+      } else {
+        this.getScheduleData(this.selected_category);
+      }
+
     }
 
     // Store the current scroll position whenever the user scrolls
@@ -681,6 +687,9 @@ export class PlaylistScheduleComponent
   changeCategory(genre?: string) {
     this.cacheService.clearCache();
     this.channelCache.clear();
+    this.resChannelList = [];
+    this.page = 1;
+
     this.getScheduleData(genre);
     this.active_categories(genre);
     this.changeDays('Today');

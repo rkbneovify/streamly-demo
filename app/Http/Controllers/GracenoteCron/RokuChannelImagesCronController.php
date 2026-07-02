@@ -45,6 +45,11 @@ class RokuChannelImagesCronController extends Controller
 
     public function RokuChannelImagesCron()
     {
+        // for local testing
+        // set_time_limit(0); // No execution time limit
+        // // or
+        // ini_set('max_execution_time', 0);
+
         // $query = Channel::select('gracenote_sources.assets')
         //     ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
         $folderPath = storage_path('app/public/channel_roku_images/');
@@ -83,7 +88,7 @@ class RokuChannelImagesCronController extends Controller
         $folderPath = storage_path('app/public/channel_roku_images/');
 
         // Load the image from the URL
-        $image = imagecreatefrompng($imageUrl);
+        $image = @imagecreatefrompng($imageUrl);
 
         if (!$image) {
             return 'Unable to load image';
