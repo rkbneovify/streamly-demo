@@ -27,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
+
+
 // qrcode generate
 Route::get('qrcode/generate', function (Request $request) {
     $url = $request->get('url', $request->url);
@@ -563,4 +565,8 @@ Route::get('/admin/clear', function () {
     Artisan::call('view:clear');
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
+});
+
+Route::get('/admin/php-info', function () {
+    phpinfo();
 });
