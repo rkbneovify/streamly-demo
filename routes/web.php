@@ -564,3 +564,7 @@ Route::get('/admin/clear', function () {
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
+
+Route::get('/admin/php-info', function () {
+    phpinfo();
+});
