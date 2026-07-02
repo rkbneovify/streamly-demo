@@ -35,6 +35,7 @@ class FooterApiController extends Controller
             try {
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
                     $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+                        ->bcc('support@streamlytv.com')
                         ->subject(env('APP_NAME') . ': Contact Form');
                 });
 
