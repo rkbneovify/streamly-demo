@@ -27,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
+
+
 // qrcode generate
 Route::get('qrcode/generate', function (Request $request) {
     $url = $request->get('url', $request->url);
