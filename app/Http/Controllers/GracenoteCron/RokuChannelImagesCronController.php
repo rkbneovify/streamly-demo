@@ -74,6 +74,12 @@ class RokuChannelImagesCronController extends Controller
 
     public function RokuChannelImagesCronNew()
     {
+        // for local testing
+        // set_time_limit(0); // No execution time limit
+        // // or
+        // ini_set('max_execution_time', 0);
+
+
         // $query = Channel::select('gracenote_sources.assets')
         //     ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
@@ -101,6 +107,11 @@ class RokuChannelImagesCronController extends Controller
             ];
             return response()->json($response, 200);
         } catch (\Throwable $th) {
+            $response['message'] = $th->getMessage();
+            $response['php_version'] = phpversion();
+            $response['gd_module_load'] = extension_loaded('gd');
+            $response['function_exists'] = function_exists('imagecreatefrompng');
+            $response['ini_path'] = php_ini_loaded_file();
             $response['exception'] = class_basename($th);
             $response['file'] = $th->getFile();
             $response['line'] = $th->getLine();
