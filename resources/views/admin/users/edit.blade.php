@@ -542,6 +542,21 @@
                                 </div>
                             @endif
 
+                             @if (count($eastCoastChannels) > 0)
+                                <div class="form-group">
+                                    <div class="">Allow East Coast Locals Channels</div>
+
+                                    <select id="east_coast_channels" name="east_coast_channels[]" multiple form="useradd"
+                                        class="form-control">
+                                        @foreach ($eastCoastChannels as $channel)
+                                            <option value="{{ $channel->id }}"
+                                                {{ $channel->eastCoast != null ? ($channel->eastCoast->status == 1 ? 'selected' : '') : '' }}>
+                                                {{ $channel->name }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
 
 
 
@@ -972,6 +987,14 @@
             });
 
             $('#phx_channels').multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                buttonWidth: '100%',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true, // <-- makes Ram and ram match
+                filterBehavior: 'text' // or 'both' if you want to search by value too
+            });
+            $('#east_coast_channels').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
                 buttonWidth: '100%',
