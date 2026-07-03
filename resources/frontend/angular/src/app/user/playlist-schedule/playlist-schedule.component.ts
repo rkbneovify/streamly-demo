@@ -459,18 +459,19 @@ export class PlaylistScheduleComponent
     const scrollHeight = element.scrollHeight;
 
     // User reached the bottom
-    if (scrollTop + clientHeight >= scrollHeight - 10) {
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
       // console.log('Scroll Down');
-      if (!this.hasMore || this.isLoading) {
-        return;
-      }
-      this.page++;
-      if (this.selected_category === 'All') {
-        this.getScheduleData();
+      if (this.hasMore && !this.isLoading) {
+        this.page++;
+        if (this.selected_category === 'All') {
+          this.getScheduleData();
 
-      } else {
-        this.getScheduleData(this.selected_category);
+        } else {
+          this.getScheduleData(this.selected_category);
+        }
       }
+
+
 
     }
 
