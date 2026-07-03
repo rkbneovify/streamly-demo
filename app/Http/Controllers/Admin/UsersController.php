@@ -9,6 +9,7 @@ use App\Exports\UserExport;
 use App\Exports\UserSessionDeviceExport;
 use App\Exports\UserSessionExport;
 use App\HoaUser;
+use App\Models\EastCostLocal;
 use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -214,8 +215,10 @@ class UsersController extends Controller
             ->where('status', 1)->get();
         $phxChannels = Channel::where('type', 'phx-locals')
             ->where('status', 1)->get();
+        $eastCoastChannels = Channel::where('type', 'east-coast-locals')
+            ->where('status', 1)->get();
 
-        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes', 'premiumChannels', 'phxChannels'));
+        return view('admin.users.create', compact('roles', 'predefinedLocalZipcodes', 'localZipcodes', 'premiumChannels', 'phxChannels', 'eastCoastChannels'));
     }
 
     public function store(Request $request)
@@ -599,6 +602,17 @@ class UsersController extends Controller
                     $phxChannel->save();
                 }
             }
+            if ($request->east_coast_channels != null) {
+                foreach ($request->east_coast_channels as $item) {
+                    $channel = Channel::where('id', $item)->first();
+                    $east = new EastCostLocal();
+                    $east->user_id = $user->id;
+                    $east->channel_id = $item;
+                    $east->name = $channel != null ? $channel->name : null;
+                    $east->status = 1;
+                    $east->save();
+                }
+            }
 
 
 
@@ -614,7 +628,7 @@ class UsersController extends Controller
             return redirect('admin/users')->with('info', 'User Added Successfully');
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e->getMessage());
+            // dd($e->getMessage());
             // Log::error('Exception occurred while creating user: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred. Check logs.');
         }
@@ -1056,6 +1070,37 @@ class UsersController extends Controller
                 ]);
             }
 
+            // east coast locals_channels
+            if ($request->east_coast_channels == null) {
+                EastCostLocal::where('user_id', $user->id)->update([
+                    'status' => 0
+                ]);
+            } else {
+
+                foreach ($request->east_coast_channels as $item) {
+                    $eastCoast = EastCostLocal::where('user_id', $user->id)
+                        ->where('channel_id', $item)->first();
+                    if ($eastCoast != null) {
+                        $channel = Channel::where('id', $item)->first();
+                        $eastCoast->name = $channel != null ? $channel->name : null;
+                        $eastCoast->status = 1;
+                        $eastCoast->save();
+                    } else {
+                        $channel = Channel::where('id', $item)->first();
+                        $eastCoast = new EastCostLocal();
+                        $eastCoast->user_id = $user->id;
+                        $eastCoast->channel_id = $item;
+                        $eastCoast->name = $channel != null ? $channel->name : null;
+                        $eastCoast->status = 1;
+                        $eastCoast->save();
+                    }
+                }
+
+                EastCostLocal::where('user_id', $user->id)->whereNotIn('channel_id', $request->east_coast_channels)->update([
+                    'status' => 0
+                ]);
+            }
+
 
             $this->newData($user->refresh())
                 ->save();
@@ -1152,6 +1197,16 @@ class UsersController extends Controller
             ->get();
 
 
+        $eastCoastChannels = Channel::with([
+            'eastCoast' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }
+        ])->where('type', 'east-coast-locals')
+            ->where('status', 1)
+            ->get();
+
+
+        // return response()->json(compact('eastCoastChannels'));
         return view('admin.users.edit', compact(
             'user',
             'roles',
@@ -1161,7 +1216,8 @@ class UsersController extends Controller
             'planDuration',
             'currentDeviceCount',
             'premiumChannels',
-            'phxChannels'
+            'phxChannels',
+            'eastCoastChannels'
         ));
     }
 

@@ -772,7 +772,8 @@ class NewChannelApiController extends Controller
             $query = Channel::with([
                 'zipcode',
                 'premium',
-                'phxLocal'
+                'phxLocal',
+                'eastCoast'
             ])
                 ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'channels.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
@@ -803,6 +804,7 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->orwhere('channels.type', 'all')
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
@@ -814,24 +816,12 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->where('channels.status', 1);
                 }
             }
 
-            // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
-            // $query->where('channels.status', 1)->where(function ($q) use ($user) {
-            //     if ($user->access_premium_channel == 1) {
-            //         $q->whereIn('channels.type', ['all', 'local', 'premium'])
-            //             ->orWhereNull('channels.type');
-            //     } else {
-            //         $q->whereIn('channels.type', ['all', 'local'])
-            //             ->orWhereNull('channels.type');
-            //     }
 
-            // });
-
-
-            // $query->premium($user);
 
             $query->where('channels.status', 1);
 
