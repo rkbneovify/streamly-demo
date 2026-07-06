@@ -948,9 +948,12 @@ class NewChannelApiController extends Controller
                 $response['start'] = $start_time->start;
             }
             $response['data'] = $channels->items();
+            $response['total'] = $channels->total();
             $response['last_page'] = $channels->lastPage();
             $response['current_page'] = $channels->currentPage();
-            $response['per_page'] = $channels->perPage();
+            $response['from'] = $channels->firstItem();
+            $response['to'] = $channels->lastItem();
+            $response['limit'] = $channels->perPage();
             $response['has_more'] = $channels->hasMorePages();
             return response()->json($response, 200);
         }

@@ -39,6 +39,7 @@ import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cac
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
 import { CacheService } from '../../services/cacheService/cacheservice.service';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
 
 
 declare let window: Window;
@@ -99,6 +100,8 @@ export class PlaylistScheduleComponent
   currentWidth: number = 0;
   private screenSizeSubscription!: Subscription;
   page: number = 1;
+  total: number = 0;
+  lastItem: number = 0;
   resChannelList: any[] = [];
   hasMore: boolean = true;
 
@@ -317,7 +320,8 @@ export class PlaylistScheduleComponent
     private ngZone: NgZone,
     private cacheService: PlaylistCacheService,
     private routeTrackingService: RouteTrackingService,
-    private channelCache: CacheService
+    private channelCache: CacheService,
+    private sweetAlert: SweetalertService
 
   ) { }
   ngOnInit(): void {
@@ -463,6 +467,10 @@ export class PlaylistScheduleComponent
     // User reached the bottom
     if (scrollTop + clientHeight >= scrollHeight - 5) {
       // console.log('Scroll Down');
+      if (!this.hasMore) {
+        this.sweetAlert.toast("No more channels to show.", "info");
+        return;
+      }
       if (this.hasMore && !this.isLoading) {
         this.page++;
         if (this.selected_category === 'All') {
@@ -624,6 +632,12 @@ export class PlaylistScheduleComponent
     // }, 100);
     // this.cdr.markForCheck();
 
+    if (this.page >= 2) {
+      this.isLoading = false;
+      this.sweetAlert.loading("Loading more channels");
+    }
+
+
     const zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
@@ -658,11 +672,13 @@ export class PlaylistScheduleComponent
     this.apiService.postRequest('auth/epg-guide-v2', body)
       .pipe(finalize(() => {
         this.isLoading = false;
+        this.sweetAlert.close();
       }))
       .subscribe({
         next: (res: any) => {
           this.hasMore = res.has_more;
-
+          this.total = res.total;
+          this.lastItem = res.to;
           // this.isLoading = false;
           this.resChannelList = [...this.resChannelList, ...res.data];
           this.cdr.markForCheck();
@@ -680,10 +696,10 @@ export class PlaylistScheduleComponent
         error: (err: any) => {
           console.error(err);
 
-          this.ngZone.run(() => {
-            this.isLoading = false;
-            this.cdr.detectChanges();
-          });
+          // this.ngZone.run(() => {
+          //   this.isLoading = false;
+          //   this.cdr.detectChanges();
+          // });
 
 
         },
