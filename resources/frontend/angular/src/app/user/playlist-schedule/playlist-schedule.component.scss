@@ -1,3 +1,9 @@
+.paginationx-text {
+  width: 100%;
+  padding: 8px 16px 8px 16px;
+
+}
+
 .schedule_main {
   height: auto;
   border-radius: 11px;
@@ -20,13 +26,18 @@
     padding: 0px 10px 0px 0px;
     overflow: hidden;
 
+
+
     .schedule_channels {
       width: 168px;
       padding: 8px 16px 8px 16px;
       height: 40px;
       cursor: pointer;
       background-color: #0a3153;
+
     }
+
+
 
     .schedule_categories {
       display: flex;

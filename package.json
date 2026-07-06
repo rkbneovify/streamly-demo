@@ -26,6 +26,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@angular/cdk": "^17.3.10",
         "countries-and-timezones": "^3.4.1",
         "firebase": "^9.17.1",
         "luxon": "^3.3.0",
