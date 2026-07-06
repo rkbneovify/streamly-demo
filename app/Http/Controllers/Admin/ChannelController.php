@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\ActivityEvent;
 use App\Enums\ActivityEventType;
 use App\Exports\ChannelReportExport;
+use App\Models\EastCostLocal;
 use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Svg\Tag\Rect;
 
 //use App\Traits\ImageUpload;programs
+
 /**
  * Description of ChannelController
  *
@@ -73,8 +75,6 @@ class ChannelController extends Controller
             } else {
                 $q->orderBy('created_at', 'desc');
             }
-
-
         });
 
         $query->when($request->selected, function ($q, $selected) {
@@ -89,9 +89,8 @@ class ChannelController extends Controller
             } else {
                 $q->where('status', 0);
             }
-
         });
-        // search 
+        // search
         $query->when($request->search, function ($q, $search) {
             $q->where(function ($q) use ($search) {
                 $q->where('id', 'like', "%{$search}%")
@@ -119,7 +118,6 @@ class ChannelController extends Controller
                     return $q->where('name', $genre);
                 });
             }
-
         });
 
         $query->ChannelType($request->channel_type);
@@ -343,6 +341,7 @@ class ChannelController extends Controller
     public function update(Request $request, $id)
     {
 
+
         $request->validate([
             'name' => 'required|string|max:255',
             'stationName' => 'nullable|string|max:255',
@@ -417,8 +416,6 @@ class ChannelController extends Controller
                 if (count($notFoundInManageZipcodes) > 0) {
                     return redirect()->back()->with('error', 'The following zip codes are not found in our service area: ' . implode(', ', $notFoundInManageZipcodes))->withInput();
                 }
-
-
             } else {
                 $zipcodeListUpdate = array_unique(array_map('trim', explode(',', $request->input('zip_codes'))));
                 $newZipcodeForChannel = array_diff($zipcodeListUpdate, $alreadyAvalableZipcodes);
@@ -431,7 +428,6 @@ class ChannelController extends Controller
                 if (count($notFoundInManageZipcodes) > 0) {
                     return redirect()->back()->with('error', 'The following zip codes are not found in our service area: ' . implode(', ', $notFoundInManageZipcodes))->withInput();
                 }
-
             }
             $newManageZipcode = Zipcode::whereIn('zipcode', $manageZipcode)
                 ->where('status', 1)
@@ -450,8 +446,6 @@ class ChannelController extends Controller
                 $localzipcode->longitude = $item->longitude;
                 $localzipcode->status = 1;
                 $localzipcode->save();
-
-
             }
             $removedZipcodes = array_diff($alreadyAvalableZipcodes, $zipcodeListUpdate);
             LocalZipcode::where('channel_id', $id)->whereIn('zipcode', $removedZipcodes)->update(['status' => 0]);
@@ -473,20 +467,29 @@ class ChannelController extends Controller
             $input['type'] = 'all';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
             PremiumChannelAccess::where('channel_id', $id)->delete();
+            EastCostLocal::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'premium') {
             $input['type'] = 'premium';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
+            EastCostLocal::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'phx-locals') {
             $input['type'] = 'phx-locals';
             PremiumChannelAccess::where('channel_id', $id)->delete();
+            EastCostLocal::where('channel_id', $id)->delete();
+        } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'east-coast-locals') {
+            $input['type'] = 'east-coast-locals';
+            PremiumChannelAccess::where('channel_id', $id)->delete();
+            PhxLocalChannelAccess::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] == 'All' && $input['type'] == 'local') {
             $input['type'] = 'all';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
             PremiumChannelAccess::where('channel_id', $id)->delete();
+            EastCostLocal::where('channel_id', $id)->delete();
         } elseif ($input['zip_code'][0] != 'All' && $input['type'] == 'local') {
             $input['type'] = 'local';
             PhxLocalChannelAccess::where('channel_id', $id)->delete();
             PremiumChannelAccess::where('channel_id', $id)->delete();
+            EastCostLocal::where('channel_id', $id)->delete();
         }
         $model = Channel::find($id);
         $oldData = $model;
@@ -505,7 +508,6 @@ class ChannelController extends Controller
         } else {
 
             if ($input['zip_code'] == null) {
-
             }
             $model->update($input); //update the subscription info
 
@@ -650,9 +652,6 @@ class ChannelController extends Controller
                 ->autoClose(3000)
                 ->timerProgressBar();
             return redirect()->back()->with('remove-all', true);
-
-
-
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error("Status change failed for user ID {$id}: " . $th->getMessage());
@@ -708,7 +707,6 @@ class ChannelController extends Controller
                         ->timerProgressBar()
                         ->autoClose(5000);
                     return redirect()->back()->with('remove-all', true);
-
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     Alert::success("Error ", "Something went wrong !");
@@ -734,7 +732,6 @@ class ChannelController extends Controller
                         ->timerProgressBar()
                         ->autoClose(5000);
                     return redirect()->back()->with('remove-all', true);
-
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     Alert::success("Error ", "Something went wrong !");
@@ -748,10 +745,7 @@ class ChannelController extends Controller
                     ->timerProgressBar()
                     ->autoClose(5000);
                 return redirect()->back();
-
         }
-
-
     }
 
 

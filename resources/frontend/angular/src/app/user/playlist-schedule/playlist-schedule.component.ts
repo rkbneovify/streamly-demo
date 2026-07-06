@@ -8,6 +8,7 @@ import {
 import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -45,6 +46,7 @@ declare let window: Window;
 @Component({
   selector: 'app-playlist-schedule',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgFor,
     RouterLink,
@@ -616,11 +618,11 @@ export class PlaylistScheduleComponent
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
     this.isLoading = true;
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      this.cdr.markForCheck(); // Force UI update
-    }, 100);
-    this.cdr.markForCheck();
+    //   this.cdr.markForCheck(); // Force UI update
+    // }, 100);
+    // this.cdr.markForCheck();
 
     const zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
@@ -660,17 +662,20 @@ export class PlaylistScheduleComponent
       .subscribe({
         next: (res: any) => {
           this.hasMore = res.has_more;
-          this.channelCache.set(cacheKey, res.data);
+
           // this.isLoading = false;
           this.resChannelList = [...this.resChannelList, ...res.data];
-          this.ngZone.run(() => {
-            this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
-            this.filteredPrograms = [...this.resChannelList];
-            this.cacheService.setFilterData(this.filteredPrograms);
-            this.cacheService.setSchedule(this.getScheduleChannelLogo);
+          this.cdr.markForCheck();
+          this.channelCache.set(cacheKey, this.resChannelList);
+          // this.ngZone.run(() => {
 
-            this.cdr.detectChanges();
-          });
+          // });
+          this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+          this.filteredPrograms = [...this.resChannelList];
+          this.cacheService.setFilterData(this.filteredPrograms);
+          this.cacheService.setSchedule(this.getScheduleChannelLogo);
+
+          // this.cdr.detectChanges();
         },
         error: (err: any) => {
           console.error(err);

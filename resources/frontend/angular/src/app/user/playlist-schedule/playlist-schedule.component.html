@@ -60,7 +60,7 @@
     <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
       <div class="schedule_channel_container">
-        <ng-container *ngIf="filteredPrograms?.length">
+        <ng-container *ngIf="filteredPrograms?.length ">
           <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}"
             *ngFor="let channel of getScheduleChannelLogo">
             <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
