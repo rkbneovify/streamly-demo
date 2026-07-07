@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       NgSelectModule,
       ScrollingModule,
-      NgxStripeModule.forRoot(''),
+      // NgxStripeModule.forRoot(''),
       StripeModule.forRoot(environment.stripe.publicKey),
       BrowserAnimationsModule,
       BrowserModule,
