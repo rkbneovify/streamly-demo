@@ -104,6 +104,7 @@ export class PlaylistScheduleComponent
   lastItem: number = 0;
   resChannelList: any[] = [];
   hasMore: boolean = true;
+  hasMoreKey: string = 'hasMore';
 
   previousRoute: string | null = null;
 
@@ -464,6 +465,14 @@ export class PlaylistScheduleComponent
     const clientHeight = element.clientHeight;
     const scrollHeight = element.scrollHeight;
 
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      if (!this.hasMore) {
+        this.sweetAlert.toast("No more channels to show.", "info");
+        return;
+      }
+    }
+
+
     // User reached the bottom
     // if (scrollTop + clientHeight >= scrollHeight - 5) {
     //   // console.log('Scroll Down');
@@ -710,6 +719,7 @@ export class PlaylistScheduleComponent
   }
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+    this.isLoading = true;
     const zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
@@ -736,6 +746,7 @@ export class PlaylistScheduleComponent
     const cachedData = this.channelCache.get(cacheKey);
 
     if (cachedData) {
+      this.hasMore = this.channelCache.get(this.hasMoreKey);
       this.resChannelList = [...this.resChannelList, ...cachedData];
       this.resChannelList = this.removeDuplicates(this.resChannelList, 'id');
       this.total = this.resChannelList.length;
@@ -743,15 +754,17 @@ export class PlaylistScheduleComponent
       this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
       this.filteredPrograms = [...this.resChannelList];
       this.isLoading = false;
+      this.cdr.markForCheck();
       return;
     }
-    this.isLoading = true;
+
 
 
     this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
 
       tap((res: any) => {
         this.hasMore = res.has_more;
+        this.channelCache.set(this.hasMoreKey, res.has_more);
         this.total = res.total;
         this.lastItem = res.to;
         this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
@@ -780,6 +793,7 @@ export class PlaylistScheduleComponent
 
       tap((res: any) => {
         this.hasMore = res.has_more;
+        this.channelCache.set(this.hasMoreKey, res.has_more);
         this.total = res.total;
         this.lastItem = res.to;
         this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
@@ -801,6 +815,7 @@ export class PlaylistScheduleComponent
   }
 
   changeCategory(genre?: string) {
+    this.channelList1.nativeElement.scrollTop = 0;
     this.cacheService.clearCache();
     this.channelCache.clear();
     this.resChannelList = [];
