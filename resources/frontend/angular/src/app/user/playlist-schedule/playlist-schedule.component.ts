@@ -34,7 +34,7 @@ import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
-import { finalize, Subscription } from 'rxjs';
+import { EMPTY, expand, finalize, Subscription, tap } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
@@ -325,7 +325,7 @@ export class PlaylistScheduleComponent
 
   ) { }
   ngOnInit(): void {
-
+    this.getScheduleData();
     this.getCurrentTimeSlot();
     this.getFavoriteList();
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
@@ -352,7 +352,7 @@ export class PlaylistScheduleComponent
       this.getScheduleChannelLogo = cachedSchedule; // Load schedule from cache
       this.filteredPrograms = filterData;
     } else {
-      this.getScheduleData('');
+      // this.getScheduleData('');
     }
 
     this.setLiveMinWith();
@@ -465,25 +465,25 @@ export class PlaylistScheduleComponent
     const scrollHeight = element.scrollHeight;
 
     // User reached the bottom
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-      // console.log('Scroll Down');
-      if (!this.hasMore) {
-        this.sweetAlert.toast("No more channels to show.", "info");
-        return;
-      }
-      if (this.hasMore && !this.isLoading) {
-        this.page++;
-        if (this.selected_category === 'All') {
-          this.getScheduleData();
+    // if (scrollTop + clientHeight >= scrollHeight - 5) {
+    //   // console.log('Scroll Down');
+    //   if (!this.hasMore) {
+    //     this.sweetAlert.toast("No more channels to show.", "info");
+    //     return;
+    //   }
+    //   if (this.hasMore && !this.isLoading) {
+    //     this.page++;
+    //     if (this.selected_category === 'All') {
+    //       this.getScheduleData();
 
-        } else {
-          this.getScheduleData(this.selected_category);
-        }
-      }
+    //     } else {
+    //       this.getScheduleData(this.selected_category);
+    //     }
+    //   }
 
 
 
-    }
+    // }
 
     // Store the current scroll position whenever the user scrolls
     localStorage.setItem(
@@ -624,7 +624,7 @@ export class PlaylistScheduleComponent
   startIndex: number = 0;
   limit: number = 10;
 
-  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+  getScheduleDataOld(genre?: string, dayFilter: string = this.dayfilter) {
     this.isLoading = true;
     // setTimeout(() => {
 
@@ -632,10 +632,7 @@ export class PlaylistScheduleComponent
     // }, 100);
     // this.cdr.markForCheck();
 
-    if (this.page >= 2) {
-      this.isLoading = false;
-      this.sweetAlert.loading("Loading more channels");
-    }
+
 
 
     const zipcode =
@@ -672,7 +669,7 @@ export class PlaylistScheduleComponent
     this.apiService.postRequest('auth/epg-guide-v2', body)
       .pipe(finalize(() => {
         this.isLoading = false;
-        this.sweetAlert.close();
+
       }))
       .subscribe({
         next: (res: any) => {
@@ -704,6 +701,103 @@ export class PlaylistScheduleComponent
 
         },
       });
+  }
+
+  removeDuplicates<T>(array: T[], key: keyof T): T[] {
+    return Array.from(
+      new Map(array.map(item => [item[key], item])).values()
+    );
+  }
+
+  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+    const zipcode =
+      JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
+    const body = {
+      typeurl: 'mpd',
+      genre: genre === 'All' ? '' : genre,
+      start: this.startIndex,
+      limit: this.limit,
+      zipcode: zipcode,
+      page: this.page
+    };
+
+
+
+
+
+    const cacheKey = JSON.stringify({
+      genre: genre === 'All' ? '' : genre,
+      page: this.page,
+      start: this.startIndex,
+      limit: this.limit,
+      zipcode
+    });
+
+    const cachedData = this.channelCache.get(cacheKey);
+
+    if (cachedData) {
+      this.resChannelList = [...this.resChannelList, ...cachedData];
+      this.resChannelList = this.removeDuplicates(this.resChannelList, 'id');
+      this.total = this.resChannelList.length;
+      this.lastItem = this.resChannelList.length;
+      this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+      this.filteredPrograms = [...this.resChannelList];
+      this.isLoading = false;
+      return;
+    }
+    this.isLoading = true;
+
+
+    this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
+
+      tap((res: any) => {
+        this.hasMore = res.has_more;
+        this.total = res.total;
+        this.lastItem = res.to;
+        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
+        this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+        this.filteredPrograms = [...this.resChannelList];
+        this.cacheService.setFilterData(this.filteredPrograms);
+        this.cacheService.setSchedule(this.getScheduleChannelLogo);
+        this.channelCache.set(cacheKey, this.resChannelList);
+        this.cdr.markForCheck();
+
+      }),
+
+      expand((res: any) => {
+
+        if (!res.has_more) {
+          return EMPTY;
+        }
+
+        this.page++;
+
+        return this.apiService.postRequest('auth/epg-guide-v2', {
+          ...body,
+          page: this.page
+        });
+      }),
+
+      tap((res: any) => {
+        this.hasMore = res.has_more;
+        this.total = res.total;
+        this.lastItem = res.to;
+        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
+
+        this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
+        this.filteredPrograms = [...this.resChannelList];
+        this.cacheService.setFilterData(this.filteredPrograms);
+        this.cacheService.setSchedule(this.getScheduleChannelLogo);
+        this.channelCache.set(cacheKey, this.resChannelList);
+        this.cdr.markForCheck();
+      }),
+
+      finalize(() => {
+        this.isLoading = false;
+      })
+
+    ).subscribe();
+
   }
 
   changeCategory(genre?: string) {
