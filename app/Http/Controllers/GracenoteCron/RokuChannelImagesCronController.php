@@ -86,7 +86,7 @@ class RokuChannelImagesCronController extends Controller
 
         try {
             $folderPath = storage_path('app/public/channel_roku_images/');
-            $this->clearFolder($folderPath);
+            // $this->clearFolder($folderPath);
             $query = GracenoteSource::select('assets');
 
             // return $query->get();
@@ -132,7 +132,7 @@ class RokuChannelImagesCronController extends Controller
         $folderPath = storage_path('app/public/channel_roku_images/');
 
         // Load the image from the URL
-        $image = imagecreatefrompng($imageUrl);
+        $image = @imagecreatefrompng($imageUrl);
 
         if (!$image) {
             return 'Unable to load image';
