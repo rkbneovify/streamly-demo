@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Models;
+
 use App\LocalZipcode;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
@@ -8,6 +10,7 @@ use App\PremiumChannelAccess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+
 /**
    @property varchar $name name
 @property varchar $url url
@@ -109,23 +112,21 @@ class Channel extends Model
             ->first();
     }
     // public function getGenrenameAttribute($value)
-// {
-//   return $value = is_array($value) ? $value : json_decode($value) ;
+    // {
+    //   return $value = is_array($value) ? $value : json_decode($value) ;
 
     // if (is_null($value)) {
-//         $value = [];
-//     }
+    //         $value = [];
+    //     }
 
     //     return $value;
-// }
+    // }
 
 
     protected static function boot()
     {
-        static::creating(function ($model) {
-        });
-        static::saving(function ($model) {
-        });
+        static::creating(function ($model) {});
+        static::saving(function ($model) {});
         static::saved(function ($model) {
             Cache::forget('channelslistsmooth');
             Cache::forget('channelslistapple');
@@ -163,8 +164,13 @@ class Channel extends Model
     {
         return $this->hasOne(PhxLocalChannelAccess::class, 'channel_id', 'id');
     }
+    public function eastCoast()
+    {
+        return $this->hasOne(EastCostLocal::class, 'channel_id', 'id');
+    }
 
 
+    // Premium channels
     public function scopePremiumActive($query, $user)
     {
         $query->whereHas('premium', function ($q) use ($user) {
@@ -184,15 +190,14 @@ class Channel extends Model
     }
     public function scopeWithPremium($query, $user)
     {
-        if ($user->is_custom_user == 1) {
-            $query->orwhereHas('premium', function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->where('status', 1);
-            });
-        }
+        $query->orwhereHas('premium', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
         return $query;
     }
 
+    // phx channel
     public function scopePhxLocalActive($query, $user)
     {
         $query->whereHas('phxLocal', function ($q) use ($user) {
@@ -212,12 +217,37 @@ class Channel extends Model
     }
     public function scopeWithPhxLocal($query, $user)
     {
-        if ($user->is_custom_user == 1) {
-            $query->orwhereHas('phxLocal', function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->where('status', 1);
-            });
-        }
+        $query->orwhereHas('phxLocal', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+
+    // east coast channel
+    public function scopeEastCoastActive($query, $user)
+    {
+        $query->whereHas('eastCoast', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopeEastCoastStatus($query, $user)
+    {
+
+        $query->orwhereHas('eastCoast', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
+        return $query;
+    }
+    public function scopeWithEastCoast($query, $user)
+    {
+        $query->orwhereHas('eastCoast', function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->where('status', 1);
+        });
         return $query;
     }
 
@@ -232,25 +262,18 @@ class Channel extends Model
 
     public function scopeChannelType($query, $type)
     {
-
-        if ($type == "all") {
-            $query->where('type', $type)
-                ->orWhereJsonContains('zip_code', 'All');
-        } elseif ($type == "local") {
-            $query->where('type', $type)
-                ->orWhereJsonDoesntContain('zip_code', 'All');
-        } elseif ($type == "premium") {
+        if ($type != "") {
             $query->where('type', $type);
-        } elseif ($type == "phx-locals") {
-            $query->where('type', $type);
+            if ($type == "all") {
+                $query->where('type', $type)
+                    ->orWhereJsonContains('zip_code', 'All');
+            } elseif ($type == "local") {
+                $query->where('type', $type)
+                    ->orWhereJsonDoesntContain('zip_code', 'All');
+            }
         }
+
 
         return $query;
     }
-
-
-
-
-
-
 }
