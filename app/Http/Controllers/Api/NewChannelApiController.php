@@ -505,7 +505,6 @@ class NewChannelApiController extends Controller
                 $zipcode = $zipcodeRule->zipcode;
             } elseif (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
-
             }
 
             if ($urlType == 'manifest') {
@@ -520,7 +519,8 @@ class NewChannelApiController extends Controller
             $query = Channel::with([
                 'zipcode',
                 'premium',
-                'phxLocal'
+                'phxLocal',
+                'eastCoast'
             ])
                 ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'channels.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
@@ -551,11 +551,11 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->orwhere('channels.type', 'all')
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -563,6 +563,7 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->where('channels.status', 1);
                 }
             }
@@ -799,8 +800,6 @@ class NewChannelApiController extends Controller
                                 ->where('channels.status', 1)
                                 ->orwhereNull('channels.type')
                                 ->where('channels.status', 1);
-
-
                         }
                     } elseif ($validate == 2) {
                         if (!empty($zipcode)) {
@@ -842,8 +841,7 @@ class NewChannelApiController extends Controller
                     // Sort so the one with play_icon = true comes first
                     return $group->sortByDesc('play_icon')->first();
                 })
-                ->values();
-            ;
+                ->values();;
             // Sorting in ascending order by 'price'
             $sortedPrograms = $filteredPrograms->sortByDesc('play_icon');
 
@@ -855,7 +853,7 @@ class NewChannelApiController extends Controller
                 'channel',
                 'channels.zipcode',
                 'channels.premium'
-            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url", )
+            ])->select('channels.id', 'channels.type', 'channels.status', 'channels.image as db_image', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets', "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%")
 
@@ -904,8 +902,6 @@ class NewChannelApiController extends Controller
                                 ->where('channels.status', 1)
                                 ->orwhereNull('channels.type')
                                 ->where('channels.status', 1);
-
-
                         }
                     } elseif ($validate == 2) {
                         if (!empty($zipcode)) {
@@ -1287,7 +1283,6 @@ class NewChannelApiController extends Controller
 
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('uploads/channellogo') . '/' . $channel->local_image;
-
                 }
 
                 unset($channel->db_image);
@@ -1344,7 +1339,6 @@ class NewChannelApiController extends Controller
 
                 if ($channel->is_logo_from_gracenote == 0) {
                     $channel->image = url('uploads/channellogo') . '/' . $channel->local_image;
-
                 }
 
                 unset($channel->db_image);
@@ -1385,7 +1379,6 @@ class NewChannelApiController extends Controller
                         "image" => env('APP_URL') . '/uploads/fandue.png', // your custom FanDuel logo
                         "up_next" => $up_next
                     ];
-
                 } else {
                     $data = [
                         "title" => $program->title,
@@ -1397,7 +1390,6 @@ class NewChannelApiController extends Controller
                         "up_next" => $up_next
                     ];
                 }
-
             } else {
                 $data = NULL;
             }
