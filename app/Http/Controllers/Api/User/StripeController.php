@@ -6,6 +6,8 @@ use App\Enums\ActivityEventType;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\SubscriptionWelcomeMail;
+use App\Mail\TrialSubscriptionWelcomeMail;
 use App\Models\EmailOtp;
 use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
@@ -29,6 +31,7 @@ use Stripe\Subscription;
 use App\SessionTable;
 use Laravel\Cashier\Cashier;
 use Ratchet\App;
+use Stripe\StripeClient;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
@@ -228,17 +231,18 @@ class StripeController extends Controller
                 ]);
 
                 // Generate email HTML
+
                 $login_link = env('FRONTEND_URL') . '/auth/login';
-                $html = '<html>
-                            Hi, ' . $request['name'] . '<br><br>
-                            Thank you for registering for ' . env('APP_NAME') . '.
-                            <br><br>Username: ' . $user->email . '
-                            <br>Password: ' . $password . '<br><br>
-                            Please click the following link to login to your account.
-                            <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
-                            Thank you!<br>
-                            The ' . env('APP_NAME') . ' Team!
-                        </html>';
+                // $html = '<html>
+                //             Hi, ' . $request['name'] . '<br><br>
+                //             Thank you for registering for ' . env('APP_NAME') . '.
+                //             <br><br>Username: ' . $user->email . '
+                //             <br>Password: ' . $password . '<br><br>
+                //             Please click the following link to login to your account.
+                //             <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
+                //             Thank you!<br>
+                //             The ' . env('APP_NAME') . ' Team!
+                //         </html>';
 
 
 
@@ -260,6 +264,11 @@ class StripeController extends Controller
                     if ($request->trial_days > 0) {
                         $user->trial_taken = 1;
                         $user->save();
+                        $subscription =  $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        Mail::to($user->email)->send(new TrialSubscriptionWelcomeMail($user, $password, $subscription->trial_start, $subscription->trial_end, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_start, $login_link));
+                    } else {
+                        $subscription =  $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        Mail::to($user->email)->send(new SubscriptionWelcomeMail($user, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_end, $login_link));
                     }
                 } catch (\Exception $e) {
 
@@ -273,10 +282,11 @@ class StripeController extends Controller
 
 
                 // Send email
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
-                    $message->to($request->input('email'), $request->input('name'))
-                        ->subject(env('APP_NAME') . ': Account Registration');
-                });
+                // Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
+                //     $message->to($request->input('email'), $request->input('name'))
+                //         ->subject(env('APP_NAME') . ': Account Registration');
+                // });
+
                 return response()->json([
                     'message' => 'User Registered Successfully !',
                     'subscription_details' => $subscription_details
@@ -948,5 +958,23 @@ class StripeController extends Controller
                 'error' => $e->getMessage(),
             ];
         }
+    }
+
+    private function subscriptionDetailsforTrailMail($subscriptionId)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $subscription = $stripe->subscriptions->retrieve(
+            $subscriptionId,
+            [
+                'expand' => [
+                    'customer',
+                    'default_payment_method',
+                    'latest_invoice.payment_intent',
+                    'items.data.price.product',
+                ],
+            ]
+        );
+        return $subscription;
     }
 }
