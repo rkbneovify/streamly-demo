@@ -865,7 +865,7 @@ class NewChannelApiController extends Controller
                     $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                     $channel->ratio = $assetData['ratio'] ?? 'NA';
 
-                    $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
+                    $channel->program = $this->getProgramScheduleByIdWithCache($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
                         // station name inside program
                         $item->stationName = $channel->stationName;
                         return $item;
@@ -984,6 +984,42 @@ class NewChannelApiController extends Controller
 
 
         return $programs;
+    }
+
+    private function getProgramScheduleByIdWithCache($prgSvcId, $day)
+    {
+        $cacheKey = "program_schedule_{$prgSvcId}_{$day}";
+
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($prgSvcId, $day) {
+            $gmdate_string = gmdate('Y-m-d H:i');
+            $current_timestamp = strtotime($gmdate_string . ' GMT');
+            $query = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'time', 'start', 'end', 'assets');
+            if ($day == 'today') {
+                $gmdate = gmdate('Y-m-d');
+                $query->where('end', '>=', $current_timestamp);
+            } else if ($day == 'tomorrow') {
+                $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
+            }
+            if (!empty($day)) {
+                $query->where('date', $gmdate);
+            } else {
+                $query->where('end', '>=', $current_timestamp);
+            }
+            $programs = $query->get();
+            $programs->map(function ($program) {
+                $program->image = $this->getURIFromAssetForProgram($program->assets);
+
+                if (strcasecmp($program->title, 'TV Guide') === 0) {
+                    $program->title = 'FanDuel';
+                }
+
+                unset($program->assets);
+            });
+
+
+
+            return $programs;
+        });
     }
 
     public function searchChannelProgram(Request $request)
