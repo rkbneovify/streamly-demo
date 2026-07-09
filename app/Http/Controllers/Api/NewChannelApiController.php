@@ -14,6 +14,7 @@ use App\Models\UserZipcodeRule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
@@ -769,6 +770,17 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
+            // cache key
+            $cacheKey = 'epg_guide_' . md5(json_encode([
+                'user'       => $user->id,
+                'zipcode'    => $zipcode,
+                'genre'      => $genre,
+                'day'        => $day,
+                'page'       => $page,
+                'limit'      => $limit,
+                'typeurl'    => $urlType,
+            ]));
+
             $query = Channel::with([
                 'zipcode',
                 'premium',
@@ -785,17 +797,7 @@ class NewChannelApiController extends Controller
 
 
 
-            // $query->where('channels.status', 1);
-            // // return response()->json([$query->where('channels.status', 1)->toSql(), $query->getBindings()]);
 
-            // $query->where(function ($q) use ($zipcode) {
-
-            //     $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
-
-            //         ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
-            // });
-            // ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
-            // $query->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')")
 
             if ($validate == 1) {
                 if (!empty($zipcode)) {
@@ -840,101 +842,92 @@ class NewChannelApiController extends Controller
             } else {
                 $query->orderBy('channels.id', 'asc');
             }
-            $channels =  $query->paginate($limit, ['*'], 'page', $page);
-            $channels->getCollection()->transform(function ($channel) use ($day) {
-                $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
-                    ->where('user_id', JWTAuth::user()->id)
-                    ->exists();
-
-                $assetData = $this->getURIFromAsset($channel->assets);
-
-                $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
-                $channel->ratio = $assetData['ratio'] ?? 'NA';
-
-                $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
-                    // station name inside program
-                    $item->stationName = $channel->stationName;
-                    return $item;
-                });
-                unset($channel->assets);
-
-                if ($channel->stationName == null) {
-                    $channel->stationName = "NA";
-                }
-                if ($channel->callSign == null) {
-                    $channel->callSign = "NA";
-                }
-                if ($channel->timeZone == null) {
-                    $channel->timeZone = "NA";
-                }
-                if ($channel->channel_url == null) {
-                    $channel->channel_url = "NA";
-                }
-                if ($channel->prgSvcId == null) {
-                    $channel->prgSvcId = "NA";
-                }
-                if ($channel->image == null) {
-                    $channel->image = env('APP_URL') . '/uploads/No Image.png';
-                }
 
 
 
+            $channelsx = Cache::remember($cacheKey, now()->addMinutes(5), function () use (
+                $query,
+                $limit,
+                $page,
+                $day,
+                $user
+            ) {
+                Log::info('CACHE MISS');
+                $channels =  $query->paginate($limit, ['*'], 'page', $page);
 
-                if ($channel->id == 11) {
-                    $channel->stationName = 'FanDuel';
-                    // $channel->image = env('APP_URL') . '/uploads/fandue.png';
-                }
-                if ($channel->id == 6) {
-                    $channel->stationName = 'Trinity Broadcasting Network';
-                    // $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
-                }
-                if ($channel->id == 19) {
-                    $channel->stationName = 'Hallmark Family';
-                    // $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
-                }
-                if ($channel->id == 45) {
-                    $channel->stationName = 'Fuse Music';
-                    // $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
-                }
+                $channels->setCollection($channels->getCollection()->transform(function ($channel) use ($day) {
+                    $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
+                        ->where('user_id', JWTAuth::user()->id)
+                        ->exists();
 
-                // if ($channel->id == 134) {
-                //     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
-                // }
-                // if ($channel->id == 135) {
-                //     $channel->image = env('APP_URL') . '/uploads/WCAU-135.png';
-                // }
-                // if ($channel->id == 136) {
+                    $assetData = $this->getURIFromAsset($channel->assets);
 
-                //     $channel->image = env('APP_URL') . '/uploads/fox29-136.png';
-                // }
-                // if ($channel->id == 137) {
-                //     $channel->image = env('APP_URL') . '/uploads/abc7-137.png';
-                // }
-                // if ($channel->id == 138) {
-                //     $channel->image = env('APP_URL') . '/uploads/ocbs-138.png';
-                // }
-                // if ($channel->id == 139) {
-                //     $channel->image = env('APP_URL') . '/uploads/fox-139.png';
-                // }
-                // if ($channel->id == 140) {
-                //     $channel->image = env('APP_URL') . '/uploads/4ny-140.png';
-                // }
+                    $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                    $channel->ratio = $assetData['ratio'] ?? 'NA';
 
-                if ($channel->is_logo_from_gracenote == 0) {
-                    $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
-                }
+                    $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
+                        // station name inside program
+                        $item->stationName = $channel->stationName;
+                        return $item;
+                    });
+                    unset($channel->assets);
 
-
-                // just for additional data hiding
-                unset($channel->zipcode);
-                unset($channel->primium);
-                unset($channel->is_logo_from_gracenote);
-                unset($channel->local_image);
-                unset($channel->db_image);
+                    if ($channel->stationName == null) {
+                        $channel->stationName = "NA";
+                    }
+                    if ($channel->callSign == null) {
+                        $channel->callSign = "NA";
+                    }
+                    if ($channel->timeZone == null) {
+                        $channel->timeZone = "NA";
+                    }
+                    if ($channel->channel_url == null) {
+                        $channel->channel_url = "NA";
+                    }
+                    if ($channel->prgSvcId == null) {
+                        $channel->prgSvcId = "NA";
+                    }
+                    if ($channel->image == null) {
+                        $channel->image = env('APP_URL') . '/uploads/No Image.png';
+                    }
 
 
-                return $channel;
+
+
+                    if ($channel->id == 11) {
+                        $channel->stationName = 'FanDuel';
+                    }
+                    if ($channel->id == 6) {
+                        $channel->stationName = 'Trinity Broadcasting Network';
+                    }
+                    if ($channel->id == 19) {
+                        $channel->stationName = 'Hallmark Family';
+                    }
+                    if ($channel->id == 45) {
+                        $channel->stationName = 'Fuse Music';
+                    }
+
+
+
+                    if ($channel->is_logo_from_gracenote == 0) {
+                        $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
+                    }
+
+
+                    // just for additional data hiding
+                    unset($channel->zipcode);
+                    unset($channel->primium);
+                    unset($channel->is_logo_from_gracenote);
+                    unset($channel->local_image);
+                    unset($channel->db_image);
+
+
+                    return $channel;
+                }));
+
+                return $channels;
             });
+
 
 
             $response = [];
@@ -947,14 +940,15 @@ class NewChannelApiController extends Controller
                 // var_dump($start_time);
                 $response['start'] = $start_time->start;
             }
-            $response['data'] = $channels->items();
-            $response['total'] = $channels->total();
-            $response['last_page'] = $channels->lastPage();
-            $response['current_page'] = $channels->currentPage();
-            $response['from'] = $channels->firstItem();
-            $response['to'] = $channels->lastItem();
-            $response['limit'] = $channels->perPage();
-            $response['has_more'] = $channels->hasMorePages();
+            $response['data'] = $channelsx->items();
+            $response['total'] = $channelsx->total();
+            $response['last_page'] = $channelsx->lastPage();
+            $response['current_page'] = $channelsx->currentPage();
+            $response['from'] = $channelsx->firstItem();
+            $response['to'] = $channelsx->lastItem();
+            $response['limit'] = $channelsx->perPage();
+            $response['has_more'] = $channelsx->hasMorePages();
+            // Log::info('Response Size: ' . round(strlen(json_encode($response)) / 1024 / 1024, 2) . ' MB');
             return response()->json($response, 200);
         }
     }
