@@ -614,8 +614,13 @@ class HomeController extends Controller
                 $plans = \Stripe\Plan::all(['active' => true, 'expand' => ['data.tiers']]);
             }
 
+            $user = SessionTable::getCurrentUserByToken();
+            if ($user != null) {
+                $trialTaken = $user->trial_taken;
+            }
+
             // Extract metadata for each plan
-            $formattedPlans = collect($plans->data)->map(function ($plan) {
+            $formattedPlans = collect($plans->data)->map(function ($plan) use ($trialTaken) {
                 $product =  \Stripe\Product::retrieve($plan->product);
                 return [
                     'id' => $plan->id,
@@ -627,7 +632,7 @@ class HomeController extends Controller
                     'metadata' => $plan->metadata,
                     'type' => $plan->billing_scheme,
                     'tiers' => $plan->billing_scheme == "tiered" ? $plan->tiers : [],
-                    'trial_period_days' => $plan->trial_period_days
+                    'trial_period_days' => $trialTaken == 1 ? 0 : $plan->trial_period_days
                 ];
             });
 
