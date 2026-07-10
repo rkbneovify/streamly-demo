@@ -61,8 +61,6 @@ class SessionTable extends Model
     {
         return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')
             ->latest('updated_at');
-
-
     }
     public function pdInfo()
     {
@@ -241,5 +239,12 @@ class SessionTable extends Model
         return $subscriptionStatus ?? 'unsubscribe';
     }
 
-
+    public static function getCurrentUserByToken()
+    {
+        $session =  SessionTable::where('access_token', request()->bearerToken())->first();
+        if ($session != null) {
+            return User::where('id', $session->users_id)->first();
+        }
+        return null;
+    }
 }
