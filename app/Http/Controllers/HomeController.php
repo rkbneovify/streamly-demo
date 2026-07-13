@@ -613,15 +613,29 @@ class HomeController extends Controller
             } catch (Exception $e) {
                 $plans = \Stripe\Plan::all(['active' => true, 'expand' => ['data.tiers']]);
             }
-
-            // $user = SessionTable::getCurrentUserByToken();
-            // if ($user != null) {
-            //     $trialTaken = $user->trial_taken;
-            // }
+            $trialTaken = null;
+            $user = SessionTable::getCurrentUserByToken();
+            if ($user != null) {
+                $trialTaken = $user->trial_taken;
+            }
 
             // Extract metadata for each plan
-            $formattedPlans = collect($plans->data)->map(function ($plan) {
+            $formattedPlans = collect($plans->data)->map(function ($plan) use ($trialTaken) {
                 $product =  \Stripe\Product::retrieve($plan->product);
+                if ($trialTaken == 1) {
+                    return [
+                        'id' => $plan->id,
+                        'nickname' => $plan->nickname,
+                        'product_name' => $product->name,
+                        'amount' => $plan->amount,
+                        'currency' => $plan->currency,
+                        'interval' => $plan->interval,
+                        'metadata' => $plan->metadata,
+                        'type' => $plan->billing_scheme,
+                        'tiers' => $plan->billing_scheme == "tiered" ? $plan->tiers : [],
+
+                    ];
+                }
                 return [
                     'id' => $plan->id,
                     'nickname' => $plan->nickname,
