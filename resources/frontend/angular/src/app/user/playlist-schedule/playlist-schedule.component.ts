@@ -465,8 +465,10 @@ export class PlaylistScheduleComponent
     const clientHeight = element.clientHeight;
     const scrollHeight = element.scrollHeight;
 
-    if ((scrollTop + clientHeight) >= scrollHeight - 5) {
+    if ((scrollTop + clientHeight) >= scrollHeight - 200) {
       this.getScheduleData();
+    } else if ((scrollTop + clientHeight) >= scrollHeight - 5) {
+
       if (!this.hasMore && this.total == this.resChannelList.length) {
         this.sweetAlert.toast("No more channels to show.", "info");
         return;
