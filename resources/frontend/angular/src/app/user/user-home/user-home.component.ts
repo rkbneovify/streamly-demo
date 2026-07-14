@@ -20,6 +20,7 @@ import {
 } from '../../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 import { NotificationService } from '../../services/utils/notification.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-user-home',
@@ -127,6 +128,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
         });
         this.crud
           .getRequest('auth/channel-sliders', headers)
+          .pipe(finalize(() => {
+            this.isLoading = false;
+          }))
           .subscribe((res: any) => {
             if (res.response_code == 200) {
               this.sldierData = res.data;
@@ -177,6 +181,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
         { channelid: channelId },
         this.getAuthHeaders()
       )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
       .subscribe((res: any) => {
         if (res.response_code === 200) {
           this.favoriteChannels.push(channelId); // Update local favorite list
@@ -197,6 +204,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
         { channelid: channelId },
         this.getAuthHeaders()
       )
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
       .subscribe((res: any) => {
         if (res.response_code === 200) {
           this.favoriteChannels = this.favoriteChannels.filter(
@@ -219,6 +229,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
       // Fetch from API if not found in local storage
       this.crud
         .getRequest('auth/my_favorites', this.getAuthHeaders())
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
         .subscribe((res: any) => {
           if (res.response_code === 200) {
             this.favoriteChannels = res.data.map((channel: any) => channel.id);
@@ -255,6 +268,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
     };
     this.crud
       .postRequest('auth/channel-list', body, this.getAuthHeaders())
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
       .subscribe({
         next: (res: any) => {
           // const list = res.data;
@@ -277,6 +293,9 @@ export class UserHomeComponent implements OnInit, OnDestroy {
     const body = { typeurl: 'mpd', zipcode: this.zipcode };
     this.crud
       .postRequest('auth/recent-channels', body)
+      .pipe(finalize(() => {
+        this.isLoading = false;
+      }))
       .subscribe((res: any) => {
         if (res.response_code === 200) {
           this.recentsPlayData = res.data;
@@ -355,16 +374,20 @@ export class UserHomeComponent implements OnInit, OnDestroy {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),
     };
-    this.crud.postRequest('auth/player-details', body).subscribe({
-      next: (res: any) => {
-        this.currentProgramDetail = !this.currentProgramDetail;
-        this.programDetailData = res.data;
+    this.crud.postRequest('auth/player-details', body)
+      .pipe(finalize(() => {
         this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.isLoading = false;
-      },
-    });
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.currentProgramDetail = !this.currentProgramDetail;
+          this.programDetailData = res.data;
+          this.isLoading = false;
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.isLoading = false;
+        },
+      });
   }
 }
