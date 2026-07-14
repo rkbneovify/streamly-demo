@@ -466,11 +466,9 @@ export class PlaylistScheduleComponent
     const clientHeight = element.clientHeight;
     const scrollHeight = element.scrollHeight;
 
-    if ((scrollTop + clientHeight) >= scrollHeight - 200) {
+    if ((scrollTop + clientHeight) >= scrollHeight - 5) {
       this.getScheduleData();
-    } else if ((scrollTop + clientHeight) >= scrollHeight - 5) {
-
-      if (!this.hasMore && this.total == this.resChannelList.length) {
+      if (!this.hasMore) {
         this.sweetAlert.toast("No more channels to show.", "info");
         return;
       }
@@ -723,7 +721,10 @@ export class PlaylistScheduleComponent
   }
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-    this.isLoading = true;
+    if (this.page <= 1) {
+      this.isLoading = true;
+    }
+
     const zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
