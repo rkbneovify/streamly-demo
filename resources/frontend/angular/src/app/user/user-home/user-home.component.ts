@@ -4,6 +4,7 @@ import {
   ElementRef,
   HostListener,
   NgZone,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -35,7 +36,7 @@ import { NotificationService } from '../../services/utils/notification.service';
   templateUrl: './user-home.component.html',
   styleUrl: './user-home.component.scss',
 })
-export class UserHomeComponent implements OnInit {
+export class UserHomeComponent implements OnInit, OnDestroy {
   access_Token: any;
   sldierData: any;
   favChannelList: any;
@@ -88,6 +89,10 @@ export class UserHomeComponent implements OnInit {
         ride: 'carousel' // Ensures the auto-slide behavior is enabled
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.isLoading = false;
   }
 
   // Function to expand the last card

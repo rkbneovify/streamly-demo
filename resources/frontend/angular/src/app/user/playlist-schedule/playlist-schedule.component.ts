@@ -1018,6 +1018,7 @@ export class PlaylistScheduleComponent
   }
 
   ngOnDestroy(): void {
+    this.isLoading = false;
     // this.clearInterval();
     if (this.intervalLiveWidth) {
       clearInterval(this.intervalLiveWidth);

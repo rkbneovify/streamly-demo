@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -8,36 +8,40 @@ import { DurationISOFormatPipe, TruncatePipe } from '../../pipe/duration-format.
 @Component({
   selector: 'app-favourites',
   standalone: true,
-  imports: [NgFor, NgClass, NgIf, RouterLink,DurationISOFormatPipe,TruncatePipe],
+  imports: [NgFor, NgClass, NgIf, RouterLink, DurationISOFormatPipe, TruncatePipe],
   templateUrl: './favourites.component.html',
   styleUrl: './favourites.component.scss',
 })
-export class FavouritesComponent implements OnInit {
+export class FavouritesComponent implements OnInit, OnDestroy {
   favoriteChannels: any;
   isLoading: boolean = false;
   expandedCardIndex: number | null = null;
-  zipcode:any;
+  zipcode: any;
   constructor(
     private apiService: CrudService,
     private router: Router,
     private ts: ToastrService
-  ) {}
+  ) { }
   ngOnInit(): void {
-  this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
+    this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     this.getFavoriteListData();
     this.getRecentsListData();
     this.getFavoriteList();
   }
 
-// Function to expand the last card
-expandLastCard(index: number) {
-  this.expandedCardIndex = index;
-}
+  ngOnDestroy(): void {
+    this.isLoading = false;
+  }
 
-// Function to close the expanded card when another card is clicked
-closeExpandedCard() {
-  this.expandedCardIndex = null;
-}
+  // Function to expand the last card
+  expandLastCard(index: number) {
+    this.expandedCardIndex = index;
+  }
+
+  // Function to close the expanded card when another card is clicked
+  closeExpandedCard() {
+    this.expandedCardIndex = null;
+  }
 
   // Check if a channel is marked as favorite
   isFavorite(channelId: number): boolean {
@@ -117,7 +121,7 @@ closeExpandedCard() {
 
   getFavoriteListData(): void {
     this.isLoading = true;
-    const body = { typeurl: 'mpd',zipcode:this.zipcode };
+    const body = { typeurl: 'mpd', zipcode: this.zipcode };
     this.apiService
       .postRequest('auth/favourite-channels', body)
       .subscribe((res: any) => {
@@ -132,7 +136,7 @@ closeExpandedCard() {
   getRecentsListData(): void {
     this.isLoading = true;
     // Fetch from API if not found in local storage
-    const body = { typeurl: 'mpd',zipcode:this.zipcode };
+    const body = { typeurl: 'mpd', zipcode: this.zipcode };
     this.apiService
       .postRequest('auth/recent-channels', body)
       .subscribe((res: any) => {
@@ -154,7 +158,7 @@ closeExpandedCard() {
   currentProgramDetail: boolean = false;
   programChannelId: string;
   programChannelUrl: string;
-  currentprogramDetailData:any;
+  currentprogramDetailData: any;
 
   formatTime(timeStr: any): string {
     const currentDate = new Date();
@@ -163,9 +167,9 @@ closeExpandedCard() {
     )
       .toString()
       .padStart(2, '0')}-${currentDate
-      .getUTCDate()
-      .toString()
-      .padStart(2, '0')} ${timeStr} +0000`;
+        .getUTCDate()
+        .toString()
+        .padStart(2, '0')} ${timeStr} +0000`;
     const localDate = this.convertTZ(dateString);
     const hours = localDate.getHours();
     const minutes = localDate.getMinutes();
@@ -205,7 +209,7 @@ closeExpandedCard() {
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),
-      zipcode:this.zipcode
+      zipcode: this.zipcode
     };
     this.apiService.postRequest('auth/player-details', body).subscribe({
       next: (res: any) => {
