@@ -326,6 +326,7 @@ export class PlaylistScheduleComponent
 
   ) { }
   ngOnInit(): void {
+    this.isLoading = false;
     this.getScheduleData();
     this.getCurrentTimeSlot();
     this.getFavoriteList();
