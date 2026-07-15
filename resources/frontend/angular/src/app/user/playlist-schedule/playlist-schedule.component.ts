@@ -108,6 +108,7 @@ export class PlaylistScheduleComponent
 
   previousRoute: string | null = null;
 
+
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
   @ViewChild('scrollableContent1') scrollableContent1: ElementRef;
@@ -466,11 +467,16 @@ export class PlaylistScheduleComponent
     const clientHeight = element.clientHeight;
     const scrollHeight = element.scrollHeight;
 
-    if ((scrollTop + clientHeight) >= scrollHeight - 5) {
-      this.getScheduleData();
-      if (!this.hasMore) {
-        this.sweetAlert.toast("No more channels to show.", "info");
-        return;
+    if ((scrollTop + clientHeight) >= scrollHeight - 50) {
+      if (this.hasMore) {
+        element.scrollTop = element.scrollHeight - element.clientHeight - 600;
+        this.getScheduleData();
+      }
+      if ((scrollTop + clientHeight) >= scrollHeight - 5) {
+        if (!this.hasMore) {
+          this.sweetAlert.toast("No more channels to show.", "info");
+          return;
+        }
       }
     }
 
@@ -721,9 +727,6 @@ export class PlaylistScheduleComponent
   }
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-    if (this.page <= 1) {
-      this.isLoading = true;
-    }
 
     const zipcode =
       JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
@@ -751,6 +754,7 @@ export class PlaylistScheduleComponent
     const cachedData = this.channelCache.get(cacheKey);
 
     if (cachedData) {
+      this.isLoading = false;
       this.hasMore = this.channelCache.get(this.hasMoreKey);
       this.resChannelList = [...this.resChannelList, ...cachedData];
       this.resChannelList = this.removeDuplicates(this.resChannelList, 'id');
@@ -758,16 +762,23 @@ export class PlaylistScheduleComponent
       this.lastItem = this.resChannelList.length;
       this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
       this.filteredPrograms = [...this.resChannelList];
-      this.isLoading = false;
+
       this.cdr.markForCheck();
       return;
     }
 
 
+    if (this.page <= 1) {
+      this.isLoading = true;
+    }
 
     this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
 
+      finalize(() => {
+        this.isLoading = false;
+      }),
       tap((res: any) => {
+
         this.hasMore = res.has_more;
         this.channelCache.set(this.hasMoreKey, res.has_more);
         this.total = res.total;
