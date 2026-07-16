@@ -28,7 +28,8 @@
 
                             <p>
                                 Your account has been created successfully, and your
-                                <strong>7-day free trial</strong> is now active.
+                                <strong>{{ \Carbon\Carbon::parse($trialStartDate)->diffInDays(\Carbon\Carbon::parse($trialEndDate), false) + 1 }}-day
+                                    free trial</strong> is now active.
                             </p>
 
                             <h3>Login Credentials</h3>
@@ -70,7 +71,7 @@
                                 <tr>
                                     <td style="border:1px solid #ddd;"><strong>Free Trial</strong></td>
                                     <td style="border:1px solid #ddd;">
-                                        {{ date('F j, Y', $trialStart) }} – {{ date('F j, Y', $trialEnd) }}
+                                        {{ date('F j, Y', $trialStartDate) }} – {{ date('F j, Y', $trialEndDate) }}
                                     </td>
                                 </tr>
 
@@ -85,7 +86,7 @@
                                 <tr>
                                     <td style="border:1px solid #ddd;"><strong>First Billing Date</strong></td>
                                     <td style="border:1px solid #ddd;">
-                                        {{ date('F j, Y', $billingDate) }}
+                                        {{ date('F j, Y', $trialEndDate) }}
                                     </td>
                                 </tr>
                             </table>
@@ -93,7 +94,7 @@
                             <p style="margin-top:20px;">
                                 Your subscription will automatically renew every month after
                                 the trial period. To avoid being charged, cancel auto-renewal
-                                before <strong>{{ date('F j, Y', $billingDate) }}</strong>.
+                                before <strong>{{ date('F j, Y', $trialEndDate) }}</strong>.
                             </p>
 
                             <hr>
