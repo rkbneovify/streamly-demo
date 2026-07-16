@@ -13,8 +13,8 @@ class TrialSubscriptionWelcomeMail extends Mailable
 
     public $user;
     public $temporaryPassword;
-    public $trialStart;
-    public $trialEnd;
+    public $trialStartDate;
+    public $trialEndDate;
     public $plan;
     public $amount;
     public $billingDate;
@@ -26,8 +26,8 @@ class TrialSubscriptionWelcomeMail extends Mailable
     public function __construct(
         $user,
         $temporaryPassword,
-        $trialStart,
-        $trialEnd,
+        $trialStartDate,
+        $trialEndDate,
         $plan,
         $amount,
         $billingDate,
@@ -35,8 +35,8 @@ class TrialSubscriptionWelcomeMail extends Mailable
     ) {
         $this->user = $user;
         $this->temporaryPassword = $temporaryPassword;
-        $this->trialStart = $trialStart;
-        $this->trialEnd = $trialEnd;
+        $this->trialStartDate = $trialStartDate;
+        $this->trialEndDate = $trialEndDate;
         $this->plan = $plan;
         $this->amount = $amount;
         $this->billingDate = $billingDate;
