@@ -34,7 +34,7 @@ import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
-import { EMPTY, expand, finalize, Subscription, tap } from 'rxjs';
+import { EMPTY, expand, finalize, Subject, Subscription, takeUntil, tap } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
@@ -107,7 +107,7 @@ export class PlaylistScheduleComponent
   hasMoreKey: string = 'hasMore';
 
   previousRoute: string | null = null;
-
+  private stopScheduleRequest$ = new Subject<void>();
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -778,6 +778,7 @@ export class PlaylistScheduleComponent
 
     this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
 
+      takeUntil(this.stopScheduleRequest$),
       finalize(() => {
         this.sweetAlert.close();
       }),
@@ -797,6 +798,7 @@ export class PlaylistScheduleComponent
 
       }),
 
+
       expand((res: any) => {
 
         if (!res.has_more) {
@@ -809,7 +811,9 @@ export class PlaylistScheduleComponent
         return this.apiService.postRequest('auth/epg-guide-v2', {
           ...body,
           page: this.page
-        });
+        }).pipe(
+          takeUntil(this.stopScheduleRequest$)
+        )
       }),
 
       tap((res: any) => {
@@ -836,11 +840,13 @@ export class PlaylistScheduleComponent
   }
 
   changeCategory(genre?: string) {
+    this.stopScheduleRequest$.next();
     this.channelList1.nativeElement.scrollTop = 0;
     this.cacheService.clearCache();
     this.channelCache.clear();
     this.resChannelList = [];
     this.page = 1;
+    this.cdr.detectChanges();
 
     this.getScheduleData(genre);
     this.active_categories(genre);
