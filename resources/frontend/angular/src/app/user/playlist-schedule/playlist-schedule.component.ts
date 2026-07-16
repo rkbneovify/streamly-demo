@@ -469,10 +469,8 @@ export class PlaylistScheduleComponent
 
     if ((scrollTop + clientHeight) >= scrollHeight - 50) {
       if (this.hasMore) {
-        element.scrollTop = element.scrollHeight - element.clientHeight - 600;
         this.getScheduleData();
-      }
-      if ((scrollTop + clientHeight) >= scrollHeight - 5) {
+      } else if ((scrollTop + clientHeight) >= scrollHeight - 5) {
         if (!this.hasMore) {
           this.sweetAlert.toast("No more channels to show.", "info");
           return;
@@ -720,10 +718,16 @@ export class PlaylistScheduleComponent
       });
   }
 
-  removeDuplicates<T>(array: T[], key: keyof T): T[] {
+  removeDuplicates<T extends { id: number | string }>(array: T[]): T[] {
     return Array.from(
-      new Map(array.map(item => [item[key], item])).values()
-    );
+      new Map(array.map(item => [item.id, item])).values()
+    ).sort((a, b) => {
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return a.id - b.id;
+      }
+
+      return String(a.id).localeCompare(String(b.id));
+    });
   }
 
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
@@ -757,7 +761,7 @@ export class PlaylistScheduleComponent
       this.sweetAlert.close();
       this.hasMore = this.channelCache.get(this.hasMoreKey);
       this.resChannelList = [...this.resChannelList, ...cachedData];
-      this.resChannelList = this.removeDuplicates(this.resChannelList, 'id');
+      this.resChannelList = this.removeDuplicates(this.resChannelList);
       this.total = this.resChannelList.length;
       this.lastItem = this.resChannelList.length;
       this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
@@ -783,7 +787,7 @@ export class PlaylistScheduleComponent
         this.channelCache.set(this.hasMoreKey, res.has_more);
         this.total = res.total;
         this.lastItem = res.to;
-        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
+        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data]);
         this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
         this.filteredPrograms = [...this.resChannelList];
         this.cacheService.setFilterData(this.filteredPrograms);
@@ -813,7 +817,7 @@ export class PlaylistScheduleComponent
         this.channelCache.set(this.hasMoreKey, res.has_more);
         this.total = res.total;
         this.lastItem = res.to;
-        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data], 'id');
+        this.resChannelList = this.removeDuplicates([...this.resChannelList, ...res.data]);
 
         this.getScheduleChannelLogo = [...this.filterchannelAnd(this.resChannelList)];
         this.filteredPrograms = [...this.resChannelList];
