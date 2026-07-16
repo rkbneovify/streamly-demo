@@ -1333,7 +1333,7 @@ class NewChannelApiController extends Controller
             $genres->map(function ($genre) {
                 $genre->image = env('APP_URL') . $genre->image;
             });
-            $response = [
+            return [
                 'success' => true,
                 'response_code' => 200,
                 'message' => 'All genres Retrieved successfully.',
