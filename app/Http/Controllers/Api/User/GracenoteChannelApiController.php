@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\UserZipcodeRule;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -52,7 +53,7 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::with(['zipcode', 'premium', 'phxLocal'])->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.type', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::with(['zipcode', 'premium', 'phxLocal', 'eastCoast'])->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.type', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -95,11 +96,11 @@ class GracenoteChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->orwhere('channels.type', 'all')
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -107,6 +108,7 @@ class GracenoteChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->where('channels.status', 1);
                 }
             }
@@ -128,19 +130,16 @@ class GracenoteChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
-
                 }
                 if ($channel->id == 6) {
                     $channel->stationName = 'Trinity Broadcasting Network';
                     $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
-
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
-
                 }
 
                 if ($channel->id == 45) {
@@ -190,13 +189,22 @@ class GracenoteChannelApiController extends Controller
                 ];
                 $result[] = $genreArray;
             }
-            $response = [
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Channel List Retrieved successfully.',
-                'data' => $result,
 
-            ];
+            $cacheKey = 'channel_list_' . md5(json_encode([
+                'user' => $user->id,
+                'typeurl' => $urlType,
+                'zipcode' => $zipcode,
+            ]));
+
+            $response = Cache::remember($cacheKey, now()->addMinutes(5), function () use ($result) {
+                return [
+                    'success' => true,
+                    'response_code' => 200,
+                    'message' => 'Channel List Retrieved successfully.',
+                    'data' => $result,
+
+                ];
+            });
             return response()->json($response, 200);
         }
     }
@@ -315,8 +323,6 @@ class GracenoteChannelApiController extends Controller
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -378,19 +384,16 @@ class GracenoteChannelApiController extends Controller
                     $channel->stationName = 'Trinity Broadcasting Network';
                     $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
-
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
-
                 }
                 if ($channel->id == 45) {
                     $channel->stationName = 'Fuse Music';
                     $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
-
                 }
                 // if ($channel->id == 134) {
                 //     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
@@ -463,37 +466,41 @@ class GracenoteChannelApiController extends Controller
             ], 400);
         } else {
 
-            $query = Channel::select('channels.id', 'channels.image as db_image', 'gracenote_sources.stationName', 'gracenote_sources.assets')
-                // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
-                ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
-                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            $query->whereNull('channels.type');
-            $query->where('channels.status', '=', '1');
-            $query->orderBy('genre_name', 'asc');
-            $record = $query->get()->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
-                unset($channel->db_image);
-                unset($channel->assets);
-                return $channel;
-            });
+            $cacheKey = 'channel_list_before_login_' . md5(json_encode($request->only(['typeurl'])));
 
-            $data = $record->groupBy('genre_name');
-            foreach ($data as $genre => $channels) {
-                $genreArray = [
-                    "genre_name" => $genre,
-                    "channels" => $channels
+            $response = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+                $query = Channel::select('channels.id', 'channels.image as db_image', 'gracenote_sources.stationName', 'gracenote_sources.assets')
+                    // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                    ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
+                    ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                    ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                    ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+                $query->whereNull('channels.type');
+                $query->where('channels.status', '=', '1');
+                $query->orderBy('genre_name', 'asc');
+                $record = $query->get()->map(function ($channel) {
+                    $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                    unset($channel->db_image);
+                    unset($channel->assets);
+                    return $channel;
+                });
+
+                $data = $record->groupBy('genre_name');
+                foreach ($data as $genre => $channels) {
+                    $genreArray = [
+                        "genre_name" => $genre,
+                        "channels" => $channels
+                    ];
+                    $result[] = $genreArray;
+                }
+                $response = [
+                    'success' => true,
+                    'response_code' => 200,
+                    'message' => 'Channel List Retrieved successfully.',
+                    'data' => $result,
+
                 ];
-                $result[] = $genreArray;
-            }
-            $response = [
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Channel List Retrieved successfully.',
-                'data' => $result,
-
-            ];
+            });
             return response()->json($response, 200);
         }
     }
