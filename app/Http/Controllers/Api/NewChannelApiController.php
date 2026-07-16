@@ -1327,17 +1327,19 @@ class NewChannelApiController extends Controller
 
     public function allGenre()
     {
-        $genres = Genre::select('name', 'image')->orderBy('position')->get();
+        $response = Cache::remember('all_genres', now()->addMinutes(5), function () {
+            $genres = Genre::select('name', 'image')->orderBy('position')->get();
 
-        $genres->map(function ($genre) {
-            $genre->image = env('APP_URL') . $genre->image;
+            $genres->map(function ($genre) {
+                $genre->image = env('APP_URL') . $genre->image;
+            });
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'All genres Retrieved successfully.',
+                'data' => $genres
+            ];
         });
-        $response = [
-            'success' => true,
-            'response_code' => 200,
-            'message' => 'All genres Retrieved successfully.',
-            'data' => $genres
-        ];
         return response()->json($response);
     }
 
