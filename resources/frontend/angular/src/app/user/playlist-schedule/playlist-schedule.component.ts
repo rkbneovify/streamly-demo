@@ -754,7 +754,7 @@ export class PlaylistScheduleComponent
     const cachedData = this.channelCache.get(cacheKey);
 
     if (cachedData) {
-      this.isLoading = false;
+      this.sweetAlert.close();
       this.hasMore = this.channelCache.get(this.hasMoreKey);
       this.resChannelList = [...this.resChannelList, ...cachedData];
       this.resChannelList = this.removeDuplicates(this.resChannelList, 'id');
@@ -769,13 +769,13 @@ export class PlaylistScheduleComponent
 
 
     if (this.page <= 1) {
-      this.isLoading = true;
+      this.sweetAlert.loading();
     }
 
     this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
 
       finalize(() => {
-        this.isLoading = false;
+        this.sweetAlert.close();
       }),
       tap((res: any) => {
 
@@ -796,6 +796,7 @@ export class PlaylistScheduleComponent
       expand((res: any) => {
 
         if (!res.has_more) {
+          this.sweetAlert.close();
           return EMPTY;
         }
 
@@ -823,7 +824,7 @@ export class PlaylistScheduleComponent
       }),
 
       finalize(() => {
-        this.isLoading = false;
+        this.sweetAlert.close();
       })
 
     ).subscribe();
