@@ -72,7 +72,6 @@ class ApiHoaController extends Controller
             if ($request->sort == null) {
 
                 $query->latest();
-
             }
             $limit = $request->input('per_page', 10);
             $page = $request->input('page', 1);
@@ -101,9 +100,6 @@ class ApiHoaController extends Controller
                 'total' => $data->total(),
                 'is_more_data' => $page >= $data->lastPage() ? false : true,
             ], 200);
-
-
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
@@ -155,13 +151,10 @@ class ApiHoaController extends Controller
                 } elseif ($request->sort == 'oldest') {
                     $q->orderBy('created_at', 'asc');
                 }
-
-
             });
             if ($request->sort == null) {
 
                 $query->latest();
-
             }
             $data = $query->get()->map(function ($item) {
                 $item->house_no = $item->house_no ?? "house" . $item->ordering;
@@ -178,9 +171,6 @@ class ApiHoaController extends Controller
                 'data' => $data,
 
             ], 200);
-
-
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
@@ -280,7 +270,6 @@ class ApiHoaController extends Controller
                         "data" => $hoaUser
                     ])
                     ->save();
-
             }
 
 
@@ -297,9 +286,6 @@ class ApiHoaController extends Controller
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
-
-
-
     }
 
     public function editHouse(Request $request)
@@ -386,7 +372,6 @@ class ApiHoaController extends Controller
                     $subscription->plan_name = $request->plan_in_month . ' Month';
                     $subscription->plan_expires_at = $timestampAfterMonth;
                     $subscription->save();
-
                 }
             }
 
@@ -400,8 +385,6 @@ class ApiHoaController extends Controller
                 'user' => $hoaUser
             ], 'User updated successfully !');
         });
-
-
     }
 
     public function verifyEditHouse(Request $request)
@@ -450,8 +433,6 @@ class ApiHoaController extends Controller
 
             return $this->successResponse('Acoount Verification done successfully ! Please check your email.');
         });
-
-
     }
 
     public function resendEditVerification($id)
@@ -517,7 +498,6 @@ class ApiHoaController extends Controller
 
                     return $this->errorResponse("You remaining device Limit is " . $remainingDevices);
                 }
-
             }
 
             $hoaUser->device_limit = $request->device_limit;
@@ -532,7 +512,7 @@ class ApiHoaController extends Controller
 
                 ])->save();
 
-            // sub user notification 
+            // sub user notification
             $this->activity()->event("subscription")
                 ->eventType(ActivityEventType::NewPlanAdded)
                 ->descriptionSimple("Your new subscription plan has been activated successfully.")
@@ -546,7 +526,7 @@ class ApiHoaController extends Controller
 
 
 
-            // sub user notification 
+            // sub user notification
             $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
 
             if ($fcmTokens != null) {
@@ -562,8 +542,6 @@ class ApiHoaController extends Controller
 
 
             return $this->successResponse("Plan added successfully !");
-
-
         });
     }
 
@@ -649,7 +627,6 @@ class ApiHoaController extends Controller
                 ->first();
             if ($hoaUser == null) {
                 return $this->notFoundResponse('Passcode not found !');
-
             }
 
             return response()->json([
@@ -662,8 +639,6 @@ class ApiHoaController extends Controller
             //throw $th;
             return $this->exceptionResponse($th);
         }
-
-
     }
 
     public function regeneratePasscode(Request $request, $token)
@@ -688,7 +663,6 @@ class ApiHoaController extends Controller
 
             $redirectUrl .= '?type=error&message=Invalid link. Please request a new passcode reset.';
             return redirect($redirectUrl);
-
         }
         $expireIn = Carbon::parse($tokenData->created_at)->diffInMinutes(now());
         if ($expireIn >= 30) {
@@ -705,7 +679,6 @@ class ApiHoaController extends Controller
 
             $redirectUrl .= '?type=error&message=No active account found for the provided email.';
             return redirect($redirectUrl);
-
         }
 
 
@@ -736,8 +709,6 @@ class ApiHoaController extends Controller
 
             $redirectUrl .= '?type=success&message=Passcode regenerated successfully ! Please check your email.';
             return redirect($redirectUrl);
-
-
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -750,10 +721,7 @@ class ApiHoaController extends Controller
             // ]);
             $redirectUrl .= '?type=error&message=Something went wrong ! Please try again later.';
             return redirect($redirectUrl);
-
         }
-
-
     }
 
     public function updateSubUserDetails(Request $request)
@@ -766,7 +734,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
 
@@ -777,7 +744,6 @@ class ApiHoaController extends Controller
             ->first();
         if ($hoaUser == null) {
             return $this->notFoundResponse('Passcode not found !');
-
         }
 
         try {
@@ -791,14 +757,10 @@ class ApiHoaController extends Controller
 
             DB::commit();
             return $this->successResponse('User details updated successfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
-
         }
-
-
     }
 
     public function changeStatus(Request $request, $id = null)
@@ -811,7 +773,6 @@ class ApiHoaController extends Controller
             ]);
             if ($validator->fails()) {
                 return $this->validationErrorResponse(null, $validator->errors());
-
             }
         }
 
@@ -832,7 +793,6 @@ class ApiHoaController extends Controller
 
         if ($hoaUser == null) {
             return $this->notFoundResponse('Data not found !');
-
         }
         $message = $hoaUser->status == 1 ? 'deactivated' : 'activated';
         try {
@@ -869,14 +829,10 @@ class ApiHoaController extends Controller
 
             DB::commit();
             return $this->successResponse('Account ' . $message . ' suscessfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
-
         }
-
-
     }
 
     public function updateDeviceLimit(Request $request)
@@ -887,7 +843,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
 
@@ -898,7 +853,6 @@ class ApiHoaController extends Controller
             ->first();
         if ($hoaUser == null) {
             return $this->notFoundResponse('Passcode not found !');
-
         }
 
         try {
@@ -910,19 +864,15 @@ class ApiHoaController extends Controller
             $hoaUser->save();
             if ($sessionRemoveCount > 0) {
                 $this->removeActiveSessions($request->passcode, $user->id, $sessionRemoveCount);
-
             }
 
 
             DB::commit();
             return $this->successResponse('Device limit updated successfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
         }
-
-
     }
 
 
@@ -936,7 +886,6 @@ class ApiHoaController extends Controller
 
             if ($session == null) {
                 return $this->notFoundResponse('Session not found !');
-
             }
             $this->activity()->event("Hoa main")
                 ->eventType(ActivityEventType::REMOVED)
@@ -949,14 +898,10 @@ class ApiHoaController extends Controller
             $session->delete();
             DB::commit();
             return $this->successResponse('Session remove  successfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
-
         }
-
-
     }
 
     public function removeAllSessions(Request $request)
@@ -966,7 +911,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
 
@@ -982,7 +926,6 @@ class ApiHoaController extends Controller
                 ->get();
             if ($sessions->isEmpty()) {
                 return $this->notFoundResponse('Session not found !');
-
             }
 
 
@@ -1003,14 +946,10 @@ class ApiHoaController extends Controller
 
             DB::commit();
             return $this->successResponse('All session remove successfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
-
         }
-
-
     }
 
     public function subscriptionPlan(Request $request)
@@ -1021,7 +960,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
 
@@ -1037,7 +975,6 @@ class ApiHoaController extends Controller
                 ->first();
             if ($hoaUser == null) {
                 return $this->notFoundResponse('User not found !');
-
             }
 
 
@@ -1056,42 +993,56 @@ class ApiHoaController extends Controller
 
             DB::commit();
             return $this->successResponse('Plan Subscribed successfully !');
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->exceptionResponse($th);
-
         }
-
-
     }
 
 
     // private function
     private function removeActiveSessions($passcode, $userId, $count = 0)
     {
-        if ($count > 0) {
+        // if ($count > 0) {
 
-            $sessions = SessionTable::where('passcode', $passcode)
-                ->where('users_id', $userId)
-                ->limit($count)
-                ->get();
-            foreach ($sessions as $session) {
+        //     $sessions = SessionTable::where('passcode', $passcode)
+        //         ->where('users_id', $userId)
+        //         ->limit($count)
+        //         ->get();
+        //     foreach ($sessions as $session) {
+        //         JWTAuth::setToken($session->access_token)->invalidate();
+        //         $session->delete();
+        //     }
+
+
+        // } else {
+        //     $sessions = SessionTable::where('passcode', $passcode)
+        //         ->where('users_id', $userId)
+        //         ->get();
+        //     foreach ($sessions as $session) {
+        //         JWTAuth::setToken($session->access_token)->invalidate();
+        //         $session->delete();
+        //     }
+        // }
+
+
+
+        $sessions = SessionTable::where('passcode', $passcode)
+            ->where('users_id', $userId)
+            ->where('status', 1)
+            ->get();
+        foreach ($sessions as $session) {
+
+            // $exp = JWTAuth::setToken($session->access_token)->getPayload()->get('exp');
+            $payload = JWTAuth::getJWTProvider()->decode($session->access_token);
+
+            $exp = $payload['exp'] ?? null;
+
+            if ($exp && time() < $exp) {
                 JWTAuth::setToken($session->access_token)->invalidate();
-                $session->delete();
             }
-
-
-        } else {
-            $sessions = SessionTable::where('passcode', $passcode)
-                ->where('users_id', $userId)
-                ->get();
-            foreach ($sessions as $session) {
-                JWTAuth::setToken($session->access_token)->invalidate();
-                $session->delete();
-            }
+            $session->delete();
         }
-
     }
 
     public function accountActive(Request $request)
@@ -1111,7 +1062,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
         DB::beginTransaction();
@@ -1182,14 +1132,12 @@ class ApiHoaController extends Controller
                     "data" => $hoaUser
                 ])->save();
             return $this->successResponse("Account active successfully ! Please check your email for details.");
-
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
 
             return $this->exceptionResponse($th);
         }
-
     }
     public function emailVerify($id, $hash, Request $request)
     {
@@ -1214,7 +1162,6 @@ class ApiHoaController extends Controller
                 ->autoClose(3000)
                 ->timerProgressBar();
             return redirect('/auth/login');
-
         }
         DB::beginTransaction();
         try {
@@ -1275,9 +1222,7 @@ class ApiHoaController extends Controller
             DB::rollBack();
 
             return response()->json($th->getMessage());
-
         }
-
     }
 
 
@@ -1317,7 +1262,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
         $hoaUser = HoaUser::where('email', $request->email)->first();
         if ($hoaUser == null) {
@@ -1379,7 +1323,6 @@ class ApiHoaController extends Controller
         ]);
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
-
         }
 
         DB::beginTransaction();
@@ -1462,7 +1405,7 @@ class ApiHoaController extends Controller
                             ->properties([
                                 "data" => $item
                             ])->save();
-                        // main user notification 
+                        // main user notification
                         $fcmTokens = HoaUser::mainUserFcmToken($hoaUser->user_id);
 
                         if ($fcmTokens != null) {
@@ -1471,7 +1414,7 @@ class ApiHoaController extends Controller
                             }
                         }
 
-                        // sub user notification 
+                        // sub user notification
                         $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
 
                         if ($fcmTokens != null) {
@@ -1491,18 +1434,6 @@ class ApiHoaController extends Controller
                             ->properties([
                                 "data" => $item
                             ])->save();
-
-
-
-
-
-
-
-
-
-
-
-
                     } elseif ($daysLeft > 1) {
                         $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
                         $this->activity($item->user_id)
@@ -1515,7 +1446,7 @@ class ApiHoaController extends Controller
                                 "data" => $item
                             ])->save();
 
-                        // main user notification 
+                        // main user notification
                         $fcmTokens = HoaUser::mainUserFcmToken($hoaUser->user_id);
 
                         if ($fcmTokens != null) {
@@ -1524,7 +1455,7 @@ class ApiHoaController extends Controller
                             }
                         }
 
-                        // sub user notification 
+                        // sub user notification
                         $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
 
                         if ($fcmTokens != null) {
@@ -1544,7 +1475,6 @@ class ApiHoaController extends Controller
                             ->properties([
                                 "data" => $item
                             ])->save();
-
                     }
                 } else {
                     if ($hoaUser != null) {
@@ -1559,7 +1489,7 @@ class ApiHoaController extends Controller
                             ->properties([
                                 "data" => $item
                             ])->save();
-                        // main user notification 
+                        // main user notification
                         $fcmTokens = HoaUser::mainUserFcmToken($hoaUser->user_id);
 
                         if ($fcmTokens != null) {
@@ -1570,7 +1500,7 @@ class ApiHoaController extends Controller
                         }
 
 
-                        // sub user notification 
+                        // sub user notification
                         $fcmTokens = HoaUser::subUserFcmToken($hoaUser->passcode);
 
                         if ($fcmTokens != null) {
@@ -1590,12 +1520,8 @@ class ApiHoaController extends Controller
                             ->properties([
                                 "data" => $item
                             ])->save();
-
-
                     }
                 }
-
-
             }
 
 
@@ -1608,16 +1534,6 @@ class ApiHoaController extends Controller
                     'message' => 'Notification sent successfully !',
                 ]
             );
-
-
-
         });
-
-
     }
-
-
-
-
-
 }
