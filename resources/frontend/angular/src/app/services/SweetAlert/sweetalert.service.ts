@@ -13,9 +13,13 @@ export class SweetalertService {
       icon: icon,
       title: message,
       showConfirmButton: false,
-      showCloseButton: true,
+      showCloseButton: true,   // Show the X button
       timer: 5000,
-      timerProgressBar: true
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
     });
   }
   success(message: string, title: string = 'Success') {

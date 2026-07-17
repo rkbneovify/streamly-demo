@@ -1,4 +1,7 @@
 <div class="schedule_main postion-relative">
+  <div *ngIf="!hasMore" class="paginationx-text">
+    Showing {{lastItem}} of {{total}} channels
+  </div>
   <div class="schedule_heading_container">
     <div class="schedule_channels">Streamly Channels</div>
 
@@ -39,11 +42,13 @@
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
-      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live
+      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go
+        Live
       </div>
       <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer"
         (click)="refreshPage()">Go Live</div>
-      <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
+      <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live
+      </div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
@@ -51,7 +56,9 @@
   </div>
 
   <!-- channels container start -->
-  <div class="schedule_container_content position-relative" #channelList (scroll)="onScrollChannelPostion()">
+
+
+  <div class="schedule_container_content position-relative" #channelList (scroll)="onScrollChannelPostion($event)">
     <div class="schedule_time_programs_counter_timer"></div>
     <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
@@ -212,8 +219,10 @@
     </div>
 
   </div>
+
   <!-- channels container end -->
 </div>
-<div *ngIf="isLoading" class="loader-overlay">
+
+<!-- <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>
-</div>
+</div> -->

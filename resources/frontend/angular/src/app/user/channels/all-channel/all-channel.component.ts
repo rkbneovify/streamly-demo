@@ -2,7 +2,7 @@ import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrudService } from '../../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { DurationISOFormatPipe, TruncatePipe } from '../../../pipe/duration-format.pipe';
 import { ScreenSizeService } from '../../../services/screenSize/screen-size.service';
@@ -11,15 +11,15 @@ import { Subscription, zip } from 'rxjs';
 @Component({
   selector: 'app-all-channel',
   standalone: true,
-  imports: [NgFor,NgClass,JsonPipe,NgIf,DurationISOFormatPipe,TruncatePipe],
+  imports: [NgFor, NgClass, JsonPipe, NgIf, DurationISOFormatPipe, TruncatePipe],
   templateUrl: './all-channel.component.html',
   styleUrl: './all-channel.component.scss'
 })
-export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
-  Bearer_token:any;
-  favChannelList:any;
+export class AllChannelComponent implements OnInit, AfterViewInit, OnDestroy {
+  Bearer_token: any;
+  favChannelList: any;
   favoriteChannels: number[] = [];
-  isLoading:boolean = false;
+  isLoading: boolean = false;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
   expandedCardIndexRow: number | null = null;
@@ -27,34 +27,35 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
   @ViewChildren('card') cards!: QueryList<ElementRef>; // Access each card element
 
 
-  data:any;
-  constructor(private apiService:CrudService,private router:Router,private ts:ToastrService,private screenSizeService: ScreenSizeService){}
+  data: any;
+  constructor(private apiService: CrudService, private router: Router, private ts: ToastrService, private screenSizeService: ScreenSizeService) { }
   ngOnInit(): void {
-    if(JSON.parse(localStorage.getItem('allChannel'))){
+    if (JSON.parse(localStorage.getItem('allChannel'))) {
       this.data = JSON.parse(localStorage.getItem('allChannel'));
-    }else{
+    } else {
       this.getPrivacyP();
     }
     this.getFavoriteList();
 
-        // Subscribe to screen width changes
-        this.screenSizeSubscription = this.screenSizeService
-        .getScreenWidth()
-        .subscribe((width) => {
-          this.currentWidth = width;
-          console.log(`Screen width is: ${this.currentWidth}`);
-  
-          // Recalculate chunk size based on screen width
-          if (this.data) {
-            const chunkSize = Math.floor(this.currentWidth / 190);
-            this.data = this.chunkArray(
-              this.data.flat(),
-              chunkSize
-            );
-          }
-        });
+    // Subscribe to screen width changes
+    this.screenSizeSubscription = this.screenSizeService
+      .getScreenWidth()
+      .subscribe((width) => {
+        this.currentWidth = width;
+        console.log(`Screen width is: ${this.currentWidth}`);
+
+        // Recalculate chunk size based on screen width
+        if (this.data) {
+          const chunkSize = Math.floor(this.currentWidth / 190);
+          this.data = this.chunkArray(
+            this.data.flat(),
+            chunkSize
+          );
+        }
+      });
   }
   ngOnDestroy(): void {
+    this.isLoading = false;
     // Unsubscribe when the component is destroyed to avoid memory leaks
     if (this.screenSizeSubscription) {
       this.screenSizeSubscription.unsubscribe();
@@ -85,7 +86,7 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
     const tokenData = JSON.parse(
       localStorage.getItem('deviceInfo') || ''
     ).access_token;
-    this.Bearer_token= tokenData;
+    this.Bearer_token = tokenData;
     return new HttpHeaders({
       Authorization: `Bearer ${tokenData}`,
       Accept: 'application/json',
@@ -93,26 +94,26 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
   }
 
   getPrivacyP() {
-  this.isLoading = true;
-  const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
+    this.isLoading = true;
+    const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
       "typeurl": "mpd",
-      zipcode:zipcode
-  }
+      zipcode: zipcode
+    }
     this.apiService.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
-        const list = this.chunkArray(res.data,this.currentWidth/190);
-        localStorage.setItem('allChannel',JSON.stringify(list));
+        const list = this.chunkArray(res.data, this.currentWidth / 190);
+        localStorage.setItem('allChannel', JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
         this.isLoading = false;
       },
       error: (err: any) => {
         console.log(err);
-      this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }
-  // 
+  //
   chunkArray(array: any, chunkSize: any): any {
     const result: any = [];
     for (let i = 0; i < array.length; i += chunkSize) {
@@ -125,79 +126,79 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
   // Check if a channel is marked as favorite
   isFavorite(channelId: number): boolean {
     return this.favoriteChannels.includes(channelId);
-}
-          // Toggle favorite status
-    toggleFavorite(channelId: number): void {
-      // If channel is already favorite, remove it
-      if (this.isFavorite(channelId)) {
-          this.removeFavoriteChannel(channelId);
-      } else {
-          // add it to favorites
-          this.addFavoriteChannel(channelId);
-      }
   }
-   // Add channel to favorites
-   addFavoriteChannel(channelId: number): void {
-  this.isLoading = true;
+  // Toggle favorite status
+  toggleFavorite(channelId: number): void {
+    // If channel is already favorite, remove it
+    if (this.isFavorite(channelId)) {
+      this.removeFavoriteChannel(channelId);
+    } else {
+      // add it to favorites
+      this.addFavoriteChannel(channelId);
+    }
+  }
+  // Add channel to favorites
+  addFavoriteChannel(channelId: number): void {
+    this.isLoading = true;
     // Call API to add channel to favorites
     this.apiService.postRequest('auth/addtofavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
-        if (res.response_code === 200) {
-            this.favoriteChannels.push(channelId); // Update local favorite list
-            this.updateFavoriteChannels(); // Update local storage
-            this.ts.success(res.message);
-        }
-  this.isLoading = false;
+      if (res.response_code === 200) {
+        this.favoriteChannels.push(channelId); // Update local favorite list
+        this.updateFavoriteChannels(); // Update local storage
+        this.ts.success(res.message);
+      }
+      this.isLoading = false;
     });
-}
-// Remove channel from favorites
-removeFavoriteChannel(channelId: number): void {
-  this.isLoading = true;
+  }
+  // Remove channel from favorites
+  removeFavoriteChannel(channelId: number): void {
+    this.isLoading = true;
     // Call API to remove channel from favorites
     this.apiService.postRequest('auth/unfavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
-        if (res.response_code === 200) {
-            this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
-            this.updateFavoriteChannels(); // Update local storage
-            this.ts.success(res.message);
-        }
-  this.isLoading = false;
+      if (res.response_code === 200) {
+        this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
+        this.updateFavoriteChannels(); // Update local storage
+        this.ts.success(res.message);
+      }
+      this.isLoading = false;
     });
-}
-// Fetch favorite list
-getFavoriteList(): void {
+  }
+  // Fetch favorite list
+  getFavoriteList(): void {
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
-        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+      this.favoriteChannels = JSON.parse(storedFavoriteChannels);
     } else {
-  this.isLoading = true;
-        // Fetch from API if not found in local storage
-        this.apiService.getRequest('auth/my_favorites', this.getAuthHeaders()).subscribe((res: any) => {
-            if (res.response_code === 200) {
-                this.favoriteChannels = res.data.map((channel: any) => channel.id);
-                this.updateFavoriteChannels(); // Update local storage
-            }
-            this.isLoading = false;
+      this.isLoading = true;
+      // Fetch from API if not found in local storage
+      this.apiService.getRequest('auth/my_favorites', this.getAuthHeaders()).subscribe((res: any) => {
+        if (res.response_code === 200) {
+          this.favoriteChannels = res.data.map((channel: any) => channel.id);
+          this.updateFavoriteChannels(); // Update local storage
+        }
+        this.isLoading = false;
 
-        });
+      });
     }
-}
-// Update local storage with current favorite channels
-updateFavoriteChannels(): void {
+  }
+  // Update local storage with current favorite channels
+  updateFavoriteChannels(): void {
     localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
-}
+  }
 
-// set player data in local 
-setplayerData(url:string,id:any){
-  localStorage.setItem('playerId',url);
-  localStorage.setItem('playerChannelId',id);
-  this.router.navigateByUrl('/user/playstream')
-}
+  // set player data in local
+  setplayerData(url: string, id: any) {
+    localStorage.setItem('playerId', url);
+    localStorage.setItem('playerChannelId', id);
+    this.router.navigateByUrl('/user/playstream')
+  }
 
 
   // current Programs
   currentProgramDetail: boolean = false;
   programChannelId: string;
   programChannelUrl: string;
-  currentprogramDetailData:any;
+  currentprogramDetailData: any;
 
   formatTime(timeStr: any): string {
     const currentDate = new Date();
@@ -206,9 +207,9 @@ setplayerData(url:string,id:any){
     )
       .toString()
       .padStart(2, '0')}-${currentDate
-      .getUTCDate()
-      .toString()
-      .padStart(2, '0')} ${timeStr} +0000`;
+        .getUTCDate()
+        .toString()
+        .padStart(2, '0')} ${timeStr} +0000`;
     const localDate = this.convertTZ(dateString);
     const hours = localDate.getHours();
     const minutes = localDate.getMinutes();
@@ -262,11 +263,11 @@ setplayerData(url:string,id:any){
   }
 
   // Function to expand the last card
-  expandLastCard(index: number,row) {
+  expandLastCard(index: number, row) {
     this.expandedCardIndex = index;
     this.expandedCardIndexRow = row;
   }
-  
+
   // Function to close the expanded card when another card is clicked
   closeExpandedCard() {
     this.expandedCardIndex = null;

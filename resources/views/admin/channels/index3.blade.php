@@ -260,6 +260,9 @@
                                     <option value="phx-locals"
                                         {{ request('channel_type') == 'phx-locals' ? 'selected' : '' }}>
                                         PHX Locals</option>
+                                    <option value="east-coast-locals"
+                                        {{ request('channel_type') == 'east-coast-locals' ? 'selected' : '' }}>
+                                        East Coast Locals</option>
                                 </select>
                             </div>
                         </div>

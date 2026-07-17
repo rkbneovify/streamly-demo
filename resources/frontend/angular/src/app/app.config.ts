@@ -12,7 +12,7 @@ import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/
 import { NgSelectModule } from '@ng-select/ng-select';
 import { authInterceptor } from './_interceptor/auth.interceptor';
 import { SweetalertService } from './services/SweetAlert/sweetalert.service';
-import { QuillModule } from 'ngx-quill';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
@@ -22,7 +22,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       HttpClientModule,
       NgSelectModule,
-      NgxStripeModule.forRoot(''),
+      ScrollingModule,
+      // NgxStripeModule.forRoot(''),
       StripeModule.forRoot(environment.stripe.publicKey),
       BrowserAnimationsModule,
       BrowserModule,

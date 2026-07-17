@@ -22,7 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
         // \Barryvdh\Cors\HandleCors::class,
 
-        \Fruitcake\Cors\HandleCors::class,   // ✅ add this line here
+        \Illuminate\Http\Middleware\HandleCors::class,   // ✅ add this line here
         \App\Http\Middleware\SetUserTimezone::class,
 
     ];

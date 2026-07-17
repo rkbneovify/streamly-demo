@@ -119,7 +119,7 @@
 
                                 <select name="genres[]" id="genres" class="form-control select2"
                                     multiple="multiple >
-             
+
                     @foreach ($genres as $id => $genre)
 <option value="{{ $id }}"
                                     {{ in_array($id, old('genres', [])) ? 'selected' : '' }}>
@@ -188,6 +188,10 @@
                                     </option>
                                     <option value="phx-locals" {{ old('type') == 'phx-locals' ? 'selected' : '' }}>PHX
                                         Locals
+                                    </option>
+                                    <option value="east-coast-locals"
+                                        {{ old('type') == 'east-coast-locals' ? 'selected' : '' }}>
+                                        East Coast Locals
                                     </option>
                                 </select>
 

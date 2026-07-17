@@ -564,3 +564,61 @@ Route::get('/admin/clear', function () {
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
+
+Route::get('/admin/export-db', function () {
+
+    $dbHost = env('DB_HOST');
+    $dbPort = env('DB_PORT', 3306);
+    $dbName = env('DB_DATABASE');
+    $dbUser = env('DB_USERNAME');
+    $dbPass = env('DB_PASSWORD');
+
+    $fileName = 'streamly-' . now()->format('d-m-Y_H-i-s') . '.sql';
+    $filePath = storage_path('app/' . $fileName);
+
+    // Detect mysqldump path based on OS
+    switch (PHP_OS_FAMILY) {
+        case 'Windows':
+            $mysqldump = 'H:\\xampp\\mysql\\bin\\mysqldump.exe';
+            break;
+
+        case 'Linux':
+            $mysqldump = '/usr/bin/mysqldump';
+            break;
+
+        case 'Darwin': // macOS
+            $mysqldump = '/usr/local/mysql/bin/mysqldump';
+            break;
+
+        default:
+            abort(500, 'Unsupported operating system.');
+    }
+
+    if (!file_exists($mysqldump)) {
+        abort(500, "mysqldump not found at: {$mysqldump}");
+    }
+
+    // Escape arguments for security
+    $command = sprintf(
+        '"%s" --host=%s --port=%s --user=%s --password=%s %s > "%s"',
+        $mysqldump,
+        escapeshellarg($dbHost),
+        escapeshellarg($dbPort),
+        escapeshellarg($dbUser),
+        escapeshellarg($dbPass),
+        escapeshellarg($dbName),
+        $filePath
+    );
+
+    exec($command, $output, $result);
+
+    if ($result !== 0 || !file_exists($filePath) || filesize($filePath) === 0) {
+        abort(500, 'Database export failed.');
+    }
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
+});
+
+Route::get('/admin/php-info', function () {
+    phpinfo();
+});

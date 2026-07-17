@@ -1,3 +1,9 @@
+.paginationx-text {
+  width: 100%;
+  padding: 8px 16px 8px 16px;
+
+}
+
 .schedule_main {
   height: auto;
   border-radius: 11px;
@@ -20,13 +26,18 @@
     padding: 0px 10px 0px 0px;
     overflow: hidden;
 
+
+
     .schedule_channels {
       width: 168px;
       padding: 8px 16px 8px 16px;
       height: 40px;
       cursor: pointer;
       background-color: #0a3153;
+
     }
+
+
 
     .schedule_categories {
       display: flex;
@@ -218,15 +229,38 @@
   border-radius: 0px 0px 11px 11px;
   position: relative;
 
+  // // Chrome, Edge, Safari
+  // &::-webkit-scrollbar {
+  //   width: 9px !important;
+  // }
+
+  // &::-webkit-scrollbar-track {
+  //   background: #f1f1f1;
+  //   border-radius: 10px;
+  // }
+
+  // &::-webkit-scrollbar-thumb {
+  //   background: #888;
+  //   border-radius: 10px;
+
+  //   &:hover {
+  //     background: #555;
+  //   }
+  // }
+
+
   .schedule_content {
     background-color: #ffffff12;
     overflow: hidden;
     scroll-behavior: smooth;
 
-    &::-webkit-scrollbar {
-      height: 0;
-      width: 0;
-    }
+    // &::-webkit-scrollbar {
+    //   height: 0;
+    //   width: 0;
+    // }
+
+
+
 
     .schedule_channel_container {
       cursor: pointer;
@@ -847,6 +881,9 @@
   top: 77px;
 
 }
+
+
+
 
 
 @media screen and (max-width: 750px) {
