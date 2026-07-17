@@ -469,7 +469,7 @@ export class PlaylistScheduleComponent
 
     if ((scrollTop + clientHeight) >= scrollHeight - 50) {
       if (this.hasMore) {
-        this.getScheduleData();
+        this.getScheduleData(this.selected_category);
       } else if ((scrollTop + clientHeight) >= scrollHeight - 5) {
         if (!this.hasMore) {
           this.sweetAlert.toast("No more channels to show.", "info");
