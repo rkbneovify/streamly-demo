@@ -37,7 +37,7 @@
                             <table cellpadding="8" cellspacing="0" width="100%"
                                 style="border:1px solid #ddd;border-collapse:collapse;">
                                 <tr>
-                                    <td style="border:1px solid #ddd;"><strong>Username</strong></td>
+                                    <td style="border:1px solid #ddd;"><strong>Email</strong></td>
                                     <td style="border:1px solid #ddd;">{{ $user->email }}</td>
                                 </tr>
                                 <tr>
