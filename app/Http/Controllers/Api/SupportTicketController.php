@@ -35,7 +35,7 @@ class SupportTicketController extends Controller
             $supportTicket->category = $request->category;
             $supportTicket->sub_category = $request->sub_category;
             $supportTicket->subject = $request->subject;
-            $supportTicket->description = $request->description;
+            // $supportTicket->description = $request->description;
             $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled
             $supportTicket->priority = 'low';  // High | Medium | Low | Critical
             $supportTicket->save();
@@ -56,7 +56,7 @@ class SupportTicketController extends Controller
 
         $file = $this->uploadFile(
             $request->file('attachment'),
-            'uploads/images',   // folder
+            'uploads/videos',   // folder
             's3'     // public or 's3'
         );
 

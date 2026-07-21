@@ -15,101 +15,248 @@ trait FileUploadTrait
     /**
      * Upload single file (image/video/other)
      */
+    // public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = null)
+    // {
+    //     $disk = $disk ?: config('filesystems.default');
+
+    //     $extension = strtolower($file->getClientOriginalExtension());
+    //     $mimeType  = $file->getMimeType();
+
+    //     $fileName = date('YmdHis') . '_' . Str::random(12) . '.' . $extension;
+
+
+    //     try {
+
+    //         /*
+    //         |--------------------------------------------------------------------------
+    //         | IMAGE UPLOAD
+    //         |--------------------------------------------------------------------------
+    //         */
+    //         if (strpos($mimeType, 'image/') === 0) {
+
+    //             $path = $folder . '/' . $fileName;
+
+    //             $image = Image::make($file);
+
+    //             $image->resize(
+    //                 1920,
+    //                 null,
+    //                 function ($constraint) {
+    //                     $constraint->aspectRatio();
+    //                     $constraint->upsize();
+    //                 }
+    //             );
+
+    //             $encodedImage = (string) $image->encode(
+    //                 $extension === 'png' ? 'png' : 'jpg',
+    //                 75
+    //             );
+
+    //             Storage::disk($disk)->put($path, $encodedImage);
+    //         }
+
+    //         /*
+    //         |--------------------------------------------------------------------------
+    //         | VIDEO UPLOAD
+    //         |--------------------------------------------------------------------------
+    //         */ elseif (strpos($mimeType, 'video/') === 0) {
+
+    //             $path = $folder . '/' . $fileName;
+
+    //             $tempPath = $file->store('temp');
+
+    //             FFMpeg::fromDisk('local')
+    //                 ->open($tempPath)
+    //                 ->export()
+    //                 ->toDisk($disk)
+    //                 ->inFormat(
+    //                     (new X264('aac'))
+    //                         ->setKiloBitrate(1000)
+    //                 )
+    //                 ->save($path);
+
+    //             Storage::delete($tempPath);
+    //         }
+
+    //         /*
+    //         |--------------------------------------------------------------------------
+    //         | OTHER FILES
+    //         |--------------------------------------------------------------------------
+    //         */ else {
+
+    //             $path = $folder . '/' . $fileName;
+
+    //             Storage::disk($disk)->put(
+    //                 $path,
+    //                 fopen($file->getRealPath(), 'r')
+    //             );
+    //         }
+
+    //         return [
+    //             'success'   => true,
+    //             'disk'      => $disk,
+    //             'file_name' => $fileName,
+    //             'path'      => $path,
+    //             'url'       => $this->getFileUrl($path, $disk),
+    //             'mime_type' => $mimeType,
+    //             'extension' => $extension,
+    //             'size'      => Storage::disk($disk)->size($path),
+    //         ];
+    //     } catch (Exception $e) {
+
+    //         return [
+    //             'success' => false,
+    //             'message' => $e->getMessage()
+    //         ];
+    //     }
+    // }
+
     public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = null)
-    {
-        $disk = $disk ?: config('filesystems.default');
+{
+    $disk = $disk ?: config('filesystems.default');
 
-        $extension = strtolower($file->getClientOriginalExtension());
-        $mimeType  = $file->getMimeType();
+    $extension = strtolower($file->getClientOriginalExtension());
+    $mimeType  = $file->getMimeType();
 
-        $fileName = date('YmdHis') . '_' . Str::random(12) . '.' . $extension;
+    $fileName = date('YmdHis') . '_' . Str::random(12) . '.' . $extension;
 
+    try {
 
-        try {
+        /*
+        |--------------------------------------------------------------------------
+        | IMAGE UPLOAD
+        |--------------------------------------------------------------------------
+        */
+        if (strpos($mimeType, 'image/') === 0) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | IMAGE UPLOAD
-            |--------------------------------------------------------------------------
-            */
-            if (strpos($mimeType, 'image/') === 0) {
+            $path = $folder . '/' . $fileName;
 
-                $path = $folder . '/' . $fileName;
+            $image = Image::make($file);
 
-                $image = Image::make($file);
+            $image->resize(
+                1920,
+                null,
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                }
+            );
 
-                $image->resize(
-                    1920,
-                    null,
-                    function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    }
-                );
+            $encodedImage = (string) $image->encode(
+                $extension === 'png' ? 'png' : 'jpg',
+                75
+            );
 
-                $encodedImage = (string) $image->encode(
-                    $extension === 'png' ? 'png' : 'jpg',
-                    75
-                );
-
-                Storage::disk($disk)->put($path, $encodedImage);
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | VIDEO UPLOAD
-            |--------------------------------------------------------------------------
-            */ elseif (strpos($mimeType, 'video/') === 0) {
-
-                $path = $folder . '/' . $fileName;
-
-                $tempPath = $file->store('temp');
-
-                FFMpeg::fromDisk('local')
-                    ->open($tempPath)
-                    ->export()
-                    ->toDisk($disk)
-                    ->inFormat(
-                        (new X264('aac'))
-                            ->setKiloBitrate(1000)
-                    )
-                    ->save($path);
-
-                Storage::delete($tempPath);
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | OTHER FILES
-            |--------------------------------------------------------------------------
-            */ else {
-
-                $path = $folder . '/' . $fileName;
-
-                Storage::disk($disk)->put(
-                    $path,
-                    fopen($file->getRealPath(), 'r')
-                );
-            }
+            Storage::disk($disk)->put($path, $encodedImage);
 
             return [
-                'success'   => true,
-                'disk'      => $disk,
+                'success' => true,
+                'disk' => $disk,
                 'file_name' => $fileName,
-                'path'      => $path,
-                'url'       => $this->getFileUrl($path, $disk),
+                'path' => $path,
+                'url' => $this->getFileUrl($path, $disk),
                 'mime_type' => $mimeType,
                 'extension' => $extension,
-                'size'      => Storage::disk($disk)->size($path),
-            ];
-        } catch (Exception $e) {
-
-            return [
-                'success' => false,
-                'message' => $e->getMessage()
+                'size' => Storage::disk($disk)->size($path),
+                'thumbnail' => null,
             ];
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIDEO UPLOAD
+        |--------------------------------------------------------------------------
+        */
+        elseif (strpos($mimeType, 'video/') === 0) {
+
+            $path = $folder . '/' . $fileName;
+
+            $thumbnailName = pathinfo($fileName, PATHINFO_FILENAME) . '.jpg';
+            $thumbnailPath = $folder . '/thumbnails/' . $thumbnailName;
+
+            // Store temporarily
+            $tempPath = $file->store('temp');
+
+            // Convert & upload video
+            FFMpeg::fromDisk('local')
+                ->open($tempPath)
+                ->export()
+                ->toDisk($disk)
+                ->inFormat(
+                    (new X264('aac'))
+                        ->setKiloBitrate(1000)
+                )
+                ->save($path);
+
+            // Generate thumbnail at 1 second
+            FFMpeg::fromDisk('local')
+                ->open($tempPath)
+                ->getFrameFromSeconds(1)
+                ->export()
+                ->toDisk($disk)
+                ->save($thumbnailPath);
+
+            // Delete temp file
+            Storage::disk('local')->delete($tempPath);
+
+           
+
+            return [
+                'success' => true,
+                'disk' => $disk,
+
+                'file_name' => $fileName,
+                'path' => $path,
+                'url' => $this->getFileUrl($path, $disk),
+                'mime_type' => $mimeType,
+                'extension' => $extension,
+                'size' => Storage::disk($disk)->size($path),
+
+                'thumbnail' => [
+                    'file_name' => $thumbnailName,
+                    'path' => $thumbnailPath,
+                    'url' => $this->getFileUrl($thumbnailPath, $disk),
+                    'mime_type' => 'image/jpeg',
+                    'extension' => 'jpg',
+                    'size' => Storage::disk($disk)->size($thumbnailPath),
+                ],
+            ];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | OTHER FILES
+        |--------------------------------------------------------------------------
+        */
+        else {
+
+            $path = $folder . '/' . $fileName;
+
+            Storage::disk($disk)->put(
+                $path,
+                fopen($file->getRealPath(), 'r')
+            );
+
+            return [
+                'success' => true,
+                'disk' => $disk,
+                'file_name' => $fileName,
+                'path' => $path,
+                'url' => $this->getFileUrl($path, $disk),
+                'mime_type' => $mimeType,
+                'extension' => $extension,
+                'size' => Storage::disk($disk)->size($path),
+                'thumbnail' => null,
+            ];
+        }
+    } catch (Exception $e) {
+
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+        ];
     }
+}
 
     /**
      * Upload multiple files
