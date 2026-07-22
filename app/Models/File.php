@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     protected $table = 'files';
+
+    public function thambnail()
+    {
+        return $this->hasOne(Thumbnail::class, 'video_id', 'id');
+    }
 }

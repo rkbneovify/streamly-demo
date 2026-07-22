@@ -18,7 +18,26 @@ class SupportTicketController extends Controller
 {
     use ApiResponseTrait, FileUploadTrait;
 
-    
+    public function __construct(public SupportTicket $supportTicket) {}
+
+
+    public function index(Request $request)
+    {
+        try {
+            $page = $request->input('page', 1);
+            $limit = $request->input('limit', 10);
+            $query  =  $this->supportTicket->query();
+            $query->with('message.files.thambnail');
+            $query->where('user_id', Auth::id());
+            $data =  $query->paginate($limit, ['*'], 'page', $page);
+
+            return $this->paginateResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function store(Request $request, SupportTicket $supportTicket,  SupportTicketMessage $supportTicketMessage, File $file)
     {
         $validator = Validator::make($request->all(), [
