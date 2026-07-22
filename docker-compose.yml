@@ -10,6 +10,17 @@ services:
     depends_on:
       - db
 
+  queue:
+    build: .
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=300
+    volumes:
+      - ./:/var/www/html
+    env_file:
+      - ./.env.docker
+    depends_on:
+      - db
+    restart: unless-stopped
+
   db:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
