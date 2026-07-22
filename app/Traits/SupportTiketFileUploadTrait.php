@@ -137,9 +137,9 @@ trait SupportTiketFileUploadTrait
                 'message' => $e->getMessage(),
             ];
         } finally {
-            if ($deleteTemp && $tempPath && Storage::disk('local')->exists($tempPath)) {
-                Storage::disk('local')->delete($tempPath);
-            }
+            // if ($deleteTemp && $tempPath && Storage::disk('local')->exists($tempPath)) {
+            //     Storage::disk('local')->delete($tempPath);
+            // }
         }
     }
 
@@ -153,7 +153,8 @@ trait SupportTiketFileUploadTrait
             'url' => $this->getFileUrl($path, $disk),
             'mime_type' => $mimeType,
             'extension' => $extension,
-            'size' => Storage::disk($disk)->size($path),
+            // 'size' => Storage::disk($disk)->size($path),
+            'size' => 123,
             'thumbnail' => $thumbnail,
         ];
     }

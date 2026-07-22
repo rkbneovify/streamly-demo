@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessSupportTicketFile implements ShouldQueue
 {
@@ -24,9 +25,8 @@ class ProcessSupportTicketFile implements ShouldQueue
 
     public function __construct(
         public int $supportTicketMessageId,
-        public $tempPath,
-        public $originalName,
-        public $mimeType,
+        public $files,
+
 
     ) {
         //
@@ -40,54 +40,64 @@ class ProcessSupportTicketFile implements ShouldQueue
     public function handle()
     {
 
-        // if (request()->hasFile('attachment')) {
-        $uploadPath = 'uploads/images';
-        if (str_starts_with($this->mimeType, 'video/')) {
-            $uploadPath = 'uploads/videos';
-        }
-        $uploadedFile = $this->uploadTempFile(
-            $this->tempPath,
-            $this->originalName,
-            $this->mimeType,
-            $uploadPath,
-            's3'
-        );
+        Log::info(response()->json($this->files));
 
-        if (str_starts_with($uploadedFile['mime_type'], 'video/')) {
 
-            $file = new File();
-            $file->support_ticket_message_id = $this->supportTicketMessageId;
-            $file->disk = $uploadedFile['disk'];
-            $file->file_name = $uploadedFile['file_name'];
-            $file->path = $uploadedFile['path'];
-            $file->url = $uploadedFile['url'];
-            $file->mime_type = $uploadedFile['mime_type'];
-            $file->extension = $uploadedFile['extension'];
-            $file->size = $uploadedFile['size'];
-            $file->save();
 
-            $thumbnail = new Thumbnail();
-            $thumbnail->video_id = $file->id;
-            $thumbnail->disk = $uploadedFile['disk'];
-            $thumbnail->file_name = $uploadedFile['thumbnail']['file_name'];
-            $thumbnail->path = $uploadedFile['thumbnail']['path'];
-            $thumbnail->url = $uploadedFile['thumbnail']['url'];
-            $thumbnail->mime_type = $uploadedFile['thumbnail']['mime_type'];
-            $thumbnail->extension = $uploadedFile['thumbnail']['extension'];
-            $thumbnail->size = $uploadedFile['thumbnail']['size'];
-            $thumbnail->save();
-        } else {
+        foreach ($this->files as $file) {
 
-            $file = new File();
-            $file->support_ticket_message_id = $this->supportTicketMessageId;
-            $file->disk = $uploadedFile['disk'];
-            $file->file_name = $uploadedFile['file_name'];
-            $file->path = $uploadedFile['path'];
-            $file->url = $uploadedFile['url'];
-            $file->mime_type = $uploadedFile['mime_type'];
-            $file->extension = $uploadedFile['extension'];
-            $file->size = $uploadedFile['size'];
-            $file->save();
+            $uploadPath = str_starts_with($file['mime_type'], 'video/')
+                ? 'uploads/videos'
+                : 'uploads/images';
+
+            $uploadedFile = $this->uploadTempFile(
+                $file['temp_path'],      // instead of temp_path
+                $file['original_name'],      // instead of original_name
+                $file['mime_type'],
+                $uploadPath,
+                's3'
+            );
+
+            if (!$uploadedFile['success']) {
+                throw new \Exception($uploadedFile['message']);
+            }
+
+            if (str_starts_with($uploadedFile['mime_type'], 'video/')) {
+
+                $file = new File();
+                $file->support_ticket_message_id = $this->supportTicketMessageId;
+                $file->disk = $uploadedFile['disk'];
+                $file->file_name = $uploadedFile['file_name'];
+                $file->path = $uploadedFile['path'];
+                $file->url = $uploadedFile['url'];
+                $file->mime_type = $uploadedFile['mime_type'];
+                $file->extension = $uploadedFile['extension'];
+                $file->size = $uploadedFile['size'];
+                $file->save();
+
+                $thumbnail = new Thumbnail();
+                $thumbnail->video_id = $file->id;
+                $thumbnail->disk = $uploadedFile['disk'];
+                $thumbnail->file_name = $uploadedFile['thumbnail']['file_name'];
+                $thumbnail->path = $uploadedFile['thumbnail']['path'];
+                $thumbnail->url = $uploadedFile['thumbnail']['url'];
+                $thumbnail->mime_type = $uploadedFile['thumbnail']['mime_type'];
+                $thumbnail->extension = $uploadedFile['thumbnail']['extension'];
+                $thumbnail->size = $uploadedFile['thumbnail']['size'];
+                $thumbnail->save();
+            } else {
+
+                $file = new File();
+                $file->support_ticket_message_id = $this->supportTicketMessageId;
+                $file->disk = $uploadedFile['disk'];
+                $file->file_name = $uploadedFile['file_name'];
+                $file->path = $uploadedFile['path'];
+                $file->url = $uploadedFile['url'];
+                $file->mime_type = $uploadedFile['mime_type'];
+                $file->extension = $uploadedFile['extension'];
+                $file->size = $uploadedFile['size'];
+                $file->save();
+            }
         }
     }
 }

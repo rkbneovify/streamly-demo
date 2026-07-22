@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 class SupportTicketController extends Controller
 {
     use ApiResponseTrait, FileUploadTrait;
+
+    
     public function store(Request $request, SupportTicket $supportTicket,  SupportTicketMessage $supportTicketMessage, File $file)
     {
         $validator = Validator::make($request->all(), [
@@ -50,17 +52,20 @@ class SupportTicketController extends Controller
 
             if ($request->hasFile('attachment')) {
 
-                foreach ($request->file('attachment') as $file) {
+                $files = collect($request->file('attachment'))->map(function ($file) {
 
-                    $tempPath = $file->store('support-ticket-temp');
+                    $tempPath = $file->store('support-ticket-temp', 'local');
 
-                    ProcessSupportTicketFile::dispatch(
-                        $supportTicketMessage->id,
-                        $tempPath,
-                        $file->getClientOriginalName(),
-                        $file->getMimeType()
-                    );
-                }
+                    return [
+                        'temp_path'     => $tempPath,
+                        'original_name' => $file->getClientOriginalName(),
+                        'mime_type'     => $file->getMimeType(),
+                        'size'          => $file->getSize(),
+                        'extension'     => $file->getClientOriginalExtension(),
+                    ];
+                })->toArray();
+
+                ProcessSupportTicketFile::dispatch($supportTicketMessage->id, $files);
             }
 
 
