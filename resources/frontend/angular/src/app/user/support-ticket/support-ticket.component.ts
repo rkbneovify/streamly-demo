@@ -1,9 +1,11 @@
 import { NgFor } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { FileUploadComponent } from '../../components/file-upload/file-upload.component';
 import { CrudService } from '../../services/crud.service';
+import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
@@ -50,8 +52,12 @@ export class SupportTicketComponent implements OnInit {
   selectedSubCategory = '';
 
   filteredSubCategories: string[] = [];
+  isLoading: boolean = false;
 
-  constructor(private fb: FormBuilder, private api: CrudService) {
+  @ViewChild(FileUploadComponent)
+  fileUploadComponent: FileUploadComponent;
+
+  constructor(private fb: FormBuilder, private api: CrudService, private sweetAlert: SweetalertService) {
     this.initializeForm();
   }
 
@@ -68,6 +74,8 @@ export class SupportTicketComponent implements OnInit {
         },
         error: (err: any) => {
           console.log("error :", err.error)
+          this.sweetAlert.toast(err.error.message, 'error');
+
         },
       })
   }
@@ -81,6 +89,7 @@ export class SupportTicketComponent implements OnInit {
         },
         error: (err: any) => {
           console.log("error :", err.error)
+          this.sweetAlert.toast(err.error.message, 'error');
         },
       })
   }
@@ -122,10 +131,10 @@ export class SupportTicketComponent implements OnInit {
   }
 
   submitTicket(): void {
-    // if (this.ticketForm.invalid) {
-    //   this.ticketForm.markAllAsTouched();
-    //   return;
-    // }
+    if (this.ticketForm.invalid) {
+      this.ticketForm.markAllAsTouched();
+      return;
+    }
 
     const formData = new FormData();
 
@@ -149,25 +158,38 @@ export class SupportTicketComponent implements OnInit {
       this.ticketForm.value.description
     );
 
-    // if (this.ticketForm.value.attachment) {
-    //   formData.append(
-    //     'attachment',
-    //     this.ticketForm.value.attachment
-    //   );
-    // }
-
     this.selectedFiles.forEach(file => {
       formData.append('attachment[]', file);
     });
 
-    // for (const [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`);
-    // }
-    // console.log(this.ticketForm.value);
+    // formData.forEach((value, key) => {
+    //   console.log(key, value);
+    // });
+    // console.log(formData);
+
+    this.sweetAlert.loading();
+    this.isLoading = true;
+    this.api.postRequest('support-ticket/store', formData).pipe(finalize(() => {
+      this.sweetAlert.close()
+      this.isLoading = false;
+    })).subscribe({
+      next: (res: any) => {
+        // console.log('res:', res);
+
+        // this.sweetAlert.toast(res.message, 'success')
+        this.fileUploadComponent.clearAll();
+        this.ticketForm.reset();
+        setTimeout(() => {
+          this.sweetAlert.toast(res.message);
+        }, 1000);
+      },
+      error: (err: any) => {
+        this.sweetAlert.toast(err.error.message, 'error')
+      }
+    })
 
 
-    // API Call
-    // this.ticketService.createTicket(formData).subscribe(...)
+
   }
 
 
