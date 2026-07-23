@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessSupportTicketFile;
+use App\Jobs\ProcessSupportTicketMail;
 use App\Models\File;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
@@ -12,6 +13,7 @@ use App\Traits\FileUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class SupportTicketController extends Controller
@@ -59,7 +61,7 @@ class SupportTicketController extends Controller
             $supportTicket->category = $request->category;
             $supportTicket->sub_category = $request->sub_category;
             $supportTicket->subject = $request->subject;
-            $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled
+            $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled | Closed
             $supportTicket->priority = 'low';  // High | Medium | Low | Critical
             $supportTicket->save();
 
@@ -69,8 +71,14 @@ class SupportTicketController extends Controller
             $supportTicketMessage->message = $request->description;
             $supportTicketMessage->save();
 
+            $files = [];
             if ($request->hasFile('attachment')) {
 
+                //  Clear all files from support-ticket-temp
+                Storage::disk('local')->deleteDirectory('support-ticket-temp');
+
+                // Recreate the directory
+                Storage::disk('local')->makeDirectory('support-ticket-temp');
                 $files = collect($request->file('attachment'))->map(function ($file) {
 
                     $tempPath = $file->store('support-ticket-temp', 'local');
@@ -84,8 +92,25 @@ class SupportTicketController extends Controller
                     ];
                 })->toArray();
 
+
+                // return response()->json($files);
                 ProcessSupportTicketFile::dispatch($supportTicketMessage->id, $files);
             }
+
+            $data = [
+
+                'ticket_no' => $supportTicket->ticket_number,
+                'subject' => $supportTicket->subject,
+                'description' => $supportTicketMessage->message
+            ];
+
+            $attachments = [];
+            foreach ($files as $file) {
+                $attachments[] =  storage_path('app/' . $file['temp_path']);
+            }
+
+            // return response()->json($attachments);
+            ProcessSupportTicketMail::dispatch(Auth::user()->email, $data, $attachments);
 
 
             DB::commit();

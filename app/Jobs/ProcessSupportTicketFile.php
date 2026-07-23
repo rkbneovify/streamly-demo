@@ -25,7 +25,8 @@ class ProcessSupportTicketFile implements ShouldQueue
 
     public function __construct(
         public int $supportTicketMessageId,
-        public $files,
+        public array $files,
+        
 
 
     ) {
