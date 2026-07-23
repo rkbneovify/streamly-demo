@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\SupportTicketMail;
+use App\Models\SupportTicket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,8 +21,12 @@ class ProcessSupportTicketMail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public string $email, public array $data, public array $attachments = [])
-    {
+    public function __construct(
+        public SupportTicket $supportTicket,
+        public string $email,
+        public array $data,
+        public array $attachments = []
+    ) {
         //
     }
 
@@ -32,6 +37,6 @@ class ProcessSupportTicketMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to(env('MAIL_USERNAME'))->send(new SupportTicketMail($this->email,$this->data, $this->attachments));
+        Mail::to(env('MAIL_USERNAME'))->send(new SupportTicketMail($this->supportTicket, $this->email, $this->data, $this->attachments));
     }
 }

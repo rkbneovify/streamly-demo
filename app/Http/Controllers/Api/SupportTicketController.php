@@ -110,7 +110,7 @@ class SupportTicketController extends Controller
             }
 
             // return response()->json($attachments);
-            ProcessSupportTicketMail::dispatch(Auth::user()->email, $data, $attachments);
+            ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
 
 
             DB::commit();

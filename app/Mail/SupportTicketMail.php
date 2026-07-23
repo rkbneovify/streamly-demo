@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\SupportTicket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -19,8 +20,12 @@ class SupportTicketMail extends Mailable
      *
      * @return void
      */
-    public function __construct(public string $email, public array $data, public array $files = [])
-    {
+    public function __construct(
+        public SupportTicket $supportTicket,
+        public string $email,
+        public array $data,
+        public array $files = []
+    ) {
         //
     }
 
@@ -41,7 +46,12 @@ class SupportTicketMail extends Mailable
 
         $mail = $this->subject('Support Ticket Created - ' . $this->data['subject'])
             ->html($html);
-
+        $mail->withSymfonyMessage(function ($message) {
+            $message->getHeaders()->addTextHeader(
+                'support_ticket_number',
+                $this->supportTicket->ticket_number
+            );
+        });
         foreach ($this->files as $file) {
             $mail->attach($file);
         }
