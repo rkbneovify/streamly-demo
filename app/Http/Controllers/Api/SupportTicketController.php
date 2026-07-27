@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessSupportTicketFile;
 use App\Jobs\ProcessSupportTicketMail;
+use App\Jobs\ProcessSupportTicketReplyMail;
 use App\Models\File;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Traits\ApiResponseTrait;
 use App\Traits\FileUploadTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +22,11 @@ class SupportTicketController extends Controller
 {
     use ApiResponseTrait, FileUploadTrait;
 
-    public function __construct(public SupportTicket $supportTicket) {}
+    public function __construct(
+        public SupportTicket $supportTicket,
+        public SupportTicketMessage $supportTicketMessage,
+        public File $file
+    ) {}
 
 
     public function index(Request $request)
@@ -74,11 +80,8 @@ class SupportTicketController extends Controller
             $files = [];
             if ($request->hasFile('attachment')) {
 
-                //  Clear all files from support-ticket-temp
-                Storage::disk('local')->deleteDirectory('support-ticket-temp');
-
-                // Recreate the directory
-                Storage::disk('local')->makeDirectory('support-ticket-temp');
+                // Remove old files
+                $this->clearSupportTicketTemp();
                 $files = collect($request->file('attachment'))->map(function ($file) {
 
                     $tempPath = $file->store('support-ticket-temp', 'local');
@@ -122,6 +125,82 @@ class SupportTicketController extends Controller
         }
     }
 
+    public function ticketReply(Request $request)
+    {
+
+        // return response()->json($request->user()->roles[0]->name);
+        $validator = Validator::make($request->all(), [
+            'ticket_number' => 'required|string',
+            'message' => 'required|string',
+            'attachment' => 'nullable',
+            'attachment.*' => 'file|mimes:pdf,png,jpg,jpeg,heic,heif,mp4,webm,mov|max:256000', // 500 MB
+
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationErrorResponse(null, $validator->errors());
+        }
+        DB::beginTransaction();
+        try {
+            $supportTicket =   $this->supportTicket->where('ticket_number', $request->ticket_number)->first();
+
+            if ($supportTicket == null) {
+                return $this->notFoundResponse('Data not found !');
+            }
+            // Support Ticket Message
+            $this->supportTicketMessage->support_ticket_id = $supportTicket->id;
+            $this->supportTicketMessage->sender_id = Auth::id();
+            $this->supportTicketMessage->message = $request->message;
+            $this->supportTicketMessage->save();
+
+            $files = [];
+            if ($request->hasFile('attachment')) {
+
+                // Remove old files
+                $this->clearSupportTicketTemp();
+                $files = collect($request->file('attachment'))->map(function ($file) {
+
+                    $tempPath = $file->store('support-ticket-temp', 'local');
+
+                    return [
+                        'temp_path'     => $tempPath,
+                        'original_name' => $file->getClientOriginalName(),
+                        'mime_type'     => $file->getMimeType(),
+                        'size'          => $file->getSize(),
+                        'extension'     => $file->getClientOriginalExtension(),
+                    ];
+                })->toArray();
+
+
+                // return response()->json($files);
+                ProcessSupportTicketFile::dispatch($this->supportTicketMessage->id, $files);
+            }
+
+            $data = [
+
+                'ticket_no' => $supportTicket->ticket_number,
+                'subject' => $supportTicket->subject,
+                'description' => $this->supportTicketMessage->message
+            ];
+
+            $attachments = [];
+            foreach ($files as $file) {
+                $attachments[] =  storage_path('app/' . $file['temp_path']);
+            }
+
+            // return response()->json($attachments);
+            ProcessSupportTicketReplyMail::dispatch($supportTicket, Auth::user()->email, $request->user()->roles[0]->name, $data, $attachments);
+
+
+            DB::commit();
+            return $this->successResponse("Submited successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function fileUpload(Request $request)
     {
         $request->validate([
@@ -135,5 +214,20 @@ class SupportTicketController extends Controller
         );
 
         return response()->json($file);
+    }
+
+    private function clearSupportTicketTemp()
+    {
+        // if file older file remove
+        $disk = Storage::disk('local');
+        $directory = 'support-ticket-temp';
+
+        foreach ($disk->allFiles($directory) as $file) {
+            $lastModified = Carbon::createFromTimestamp($disk->lastModified($file));
+
+            if ($lastModified->lt(now()->subDays(2))) {
+                $disk->delete($file);
+            }
+        }
     }
 }

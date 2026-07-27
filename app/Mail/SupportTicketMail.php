@@ -9,7 +9,10 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SupportTicketMail extends Mailable
 {
@@ -31,6 +34,8 @@ class SupportTicketMail extends Mailable
 
 
 
+
+
     public function build()
     {
 
@@ -44,7 +49,7 @@ class SupportTicketMail extends Mailable
                 {$this->data['description']}
             ";
 
-        $mail = $this->subject('Support Ticket Created - ' . $this->data['subject'])
+        $mail = $this->subject("Support Ticket #{$this->supportTicket->ticket_number}")
             ->html($html);
         $mail->withSymfonyMessage(function ($message) {
             $message->getHeaders()->addTextHeader(

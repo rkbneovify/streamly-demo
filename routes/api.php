@@ -316,5 +316,6 @@ Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
 Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
     Route::get('/', 'Api\SupportTicketController@index');
     Route::post('/store', 'Api\SupportTicketController@store');
+    Route::post('/reply', 'Api\SupportTicketController@ticketReply');
     Route::post('/upload', 'Api\SupportTicketController@fileUpload');
 });

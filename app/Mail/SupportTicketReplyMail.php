@@ -2,12 +2,15 @@
 
 namespace App\Mail;
 
+use App\Models\SupportTicket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
 class SupportTicketReplyMail extends Mailable
 {
@@ -18,42 +21,44 @@ class SupportTicketReplyMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        public SupportTicket $supportTicket,
+        public array $data,
+        public array $files = []
+    ) {
         //
     }
 
-    /**
-     * Get the message envelope.
-     *
-     * @return \Illuminate\Mail\Mailables\Envelope
-     */
-    public function envelope()
+
+    public function headers()
     {
-        return new Envelope(
-            subject: 'Support Ticket Reply Mail',
+
+        return new Headers(
+            references: [
+                $this->supportTicket->email_message_id
+            ],
+            text: [
+                'In-Reply-To' => $this->supportTicket->email_message_id,
+            ],
         );
     }
 
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
+    public function build()
     {
-        return new Content(
-            view: 'view.name',
-        );
-    }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
-    public function attachments()
-    {
-        return [];
+        $html =  "
+              {$this->data['description']}
+
+
+            ";
+
+        $mail = $this->subject("Support Ticket #{$this->supportTicket->ticket_number}")
+            ->html($html);
+
+        foreach ($this->files as $file) {
+            $mail->attach($file);
+        }
+
+        return $mail;
     }
 }
