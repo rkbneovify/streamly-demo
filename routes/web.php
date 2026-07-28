@@ -12,6 +12,7 @@
 
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
+use App\Http\Controllers\Admin\AdminSupportTicketController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -344,6 +345,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
+
+    // Support Ticket
+    Route::prefix('/support-ticket')->group(function () {
+        Route::get('/', [AdminSupportTicketController::class, 'index']);
+    });
 });
 
 /*Prev Next channel*/

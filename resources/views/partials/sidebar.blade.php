@@ -149,11 +149,11 @@
                                 </a>
                             </li>
                             <!-- <li class="nav-item">
-                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/hotelcontracts') }}" class="nav-link">
-                                                                                                                                                                                                                                                                                                        <i class="far fa-circle nav-icon"></i>
-                                                                                                                                                                                                                                                                                                        <p>Hotel contracts</p>
-                                                                                                                                                                                                                                                                                                      </a>
-                                                                                                                                                                                                                                                                                                    </li> -->
+                                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/hotelcontracts') }}" class="nav-link">
+                                                                                                                                                                                                                                                                                                                        <i class="far fa-circle nav-icon"></i>
+                                                                                                                                                                                                                                                                                                                        <p>Hotel contracts</p>
+                                                                                                                                                                                                                                                                                                                      </a>
+                                                                                                                                                                                                                                                                                                                    </li> -->
                             <li class="nav-item {{ request()->is('admin/hotelroomsess') ? 'activeElement' : '' }}">
                                 <a href=" {{ url('/admin/hotelroomsess') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -248,7 +248,33 @@
                             <p>HLS analyzer</p>
                         </a>
                     </li>
+
+
+
                 </ul>
+
+                <li
+                    class="nav-item has-treeview {{ request()->is('admin/users') ? 'menu-open' : '' }}{{ request()->is('admin/users/session') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            Support Ticket
+                            <i class="fas fa-angle-left right"></i>
+                            <!-- <span class="badge badge-info right">6</span> -->
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item {{ request()->is('admin/users') ? 'activeElement' : '' }}">
+                            <a href=" {{ url('/admin/users') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tickets</p>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </li>
 
                 <li
                     class="nav-item has-treeview {{ request()->is('admin/allgenre') ? 'menu-open' : '' }}{{ request()->is('admin/addgenre') ? 'menu-open' : '' }}">
@@ -321,17 +347,17 @@
                             </a>
                         </li>
                         <!-- <li class="nav-item {{ request()->is('admin/zipcode/map') ? 'activeElement' : '' }}">
-                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/zipcode/map') }}" class="nav-link">
-                                                                                                                                                                                                                                                                                                        <i class="far fa-circle nav-icon"></i>
-                                                                                                                                                                                                                                                                                                        <p>Allowed Zipcode on map</p>
-                                                                                                                                                                                                                                                                                                      </a>
-                                                                                                                                                                                                                                                                                                    </li>
-                                                                                                                                                                                                                                                                                                    <li class="nav-item {{ request()->is('admin/zipcode/checkfenceweb') ? 'activeElement' : '' }}">
-                                                                                                                                                                                                                                                                                                      <a href=" {{ url('/admin/zipcode/checkfenceweb') }}" class="nav-link">
-                                                                                                                                                                                                                                                                                                          <i class="far fa-circle nav-icon"></i>
-                                                                                                                                                                                                                                                                                                          <p>Check coordinate on map</p>
-                                                                                                                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                                                                                                                      </li> -->
+                                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/zipcode/map') }}" class="nav-link">
+                                                                                                                                                                                                                                                                                                                        <i class="far fa-circle nav-icon"></i>
+                                                                                                                                                                                                                                                                                                                        <p>Allowed Zipcode on map</p>
+                                                                                                                                                                                                                                                                                                                      </a>
+                                                                                                                                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                                                                                                                                    <li class="nav-item {{ request()->is('admin/zipcode/checkfenceweb') ? 'activeElement' : '' }}">
+                                                                                                                                                                                                                                                                                                                      <a href=" {{ url('/admin/zipcode/checkfenceweb') }}" class="nav-link">
+                                                                                                                                                                                                                                                                                                                          <i class="far fa-circle nav-icon"></i>
+                                                                                                                                                                                                                                                                                                                          <p>Check coordinate on map</p>
+                                                                                                                                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                                                                                                                                      </li> -->
                     </ul>
                 <li
                     class="nav-item has-treeview {{ request()->is('admin/report/usersdetails') ? 'menu-open' : '' }}{{ request()->is('admin/report/zipcode') ? 'menu-open' : '' }}{{ request()->is('admin/report/subscriptionsreport') ? 'menu-open' : '' }}{{ request()->is('admin/report/transactionsreport') ? 'menu-open' : '' }}{{ request()->is('admin/report/demographic') ? 'menu-open' : '' }}">
@@ -346,11 +372,11 @@
                     <ul class="nav nav-treeview">
 
                         <!-- <li class="nav-item">
-                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/report/channelanalysis') }}" class="nav-link">
-                                                                                                                                                                                                                                                                                                      <i class="far fa-circle nav-icon"></i>
-                                                                                                                                                                                                                                                                                                      <p>Channel Analysis</p>
-                                                                                                                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                                                                                                                  </li> -->
+                                                                                                                                                                                                                                                                                                                    <a href=" {{ url('/admin/report/channelanalysis') }}" class="nav-link">
+                                                                                                                                                                                                                                                                                                                      <i class="far fa-circle nav-icon"></i>
+                                                                                                                                                                                                                                                                                                                      <p>Channel Analysis</p>
+                                                                                                                                                                                                                                                                                                                    </a>
+                                                                                                                                                                                                                                                                                                                  </li> -->
                         <li class="nav-item {{ request()->is('admin/report/usersdetails') ? 'activeElement' : '' }}">
                             <a href=" {{ url('/admin/report/usersdetails') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
