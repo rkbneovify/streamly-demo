@@ -303,3 +303,19 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whe
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
 Route::get('/notification/send', 'Api\ApiNotificationController@send');
+
+
+// Blog
+
+Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
+    Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
+    Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
+});
+
+// Support Ticket
+Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
+    Route::get('/', 'Api\SupportTicketController@index');
+    Route::post('/store', 'Api\SupportTicketController@store');
+    Route::post('/reply', 'Api\SupportTicketController@ticketReply');
+    Route::post('/upload', 'Api\SupportTicketController@fileUpload');
+});

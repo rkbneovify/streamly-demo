@@ -5,7 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxStripeModule, provideNgxStripe } from 'ngx-stripe';
 import { environment } from '../environments/environment';
 import { StripeModule } from 'stripe-angular';
-
+import { QuillModule } from 'ngx-quill';
 import { routes } from './app.routes';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -28,6 +28,7 @@ export const appConfig: ApplicationConfig = {
       BrowserAnimationsModule,
       BrowserModule,
       SweetalertService,
+      QuillModule.forRoot(),
       ToastrModule.forRoot({
         timeOut: 4000,
         positionClass: 'toast-top-right',
@@ -36,5 +37,6 @@ export const appConfig: ApplicationConfig = {
         closeButton: true
       })
     ),
+
   ],
 };

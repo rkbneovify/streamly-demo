@@ -1,0 +1,110 @@
+<div class="support-container">
+
+  <!-- Header -->
+  <div class="banner">
+    <h1>Create Support Ticket</h1>
+    <p>Tell us what's going wrong — we'll fix it fast.</p>
+  </div>
+
+  <div class="xcontainer">
+    <!-- Form Card -->
+    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket()">
+
+      <!-- Category -->
+      <div class="form-group">
+        <label>Category</label>
+        <select class="input-field" formControlName="category" (change)="onCategoryChange($event)">
+
+          <option [ngValue]="null">
+            Select Category
+          </option>
+
+          <option *ngFor="let category of categories" [value]="category">
+
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+
+
+      <!-- Sub Category -->
+      <div class="form-group">
+        <label>Sub Category</label>
+        <select class="input-field" formControlName="subCategory">
+
+          <option [ngValue]="null">
+            Select Sub Category
+          </option>
+
+          <option *ngFor="let item of subCategories" [value]="item">
+
+            {{ item }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Subject -->
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="input-field" placeholder="Subject" formControlName="subject">
+
+      </div>
+      <!-- Description -->
+      <div class="form-group">
+        <label>Description</label>
+        <quill-editor formControlName="description" [modules]="quillConfig" theme="snow">
+        </quill-editor>
+      </div>
+
+      <!-- Attachment -->
+      <div class="form-group">
+        <label>Attachment</label>
+        <app-file-upload (filesChange)="onFilesSelected($event)">
+        </app-file-upload>
+      </div>
+
+
+      <button type="submit" [disabled]="isLoading">
+        Submit Ticket
+      </button>
+
+    </form>
+
+    <!-- Support Info -->
+    <div class="support-info">
+
+      <p class="support-text">
+        Our team is available 24*7. we'll do our best to respond to your inquiries as soon as possible
+        <br>
+        Need help or have a question? Our support team is here to assist you. You can reach us at the following.
+      </p>
+
+      <div class="contact-grid">
+
+        <div class="contact-card">
+          <div class="icon">
+            <img src="../../../assets/dummy-img/contact-call.png" alt="icon">
+          </div>
+
+          <div class="value">
+            (602) 245 - 0986
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="icon">
+            <img src="../../../assets/dummy-img/contact-mail.png" alt="icon">
+          </div>
+
+          <div class="value">
+            {{ 'support@streamlytv.com' }}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
