@@ -219,10 +219,38 @@
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_status" class="select-custom">
                                     <option value="">Select Status</option>
-                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active
+                                    <option value="under review"
+                                        {{ request('status') == 'under review' ? 'selected' : '' }}>Under Review
                                     </option>
-                                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
-                                        Inactive</option>
+                                    <option value="in progress" {{ request('status') == 'in progress' ? 'selected' : '' }}>
+                                        In progress</option>
+                                    <option value="on hold" {{ request('status') == 'on hold' ? 'selected' : '' }}>
+                                        On Hold</option>
+                                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                                        Completed</option>
+                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                                        Cancelled</option>
+                                    <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>
+                                        Closed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="filter icon">
+                                <select name="priority" id="sel_priority" class="select-custom">
+                                    <option value="">Select Priority</option>
+                                    <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>Low
+                                    </option>
+                                    <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>Medium
+                                    </option>
+                                    <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>High
+                                    </option>
+                                    <option value="critical" {{ request('priority') == 'critical' ? 'selected' : '' }}>
+                                        Critical
+                                    </option>
+
                                 </select>
                             </div>
                         </div>
@@ -270,80 +298,8 @@
 @section('scripts')
 
 
-    {{-- <script>
-        $(function() {
-
-
-
-            restoreSelectedData();
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left',
-                startDate: "{{ $dates['start_date'] ? date('d/m/Y', strtotime($dates['start_date'])) : '' }}",
-                endDate: "{{ $dates['end_date'] ? date('d/m/Y', strtotime($dates['end_date'])) : '' }}",
-                minDate: "{{ $dates['min_date'] ? date('d/m/Y', strtotime($dates['min_date'])) : '' }}",
-                maxDate: "{{ $dates['max_date'] ? date('d/m/Y', strtotime($dates['max_date'])) : '' }}",
-                locale: {
-                    format: 'DD/MM/YYYY'
-                }
-            }, function(start, end, label) {
-                console.log("A new date selection was made: " + start.format('DD/MM/YYYY') +
-                    ' to ' + end.format('DD/MM/YYYY'));
-            });
-
-
-            $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate
-                    .format('DD-MM-YYYY'));
-
-                //console.log("apply clicked");
-                const dateRange = picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate
-                    .format('YYYY-MM-DD');
-                let url = new URL(window.location.href);
-                let params = url.searchParams;
-                let page = parseInt(params.get("page")) || 1;
-
-
-                if (page > 1) {
-                    // reset URL (remove params except page)
-                    url.search = "";
-                    url.searchParams.delete("page");
-                    url.searchParams.set("daterange", dateRange);
-                } else {
-                    // just add role param
-                    url.searchParams.set("daterange", dateRange);
-                }
-
-                window.location.href = url.toString();
-
-
-            });
-
-            $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
-                const today = new Date();
-                const day = String(today.getDate()).padStart(2, '0');
-                const month = String(today.getMonth() + 1).padStart(2, '0');
-                const year = today.getFullYear();
-                $(this).val(day + '/' + month + '/' + year + ' - ' + day + '/' + month + '/' + year);
-                let url = new URL(window.location.href);
-                let params = url.searchParams;
-                let page = parseInt(params.get("page")) || 1;
-                if (page > 1) {
-                    // reset URL (remove params except page)
-                    url.search = "";
-                    url.searchParams.delete("page");
-                    url.searchParams.delete("daterange");
-                } else {
-                    // just add role param
-                    url.searchParams.delete("daterange");
-                }
-                window.location.href = url.toString();
-
-
-            });
-        });
-    </script> --}}
     <script>
-        let storageKey = "selected_users";
+        let storageKey = "selected_ticket";
 
         // Get selected IDs from localStorage
         function getSelected() {
@@ -560,49 +516,8 @@
             }
         });
 
-        $(document).on('change', '#sel_roles', function(e) {
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
 
 
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("role", $(this).val());
-            } else if ($(this).val() == "") {
-                url.searchParams.delete("role");
-            } else {
-                // just add role param
-                url.searchParams.set("role", $(this).val());
-            }
-
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
-        });
-
-        $(document).on('change', '#sel_mode', function(e) {
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
-
-
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("mode", $(this).val());
-            } else if ($(this).val() == "") {
-                url.searchParams.delete("mode");
-            } else {
-                // just add role param
-                url.searchParams.set("mode", $(this).val());
-            }
-
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
-        });
 
         $(document).on('change', '#sel_status', function(e) {
             let url = new URL(window.location.href);
@@ -626,7 +541,7 @@
             window.location.href = url.toString();
         });
 
-        $(document).on('change', '#sel_user_type', function(e) {
+        $(document).on('change', '#sel_priority', function(e) {
             let url = new URL(window.location.href);
             let params = url.searchParams;
             let page = parseInt(params.get("page")) || 1;
@@ -636,18 +551,18 @@
                 // reset URL (remove params except page)
                 url.search = "";
                 url.searchParams.delete("page");
-                url.searchParams.set("user_type", $(this).val());
+                url.searchParams.set("priority", $(this).val());
             } else if ($(this).val() == "") {
-                url.searchParams.delete("user_type");
+                url.searchParams.delete("priority");
             } else {
                 // just add role param
-                url.searchParams.set("user_type", $(this).val());
+                url.searchParams.set("priority", $(this).val());
             }
 
-            // Push new URL without reload
             window.history.pushState({}, '', url.toString());
             window.location.href = url.toString();
         });
+
 
         $(document).on('change', '#sel_limit', function(e) {
             let url = new URL(window.location.href);
@@ -678,6 +593,9 @@
         function fetchData(page = 1) {
 
             let search = $('input[name="search"]').val();
+            if (search.length > 2) {
+                return;
+            }
 
 
             $.ajax({
@@ -709,12 +627,13 @@
             if (search.length > 0) {
                 $('#btnClear').show();
 
-            } else {
+            } else if (search.length == 0) {
                 $('#btnClear').hide();
                 loadSelected();
+                fetchData();
 
             }
-            fetchData();
+
 
         });
         $('#btnClear').click(function() {

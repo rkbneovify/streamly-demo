@@ -36,6 +36,15 @@
     .badge-light {
         background: none;
     }
+
+    .dropdown-toggle::after {
+        display: none !important;
+    }
+
+    .radius {
+        border-radius: 20px;
+        padding: 10px;
+    }
 </style>
 
 
@@ -80,10 +89,16 @@
                             Ticket Number
                         </th>
                         <th>
+                            User
+                        </th>
+                        <th>
                             Subject
                         </th>
 
+                        <th>
+                            Priority
 
+                        </th>
                         <th>
                             Status
 
@@ -109,9 +124,153 @@
                                 <input type="checkbox" class="row-checkbox custom-checkbox" value="{{ $item->id }}">
                             </td>
                             <td style="vertical-align: middle;">
-
+                                #{{ $item->ticket_number }}
                             </td>
+                            <td>
+                                <a href="{{ route('admin.users.view', $item->user->id) }}">
+                                    <div class="mb-2"
+                                        style="width:40px; height:40px;
+                                            background:#d62d41;
+                                            color:white; display:flex; align-items:center; justify-content:center;
+                                            border-radius:50%; font-weight:bold;">
+                                        {{ getAvatarName($item->user->name) }}
+                                    </div>
 
+
+                                    <span> {{ ucwords(Str::limit($item->user->name, 10, '...')) }}</span>
+                                </a>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                {{ $item->subject }}
+                            </td>
+                            <td style="vertical-align: middle;">
+
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="btn-ticket-status dropdown-toggle"
+                                        id="priorityDropdown{{ $item->id }}" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+
+                                        {{-- @if ($item->priority != 'high')
+                                            <span class="custom-badge badge-active">
+                                                {{ ucwords($item->priority) }}
+                                            </span>
+                                        @else
+                                            <span class="custom-badge badge-inactive">
+                                                {{ ucwords($item->priority) }}
+                                            </span>
+                                        @endif --}}
+
+                                        @switch($item->priority)
+                                            @case('high')
+                                                <span class="custom-badge badge-inactive">
+                                                    {{ ucwords($item->priority) }}
+                                                </span>
+                                            @break
+
+                                            @case('critical')
+                                                <span class="custom-badge badge-inactive">
+                                                    {{ ucwords($item->priority) }}
+                                                </span>
+                                            @break
+
+                                            @default
+                                                <span class="custom-badge badge-active">
+                                                    {{ ucwords($item->priority) }}
+                                                </span>
+                                        @endswitch
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="priorityDropdown{{ $item->id }}">
+                                        <a class="dropdown-item change-priority" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.priority.update', ['priority' => 'low', 'id' => $item->id]) }}">
+                                            Low
+                                        </a>
+
+                                        <a class="dropdown-item change-priority" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.priority.update', ['priority' => 'medium', 'id' => $item->id]) }}">
+                                            Medium
+                                        </a>
+
+                                        <a class="dropdown-item change-priority" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.priority.update', ['priority' => 'high', 'id' => $item->id]) }}">
+                                            High
+                                        </a>
+                                        <a class="dropdown-item change-priority" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.priority.update', ['priority' => 'critical', 'id' => $item->id]) }}">
+
+                                            Critical
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle;">
+
+                                <div class="dropdown">
+                                    <a href="javascript:void(0);" class="btn-ticket-status dropdown-toggle no-arrow"
+                                        id="statusDropdown{{ $item->id }}" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+
+                                        @switch($item->status)
+                                            @case('under review')
+                                                <span class="badge badge-warning radius">Under Review</span>
+                                            @break
+
+                                            @case('in progress')
+                                                <span class="badge badge-primary radius">In Progress</span>
+                                            @break
+
+                                            @case('on hold')
+                                                <span class="badge badge-secondary radius">On Hold</span>
+                                            @break
+
+                                            @case('completed')
+                                                <span class="badge badge-success radius">Completed</span>
+                                            @break
+
+                                            @case('cancelled')
+                                                <span class="badge badge-danger radius">Cancelled</span>
+                                            @break
+
+                                            @case('closed')
+                                                <span class="badge badge-dark radius">Closed</span>
+                                            @break
+                                        @endswitch
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="statusDropdown{{ $item->id }}">
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'under review', 'id' => $item->id]) }}">
+                                            <span>Under Review</span>
+                                        </a>
+
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'in progress', 'id' => $item->id]) }}">
+
+                                            <span>In Progress</span>
+                                        </a>
+
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'on hold', 'id' => $item->id]) }}">
+                                            <span>On Hold</span>
+                                        </a>
+
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'completed', 'id' => $item->id]) }}">
+                                            <span>Completed</span>
+                                        </a>
+
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'cancelled', 'id' => $item->id]) }}">
+                                            <span>Cancelled</span>
+                                        </a>
+
+                                        <a class="dropdown-item change-status" href="javascript:void(0);"
+                                            data-url="{{ route('admin.ticket.status.update', ['status' => 'closed', 'id' => $item->id]) }}">
+                                            <span>Closed</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
                             <td style="vertical-align: middle;">
                                 {{ $item->created_at->format('d/m/Y') }}
                             </td>
@@ -189,5 +348,60 @@
     @endif
 </form>
 <div class="d-flex justify-content-end mt-5 mr-1">
-    {{ $users->withQueryString()->links() }}
+    {{ $data->withQueryString()->links() }}
 </div>
+
+<script>
+    $(document).on('click', '.change-priority', function() {
+        let url = $(this).data('url');
+        location.href = url;
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to change the priority?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, change it!",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+                showLoader();
+
+
+            }
+
+        });
+
+    });
+</script>
+
+<script>
+    $(document).on('click', '.change-status', function() {
+
+        let url = $(this).data('url');
+        location.href = url;
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to change the status?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, change it!",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+                showLoader();
+
+
+            }
+
+        });
+
+
+
+
+
+    });
+</script>
