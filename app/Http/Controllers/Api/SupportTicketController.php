@@ -51,6 +51,7 @@ class SupportTicketController extends Controller
         $validator = Validator::make($request->all(), [
             'category' => 'required|string|max:225',
             'sub_category' => 'required|string|max:225',
+            'platform' => 'required|string|max:225',
             'subject' => 'required|string|max:225',
             'description' => 'required|string',
             'attachment' => 'nullable',
@@ -66,6 +67,7 @@ class SupportTicketController extends Controller
             $supportTicket->user_id = Auth::id();
             $supportTicket->category = $request->category;
             $supportTicket->sub_category = $request->sub_category;
+            $supportTicket->platform = $request->platform;
             $supportTicket->subject = $request->subject;
             $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled | Closed
             $supportTicket->priority = 'low';  // High | Medium | Low | Critical
@@ -103,6 +105,7 @@ class SupportTicketController extends Controller
             $data = [
 
                 'ticket_no' => $supportTicket->ticket_number,
+                'platform' => $supportTicket->platform,
                 'subject' => $supportTicket->subject,
                 'description' => $supportTicketMessage->message
             ];

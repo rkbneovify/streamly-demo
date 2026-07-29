@@ -50,6 +50,9 @@ export class FileUploadComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
+
+
+
     if (input.files?.length) {
       this.processFiles(input.files);
     }
@@ -57,29 +60,16 @@ export class FileUploadComponent {
     input.value = '';
   }
 
-  // processFiles(fileList: FileList): void {
 
-  //   Array.from(fileList).forEach(file => {
-
-  //     let type: 'image' | 'video' | 'other' = 'other';
-
-  //     if (file.type.startsWith('image/')) {
-  //       type = 'image';
-  //     } else if (file.type.startsWith('video/')) {
-  //       type = 'video';
-  //     }
-
-  //     this.files.push({
-  //       file,
-  //       preview: URL.createObjectURL(file),
-  //       type
-  //     });
-  //   });
-
-  //   this.emitFiles();
-  // }
 
   processFiles(fileList: FileList): void {
+
+    const maxFiles = 3;
+
+    if (this.files.length + fileList.length > maxFiles) {
+      this.sweetAlert.toast(`You can upload a maximum of ${maxFiles} files.`, "error");
+      return;
+    }
 
     Array.from(fileList).forEach(file => {
 
@@ -89,9 +79,9 @@ export class FileUploadComponent {
         'image/jpg',
         'image/heic',
         'image/heif',
-        'video/mp4',
-        'video/webm',
-        'video/quicktime'
+        // 'video/mp4',
+        // 'video/webm',
+        // 'video/quicktime'
       ];
 
       if (!allowedTypes.includes(file.type)) {
@@ -104,9 +94,11 @@ export class FileUploadComponent {
 
       if (file.type.startsWith('image/')) {
         type = 'image';
-      } else if (file.type.startsWith('video/')) {
-        type = 'video';
       }
+
+      // else if (file.type.startsWith('video/')) {
+      //   type = 'video';
+      // }
 
       this.files.push({
         file,
