@@ -83,7 +83,7 @@ class AdminHoaController extends Controller
                 'pdInfoPasscode',
                 'subSessionPasscode'
             ]);
-            $query->selectRaw("*, 
+            $query->selectRaw("*,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('is_main_account', 0)
@@ -171,8 +171,8 @@ class AdminHoaController extends Controller
             // toast('Something went wrong ! try again later.', 'error')
             //     ->timerProgressBar()
             //     ->autoClose(3000);
-            Alert::error('Oops !', $th->getMessage());
-            return redirect()->back();
+            // Alert::error('Oops !', $th->getMessage());
+            // return redirect()->back();
         }
     }
 

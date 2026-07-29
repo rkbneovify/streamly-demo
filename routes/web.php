@@ -349,6 +349,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Support Ticket
     Route::prefix('/support-ticket')->group(function () {
         Route::get('/', [AdminSupportTicketController::class, 'index']);
+        Route::get('/status/{status}/update/{id}', [AdminSupportTicketController::class, 'statusUpdate'])->name('ticket.status.update');
+        Route::get('/priority/{priority}/update/{id}', [AdminSupportTicketController::class, 'priorityUpdate'])->name('ticket.priority.update');
     });
 });
 
