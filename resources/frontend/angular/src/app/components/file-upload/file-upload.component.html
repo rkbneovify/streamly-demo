@@ -1,12 +1,16 @@
 <div class="upload-box" [class.dragging]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
   (drop)="onDrop($event)">
 
-  <input #fileInput type="file" multiple hidden accept=".jpg,.jpeg,.png,.heic,.heif,.mp4,.mov,image/*,video/*"
+  <!-- <input #fileInput type="file" multiple hidden accept=".jpg,.jpeg,.png,.heic,.heif,.mp4,.mov,image/*,video/*"
+    (change)="onFileSelected($event)" /> -->
+
+  <input #fileInput type="file" multiple hidden accept=".jpg,.jpeg,.png,.heic,.heif,image/*"
     (change)="onFileSelected($event)" />
 
   <div class="upload-content" (click)="fileInput.click()">
     <h2>Click to upload or drag file here</h2>
-    <p>Images & Videos Supported</p>
+    <!-- <p>Images & Videos Supported</p> -->
+    <p>Images Supported</p>
   </div>
 
 </div>

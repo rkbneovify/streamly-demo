@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
@@ -9,7 +9,7 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgFor, QuillModule, FileUploadComponent],
+  imports: [FormsModule, ReactiveFormsModule, NgFor, NgIf, QuillModule, FileUploadComponent],
   templateUrl: './support-ticket.component.html',
   styleUrl: './support-ticket.component.scss'
 })
@@ -62,11 +62,16 @@ export class SupportTicketComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializeForm();
     this.getCategories();
   }
 
   getCategories() {
+    this.sweetAlert.loading();
     this.api.getRequest('blogs/categories')
+      .pipe(finalize(() => {
+        this.sweetAlert.close();
+      }))
       .subscribe({
         next: (res: any) => {
           console.log("res :", res)
@@ -81,7 +86,11 @@ export class SupportTicketComponent implements OnInit {
   }
 
   getSubCategories(category: string) {
+    this.sweetAlert.loading();
     this.api.getRequest(`blogs/${category}/sub-categories`)
+      .pipe(finalize(() => {
+        this.sweetAlert.close();
+      }))
       .subscribe({
         next: (res: any) => {
           console.log("res :", res)
@@ -99,10 +108,11 @@ export class SupportTicketComponent implements OnInit {
     this.getSubCategories(this.selectedCategory);
   }
 
-  initializeForm(): void {
+  private initializeForm(): void {
     this.ticketForm = this.fb.group({
       category: [null, Validators.required],
       subCategory: [null, Validators.required],
+      platform: [null, Validators.required],
       subject: ['', [
         Validators.required,
         Validators.maxLength(255)
@@ -127,7 +137,7 @@ export class SupportTicketComponent implements OnInit {
   onFilesSelected(files: File[]) {
     this.selectedFiles = files;
 
-    console.log('Selected Files:', files);
+    // console.log('Selected Files:', files);
   }
 
   submitTicket(): void {
@@ -148,6 +158,10 @@ export class SupportTicketComponent implements OnInit {
       this.ticketForm.value.subCategory
     );
 
+    formData.append(
+      'platform',
+      this.ticketForm.value.platform
+    );
     formData.append(
       'subject',
       this.ticketForm.value.subject
@@ -191,6 +205,8 @@ export class SupportTicketComponent implements OnInit {
 
 
   }
+
+
 
 
 }

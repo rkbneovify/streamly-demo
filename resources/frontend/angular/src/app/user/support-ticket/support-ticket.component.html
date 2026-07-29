@@ -24,6 +24,14 @@
             {{ category }}
           </option>
         </select>
+
+        <div *ngIf="ticketForm.get('category')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('category')?.errors as e">
+            {{ e['required'] && '* Category is required.' }}
+
+          </span>
+        </div>
+
       </div>
 
 
@@ -42,19 +50,62 @@
             {{ item }}
           </option>
         </select>
+
+
+        <div *ngIf="ticketForm.get('subCategory')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('subCategory')?.errors as e">
+            {{ e['required'] && '* Sub category is required.' }}
+
+          </span>
+        </div>
       </div>
+
+      <!--  -->
+      <div class="form-group">
+        <label>Select Platform</label>
+
+        <select class="input-field" formControlName="platform">
+          <option [ngValue]="null">Select Platform</option>
+          <option value="Android TV">Android TV</option>
+          <option value="Roku">Roku</option>
+          <option value="Tizen TV">Tizen TV</option>
+          <option value="Apple TV">Apple TV</option>
+          <option value="iOS">iOS</option>
+          <option value="Android Mobile">Android Mobile</option>
+          <option value="Web">Web</option>
+        </select>
+
+        <div *ngIf="ticketForm.get('platform')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('platform')?.errors as e">
+            {{ e['required'] && '* Platform is required.' }}
+          </span>
+        </div>
+      </div>
+      <!--  -->
 
       <!-- Subject -->
       <div class="form-group">
         <label>Subject</label>
         <input type="text" class="input-field" placeholder="Subject" formControlName="subject">
+        <div *ngIf="ticketForm.get('subject')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('subject')?.errors as e">
+            {{ e['required'] && '* Subject is required.' }}
 
+          </span>
+        </div>
       </div>
       <!-- Description -->
       <div class="form-group">
         <label>Description</label>
         <quill-editor formControlName="description" [modules]="quillConfig" theme="snow">
         </quill-editor>
+
+        <div *ngIf="ticketForm.get('description')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('description')?.errors as e">
+            {{ e['required'] && '* Description is required.' }}
+
+          </span>
+        </div>
       </div>
 
       <!-- Attachment -->

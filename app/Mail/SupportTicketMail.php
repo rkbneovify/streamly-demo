@@ -43,7 +43,7 @@ class SupportTicketMail extends Mailable
               <h2>Hi Streamly Team,</h2>
                 <p><strong>Email:</strong> {$this->email}</p>
                 <p><strong>Ticket No:</strong> {$this->data['ticket_no']}</p>
-
+                <p><strong>Platform:</strong> {$this->data['platform']}</p>
                 <p><strong>Subject:</strong> {$this->data['subject']}</p>
 
                 {$this->data['description']}
