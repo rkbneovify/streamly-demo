@@ -593,9 +593,6 @@
         function fetchData(page = 1) {
 
             let search = $('input[name="search"]').val();
-            if (search.length > 2) {
-                return;
-            }
 
 
             $.ajax({
@@ -627,15 +624,15 @@
             if (search.length > 0) {
                 $('#btnClear').show();
 
-            } else if (search.length == 0) {
+            } else {
                 $('#btnClear').hide();
                 loadSelected();
-                fetchData();
 
             }
-
+            fetchData();
 
         });
+
         $('#btnClear').click(function() {
 
             $('input[name="search"]').val('');

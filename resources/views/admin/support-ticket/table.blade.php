@@ -92,6 +92,9 @@
                             User
                         </th>
                         <th>
+                            Platform
+                        </th>
+                        <th>
                             Subject
                         </th>
 
@@ -139,6 +142,9 @@
 
                                     <span> {{ ucwords(Str::limit($item->user->name, 10, '...')) }}</span>
                                 </a>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                {{ $item->platform }}
                             </td>
                             <td style="vertical-align: middle;">
                                 {{ $item->subject }}
@@ -353,8 +359,7 @@
 
 <script>
     $(document).on('click', '.change-priority', function() {
-        let url = $(this).data('url');
-        location.href = url;
+
 
         Swal.fire({
             title: "Are you sure?",
@@ -378,9 +383,6 @@
 
 <script>
     $(document).on('click', '.change-status', function() {
-
-        let url = $(this).data('url');
-        location.href = url;
 
         Swal.fire({
             title: "Are you sure?",
