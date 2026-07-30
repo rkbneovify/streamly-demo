@@ -206,6 +206,11 @@ export class SupportTicketComponent implements OnInit {
 
   }
 
+  onReset(): void {
+    this.fileUploadComponent.clearAll();
+    this.ticketForm.reset();
+  }
+
 
 
 
