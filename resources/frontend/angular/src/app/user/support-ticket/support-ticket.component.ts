@@ -6,14 +6,26 @@ import { FileUploadComponent } from '../../components/file-upload/file-upload.co
 import { CrudService } from '../../services/crud.service';
 import { SweetalertService } from '../../services/SweetAlert/sweetalert.service';
 import { finalize } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { RecaptchaModule, RecaptchaComponent } from 'ng-recaptcha';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgFor, NgIf, QuillModule, FileUploadComponent],
+  imports: [FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    NgIf,
+    QuillModule,
+    FileUploadComponent,
+    RecaptchaModule],
   templateUrl: './support-ticket.component.html',
   styleUrl: './support-ticket.component.scss'
 })
 export class SupportTicketComponent implements OnInit {
+
+  siteKey: string = environment.google.captchaKey;
+  captchaToken: string | null = null;
+  // ================
   ticketForm!: FormGroup;
   description = '';
   selectedFiles: File[] = [];
@@ -54,16 +66,89 @@ export class SupportTicketComponent implements OnInit {
   filteredSubCategories: string[] = [];
   isLoading: boolean = false;
 
+
   @ViewChild(FileUploadComponent)
   fileUploadComponent: FileUploadComponent;
+
 
   constructor(private fb: FormBuilder, private api: CrudService, private sweetAlert: SweetalertService) {
     this.initializeForm();
   }
 
   ngOnInit(): void {
-    this.initializeForm();
     this.getCategories();
+    this.initializeForm();
+
+
+  }
+
+  resolved(token: any) {
+
+
+    const formData = new FormData();
+
+
+    formData.append(
+      'category',
+      this.ticketForm.value.category
+    );
+
+    formData.append(
+      'sub_category',
+      this.ticketForm.value.subCategory
+    );
+
+    formData.append(
+      'platform',
+      this.ticketForm.value.platform
+    );
+    formData.append(
+      'subject',
+      this.ticketForm.value.subject
+    );
+
+    formData.append(
+      'description',
+      this.ticketForm.value.description
+    );
+
+    formData.append(
+      'captcha_token',
+      token
+    );
+
+    this.selectedFiles.forEach(file => {
+      formData.append('attachment[]', file);
+    });
+
+
+
+    if (token == null) {
+      return;
+    }
+
+    this.sweetAlert.loading();
+    this.isLoading = true;
+    this.api.postRequest('support-ticket/store', formData).pipe(finalize(() => {
+      this.sweetAlert.close()
+      this.isLoading = false;
+    })).subscribe({
+      next: (res: any) => {
+        console.log('res:', res);
+
+        // this.sweetAlert.toast(res.message, 'success')
+        this.fileUploadComponent.clearAll();
+        this.ticketForm.reset();
+        setTimeout(() => {
+          this.sweetAlert.toast(res.message);
+        }, 1000);
+      },
+      error: (err: any) => {
+        console.log("error:", err);
+        this.sweetAlert.toast(err.error.message, 'error')
+      }
+    });
+
   }
 
   getCategories() {
@@ -118,8 +203,10 @@ export class SupportTicketComponent implements OnInit {
         Validators.maxLength(255)
       ]],
       description: ['', Validators.required],
+
       attachment: [null]
     });
+
   }
 
 
@@ -140,73 +227,25 @@ export class SupportTicketComponent implements OnInit {
     // console.log('Selected Files:', files);
   }
 
-  submitTicket(): void {
+  submitTicket(captcha: RecaptchaComponent): void {
+
+
     if (this.ticketForm.invalid) {
       this.ticketForm.markAllAsTouched();
       return;
     }
 
-    const formData = new FormData();
 
-    formData.append(
-      'category',
-      this.ticketForm.value.category
-    );
+    captcha.execute();
 
-    formData.append(
-      'sub_category',
-      this.ticketForm.value.subCategory
-    );
 
-    formData.append(
-      'platform',
-      this.ticketForm.value.platform
-    );
-    formData.append(
-      'subject',
-      this.ticketForm.value.subject
-    );
-
-    formData.append(
-      'description',
-      this.ticketForm.value.description
-    );
-
-    this.selectedFiles.forEach(file => {
-      formData.append('attachment[]', file);
-    });
-
-    // formData.forEach((value, key) => {
-    //   console.log(key, value);
-    // });
-    // console.log(formData);
-
-    this.sweetAlert.loading();
-    this.isLoading = true;
-    this.api.postRequest('support-ticket/store', formData).pipe(finalize(() => {
-      this.sweetAlert.close()
-      this.isLoading = false;
-    })).subscribe({
-      next: (res: any) => {
-        // console.log('res:', res);
-
-        // this.sweetAlert.toast(res.message, 'success')
-        this.fileUploadComponent.clearAll();
-        this.ticketForm.reset();
-        setTimeout(() => {
-          this.sweetAlert.toast(res.message);
-        }, 1000);
-      },
-      error: (err: any) => {
-        this.sweetAlert.toast(err.error.message, 'error')
-      }
-    })
 
 
 
   }
 
-  onReset(): void {
+  onReset(captcha: RecaptchaComponent): void {
+    captcha.reset();
     this.fileUploadComponent.clearAll();
     this.ticketForm.reset();
   }

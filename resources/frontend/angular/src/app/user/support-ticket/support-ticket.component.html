@@ -8,7 +8,7 @@
 
   <div class="xcontainer">
     <!-- Form Card -->
-    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket()">
+    <form [formGroup]="ticketForm" (ngSubmit)="submitTicket(captchaRef)">
 
       <!-- Category -->
       <div class="form-group">
@@ -115,7 +115,8 @@
         </app-file-upload>
       </div>
 
-
+      <re-captcha #captchaRef="reCaptcha" size="invisible" [siteKey]="siteKey" (resolved)="resolved($event)">
+      </re-captcha>
       <div class="row">
         <div class="col">
           <button type="submit" [disabled]="isLoading">
@@ -126,7 +127,7 @@
 
         </div>
         <div class="col">
-          <button type="button" (click)="onReset()" [disabled]="isLoading">
+          <button type="button" (click)="onReset(captchaRef)" [disabled]="isLoading">
             Reset
           </button>
         </div>

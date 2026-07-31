@@ -9,6 +9,7 @@ use App\Jobs\ProcessSupportTicketReplyMail;
 use App\Models\File;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
+use App\Services\RecaptchaService;
 use App\Traits\ApiResponseTrait;
 use App\Traits\FileUploadTrait;
 use Carbon\Carbon;
@@ -46,9 +47,10 @@ class SupportTicketController extends Controller
         }
     }
 
-    public function store(Request $request, SupportTicket $supportTicket,  SupportTicketMessage $supportTicketMessage, File $file)
+    public function store(Request $request, SupportTicket $supportTicket,  SupportTicketMessage $supportTicketMessage, File $file, RecaptchaService $recaptcha)
     {
         $validator = Validator::make($request->all(), [
+            'captcha_token' => 'nullable|string',
             'category' => 'required|string|max:225',
             'sub_category' => 'required|string|max:225',
             'platform' => 'required|string|max:225',
@@ -62,6 +64,16 @@ class SupportTicketController extends Controller
         if ($validator->fails()) {
             return $this->validationErrorResponse(null, $validator->errors());
         }
+
+        if (! $recaptcha->verify($request->captcha_token, $request->ip())) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid reCAPTCHA.'
+            ], 422);
+        }
+
+
+
         DB::beginTransaction();
         try {
             $supportTicket->user_id = Auth::id();

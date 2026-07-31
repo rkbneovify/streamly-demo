@@ -75,5 +75,9 @@ return [
         'verifyssl' => env('USPS_VERIFY_SSL'), // bool
         'env' => env('USPS_ENV') //string
     ],
+    'frontend_recaptcha' => [
+        'site_key'   => env('RECAPTCHA_FRONTEND_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_FRONTEND_SECRET_KEY'),
+    ],
 
 ];
