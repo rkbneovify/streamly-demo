@@ -83,8 +83,7 @@ export class SupportTicketComponent implements OnInit {
   }
 
   resolved(token: any) {
-    // console.log("captcha token :", token);
-    // this.captchaToken = token;
+
 
     const formData = new FormData();
 
@@ -124,10 +123,9 @@ export class SupportTicketComponent implements OnInit {
 
 
 
-    // formData.forEach((value, key) => {
-    //   console.log(key, value);
-    // });
-    // console.log(formData);
+    if (token == null) {
+      return;
+    }
 
     this.sweetAlert.loading();
     this.isLoading = true;
