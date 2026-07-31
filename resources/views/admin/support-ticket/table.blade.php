@@ -360,7 +360,8 @@
 <script>
     $(document).on('click', '.change-priority', function() {
 
-
+        let $btn = $(this); // store the clicked button
+        let url = $btn.data('url');
         Swal.fire({
             title: "Are you sure?",
             text: "Do you really want to change the priority?",
@@ -383,7 +384,8 @@
 
 <script>
     $(document).on('click', '.change-status', function() {
-
+        let $btn = $(this); // store the clicked button
+        let url = $btn.data('url');
         Swal.fire({
             title: "Are you sure?",
             text: "Do you really want to change the status?",
