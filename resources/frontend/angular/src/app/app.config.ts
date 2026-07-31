@@ -13,18 +13,23 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { authInterceptor } from './_interceptor/auth.interceptor';
 import { SweetalertService } from './services/SweetAlert/sweetalert.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { RecaptchaModule } from "ng-recaptcha";
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes, withViewTransitions()),
     provideClientHydration(),
     provideNgxStripe(),
+
     importProvidersFrom(
       HttpClientModule,
       NgSelectModule,
       ScrollingModule,
+      RecaptchaModule,
       // NgxStripeModule.forRoot(''),
       StripeModule.forRoot(environment.stripe.publicKey),
+
       BrowserAnimationsModule,
       BrowserModule,
       SweetalertService,

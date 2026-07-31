@@ -37,6 +37,7 @@
     "hls.js": "^1.5.17",
     "jquery": "^3.7.1",
     "mock-browser": "^0.92.14",
+    "ng-recaptcha": "^13.2.1",
     "ngx-infinite-scroll": "^20.0.0",
     "ngx-quill": "^26.0.10",
     "ngx-stripe": "^17.1.1",
