@@ -19,7 +19,8 @@ class AdminSupportTicketController extends Controller
         $query  = $this->supportTicket->query();
         $query->search($request->search)
             ->status($request->status)
-            ->priority($request->priority);
+            ->priority($request->priority)->latest();
+
         $data = $query->with(['user', 'message'])->paginate($limit, ['*'], $page);
 
         if ($request->ajax()) {
@@ -72,5 +73,17 @@ class AdminSupportTicketController extends Controller
             Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
+    }
+
+    public function chat($ticket, Request $request)
+    {
+        $limit = $request->input('limit', 10);
+        $page = $request->input('page', 1);
+        $query =   $this->supportTicket->query();
+        $query->where('ticket_number', $ticket);
+        $data = $query->with(['user', 'message'])->first();
+        // return response()->json($data);
+
+        return view('admin.support-ticket.chat.index', compact('data'));
     }
 }

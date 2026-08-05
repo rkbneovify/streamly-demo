@@ -258,7 +258,7 @@
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control input-custom" placeholder="Search by name, email">
+                                    class="form-control input-custom" placeholder="Search by ticket, platform, name, email">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>

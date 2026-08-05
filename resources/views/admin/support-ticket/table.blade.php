@@ -127,7 +127,9 @@
                                 <input type="checkbox" class="row-checkbox custom-checkbox" value="{{ $item->id }}">
                             </td>
                             <td style="vertical-align: middle;">
-                                #{{ $item->ticket_number }}
+
+                                <a href="{{ route('admin.ticket.chat', $item->ticket_number) }}">
+                                    #{{ $item->ticket_number }}</a>
                             </td>
                             <td>
                                 <a href="{{ route('admin.users.view', $item->user->id) }}">
