@@ -28,7 +28,7 @@ class SupportTicket extends Model
 
         return $prefix . $date . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
     }
-    public function message()
+    public function messages()
     {
         return  $this->hasMany(SupportTicketMessage::class, 'support_ticket_id', 'id');
     }

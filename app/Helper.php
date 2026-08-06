@@ -2469,3 +2469,14 @@ function hoaSubUserDeviceLimitCheck($user, $deviceLimit)
         'Access-Control-Allow-Origin' => '*',
     ])->send();
 }
+
+
+function getAvatarInitials(string $name): string
+{
+    $words = preg_split('/\s+/', trim($name));
+
+    return strtoupper(
+        substr($words[0], 0, 1) .
+            (count($words) > 1 ? substr(end($words), 0, 1) : '')
+    );
+}

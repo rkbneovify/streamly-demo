@@ -353,6 +353,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::get('/priority/{priority}/update/{id}', [AdminSupportTicketController::class, 'priorityUpdate'])->name('ticket.priority.update');
         // chat
         Route::get('/chat/{ticket}', [AdminSupportTicketController::class, 'chat'])->name('ticket.chat');
+        Route::post('/chat/reply/{ticket}', [AdminSupportTicketController::class, 'ticketReply'])->name('ticket.reply');
     });
 });
 
