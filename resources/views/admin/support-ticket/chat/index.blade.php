@@ -2,6 +2,7 @@
 @section('stylesheets')
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
+
     <style>
         .scroll-box {
             max-height: 880px;
@@ -53,6 +54,10 @@
 
         .bg-user {
             background: #4b545c;
+        }
+
+        .bg-admin {
+            background: #cccdce;
         }
     </style>
     <style>
@@ -162,56 +167,32 @@
                         <!-- Conversation -->
                         <div class="card-body">
 
-                            {{-- <!-- Support Message -->
-                        <div class="media mb-5">
-
-                            <img src="https://via.placeholder.com/60" class="rounded-circle mr-3" width="60"
-                                height="60">
-
-                            <div class="media-body">
-
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="text-primary font-weight-bold mb-2">
-                                        Shirin Aka
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Jul 29, 2026 15:34
-                                    </small>
-                                </div>
-
-                                <p>Hello,</p>
-
-                                <p>
-                                    I am in the process of looking into your issue,
-                                    but I'll need a bit more time to come to a conclusion.
-                                    I'll provide you with an update at the earliest opportunity.
-                                </p>
-
-                                <p class="mb-0">
-                                    Best regards,<br>
-                                    Shirin A.<br>
-                                    Technical Support
-                                </p>
-
-                            </div>
-
-                        </div> --}}
 
                             <!-- User Reply -->
                             @foreach ($data->messages->skip(1) as $item)
                                 <div class="media">
 
-                                    <div class="rounded-circle bg-user text-white d-flex align-items-center justify-content-center mr-3"
-                                        style="width:50px;height:50px;font-size:16px;">
-                                        {{ getAvatarInitials($item->user->name) }}
-                                    </div>
+                                    @if (in_array($item->user->roles->first()->name, ['admin', 'superadmin']))
+                                        <div class="rounded-circle bg-admin text-white d-flex align-items-center justify-content-center mr-3"
+                                            style="width:50px;height:50px;font-size:16px;">
+                                            {{ getAvatarInitials($item->user->name) }}
+                                        </div>
+                                    @else
+                                        <div class="rounded-circle bg-user text-white d-flex align-items-center justify-content-center mr-3"
+                                            style="width:50px;height:50px;font-size:16px;">
+                                            {{ getAvatarInitials($item->user->name) }}
+                                        </div>
+                                    @endif
+
 
                                     <div class="media-body">
 
                                         <div class="d-flex justify-content-between">
                                             <h5 class="font-weight-bold mb-2">
                                                 {{ $item->user->name }}
+                                                <small class="text-muted"> &#45;
+                                                    ({{ ucfirst($item->user->roles->first()->name) }})
+                                                </small>
                                             </h5>
 
                                             <small class="text-muted">
@@ -332,73 +313,18 @@
             });
 
             $('#cancelReply').click(function() {
-                $('#replySection').slideUp(300, function() {
-                    $(this).addClass('d-none');
-                    $('#replyBtn').show();
-                });
+                quill.setText('');
+                myDropzone.removeAllFiles(true);
+                $('#replyForm .dynamic-attachment').remove();
+                // $('#replySection').slideUp(300, function() {
+                //     // $(this).addClass('d-none');
+                //     // $('#replyBtn').show();
+                // });
             });
 
         });
 
-        // $('form').submit(function(e) {
 
-        //     e.preventDefault();
-
-        //     $('#message').val(quill.root.innerHTML);
-
-        //     let formData = new FormData(this);
-
-        //     myDropzone.getAcceptedFiles().forEach(function(file) {
-        //         formData.append('attachment[]', file);
-        //     });
-
-        //     // formData.forEach((key, value) => {
-        //     //     console.log(`${key}: ${value}`);
-        //     // })
-        //     // return
-
-        //     $.ajax({
-        //         url: $(this).attr('action'),
-        //         type: 'POST',
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         cache: false,
-
-        //         beforeSend: function() {
-        //             $('.btn-success')
-        //                 .prop('disabled', true);
-        //             showLoader();
-
-        //         },
-
-        //         success: function(response) {
-
-        //             console.log(response);
-        //             alert('Reply sent successfully.');
-
-        //             quill.setContents([]);
-
-        //             myDropzone.removeAllFiles(true);
-
-        //             $('#replyForm')[0].reset();
-
-        //             $('.btn-success')
-        //                 .prop('disabled', false)
-        //                 .text('Send Reply');
-        //         },
-
-        //         error: function(xhr) {
-
-        //             console.log(xhr.responseJSON);
-
-        //             $('.btn-success')
-        //                 .prop('disabled', false)
-        //                 .text('Send Reply');
-        //         }
-        //     });
-
-        // });
 
         $('#replyForm').on('submit', function(e) {
 
@@ -433,6 +359,7 @@
                 input.name = 'attachment[]';
                 input.files = dt.files;
                 input.style.display = 'none';
+                input.classList.add('dynamic-attachment');
 
                 document.getElementById('replyForm').appendChild(input);
             });
@@ -464,7 +391,7 @@
                         'indent': '+1'
                     }],
                     ['blockquote', 'code-block'],
-                    ['link', 'image'],
+                    ['link'],
                     [{
                         'align': []
                     }],

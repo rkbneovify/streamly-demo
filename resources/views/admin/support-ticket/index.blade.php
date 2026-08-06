@@ -2,6 +2,7 @@
 @section('stylesheets')
     <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
     <style>
         .custom-switch {
             position: relative;
@@ -257,12 +258,9 @@
 
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
-                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control input-custom" placeholder="Search by ticket, platform, name, email">
-                                <span class="btn-clear" id="btnClear">×</span>
+                                <input type="text" id="daterange" class="form-control">
                             </div>
                         </div>
-
 
                         <div class="col-md-2 mb-3">
                             <button id="btnResetFilter" type="button" class="btn-with-img">
@@ -270,6 +268,18 @@
                                 Reset filters
                             </button>
                         </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="input-conatiner">
+                                <input type="text" name="search" id="search" value="{{ Request()->search }}"
+                                    class="form-control input-custom" placeholder="Search by ticket, platform">
+                                <span class="btn-clear" id="btnClear">×</span>
+                            </div>
+                        </div>
+
+
+
+
 
                     </div>
 
@@ -296,8 +306,85 @@
 
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script>
+        $(function() {
+
+            $('#daterange').daterangepicker({
+
+                startDate: moment().startOf('week'),
+                endDate: moment().endOf('week'),
+
+                opens: 'center',
+
+                autoApply: false,
+
+                showDropdowns: true,
+
+                alwaysShowCalendars: true,
+
+                linkedCalendars: false,
+
+                locale: {
+                    format: 'MMM D, YYYY'
+                },
+
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [
+                        moment().subtract(1, 'days'),
+                        moment().subtract(1, 'days')
+                    ],
+                    'Last 7 Days': [
+                        moment().subtract(6, 'days'),
+                        moment()
+                    ],
+                    'Last 30 Days': [
+                        moment().subtract(29, 'days'),
+                        moment()
+                    ],
+                    'This Month': [
+                        moment().startOf('month'),
+                        moment().endOf('month')
+                    ],
+                    'Last Month': [
+                        moment().subtract(1, 'month').startOf('month'),
+                        moment().subtract(1, 'month').endOf('month')
+                    ]
+                }
+
+            });
+
+        });
+
+        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+
+            // console.log(picker.startDate.format('YYYY-MM-DD'));
+            // console.log(picker.endDate.format('YYYY-MM-DD'));
+            let daterange = picker.startDate.format('YYYY-MM-DD') + "_" + picker.endDate.format('YYYY-MM-DD');
+            let url = new URL(window.location.href);
+            let params = url.searchParams;
+            let page = parseInt(params.get("page")) || 1;
 
 
+            if (page > 1) {
+                // reset URL (remove params except page)
+                url.search = "";
+                url.searchParams.delete("page");
+                url.searchParams.set("daterange", daterange);
+            } else if (daterange == "") {
+                url.searchParams.delete("daterange");
+            } else {
+                // just add role param
+                url.searchParams.set("daterange", daterange);
+            }
+
+            window.history.pushState({}, '', url.toString());
+            window.location.href = url.toString();
+
+        });
+    </script>
     <script>
         let storageKey = "selected_ticket";
 
@@ -343,7 +430,7 @@
             // Remove old selected[] params
             url.searchParams.delete("selected[]");
 
-            // Add only currently selected IDs
+            // Add only currently selected ID
             selected.reverse().forEach(id => {
                 url.searchParams.append("selected[]", id);
             });

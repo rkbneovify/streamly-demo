@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class SupportTicket extends Model
@@ -55,5 +56,28 @@ class SupportTicket extends Model
         if ($priority != null) {
             $query->where('priority', $priority);
         }
+    }
+
+    public function scopeFilterDateOrder($query, ?string $date, string $column = 'created_at')
+    {
+        if (!$date) {
+            return $query;
+        }
+
+
+        return $query->orderBy($column, $date);
+    }
+    public function scopeDateRange($query, ?string $daterange, string $column = 'created_at')
+    {
+        if (!$daterange) {
+            return $query;
+        }
+
+        [$start, $end] = explode('_', $daterange);
+
+        return $query->whereBetween($column, [
+            Carbon::parse($start)->startOfDay(),
+            Carbon::parse($end)->endOfDay(),
+        ]);
     }
 }

@@ -34,9 +34,12 @@ class AdminSupportTicketController extends Controller
         $query  = $this->supportTicket->query();
         $query->search($request->search)
             ->status($request->status)
-            ->priority($request->priority)->latest();
+            ->priority($request->priority)
+            ->dateRange($request->daterange)
+            ->filterDateOrder($request->date)
+            ->latest();
 
-        $data = $query->with(['user', 'messages'])->paginate($limit, ['*'], $page);
+        $data = $query->with(['user', 'messages'])->paginate($limit, ['*'], 'page', $page);
 
         if ($request->ajax()) {
             return view('admin.support-ticket.table', compact('data'));

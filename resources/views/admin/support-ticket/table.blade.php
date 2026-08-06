@@ -110,9 +110,9 @@
                         <th>
                             Created At
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?sort_date=' . (request()->get('sort_date', 'desc') === 'desc' ? 'asc' : 'desc')
+                                ? request()->url() . '?date=' . (request()->get('date', 'desc') === 'desc' ? 'asc' : 'desc')
                                 : request()->fullUrlWithQuery([
-                                    'sort_date' => request()->get('sort_date', 'desc') === 'desc' ? 'asc' : 'desc',
+                                    'date' => request()->get('date', 'desc') === 'desc' ? 'asc' : 'desc',
                                 ]) }}"
                                 class="text-primary ms-1">↑↓</a>
                         </th>
@@ -294,69 +294,53 @@
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" id="selectAll">
+                            <input type="checkbox" class="custom-checkbox" id="selectAll">
                         </th>
                         <th>
-                            Name
+                            Ticket Number
                         </th>
                         <th>
-                            Email
+                            User
+                        </th>
+                        <th>
+                            Platform
+                        </th>
+                        <th>
+                            Subject
                         </th>
 
                         <th>
-                            Role
-                        </th>
-                        <th>
-                            User Type
-                            <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?mode=' . (request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live')
-                                : request()->fullUrlWithQuery([
-                                    'mode' => request()->get('mode', 'Live') === 'Live' ? 'Testing' : 'Live',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+                            Priority
+
                         </th>
                         <th>
                             Status
-                            <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?status=' . (request()->get('status', 'active') === 'active' ? 'inactive' : 'active')
-                                : request()->fullUrlWithQuery([
-                                    'status' => request()->get('status', 'active') === 'active' ? 'inactive' : 'active',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+
                         </th>
-                        <th>
-                            Active <br> Devices
-                            <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?sort_device=' . (request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc')
-                                : request()->fullUrlWithQuery([
-                                    'sort_device' => request()->get('sort_device', 'asc') === 'asc' ? 'desc' : 'asc',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
-                        </th>
+
                         <th>
                             Created At
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?sort_date=' . (request()->get('sort_date', 'desc') === 'desc' ? 'asc' : 'desc')
+                                ? request()->url() . '?date=' . (request()->get('date', 'desc') === 'desc' ? 'asc' : 'desc')
                                 : request()->fullUrlWithQuery([
-                                    'sort_date' => request()->get('sort_date', 'desc') === 'desc' ? 'asc' : 'desc',
+                                    'date' => request()->get('date', 'desc') === 'desc' ? 'asc' : 'desc',
                                 ]) }}"
                                 class="text-primary ms-1">↑↓</a>
                         </th>
-                        <th>Action</th>
 
 
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="9" class="text-center">No records found</td>
+                        <td colspan="8" class="text-center">No records found</td>
                     </tr>
             </table>
         </div>
     @endif
 </form>
 <div class="d-flex justify-content-end mt-5 mr-1">
-    {{ $data->withQueryString()->links() }}
+    {{ $data->links() }}
 </div>
 
 <script>
