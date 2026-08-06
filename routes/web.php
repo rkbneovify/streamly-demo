@@ -351,6 +351,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::get('/', [AdminSupportTicketController::class, 'index']);
         Route::get('/status/{status}/update/{id}', [AdminSupportTicketController::class, 'statusUpdate'])->name('ticket.status.update');
         Route::get('/priority/{priority}/update/{id}', [AdminSupportTicketController::class, 'priorityUpdate'])->name('ticket.priority.update');
+        Route::post('/bulk/action', [AdminSupportTicketController::class, 'bulkAction'])->name('ticket.bulk.action');
         // chat
         Route::get('/chat/{ticket}', [AdminSupportTicketController::class, 'chat'])->name('ticket.chat');
         Route::post('/chat/reply/{ticket}', [AdminSupportTicketController::class, 'ticketReply'])->name('ticket.reply');

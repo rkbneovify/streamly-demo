@@ -73,7 +73,7 @@
     </div>
 
 </div>
-<form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
+<form id="tbl-form" method="POST" action="{{ route('admin.ticket.bulk.action') }}">
     @csrf
 
     <input hidden type="text" name="action">
