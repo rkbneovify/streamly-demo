@@ -206,9 +206,16 @@
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
                                     <option value="">Bulk Action</option>
-                                    <option value="activate">Activate</option>
-                                    <option value="inactivate">Inactivate</option>
-                                    <option value="delete">Delete</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="under review">Under Review</option>
+                                    <option value="in progress">In Progress</option>
+                                    <option value="on hold">on hold</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                    <option value="closed">Closed</option>
                                 </select>
                             </div>
                         </div>
@@ -314,7 +321,7 @@
             $('#daterange').daterangepicker({
 
                 startDate: moment().startOf('week'),
-                endDate: moment().endOf('week'),
+                endDate: moment().endOf('today'),
 
                 opens: 'center',
 
@@ -559,7 +566,7 @@
                 Swal.fire({
                     toast: true,
                     icon: 'error',
-                    title: 'Please select at least one user',
+                    title: 'Please select at least one ticket',
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
@@ -576,7 +583,7 @@
                 }
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to ${action} selected users?`,
+                    text: `Do you really want to ${action} selected ticket?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes, ${action} them!`,
@@ -590,7 +597,7 @@
 
                         $.each(selected, function(index, value) {
                             $("#tbl-form").append(
-                                `<input type="hidden" name="user_ids[]" value="${value}">`
+                                `<input type="hidden" name="tickets[]" value="${value}">`
                             );
                         });
 

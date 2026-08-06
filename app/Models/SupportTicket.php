@@ -10,6 +10,10 @@ class SupportTicket extends Model
 {
     protected $table = 'support_tickets';
 
+    protected $fillable = [
+        'priority',
+        'status'
+    ];
     protected static function boot()
     {
         parent::boot();
@@ -42,6 +46,7 @@ class SupportTicket extends Model
     {
         if ($txt != null) {
             $query->where('ticket_number', 'like', '%' . $txt . '%')
+                ->orWhere('platform', 'like', '%' . $txt . '%')
                 ->orWhere('subject', 'like', '%' . $txt . '%');
         }
     }

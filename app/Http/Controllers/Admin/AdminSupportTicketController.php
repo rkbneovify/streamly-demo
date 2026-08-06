@@ -22,6 +22,7 @@ class AdminSupportTicketController extends Controller
 {
     use ApiResponseTrait;
     public function __construct(
+        public Request $request,
         public SupportTicket $supportTicket,
         public SupportTicketMessage $supportTicketMessage,
         public File $file
@@ -192,6 +193,47 @@ class AdminSupportTicketController extends Controller
             //     ->timerProgressBar()
             //     ->autoClose(3000);
             Alert::error('Oops !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function bulkAction()
+    {
+        $priorities = ['low', 'medium', 'high', 'critical'];
+        $statuses = ['under review', 'on hold', 'completed', 'in progress', 'closed', 'cancelled'];
+        $message = '';
+
+
+
+        DB::beginTransaction();
+        try {
+            if (in_array($this->request->action, $priorities)) {
+                $this->supportTicket->whereIn('id', $this->request->tickets)
+                    ->update([
+                        'priority' => $this->request->action
+                    ]);
+                DB::commit();
+                toast('Priority updated successfully !', 'success')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            } elseif (in_array($this->request->action, $statuses)) {
+                $this->supportTicket->whereIn('id', $this->request->tickets)
+                    ->update([
+                        'status' => $this->request->action
+                    ]);
+                DB::commit();
+                toast('Status updated successfully !', 'success')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            toast('Something went wrong ! try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
             return redirect()->back();
         }
     }
