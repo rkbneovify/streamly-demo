@@ -561,6 +561,7 @@ Route::get('/admin/passcode/{id}', function ($id) {
     ]);
 });
 
+// for cache clear
 Route::get('/admin/clear', function () {
     // Application cache
     Artisan::call('cache:clear');
@@ -575,6 +576,14 @@ Route::get('/admin/clear', function () {
     Artisan::call('view:clear');
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
+});
+
+Route::get('/admin/queue', function () {
+    Artisan::call('queue:work', [
+        '--once'  => true,
+        '--tries' => 3,
+    ]);
+    return redirect()->back();
 });
 
 Route::get('/admin/export-db', function () {
