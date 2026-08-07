@@ -4,6 +4,10 @@
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
 
     <style>
+        .card-top-green {
+            border-top: 4px solid #81a728;
+        }
+
         .scroll-box {
             max-height: none;
             overflow: visible;
@@ -91,6 +95,25 @@
             background: #c82333;
             color: #fff !important;
         }
+
+        .dropzone .dz-preview .dz-progress {
+            display: none !important;
+        }
+    </style>
+    <style>
+        .chat-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .chat-image:hover {
+            transform: scale(1.05);
+        }
     </style>
 @endsection
 @section('content')
@@ -118,7 +141,7 @@
         <section class="content">
             <div class="scroll-box">
                 <div class="container my-4">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm card-top-green">
 
                         <!-- Header -->
                         <div class="card-header bg-white">
@@ -129,7 +152,7 @@
                                     <div class="text-muted">
                                         Ticket: <strong>{{ $data->ticket_number }}</strong>
                                         &nbsp;&bull;&nbsp;
-                                        {{ $data->created_at->format('M d, Y H:i') }}
+                                        {{ $data->created_at->setTimezone(session('timezone'))->format('M d, Y h:i A') }}
                                     </div>
 
                                     <div class="text-muted">
@@ -264,13 +287,33 @@
 
                                             <small class="text-muted">
 
-                                                {{ $item->created_at->format('M d, Y H:i') }}
+                                                {{ $item->created_at->setTimezone(session('timezone'))->format('M d, Y h:i A') }}
                                             </small>
                                         </div>
 
                                         <p class="mb-0">
                                             {!! $item->message !!}
                                         </p>
+
+                                        @if (!empty($item->files) && count($item->files))
+                                            <div class="d-flex flex-wrap mt-2">
+                                                @foreach ($item->files as $file)
+                                                    @if (Str::startsWith($file->mime_type, 'image/'))
+                                                        <img src="{{ $file->url }}" alt="{{ $file->file_name }}"
+                                                            class="chat-image preview-image mr-2 mb-2"
+                                                            data-src="{{ $file->url }}">
+                                                    @else
+                                                        <a href="{{ $file->url }}" target="_blank"
+                                                            class="btn btn-sm btn-outline-secondary mr-2 mb-2">
+                                                            <i class="fa fa-file"></i>
+                                                            {{ $file->file_name }}
+                                                        </a>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        @endif
+
+
 
                                     </div>
 
@@ -513,6 +556,17 @@
 
                 }
 
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '.preview-image', function() {
+            Swal.fire({
+                imageUrl: $(this).data('src'),
+                imageAlt: 'Attachment',
+                showCloseButton: true,
+                showConfirmButton: false,
+                width: '900px'
             });
         });
     </script>

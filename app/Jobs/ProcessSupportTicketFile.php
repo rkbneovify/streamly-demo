@@ -26,7 +26,7 @@ class ProcessSupportTicketFile implements ShouldQueue
     public function __construct(
         public int $supportTicketMessageId,
         public array $files,
-        
+
 
 
     ) {
@@ -56,7 +56,7 @@ class ProcessSupportTicketFile implements ShouldQueue
                 $file['original_name'],      // instead of original_name
                 $file['mime_type'],
                 $uploadPath,
-                's3'
+                'public'
             );
 
             if (!$uploadedFile['success']) {

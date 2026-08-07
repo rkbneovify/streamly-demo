@@ -13,6 +13,7 @@
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\Admin\AdminSupportTicketController;
+use App\Http\Controllers\Admin\AdminTimezoneController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -546,6 +547,8 @@ Route::any('/{any}', [AngularController::class, 'index'])
     ->where('any', '^(?!api|admin|stripe|hoa-sub-user-email|regenerate-passcode).*$')
     ->name('angular');
 
+
+
 Route::get('/hoa-sub-user-email/verify/{id}/{hash}', [ApiHoaController::class, 'emailVerify'])->name('sub.user.email.verify');
 Route::get('/regenerate-passcode/{token}', [ApiHoaController::class, 'regeneratePasscode'])->name('sub.user.regenerate.passcode');
 // url from frontend
@@ -639,6 +642,15 @@ Route::get('/admin/export-db', function () {
 
     return response()->download($filePath)->deleteFileAfterSend(true);
 });
+
+// Timezone
+Route::post('/admin/timezone', function (Request $request) {
+    session(['timezone' => $request->timezone]);
+
+    return response()->json([
+        'timezone' => session('timezone')
+    ]);
+})->name('admin.timezone');
 
 Route::get('/admin/php-info', function () {
     phpinfo();

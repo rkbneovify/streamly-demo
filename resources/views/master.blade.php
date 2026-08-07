@@ -81,6 +81,20 @@
             });
         }
     </script>
+    <script>
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        fetch('{{ route('admin.timezone') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                timezone
+            })
+        });
+    </script>
 </body>
 
 </html>

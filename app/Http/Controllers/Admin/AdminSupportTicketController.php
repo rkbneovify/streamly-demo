@@ -97,9 +97,10 @@ class AdminSupportTicketController extends Controller
     public function chat($ticket)
     {
 
+
         $query =   $this->supportTicket->query();
         $query->where('ticket_number', $ticket);
-        $data = $query->with('messages.user.roles')->first();
+        $data = $query->with(['messages.user.roles', 'messages.files'])->first();
         // return response()->json($data);
 
         return view('admin.support-ticket.chat.index', compact('data'));
