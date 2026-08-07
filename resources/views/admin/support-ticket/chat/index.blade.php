@@ -122,30 +122,110 @@
 
                         <!-- Header -->
                         <div class="card-header bg-white">
-                            <h4 class="font-weight-bold mb-2">
-                                {{ $data->subject }}
-                            </h4>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-weight-bold mb-2">{{ $data->subject }}</h4>
 
-                            <div class="text-muted">
-                                Ticket: <strong>{{ $data->ticket_number }}</strong>
-                                &nbsp;&bull;&nbsp;
-                                {{ $data->created_at->format('M d, Y H:i') }}
+                                    <div class="text-muted">
+                                        Ticket: <strong>{{ $data->ticket_number }}</strong>
+                                        &nbsp;&bull;&nbsp;
+                                        {{ $data->created_at->format('M d, Y H:i') }}
+                                    </div>
 
-                                &nbsp;&bull;&nbsp;
-                                Priority: &nbsp;&nbsp;&nbsp; <span
-                                    class="badgex badge-secondary">{{ ucfirst($data->priority) }}</span>
+                                    <div class="text-muted">
+                                        Platform: <strong>{{ $data->platform }}</strong>
+                                    </div>
+                                </div>
 
-                                &nbsp;&nbsp;&nbsp; Status: &nbsp;&nbsp;&nbsp; <span
-                                    class="badgex badge-secondary">{{ ucwords($data->status) }}</span>
+                                <div class="d-flex">
+                                    <!-- Priority -->
+                                    <div class="dropdown mr-2">
+                                        <button class="btn btn-md btn-outline-secondary dropdown-toggle" type="button"
+                                            id="priorityDropdown" data-toggle="dropdown">
+                                            Priority:
+                                            @if (in_array($data->priority, ['high', 'critical']))
+                                                <span class="badge badge-danger">
+                                                    {{ ucfirst($data->priority) }}
+                                                </span>
+                                            @else
+                                                <span class="badge badge-warning">
+                                                    {{ ucfirst($data->priority) }}
+                                                </span>
+                                            @endif
+
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item priority-change" href="#"
+                                                data-url="{{ route('admin.ticket.priority.update', ['priority' => 'low', 'id' => $data->id]) }}">Low</a>
+                                            <a class="dropdown-item priority-change" href="#"
+                                                data-url="{{ route('admin.ticket.priority.update', ['priority' => 'medium', 'id' => $data->id]) }}">Medium</a>
+                                            <a class="dropdown-item priority-change" href="#"
+                                                data-url="{{ route('admin.ticket.priority.update', ['priority' => 'high', 'id' => $data->id]) }}">High</a>
+                                            <a class="dropdown-item priority-change" href="#"
+                                                data-url="{{ route('admin.ticket.priority.update', ['priority' => 'critical', 'id' => $data->id]) }}">Critical</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-md btn-outline-secondary dropdown-toggle" type="button"
+                                            id="statusDropdown" data-toggle="dropdown">
+                                            Status:
+
+
+
+
+                                            @switch($data->status)
+                                                @case('under review')
+                                                    <span class="badge badge-warning">Under Review</span>
+                                                @break
+
+                                                @case('in progress')
+                                                    <span class="badge badge-primary">In Progress</span>
+                                                @break
+
+                                                @case('on hold')
+                                                    <span class="badge badge-info">On Hold</span>
+                                                @break
+
+                                                @case('completed')
+                                                    <span class="badge badge-success">Completed</span>
+                                                @break
+
+                                                @case('cancelled')
+                                                    <span class="badge badge-danger">Cancelled</span>
+                                                @break
+
+                                                @case('closed')
+                                                    <span class="badge badge-dark">Closed</span>
+                                                @break
+                                            @endswitch
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'under review', 'id' => $data->id]) }}">Under
+                                                Review</a>
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'in progress', 'id' => $data->id]) }}">In
+                                                Progress</a>
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'on hold', 'id' => $data->id]) }}">On
+                                                Hold</a>
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'completed', 'id' => $data->id]) }}">Completed</a>
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'closed', 'id' => $data->id]) }}">Closed</a>
+                                            <a class="dropdown-item status-change" href="#"
+                                                data-url="{{ route('admin.ticket.status.update', ['status' => 'cancelled', 'id' => $data->id]) }}">Cancelled</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-muted">
-                                Platform: <strong>{{ $data->platform }}</strong>
-
-                            </div>
-
 
                         </div>
-
+                        <!-- End -->
                         <!-- Ticket Description -->
                         <div class="card-body border-bottom">
                             {!! $data->messages->first()->message !!}
@@ -390,5 +470,50 @@
         document.querySelector('form').onsubmit = function() {
             document.querySelector('#message').value = quill.root.innerHTML;
         };
+    </script>
+    <script>
+        $(document).on('click', '.priority-change', function(e) {
+            e.preventDefault();
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to change the priority?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, change it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+        });
+
+        $(document).on('click', '.status-change', function(e) {
+            e.preventDefault();
+            let $btn = $(this); // store the clicked button
+            let url = $btn.data('url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to change the status?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, change it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                    showLoader();
+
+
+                }
+
+            });
+        });
     </script>
 @endsection
