@@ -184,7 +184,7 @@ trait SupportTiketFileUploadTrait
         $disk = $disk ?: config('filesystems.default');
 
         if ($disk === 'public') {
-            return asset('storage/' . $path);
+            return url('storage/' . $path);
         }
 
         if ($disk === 's3') {
