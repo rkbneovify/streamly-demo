@@ -39,15 +39,18 @@
         @include('partials.header')
         @include('partials.sidebar')
         @yield('content')
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong> <a href="http://streamlytv.com">© {{ Date('Y') }} Streamly, LLC</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.0.4
+            </div>
+        </footer>
+        <!-- End -->
     </div>
     <!-- Main Footer -->
-    <footer class="main-footer">
-        <strong> <a href="http://streamlytv.com">© {{ Date('Y') }} Streamly, LLC</a>.</strong>
-        All rights reserved.
-        <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 3.0.4
-        </div>
-    </footer>
+
     <!-- ./wrapper -->
     <!-- jQuery -->
     {{-- <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> --}}

@@ -5,22 +5,9 @@
 
     <style>
         .scroll-box {
-            max-height: 880px;
-            overflow-y: auto;
-
-
-            /* Hide scrollbar - Firefox */
-            scrollbar-width: none;
-
-            /* Hide scrollbar - IE/Edge */
-            -ms-overflow-style: none;
+            max-height: none;
+            overflow: visible;
         }
-
-        .scroll-box::-webkit-scrollbar {
-            display: none;
-            /* Chrome, Safari, Edge */
-        }
-
 
         .card {
             border-radius: 10px;
