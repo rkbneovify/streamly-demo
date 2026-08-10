@@ -1,33 +1,140 @@
-<div class="container-helpSupport p-3">
-    <div class="helpSupport-img ">
-        <img loading="lazy" src="../../assets/dummy-img/helpAndSupport.png" alt="">
+<div class="help-support-page">
+
+  <!-- Header -->
+  <section class="hero">
+    <div class="container">
+      <h1>Help &amp; Support</h1>
     </div>
-    <div class="main-helpSupport">
-        <div class="main-help-text">
-            <p>
-                Our team is available 24*7. we’ll do our best to respond to your inquiries as soon as possible
-            </p>
-            <p class="mt-2">
-                Need help or have a question? Our support team is here to assist you. You can reach us at the following.
-            </p>
+  </section>
+
+  <!-- Search -->
+  <section class="search-section">
+    <div class="container search-wrapper">
+      <div class="search-box">
+        <span class="search-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M16.5 16.5L21 21"></path>
+          </svg>
+        </span>
+
+        <input type="text" placeholder="Search . ."  />
+      </div>
+
+      <button class="generate-btn" (click)="generateTicket()">
+        Generate Ticket
+      </button>
+    </div>
+  </section>
+
+  <!-- Help Categories -->
+  <section class="categories-section">
+    <div class="container">
+
+      <h2>What Can We Help You With?</h2>
+
+      <div class="category-grid">
+
+        <div class="category-card" *ngFor="let item of categories" (click)="openCategory(item)">
+          <div class="category-icon">
+            <img [src]="item.icon" [alt]="item.title">
+          </div>
+
+          <h3>{{ item.title }}</h3>
+
+          <p>{{ item.description }}</p>
         </div>
 
-        <div class="main-tel-mail d-flex gap-5 justify-content-center mt-4">
-            <a class="btn-link" href="tel:+16022450986">
-                <div class="tel d-flex flex-column justify-content-center">
-                    <div class="tel-img"><img loading="lazy" src="../../assets/dummy-img/phone.svg" alt=""></div>
-                    <p>(602) 245-0986</p>
-                </div>
-            </a>
-            <a class="btn-link" href="mailto:support@streamlytv.com">
-                <div class="mail d-flex flex-column justify-content-center">
-                    <div class="tel-img"><img loading="lazy" src="../../assets/dummy-img/mail.svg" alt=""></div>
-                    <p>
-                        support&#64;streamlytv.com
-                    </p>
-                </div>
-            </a>
+      </div>
 
-        </div>
     </div>
+  </section>
+
+  <!-- Top Articles -->
+  <section class="articles-section">
+    <div class="container">
+
+      <h2>Top Articles</h2>
+
+      <div class="articles-grid">
+
+        <div class="article-card" *ngFor="let article of articles" (click)="openArticle(article)">
+          <div class="article-icon">
+            <img [src]="article.icon" [alt]="article.title">
+          </div>
+
+          <h3>{{ article.title }}</h3>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact-section">
+    <div class="container contact-container">
+
+      <h2>We’re here to help</h2>
+
+      <p class="contact-description">
+        Our team is available <strong>24*7.</strong> we’ll do our best to
+        respond to your inquiries as soon as possible<br>
+
+        Need help or have a question? Our support team is here to assist you.
+        You can reach us at the following.
+      </p>
+
+      <div class="contact-grid">
+
+        <!-- Phone -->
+        <a href="tel:+16022450986" class="contact-card">
+
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 16.5v3a2 2 0 0 1-2.18 2
+                19.8 19.8 0 0 1-8.63-3.07
+                19.5 19.5 0 0 1-6-6
+                A19.8 19.8 0 0 1 1.12 3.8
+                A2 2 0 0 1 3.11 1.6h3
+                a2 2 0 0 1 2 1.72
+                c.12.9.35 1.78.68 2.62
+                a2 2 0 0 1-.45 2.11L7.07 9.32
+                a16 16 0 0 0 6 6l1.27-1.27
+                a2 2 0 0 1 2.11-.45
+                c.84.33 1.72.56 2.62.68
+                A2 2 0 0 1 21 16.5z">
+              </path>
+            </svg>
+          </div>
+
+          <div class="contact-content">
+            <h3>(602) 245 - 0986</h3>
+            <span>Call us anytime</span>
+          </div>
+
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:support@streamlytv.com" class="contact-card">
+
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="M3 6l9 7 9-7"></path>
+            </svg>
+          </div>
+
+          <div class="contact-content">
+            <h3>Support&#64;streamlytv.com</h3>
+            <span>we’ll reply via email</span>
+          </div>
+
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
 </div>
