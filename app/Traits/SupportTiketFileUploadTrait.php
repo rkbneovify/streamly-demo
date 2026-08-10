@@ -16,7 +16,7 @@ trait SupportTiketFileUploadTrait
     /**
      * Upload directly from an UploadedFile (controller usage).
      */
-    public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = null)
+    public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = 'public')
     {
         return $this->performUpload(
             $file,
