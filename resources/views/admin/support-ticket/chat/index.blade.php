@@ -2,7 +2,7 @@
 @section('stylesheets')
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
     <style>
         .card-top-green {
             border-top: 4px solid #81a728;
@@ -297,19 +297,21 @@
 
                                         @if (!empty($item->files) && count($item->files))
                                             <div class="d-flex flex-wrap mt-2">
-                                                @foreach ($item->files as $file)
-                                                    @if (Str::startsWith($file->mime_type, 'image/'))
-                                                        <img src="{{ $file->url }}" alt="{{ $file->file_name }}"
-                                                            class="chat-image preview-image mr-2 mb-2"
-                                                            data-src="{{ $file->url }}">
-                                                    @else
-                                                        <a href="{{ $file->url }}" target="_blank"
-                                                            class="btn btn-sm btn-outline-secondary mr-2 mb-2">
-                                                            <i class="fa fa-file"></i>
-                                                            {{ $file->file_name }}
-                                                        </a>
-                                                    @endif
-                                                @endforeach
+                                                <div class="image-gallery">
+                                                    @foreach ($item->files as $file)
+                                                        @if (Str::startsWith($file->mime_type, 'image/'))
+                                                            <img src="{{ $file->url }}" alt="{{ $file->file_name }}"
+                                                                class="chat-image preview-image mr-2 mb-2"
+                                                                data-src="{{ $file->url }}">
+                                                        @else
+                                                            <a href="{{ $file->url }}" target="_blank"
+                                                                class="btn btn-sm btn-outline-secondary mr-2 mb-2">
+                                                                <i class="fa fa-file"></i>
+                                                                {{ $file->file_name }}
+                                                            </a>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         @endif
 
@@ -392,6 +394,7 @@
 @section('scripts')
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
     <script>
         Dropzone.autoDiscover = false;
         let myDropzone;
@@ -560,13 +563,16 @@
         });
     </script>
     <script>
-        $(document).on('click', '.preview-image', function() {
-            Swal.fire({
-                imageUrl: $(this).data('src'),
-                imageAlt: 'Attachment',
-                showCloseButton: true,
-                showConfirmButton: false,
-                width: '900px'
+        document.querySelectorAll('.image-gallery').forEach(function(gallery) {
+            new Viewer(gallery, {
+                inline: false,
+                navbar: false,
+                toolbar: true,
+                title: false,
+                movable: true,
+                zoomable: true,
+                scalable: true,
+                rotatable: true,
             });
         });
     </script>
