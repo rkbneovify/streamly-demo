@@ -347,6 +347,14 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
 
+    // Blog
+    Route::prefix('/blog')->group(function () {
+        Route::prefix('/categories')->group(function () {
+            
+        });
+    });
+
+
     // Support Ticket
     Route::prefix('/support-ticket')->group(function () {
         Route::get('/', [AdminSupportTicketController::class, 'index']);

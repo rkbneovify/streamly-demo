@@ -252,7 +252,30 @@
                         <!-- Ticket Description -->
                         <div class="card-body border-bottom">
                             {!! $data->messages->first()->message !!}
+
+                            @if (!empty($data->messages->first()->files) && count($data->messages->first()->files))
+                                <div class="d-flex flex-wrap mt-2">
+                                    <div class="image-gallery">
+                                        @foreach ($data->messages->first()->files as $file)
+                                            @if (Str::startsWith($file->mime_type, 'image/'))
+                                                <img src="{{ $file->url }}" alt="{{ $file->file_name }}"
+                                                    class="chat-image preview-image mr-2 mb-2"
+                                                    data-src="{{ $file->url }}">
+                                            @else
+                                                <a href="{{ $file->url }}" target="_blank"
+                                                    class="btn btn-sm btn-outline-secondary mr-2 mb-2">
+                                                    <i class="fa fa-file"></i>
+                                                    {{ $file->file_name }}
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
+
+
+
 
                         <!-- Conversation -->
                         <div class="card-body">
