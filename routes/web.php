@@ -13,6 +13,7 @@
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\Admin\AdminSupportTicketController;
+use App\Http\Controllers\Admin\AdminBlogCategoryController;
 use App\Http\Controllers\Admin\AdminTimezoneController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
@@ -350,8 +351,13 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Blog
     Route::prefix('/blog')->group(function () {
         Route::prefix('/categories')->group(function () {
-            
-        });
+            Route::get('/', [AdminBlogCategoryController::class,'index'])->name('blog.category');
+            Route::post('/store', [AdminBlogCategoryController::class,'store'])->name('blog.category.store');
+            Route::post('/update/{id}', [AdminBlogCategoryController::class,'update'])->name('blog.category.update');
+            Route::get('/status/{id}', [AdminBlogCategoryController::class,'updateStatus'])->name('blog.category.status');
+            Route::get('/delete/{id}', [AdminBlogCategoryController::class,'destroy'])->name('blog.category.destroy');
+            Route::post('/bulk/action', [AdminBlogCategoryController::class,'bulkAction'])->name('blog.category.bulk.action');
+            });
     });
 
 
