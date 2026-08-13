@@ -64,7 +64,7 @@
 
 
                                     <input type="text" class="form-control" name="prgSvcId"
-                                        value="{{ $channel->prgSvcId }}" required autofocus>
+                                        value="{{ $channel->prgSvcId }}"  autofocus>
 
                                     @if ($errors->has('prgSvcId'))
                                         <span class="help-block">
