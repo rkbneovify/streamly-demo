@@ -32,7 +32,8 @@
 
 
                 <div class="card-body">
-                    <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data">
+                    <form id="frm" action="{{ route('admin.blog.store') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <div class="row">
@@ -114,7 +115,8 @@
                                     {{-- <textarea name="content" id="content" rows="10" class="form-control @error('content') is-invalid @enderror"
                                         placeholder="Write your blog content...">{{ old('content') }}</textarea> --}}
 
-                                          <div id="editor" style="height:250px;"></div>
+                                    <div id="editor" style="height:250px;"
+                                        class="@error('content') is-invalid @enderror"></div>
                                     <input type="hidden" name="content" id="content">
 
                                     @error('content')
@@ -233,9 +235,30 @@
             }
         });
 
-        document.querySelector('form').onsubmit = function() {
-            document.querySelector('#message').value = quill.root.innerHTML;
-        };
+        var oldContent = @json(old('content', ''));
+
+        if (oldContent) {
+            quill.root.innerHTML = oldContent;
+            $('#editor').css('border', '');
+        }
+
+        if (oldContent == null) {
+            $('#editor').css('border', '1px solid #dc3545');
+        }
+
+        quill.on('text-change', function() {
+            $('#content').val(quill.root.innerHTML);
+            // console.log(quill.root.innerHTML);
+        });
+
+
+
+
+        $('#frm').on('submit', function(e) {
+            e.preventDefault();
+            showLoader();
+            this.submit();
+        });
     </script>
 
 

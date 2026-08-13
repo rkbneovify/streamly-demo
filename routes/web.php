@@ -356,10 +356,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
             Route::get('/', [AdminBlogController::class,'index'])->name('blog.index');
             Route::get('/create', [AdminBlogController::class,'create'])->name('blog.create');
             Route::post('/store', [AdminBlogController::class,'store'])->name('blog.store');
-            Route::post('/update/{id}', [AdminBlogController::class,'update'])->name('blog.category.update');
-            Route::get('/status/{id}', [AdminBlogController::class,'updateStatus'])->name('blog.category.status');
-            Route::get('/delete/{id}', [AdminBlogController::class,'destroy'])->name('blog.category.destroy');
-            Route::post('/bulk/action', [AdminBlogController::class,'bulkAction'])->name('blog.category.bulk.action');
+            Route::get('/edit/{id}', [AdminBlogController::class,'edit'])->name('blog.edit');
+            Route::post('/update/{id}', [AdminBlogController::class,'update'])->name('blog.update');
+            Route::get('/status/{id}', [AdminBlogController::class,'updateStatus'])->name('blog.status');
+            Route::get('/delete/{id}', [AdminBlogController::class,'destroy'])->name('blog.destroy');
+            Route::post('/bulk/action', [AdminBlogController::class,'bulkAction'])->name('blog.bulk.action');
             Route::get('/sub-categories/{category}/list',[AdminBlogController::class, 'subCategoriesByCategory'])->name('blog.subcategory.list');
 
         Route::prefix('/categories')->group(function () {
