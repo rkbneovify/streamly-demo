@@ -166,6 +166,10 @@
             -moz-appearance: none;
             background: none;
         }
+
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
     </style>
 @endsection
 @section('content')
@@ -177,13 +181,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Support Ticket</h1>
+                        <h1>Blog Sub Categories</h1>
 
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Support Ticket</li>
+                            <li class="breadcrumb-item active">Blog Sub Categories</li>
                         </ol>
                     </div>
                 </div>
@@ -198,7 +202,7 @@
                 <div class="card-header">
 
 
-
+                    <!-- row -->
                     <div class="row  mt-3 mb-0 mb-3">
 
                         <div class="col-md-2 mb-2">
@@ -206,16 +210,9 @@
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
                                     <option value="">Bulk Action</option>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                    <option value="critical">Critical</option>
-                                    <option value="under review">Under Review</option>
-                                    <option value="in progress">In Progress</option>
-                                    <option value="on hold">on hold</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                    <option value="closed">Closed</option>
+                                    <option value="active">Active</option>
+                                    <option value="deactive">Deactive</option>
+
                                 </select>
                             </div>
                         </div>
@@ -227,47 +224,18 @@
                                 <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
                                 <select name="status" id="sel_status" class="select-custom">
                                     <option value="">Select Status</option>
-                                    <option value="under review"
-                                        {{ request('status') == 'under review' ? 'selected' : '' }}>Under Review
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active
                                     </option>
-                                    <option value="in progress" {{ request('status') == 'in progress' ? 'selected' : '' }}>
-                                        In progress</option>
-                                    <option value="on hold" {{ request('status') == 'on hold' ? 'selected' : '' }}>
-                                        On Hold</option>
-                                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
-                                        Completed</option>
-                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
-                                        Cancelled</option>
-                                    <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>
-                                        Closed</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 mb-3">
-                            <div class="select-wrapper">
-                                <img src="{{ asset('images/user-mode.png') }}" alt="filter icon">
-                                <select name="priority" id="sel_priority" class="select-custom">
-                                    <option value="">Select Priority</option>
-                                    <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>Low
-                                    </option>
-                                    <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>Medium
-                                    </option>
-                                    <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>High
-                                    </option>
-                                    <option value="critical" {{ request('priority') == 'critical' ? 'selected' : '' }}>
-                                        Critical
-                                    </option>
+                                    <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>
+                                        Deactive</option>
 
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-4 mb-3">
-                            <div class="input-conatiner">
-                                <input type="text" id="daterange" class="form-control">
-                            </div>
-                        </div>
+
+
+
 
                         <div class="col-md-2 mb-3">
                             <button id="btnResetFilter" type="button" class="btn-with-img">
@@ -276,28 +244,27 @@
                             </button>
                         </div>
 
-                        <div class="col-md-4 mb-3">
+
+
+                        <div class="col-md-5 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
-                                    class="form-control input-custom" placeholder="Search by ticket, platform">
+                                    class="form-control input-custom" placeholder="Search by title, category, sub category">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
 
-
-
-
-
                     </div>
+                    <!-- row -->
 
 
 
                 </div>
 
 
-                {{-- <div id="user-data">
-                    @include('admin.support-ticket.table')
-                </div> --}}
+                <div id="user-data">
+                    @include('admin.blog.table')
+                </div>
 
                 <!-- /.card-body -->
             </div>
@@ -307,93 +274,33 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
+
+
 @endsection
 
 
 
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
     <script>
-        $(function() {
+        $(document).on('click', '.edit-category', function() {
 
-            $('#daterange').daterangepicker({
+            let url = $(this).data('url');
+            location.href = url;
 
-                startDate: moment().startOf('week'),
-                endDate: moment().endOf('today'),
+          
 
-                opens: 'center',
-
-                autoApply: false,
-
-                showDropdowns: true,
-
-                alwaysShowCalendars: true,
-
-                linkedCalendars: false,
-
-                locale: {
-                    format: 'MMM D, YYYY'
-                },
-
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [
-                        moment().subtract(1, 'days'),
-                        moment().subtract(1, 'days')
-                    ],
-                    'Last 7 Days': [
-                        moment().subtract(6, 'days'),
-                        moment()
-                    ],
-                    'Last 30 Days': [
-                        moment().subtract(29, 'days'),
-                        moment()
-                    ],
-                    'This Month': [
-                        moment().startOf('month'),
-                        moment().endOf('month')
-                    ],
-                    'Last Month': [
-                        moment().subtract(1, 'month').startOf('month'),
-                        moment().subtract(1, 'month').endOf('month')
-                    ]
-                }
-
-            });
+          
 
         });
 
-        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
 
-            // console.log(picker.startDate.format('YYYY-MM-DD'));
-            // console.log(picker.endDate.format('YYYY-MM-DD'));
-            let daterange = picker.startDate.format('YYYY-MM-DD') + "_" + picker.endDate.format('YYYY-MM-DD');
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
+          </script>
 
-
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("daterange", daterange);
-            } else if (daterange == "") {
-                url.searchParams.delete("daterange");
-            } else {
-                // just add role param
-                url.searchParams.set("daterange", daterange);
-            }
-
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
-
-        });
-    </script>
     <script>
-        let storageKey = "selected_ticket";
+        let storageKey = "selected_blog";
 
         // Get selected IDs from localStorage
         function getSelected() {
@@ -566,7 +473,7 @@
                 Swal.fire({
                     toast: true,
                     icon: 'error',
-                    title: 'Please select at least one ticket',
+                    title: 'Please select at least one category',
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
@@ -583,7 +490,7 @@
                 }
                 Swal.fire({
                     title: "Are you sure?",
-                    text: `Do you really want to ${action} selected ticket?`,
+                    text: `Do you really want to ${action} selected category?`,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: `Yes, ${action} them!`,
@@ -597,7 +504,7 @@
 
                         $.each(selected, function(index, value) {
                             $("#tbl-form").append(
-                                `<input type="hidden" name="tickets[]" value="${value}">`
+                                `<input type="hidden" name="blogs[]" value="${value}">`
                             );
                         });
 
@@ -755,9 +662,9 @@
             loadSelected();
         </script>
         {{-- @elseif (session('remove-all'))
-        <script>
-            removeAll();
-        </script> --}}
+    <script>
+        removeAll();
+    </script> --}}
     @elseif (!session('remove') && !session('remove-all'))
         <script>
             window.addEventListener("load", () => {

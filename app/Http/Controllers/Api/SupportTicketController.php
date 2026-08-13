@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ActivityEventType;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessSupportTicketFile;
 use App\Jobs\ProcessSupportTicketMail;
@@ -130,6 +131,14 @@ class SupportTicketController extends Controller
             // return response()->json($attachments);
             ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
 
+
+             $this->activity()->event("Support Ticket")
+                ->eventType(ActivityEventType::CREATED)
+                ->description(ActivityEventType::CREATED)
+                ->isAdmin()
+                ->properties([
+                    "data" => $supportTicket->with(['messages.user.roles', 'messages.files'])
+                ])->save();
 
             DB::commit();
             return $this->successResponse("Submited successfully !");
