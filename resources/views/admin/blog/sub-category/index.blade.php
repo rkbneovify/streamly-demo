@@ -311,7 +311,8 @@
                         </div>
                         <div class="form-group mt-3">
                             <label for="title">Sub Category</label>
-                            <input type="text" name="title" class="form-control" placeholder="Enter sub category" required>
+                            <input type="text" name="title" class="form-control" placeholder="Enter sub category"
+                                required>
                         </div>
 
                     </div>

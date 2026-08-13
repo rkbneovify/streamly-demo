@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\Admin\AdminSupportTicketController;
 use App\Http\Controllers\Admin\AdminBlogCategoryController;
 use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
+use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminTimezoneController;
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
@@ -351,6 +352,16 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     // Blog
     Route::prefix('/blog')->group(function () {
+
+            Route::get('/', [AdminBlogController::class,'index'])->name('blog.index');
+            Route::get('/create', [AdminBlogController::class,'create'])->name('blog.create');
+            Route::post('/store', [AdminBlogController::class,'store'])->name('blog.store');
+            Route::post('/update/{id}', [AdminBlogController::class,'update'])->name('blog.category.update');
+            Route::get('/status/{id}', [AdminBlogController::class,'updateStatus'])->name('blog.category.status');
+            Route::get('/delete/{id}', [AdminBlogController::class,'destroy'])->name('blog.category.destroy');
+            Route::post('/bulk/action', [AdminBlogController::class,'bulkAction'])->name('blog.category.bulk.action');
+            Route::get('/sub-categories/{category}/list',[AdminBlogController::class, 'subCategoriesByCategory'])->name('blog.subcategory.list');
+
         Route::prefix('/categories')->group(function () {
             Route::get('/', [AdminBlogCategoryController::class,'index'])->name('blog.category');
             Route::post('/store', [AdminBlogCategoryController::class,'store'])->name('blog.category.store');
