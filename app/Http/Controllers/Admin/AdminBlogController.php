@@ -10,6 +10,7 @@ use App\Models\BlogSubCategory;
 use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -79,6 +80,7 @@ class AdminBlogController extends Controller
         DB::beginTransaction();
         try {
             $blog = $this->blog;
+            $blog->user_id = Auth::id();
             $blog->title = $this->request->title;
             $blog->slug = Str::slug($this->request->title) . '-' . time();
             $blog->category = $this->request->category;
@@ -206,7 +208,7 @@ class AdminBlogController extends Controller
             $this->activity()
                 ->event("Blog")
                 ->isAdmin()
-                ->eventType($blog->status == 1? ActivityEventType::STATUSDISABLE:ActivityEventType::STATUSENABLE)
+                ->eventType($blog->status == 1 ? ActivityEventType::STATUSDISABLE : ActivityEventType::STATUSENABLE)
                 ->description("Blog disable")
                 ->properties([
                     "data" => $blog
@@ -241,7 +243,7 @@ class AdminBlogController extends Controller
                 return redirect()->back();
             }
 
-              $this->activity()
+            $this->activity()
                 ->event("Blog")
                 ->eventType(ActivityEventType::DELETED)
                 ->isAdmin()
@@ -303,7 +305,7 @@ class AdminBlogController extends Controller
                     ]);
                     $message = 'deactive';
 
-                       $this->activity()
+                    $this->activity()
                         ->event("Blog")
                         ->eventType(ActivityEventType::STATUSDISABLE)
                         ->isAdmin()
