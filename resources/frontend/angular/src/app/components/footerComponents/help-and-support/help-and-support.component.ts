@@ -8,9 +8,10 @@ interface Category {
   icon: string;
 }
 
-interface Article {
+interface Actions {
   title: string;
   icon: string;
+  url: string;
 }
 
 @Component({
@@ -21,8 +22,8 @@ interface Article {
   styleUrl: './help-and-support.component.scss'
 })
 export class HelpAndSupportComponent {
-  constructor(private router: Router) { }
- searchText = '';
+  constructor(private router: Router) {}
+  searchText = '';
 
   categories: Category[] = [
     {
@@ -67,27 +68,30 @@ export class HelpAndSupportComponent {
     }
   ];
 
-  articles: Article[] = [
+  actions: Actions[] = [
     {
-      title: 'Support Hub',
-      icon: 'assets/icons/support-hub.svg'
+      title: 'Support Ticket',
+      icon: 'assets/icons/support-hub.svg',
+      url: '/user/support-ticket'
     },
     {
-      title: 'Latest Notifications',
-      icon: 'assets/icons/latest-notifications.svg'
+      title: 'Report A BUG',
+      icon: 'assets/icons/latest-notifications.svg',
+      url: '/user/report'
     },
     {
-      title: 'Developer Hub',
-      icon: 'assets/icons/developer.svg'
+      title: 'FAQs',
+      icon: 'assets/icons/developer.svg',
+      url: '/user/faq'
     },
     {
-      title: 'Gracenote API Guide',
-      icon: 'assets/icons/api.svg'
+      title: 'Privacy Policy',
+      icon: 'assets/icons/api.svg',
+      url: '/user/privacy-policy'
     }
   ];
 
   generateTicket(): void {
-   
     this.router.navigate(['/user/support-ticket']);
   }
 
@@ -95,7 +99,8 @@ export class HelpAndSupportComponent {
     console.log('Category:', category);
   }
 
-  openArticle(article: Article): void {
-    console.log('Article:', article);
+  openAction(action: Actions): void {
+   this.router.navigate([action.url]);
+    console.log(action.url);
   }
 }

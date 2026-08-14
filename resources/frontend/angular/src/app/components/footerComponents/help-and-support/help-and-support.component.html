@@ -21,9 +21,9 @@
         <input type="text" placeholder="Search . ."  />
       </div>
 
-      <button class="generate-btn" (click)="generateTicket()">
+      <!-- <button class="generate-btn" (click)="generateTicket()">
         Generate Ticket
-      </button>
+      </button> -->
     </div>
   </section>
 
@@ -54,16 +54,16 @@
   <section class="articles-section">
     <div class="container">
 
-      <h2>Top Articles</h2>
+      <h2>Quick Actions</h2>
 
       <div class="articles-grid">
 
-        <div class="article-card" *ngFor="let article of articles" (click)="openArticle(article)">
+        <div class="article-card" *ngFor="let action of actions" (click)="openAction(action)">
           <div class="article-icon">
-            <img [src]="article.icon" [alt]="article.title">
+            <img [src]="action.icon" [alt]="action.title">
           </div>
 
-          <h3>{{ article.title }}</h3>
+          <h3>{{ action.title }}</h3>
         </div>
 
       </div>
