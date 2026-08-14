@@ -134,10 +134,11 @@ class SupportTicketController extends Controller
 
              $this->activity()->event("Support Ticket")
                 ->eventType(ActivityEventType::CREATED)
-                ->description(ActivityEventType::CREATED)
+                ->description("Support Ticket - Created by user")
                 ->isAdmin()
                 ->properties([
-                    "data" => $supportTicket->with(['messages.user.roles', 'messages.files'])
+                    "data" => $supportTicket
+
                 ])->save();
 
             DB::commit();
