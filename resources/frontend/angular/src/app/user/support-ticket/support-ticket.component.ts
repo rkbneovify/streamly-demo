@@ -130,7 +130,7 @@ export class SupportTicketComponent implements OnInit {
     this.sweetAlert.loading();
     this.isLoading = true;
     this.api.postRequest('support-ticket/store', formData).pipe(finalize(() => {
-      this.sweetAlert.close()
+      this.sweetAlert.close();
       this.isLoading = false;
     })).subscribe({
       next: (res: any) => {
@@ -145,7 +145,10 @@ export class SupportTicketComponent implements OnInit {
       },
       error: (err: any) => {
         console.log("error:", err);
-        this.sweetAlert.toast(err.error.message, 'error')
+         setTimeout(() => {
+         this.sweetAlert.toast(err.error.message, 'error')
+        }, 1000);
+        
       }
     });
 

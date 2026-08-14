@@ -29,64 +29,64 @@ export class HelpAndSupportComponent {
     {
       title: 'Reports & Dashboards',
       description: 'Get insights and learn how to use reports.',
-      icon: 'assets/icons/reports.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'How to get help',
       description: 'Contact our support system & find answers',
-      icon: 'assets/icons/help.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Notification',
       description: 'Manage alerts & notification settings',
-      icon: 'assets/icons/notification.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Video Data',
       description: 'Learn about video data & usage.',
-      icon: 'assets/icons/video.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Sports Data',
       description: 'Explore sports data options & formats.',
-      icon: 'assets/icons/sports.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Audio Data',
       description: 'Understand audio data & integrations.',
-      icon: 'assets/icons/audio.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Automotive Data',
       description: 'Discover automotive data solutions.',
-      icon: 'assets/icons/automotive.svg'
+      icon: 'assets/icons/article.svg'
     },
     {
       title: 'Studio System',
       description: 'Learn about studio system & setup',
-      icon: 'assets/icons/studio.svg'
+      icon: 'assets/icons/article.svg'
     }
   ];
 
   actions: Actions[] = [
     {
       title: 'Support Ticket',
-      icon: 'assets/icons/support-hub.svg',
+      icon: 'assets/icons/support-ticket.svg',
       url: '/user/support-ticket'
     },
     {
       title: 'Report A BUG',
-      icon: 'assets/icons/latest-notifications.svg',
+      icon: 'assets/icons/bug.svg',
       url: '/user/report'
     },
     {
       title: 'FAQs',
-      icon: 'assets/icons/developer.svg',
+      icon: 'assets/icons/faq.svg',
       url: '/user/faq'
     },
     {
       title: 'Privacy Policy',
-      icon: 'assets/icons/api.svg',
+      icon: 'assets/icons/policy.svg',
       url: '/user/privacy-policy'
     }
   ];

@@ -1,0 +1,28 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ticket -->
+    <path d="M10 18C10 15.79 11.79 14 14 14H50C52.21 14 54 15.79 54 18V25C49.58 25 46 28.58 46 33C46 37.42 49.58 41 54 41V48C54 50.21 52.21 52 50 52H14C11.79 52 10 50.21 10 48V41C14.42 41 18 37.42 18 33C18 28.58 14.42 25 10 25V18Z"
+        fill="#F59E0B"/>
+
+    <!-- Ticket Highlight -->
+    <path d="M14 19C14 18.45 14.45 18 15 18H49C49.55 18 50 18.45 50 19V23.5C44.8 24.9 41 28.6 41 33C41 37.4 44.8 41.1 50 42.5V47C50 47.55 49.55 48 49 48H15C14.45 48 14 47.55 14 47V44.5C18.9 42.9 22 38.5 22 33C22 27.5 18.9 23.1 14 21.5V19Z"
+        fill="#FBBF24"/>
+
+    <!-- Ticket Divider -->
+    <path d="M32 17V23"
+        stroke="white"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="2 3"/>
+
+    <path d="M32 27V33"
+        stroke="white"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="2 3"/>
+
+    <path d="M32 37V43"
+        stroke="white"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="2 3"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- FAQ Speech Bubble -->
+    <path d="M9 13C9 10.79 10.79 9 13 9H51C53.21 9 55 10.79 55 13V40C55 42.21 53.21 44 51 44H29L18 55V44H13C10.79 44 9 42.21 9 40V13Z"
+        fill="#8B5CF6"/>
+
+    <!-- Bubble Highlight -->
+    <path d="M14 15C14 14.45 14.45 14 15 14H49C49.55 14 50 14.45 50 15V38C50 38.55 49.55 39 49 39H27L22 44V39H15C14.45 39 14 38.55 14 38V15Z"
+        fill="#A78BFA"/>
+
+    <!-- Question Mark -->
+    <path d="M25 23C25 19.13 28.13 16 32 16C35.87 16 39 19.13 39 23C39 27 36.2 29 33 30.8C32.3 31.2 32 31.8 32 33"
+        stroke="white"
+        stroke-width="3.5"
+        stroke-linecap="round"/>
+
+    <!-- Question Dot -->
+    <circle cx="32" cy="38" r="2.2" fill="white"/>
+</svg>
