@@ -242,7 +242,7 @@ class AdminBlogController extends Controller
             }
 
               $this->activity()
-                ->event("User")
+                ->event("Blog")
                 ->eventType(ActivityEventType::DELETED)
                 ->isAdmin()
                 ->description("Blog deleted")

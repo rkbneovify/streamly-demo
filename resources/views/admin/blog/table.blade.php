@@ -136,7 +136,7 @@
 
 
                             <td style="vertical-align: middle;">
-                                <a href="#" data-url="{{ route('admin.blog.status', $item->id) }}"
+                                <a href="javascript:void(0)" data-url="{{ route('admin.blog.status', $item->id) }}"
                                     title="Change user status" class="change-status">
                                     @if ($item->status)
                                         <span class="custom-badge badge-active">Active</span>

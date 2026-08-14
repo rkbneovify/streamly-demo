@@ -181,13 +181,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Blog Sub Categories</h1>
+                        <h1>Blogs</h1>
 
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Blog Sub Categories</li>
+                            <li class="breadcrumb-item active">Blogs</li>
                         </ol>
                     </div>
                 </div>
@@ -244,15 +244,20 @@
                             </button>
                         </div>
 
-
-
-                        <div class="col-md-5 mb-3">
+                        <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control input-custom" placeholder="Search by title, category, sub category">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
                         </div>
+
+                         <div class="col-md-2 mb-3">
+                            <a href="{{ route('admin.blog.create') }}" class="btn btn-info shadow text-white">
+                                Add New
+                            </a>
+                        </div>
+
 
                     </div>
                     <!-- row -->
@@ -284,398 +289,398 @@
 
 @section('scripts')
 
-    <script>
-        $(document).on('click', '.edit-category', function() {
+<script>
+    $(document).on('click', '.edit-category', function () {
 
-            let url = $(this).data('url');
-            location.href = url;
+        let url = $(this).data('url');
+        location.href = url;
 
-          
 
-          
+
+
+
+    });
+
+
+</script>
+
+<script>
+    let storageKey = "selected_blog";
+
+    // Get selected IDs from localStorage
+    function getSelected() {
+        return JSON.parse(localStorage.getItem(storageKey)) || [];
+    }
+
+    // Save to localStorage
+    function saveSelected(ids) {
+        localStorage.setItem(storageKey, JSON.stringify(ids));
+    }
+
+    function removeAll() {
+        localStorage.removeItem(storageKey);
+        restoreSelectedData();
+    }
+
+    function restoreSelectedData() {
+        let selected = getSelected();
+        if (selected.length > 0) {
+            document.getElementById('selected').textContent = "Selected : " + selected.length;
+        } else {
+            document.getElementById('selected').textContent = "";
+        }
+
+        const userCheckboxes = document.querySelectorAll('.row-checkbox');
+        userCheckboxes.forEach(checkbox => {
+            selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
 
         });
+        let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+            '.row-checkbox').length;
+        $('#selectAll').prop('checked', allChecked);
+    }
 
+    function loadSelected() {
+        let selected = getSelected();
 
-          </script>
+        // Start with the current URL (preserve existing params)
+        const url = new URL(window.location.href);
 
-    <script>
-        let storageKey = "selected_blog";
+        // Remove old selected[] params
+        url.searchParams.delete("selected[]");
 
-        // Get selected IDs from localStorage
-        function getSelected() {
-            return JSON.parse(localStorage.getItem(storageKey)) || [];
-        }
+        // Add only currently selected ID
+        selected.reverse().forEach(id => {
+            url.searchParams.append("selected[]", id);
+        });
 
-        // Save to localStorage
-        function saveSelected(ids) {
-            localStorage.setItem(storageKey, JSON.stringify(ids));
-        }
-
-        function removeAll() {
-            localStorage.removeItem(storageKey);
-            restoreSelectedData();
-        }
-
-        function restoreSelectedData() {
-            let selected = getSelected();
-            if (selected.length > 0) {
-                document.getElementById('selected').textContent = "Selected : " + selected.length;
-            } else {
-                document.getElementById('selected').textContent = "";
-            }
-
-            const userCheckboxes = document.querySelectorAll('.row-checkbox');
-            userCheckboxes.forEach(checkbox => {
-                selected.includes(checkbox.value) ? checkbox.checked = true : checkbox.checked = false;
-
-            });
-            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                '.row-checkbox').length;
-            $('#selectAll').prop('checked', allChecked);
-        }
-
-        function loadSelected() {
-            let selected = getSelected();
-
-            // Start with the current URL (preserve existing params)
-            const url = new URL(window.location.href);
-
-            // Remove old selected[] params
-            url.searchParams.delete("selected[]");
-
-            // Add only currently selected ID
-            selected.reverse().forEach(id => {
-                url.searchParams.append("selected[]", id);
-            });
-
-            // Reload with updated query string (keeping other params intact)
-            window.location.href = url.toString();
-        }
+        // Reload with updated query string (keeping other params intact)
+        window.location.href = url.toString();
+    }
 
 
 
-        $(document).on('change', '.row-checkbox', function() {
-            let selected = getSelected();
-            if ($(this).is(':checked')) {
-                if (!selected.includes($(this).val())) {
-                    selected.push($(this).val());
-                    saveSelected(selected);
-
-                }
-
-            } else {
-
-
-                selected = selected.filter(id => id !== $(this).val());
+    $(document).on('change', '.row-checkbox', function () {
+        let selected = getSelected();
+        if ($(this).is(':checked')) {
+            if (!selected.includes($(this).val())) {
+                selected.push($(this).val());
                 saveSelected(selected);
 
             }
 
-            restoreSelectedData();
+        } else {
 
 
-        });
-
-        $(document).on('change', '#selectAll', function() {
-            let selected = getSelected();
-            const userCheckboxes = $('.row-checkbox');
-            if ($(this).is(':checked')) {
-                userCheckboxes.each(function() {
-                    this.checked = true;
-                    if (!selected.includes(this.value)) {
-                        selected.push(this.value);
-                    }
-                });
-            } else {
-                userCheckboxes.each(function() {
-                    this.checked = false;
-                    if (selected.includes(this.value)) {
-                        selected = selected.filter(id => id !== this.value);
-                    }
-
-                });
-
-            }
+            selected = selected.filter(id => id !== $(this).val());
             saveSelected(selected);
-            restoreSelectedData();
 
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
+        }
+
+        restoreSelectedData();
 
 
-            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                '.row-checkbox').length;
-            $('#selectAll').prop('checked', allChecked);
+    });
 
-            $(document).on('click', '.btn-user-status', function(e) {
-                e.preventDefault();
-
-                let $btn = $(this); // store the clicked button
-                let url = $btn.data('url');
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "Do you really want to change the status?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, change it!",
-                    cancelButtonText: "Cancel",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = url;
-                        showLoader();
-
-
-                    }
-                    // else {
-                    //     loadSelected();
-                    // }
-                });
-
+    $(document).on('change', '#selectAll', function () {
+        let selected = getSelected();
+        const userCheckboxes = $('.row-checkbox');
+        if ($(this).is(':checked')) {
+            userCheckboxes.each(function () {
+                this.checked = true;
+                if (!selected.includes(this.value)) {
+                    selected.push(this.value);
+                }
+            });
+        } else {
+            userCheckboxes.each(function () {
+                this.checked = false;
+                if (selected.includes(this.value)) {
+                    selected = selected.filter(id => id !== this.value);
+                }
 
             });
-        });
 
-        $(document).on('click', '.btn-user-delete', function(e) {
+        }
+        saveSelected(selected);
+        restoreSelectedData();
+
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+
+        let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+            '.row-checkbox').length;
+        $('#selectAll').prop('checked', allChecked);
+
+        $(document).on('click', '.btn-user-status', function (e) {
             e.preventDefault();
 
             let $btn = $(this); // store the clicked button
             let url = $btn.data('url');
-
             Swal.fire({
                 title: "Are you sure?",
-                text: "Do you really want to delete this user?",
+                text: "Do you really want to change the status?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes, change it!",
                 cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
-
-                    showLoader();
-                    // Redirect to URL
                     window.location.href = url;
-                }
+                    showLoader();
 
+
+                }
                 // else {
                 //     loadSelected();
                 // }
             });
+
+
         });
-        $(document).on('change', '#sel_bulk_action', function(e) {
-            e.preventDefault();
-            let selectedIds = $('.row-checkbox:checked').map(function() {
-                return $(this).val();
-            }).get();
-            if (selectedIds.length == 0) {
-                Swal.fire({
-                    toast: true,
-                    icon: 'error',
-                    title: 'Please select at least one category',
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                }).then(() => {
-                    location.reload(); // reload after toast timeout
-                });
+    });
 
-            } else {
+    $(document).on('click', '.btn-user-delete', function (e) {
+        e.preventDefault();
 
-                let action = $(this).val();
-                if (!action) {
-                    return; // No action selected
-                }
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: `Do you really want to ${action} selected category?`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: `Yes, ${action} them!`,
-                    cancelButtonText: "Cancel",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        let selected = getSelected();
+        let $btn = $(this); // store the clicked button
+        let url = $btn.data('url');
 
-                        // Set action value in hidden input
-                        $('input[name="action"]').val(action);
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to delete this user?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-                        $.each(selected, function(index, value) {
-                            $("#tbl-form").append(
-                                `<input type="hidden" name="blogs[]" value="${value}">`
-                            );
-                        });
-
-                        $('#tbl-form').submit();
-                        showLoader();
-                    } else {
-                        loadSelected();
-                    }
-                });
-            }
-        });
-
-
-
-
-        $(document).on('change', '#sel_status', function(e) {
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
-
-
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("status", $(this).val());
-            } else if ($(this).val() == "") {
-                url.searchParams.delete("status");
-            } else {
-                // just add role param
-                url.searchParams.set("status", $(this).val());
+                showLoader();
+                // Redirect to URL
+                window.location.href = url;
             }
 
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
+            // else {
+            //     loadSelected();
+            // }
         });
-
-        $(document).on('change', '#sel_priority', function(e) {
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
-
-
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("priority", $(this).val());
-            } else if ($(this).val() == "") {
-                url.searchParams.delete("priority");
-            } else {
-                // just add role param
-                url.searchParams.set("priority", $(this).val());
-            }
-
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
-        });
-
-
-        $(document).on('change', '#sel_limit', function(e) {
-            let url = new URL(window.location.href);
-            let params = url.searchParams;
-            let page = parseInt(params.get("page")) || 1;
-
-
-            if (page > 1) {
-                // reset URL (remove params except page)
-                url.search = "";
-                url.searchParams.delete("page");
-                url.searchParams.set("limit", $(this).val());
-            } else if ($(this).val() == "") {
-                url.searchParams.delete("limit");
-            } else {
-
-                url.searchParams.set("limit", $(this).val());
-            }
-
-            window.history.pushState({}, '', url.toString());
-            window.location.href = url.toString();
-        });
-    </script>
-
-    <script>
-        $('#btnClear').hide();
-
-        function fetchData(page = 1) {
-
-            let search = $('input[name="search"]').val();
-
-
-            $.ajax({
-                url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
-                    search + "&page=" + page,
-                success: function(data) {
-                    $('#user-data').html(data);
-
-                    restoreSelectedData();
-
-                    // Set #selectAll checked only if all visible checkboxes are checked (current page)
-                    let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                        '.row-checkbox').length;
-                    $('#selectAll').prop('checked', allChecked);
-                    console.log($('.row-checkbox:checked').length);
-
-
-                }
+    });
+    $(document).on('change', '#sel_bulk_action', function (e) {
+        e.preventDefault();
+        let selectedIds = $('.row-checkbox:checked').map(function () {
+            return $(this).val();
+        }).get();
+        if (selectedIds.length == 0) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Please select at least one category',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                location.reload(); // reload after toast timeout
             });
 
+        } else {
+
+            let action = $(this).val();
+            if (!action) {
+                return; // No action selected
+            }
+            Swal.fire({
+                title: "Are you sure?",
+                text: `Do you really want to ${action} selected category?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: `Yes, ${action} them!`,
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let selected = getSelected();
+
+                    // Set action value in hidden input
+                    $('input[name="action"]').val(action);
+
+                    $.each(selected, function (index, value) {
+                        $("#tbl-form").append(
+                            `<input type="hidden" name="blogs[]" value="${value}">`
+                        );
+                    });
+
+                    $('#tbl-form').submit();
+                    showLoader();
+                } else {
+                    loadSelected();
+                }
+            });
+        }
+    });
 
 
+
+
+    $(document).on('change', '#sel_status', function (e) {
+        let url = new URL(window.location.href);
+        let params = url.searchParams;
+        let page = parseInt(params.get("page")) || 1;
+
+
+        if (page > 1) {
+            // reset URL (remove params except page)
+            url.search = "";
+            url.searchParams.delete("page");
+            url.searchParams.set("status", $(this).val());
+        } else if ($(this).val() == "") {
+            url.searchParams.delete("status");
+        } else {
+            // just add role param
+            url.searchParams.set("status", $(this).val());
         }
 
+        window.history.pushState({}, '', url.toString());
+        window.location.href = url.toString();
+    });
+
+    $(document).on('change', '#sel_priority', function (e) {
+        let url = new URL(window.location.href);
+        let params = url.searchParams;
+        let page = parseInt(params.get("page")) || 1;
 
 
-        $(document).on('keyup', 'input[name="search"]', function() {
-            let search = $('input[name="search"]').val();
-            if (search.length > 0) {
-                $('#btnClear').show();
+        if (page > 1) {
+            // reset URL (remove params except page)
+            url.search = "";
+            url.searchParams.delete("page");
+            url.searchParams.set("priority", $(this).val());
+        } else if ($(this).val() == "") {
+            url.searchParams.delete("priority");
+        } else {
+            // just add role param
+            url.searchParams.set("priority", $(this).val());
+        }
 
-            } else {
-                $('#btnClear').hide();
-                loadSelected();
+        window.history.pushState({}, '', url.toString());
+        window.location.href = url.toString();
+    });
+
+
+    $(document).on('change', '#sel_limit', function (e) {
+        let url = new URL(window.location.href);
+        let params = url.searchParams;
+        let page = parseInt(params.get("page")) || 1;
+
+
+        if (page > 1) {
+            // reset URL (remove params except page)
+            url.search = "";
+            url.searchParams.delete("page");
+            url.searchParams.set("limit", $(this).val());
+        } else if ($(this).val() == "") {
+            url.searchParams.delete("limit");
+        } else {
+
+            url.searchParams.set("limit", $(this).val());
+        }
+
+        window.history.pushState({}, '', url.toString());
+        window.location.href = url.toString();
+    });
+</script>
+
+<script>
+    $('#btnClear').hide();
+
+    function fetchData(page = 1) {
+
+        let search = $('input[name="search"]').val();
+
+
+        $.ajax({
+            url: "{{ url()->current() }}" + "?" + window.location.search.replace(/^\?/, '') + "&search=" +
+                search + "&page=" + page,
+            success: function (data) {
+                $('#user-data').html(data);
+
+                restoreSelectedData();
+
+                // Set #selectAll checked only if all visible checkboxes are checked (current page)
+                let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+                    '.row-checkbox').length;
+                $('#selectAll').prop('checked', allChecked);
+                console.log($('.row-checkbox:checked').length);
+
 
             }
-            fetchData();
-
         });
 
-        $('#btnClear').click(function() {
 
-            $('input[name="search"]').val('');
-            $('input[name="search"]').focus();
-            fetchData();
+
+    }
+
+
+
+    $(document).on('keyup', 'input[name="search"]', function () {
+        let search = $('input[name="search"]').val();
+        if (search.length > 0) {
+            $('#btnClear').show();
+
+        } else {
             $('#btnClear').hide();
-
             loadSelected();
-        })
 
-        $(document).on('click', '#btn-show-selected', function() {
-            loadSelected();
-        })
+        }
+        fetchData();
 
-        $(document).on('click', '#btnResetFilter', function(e) {
-            e.preventDefault();
-            removeAll();
-            let url = "{{ url()->current() }}";
-            window.history.pushState({}, '', url);
-            window.location.href = url.toString();
-        })
+    });
+
+    $('#btnClear').click(function () {
+
+        $('input[name="search"]').val('');
+        $('input[name="search"]').focus();
+        fetchData();
+        $('#btnClear').hide();
+
+        loadSelected();
+    })
+
+    $(document).on('click', '#btn-show-selected', function () {
+        loadSelected();
+    })
+
+    $(document).on('click', '#btnResetFilter', function (e) {
+        e.preventDefault();
+        removeAll();
+        let url = "{{ url()->current() }}";
+        window.history.pushState({}, '', url);
+        window.location.href = url.toString();
+    })
+</script>
+
+@if (session('remove'))
+    <script>
+        loadSelected();
     </script>
-
-    @if (session('remove'))
-        <script>
-            loadSelected();
-        </script>
-        {{-- @elseif (session('remove-all'))
+    {{-- @elseif (session('remove-all'))
     <script>
         removeAll();
     </script> --}}
-    @elseif (!session('remove') && !session('remove-all'))
-        <script>
-            window.addEventListener("load", () => {
-                const [nav] = performance.getEntriesByType("navigation");
-                const hasParams = window.location.search.length > 0;
+@elseif (!session('remove') && !session('remove-all'))
+    <script>
+        window.addEventListener("load", () => {
+            const [nav] = performance.getEntriesByType("navigation");
+            const hasParams = window.location.search.length > 0;
 
-                if (nav.type !== "reload" && !hasParams) {
-                    removeAll();
+            if (nav.type !== "reload" && !hasParams) {
+                removeAll();
 
-                }
-            });
-        </script>
-    @endif
+            }
+        });
+    </script>
+@endif
 @stop

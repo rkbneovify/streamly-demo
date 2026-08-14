@@ -8,6 +8,7 @@ use App\Jobs\ProcessSupportTicketReplyMail;
 use App\Models\File;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
+use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\User;
 use Carbon\Carbon;
@@ -20,19 +21,20 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminSupportTicketController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait, ActivityLogger;
     public function __construct(
         public Request $request,
         public SupportTicket $supportTicket,
         public SupportTicketMessage $supportTicketMessage,
         public File $file
-    ) {}
+    ) {
+    }
     public function index(Request $request)
     {
         $limit = $request->input('limit', 10);
         $page = $request->input('page', 1);
 
-        $query  = $this->supportTicket->query();
+        $query = $this->supportTicket->query();
         $query->search($request->search)
             ->status($request->status)
             ->priority($request->priority)
@@ -55,6 +57,17 @@ class AdminSupportTicketController extends Controller
             $ticket = $this->supportTicket->where('id', $id)->first();
             $ticket->priority = $priority;
             $ticket->save();
+
+
+            $this->activity()
+                ->event("Support Ticket")
+                ->isAdmin()
+                ->eventType(ucfirst($priority))
+                ->description("Support Ticket - Priority update")
+                ->properties([
+                    "data" => $ticket
+                ])->save();
+
             DB::commit();
             toast('Data updated successfully !', 'success')
                 ->timerProgressBar()
@@ -75,9 +88,19 @@ class AdminSupportTicketController extends Controller
     {
         DB::beginTransaction();
         try {
-            $ticket =  $this->supportTicket->where('id', $id)->first();
+            $ticket = $this->supportTicket->where('id', $id)->first();
             $ticket->status = $status;
             $ticket->save();
+
+            $this->activity()
+                ->event("Support Ticket")
+                ->isAdmin()
+                ->eventType(ucwords($status))
+                ->description("Support Ticket - Status update")
+                ->properties([
+                    "data" => $ticket
+                ])->save();
+
             DB::commit();
             toast('Data updated successfully !', 'success')
                 ->timerProgressBar()
@@ -98,7 +121,7 @@ class AdminSupportTicketController extends Controller
     {
 
 
-        $query =   $this->supportTicket->query();
+        $query = $this->supportTicket->query();
         $query->where('ticket_number', $ticket);
         $data = $query->with(['messages.user.roles', 'messages.files'])->first();
         // return response()->json($data);
@@ -118,7 +141,7 @@ class AdminSupportTicketController extends Controller
 
         DB::beginTransaction();
         try {
-            $supportTicket =   $this->supportTicket->where('ticket_number', $ticket)->first();
+            $supportTicket = $this->supportTicket->where('ticket_number', $ticket)->first();
 
 
             if ($supportTicket == null) {
@@ -143,11 +166,11 @@ class AdminSupportTicketController extends Controller
                     $tempPath = $file->store('support-ticket-temp', 'local');
 
                     return [
-                        'temp_path'     => $tempPath,
+                        'temp_path' => $tempPath,
                         'original_name' => $file->getClientOriginalName(),
-                        'mime_type'     => $file->getMimeType(),
-                        'size'          => $file->getSize(),
-                        'extension'     => $file->getClientOriginalExtension(),
+                        'mime_type' => $file->getMimeType(),
+                        'size' => $file->getSize(),
+                        'extension' => $file->getClientOriginalExtension(),
                     ];
                 })->toArray();
 
@@ -165,7 +188,7 @@ class AdminSupportTicketController extends Controller
 
             $attachments = [];
             foreach ($files as $file) {
-                $attachments[] =  storage_path('app/' . $file['temp_path']);
+                $attachments[] = storage_path('app/' . $file['temp_path']);
             }
 
             $user = User::where('id', $supportTicket->user_id)->first();
@@ -178,7 +201,24 @@ class AdminSupportTicketController extends Controller
             // return response()->json($attachments);
             ProcessSupportTicketReplyMail::dispatch($supportTicket, $user->email, $request->user()->roles[0]->name, $data, $attachments);
 
+            $this->activity()
+                ->event("Support Ticket")
+                ->isAdmin()
+                ->eventType('Reply')
+                ->description("Support Ticket - Reply to user")
+                ->properties([
+                    "data" => $this->supportTicket
+                    ->where('ticket_number', $ticket)
+                    ->with(['messages.user.roles', 'messages.files'])->first()
+                ])->save();
 
+                 $this->activity($supportTicket->user_id)
+                ->event("Support Ticket")
+                ->isUser()
+                ->notification()
+                ->eventType('Reply')
+                ->description("Support Ticket - Reply")
+                ->save();
             DB::commit();
 
             toast('Reply submited successfully !', 'success')
@@ -213,6 +253,15 @@ class AdminSupportTicketController extends Controller
                     ->update([
                         'priority' => $this->request->action
                     ]);
+
+                $this->activity()
+                    ->event("Support Ticket")
+                    ->isAdmin()
+                    ->eventType(ucfirst($this->request->action))
+                    ->description("Multiple Support Ticket - Priority update")
+                    ->properties([
+                        "data" => $this->supportTicket->whereIn('id', $this->request->tickets)->get()
+                    ])->save();
                 DB::commit();
                 toast('Priority updated successfully !', 'success')
                     ->timerProgressBar()
@@ -223,6 +272,16 @@ class AdminSupportTicketController extends Controller
                     ->update([
                         'status' => $this->request->action
                     ]);
+
+                $this->activity()
+                    ->event("Support Ticket")
+                    ->isAdmin()
+                    ->eventType(ucfirst($this->request->action))
+                    ->description("Multiple Support Ticket - Status update")
+                    ->properties([
+                        "data" => $this->supportTicket->whereIn('id', $this->request->tickets)->get()
+                    ])->save();
+
                 DB::commit();
                 toast('Status updated successfully !', 'success')
                     ->timerProgressBar()
