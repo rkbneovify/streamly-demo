@@ -11,6 +11,7 @@ use App\Models\File;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Services\RecaptchaService;
+use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\Traits\FileUploadTrait;
 use Carbon\Carbon;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SupportTicketController extends Controller
 {
-    use ApiResponseTrait, FileUploadTrait;
+    use ApiResponseTrait, FileUploadTrait, ActivityLogger;
 
     public function __construct(
         public SupportTicket $supportTicket,

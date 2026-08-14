@@ -283,6 +283,12 @@ button[type='button'] {
   padding: 32px;
   text-align: center;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
 
   .icon {
     width: 50px;
@@ -294,6 +300,7 @@ button[type='button'] {
   .value {
     font-size: 22px;
     font-weight: 600;
+    color:#000;
   }
 }
 

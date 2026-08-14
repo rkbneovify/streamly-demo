@@ -1,0 +1,43 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Newspaper -->
+    <rect x="7" y="9" width="50" height="46" rx="4"
+        fill="#EA580C"/>
+
+    <!-- Inner Paper -->
+    <rect x="12" y="14" width="40" height="36" rx="2"
+        fill="#FFF7ED"/>
+
+    <!-- Main Headline -->
+    <rect x="16" y="18" width="23" height="11" rx="1.5"
+        fill="#F97316"/>
+
+    <!-- Small Article -->
+    <rect x="42" y="18" width="6" height="11" rx="1"
+        fill="#FDBA74"/>
+
+    <!-- Article Lines -->
+    <path d="M16 34H48"
+        stroke="#EA580C"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+    <path d="M16 41H31"
+        stroke="#FB923C"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+    <path d="M16 47H31"
+        stroke="#FB923C"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+    <path d="M37 41H48"
+        stroke="#FB923C"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+    <path d="M37 47H48"
+        stroke="#FB923C"
+        stroke-width="3"
+        stroke-linecap="round"/>
+</svg>
