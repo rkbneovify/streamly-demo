@@ -176,7 +176,7 @@ class AdminBlogController extends Controller
             $blog->content = $this->request->input('content');
             $blog->update();
 
-            $this->newData($blog->refresh())->save();
+            $this->newData($blog->fresh())->save();
             DB::commit();
             toast('Data updated successfully !', 'success')
                 ->timerProgressBar()
@@ -205,17 +205,18 @@ class AdminBlogController extends Controller
                 return redirect()->back();
             }
 
-            $this->activity()
-                ->event("Blog")
-                ->isAdmin()
-                ->eventType($blog->status == 1 ? ActivityEventType::STATUSDISABLE : ActivityEventType::STATUSENABLE)
-                ->description("Blog disable")
-                ->properties([
-                    "data" => $blog
-                ])->save();
+
 
             $blog->status = ($blog->status == 1 ? 0 : 1);
             $blog->save();
+            $this->activity()
+                ->event("Blog")
+                ->isAdmin()
+                ->eventType($blog->status == 1 ? ActivityEventType::STATUSENABLE : ActivityEventType::STATUSDISABLE)
+                ->description("Blog disable")
+                ->properties([
+                    "data" => $blog->refresh()
+                ])->save();
             DB::commit();
             toast('Data updated Successfully !', 'success')
                 ->timerProgressBar()
