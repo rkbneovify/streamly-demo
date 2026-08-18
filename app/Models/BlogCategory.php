@@ -9,11 +9,16 @@ class BlogCategory extends Model
     protected $table = "blog_categories";
 
     protected $fillable = [
-         'status'
+        'status'
     ];
     protected $cast = [
         'status' => 'boolean'
     ];
+
+    public function subCategories()
+    {
+        return $this->hasMany(BlogSubCategory::class, 'category', 'title');
+    }
 
     public function scopeSearch($query, $txt)
     {
