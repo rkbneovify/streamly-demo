@@ -309,6 +309,7 @@ Route::get('/notification/send', 'Api\ApiNotificationController@send');
 
 Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
+    Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
 });
 

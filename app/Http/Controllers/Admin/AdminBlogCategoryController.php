@@ -10,7 +10,9 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminBlogCategoryController extends Controller
 {
-    public function __construct(public Request $request, public BlogCategory $blogCategory) {}
+    public function __construct(public Request $request, public BlogCategory $blogCategory)
+    {
+    }
 
     public function index()
     {
@@ -36,9 +38,23 @@ class AdminBlogCategoryController extends Controller
 
     public function store()
     {
+        $validator = validator($this->request->all(), [
+           
+            'title' => 'required|string|unique:blog_categories,title',
+        ], [
+            'title.unique' => 'This category already exists. Please use a different category.',
+        ]);
+
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
+
         DB::beginTransaction();
         try {
-            $category =    $this->blogCategory;
+            $category = $this->blogCategory;
             $category->title = $this->request->title;
             $category->status = 1;
             $category->save();
@@ -57,18 +73,32 @@ class AdminBlogCategoryController extends Controller
         }
     }
 
-     public function update($id)
+    public function update($id)
     {
+
+        $validator = validator($this->request->all(), [
+           
+            'title' => 'required|string|max:225|unique:blog_categories,title,' . $id,
+        ], [
+            'title.unique' => 'This category already exists. Please use a different category.',
+        ]);
+
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
         DB::beginTransaction();
         try {
-            $category =    $this->blogCategory->where('id', $id)->first();
+            $category = $this->blogCategory->where('id', $id)->first();
             if ($category == null) {
                 toast('Data not found !', 'error')
                     ->timerProgressBar()
                     ->autoClose(3000);
                 return redirect()->back();
             }
-            $category->title =$this->request->title;
+            $category->title = $this->request->title;
             $category->save();
             DB::commit();
             toast('Data updated Successfully !', 'success')
@@ -89,7 +119,7 @@ class AdminBlogCategoryController extends Controller
     {
         DB::beginTransaction();
         try {
-            $category =    $this->blogCategory->where('id', $id)->first();
+            $category = $this->blogCategory->where('id', $id)->first();
             if ($category == null) {
                 toast('Data not found !', 'error')
                     ->timerProgressBar()
@@ -117,7 +147,7 @@ class AdminBlogCategoryController extends Controller
     {
         DB::beginTransaction();
         try {
-            $category =    $this->blogCategory->where('id', $id)->first();
+            $category = $this->blogCategory->where('id', $id)->first();
             if ($category == null) {
                 toast('Data not found !', 'error')
                     ->timerProgressBar()
@@ -141,12 +171,12 @@ class AdminBlogCategoryController extends Controller
         }
     }
 
-     public function bulkAction()
+    public function bulkAction()
     {
-      
+
         DB::beginTransaction();
         try {
-            $category =    $this->blogCategory->whereIn('id', $this->request->categories)->get();
+            $category = $this->blogCategory->whereIn('id', $this->request->categories)->get();
             if ($category == null) {
                 toast('Data not found !', 'error')
                     ->timerProgressBar()
@@ -157,23 +187,23 @@ class AdminBlogCategoryController extends Controller
             $message = null;
             switch ($this->request->action) {
                 case 'active':
-                   $this->blogCategory->whereIn('id', $this->request->categories)->update([
-                    "status"=>1
-                   ]);
-                   $message = 'active';
-                    break;
-                 case 'deactive':
                     $this->blogCategory->whereIn('id', $this->request->categories)->update([
-                    "status"=>0
-                   ]);
-                     $message = 'deactive';
+                        "status" => 1
+                    ]);
+                    $message = 'active';
                     break;
-              
+                case 'deactive':
+                    $this->blogCategory->whereIn('id', $this->request->categories)->update([
+                        "status" => 0
+                    ]);
+                    $message = 'deactive';
+                    break;
+
             }
 
-          
+
             DB::commit();
-            toast('Data '.$message.' Successfully !', 'success')
+            toast('Data ' . $message . ' Successfully !', 'success')
                 ->timerProgressBar()
                 ->autoClose(3000);
             return redirect()->back();

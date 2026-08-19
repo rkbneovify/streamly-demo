@@ -36,7 +36,7 @@ class AdminBlogSubCategoryController extends Controller
             return view('admin.blog.sub-category.index', compact('data', 'categories'));
         } catch (\Throwable $th) {
             //throw $th;
-              Alert::error('error', 'Something went wrong ! try again later.');
+            Alert::error('error', 'Something went wrong ! try again later.');
             // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
@@ -45,6 +45,19 @@ class AdminBlogSubCategoryController extends Controller
     public function store()
     {
 
+        $validator = validator($this->request->all(), [
+             'category' => 'required|string|max:225',
+            'title' => 'required|string|unique:blog_sub_categories,title',
+        ], [
+            'title.unique' => 'This sub category already exists. Please use a different sub category.',
+        ]);
+
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
         DB::beginTransaction();
         try {
             $subcategory = $this->blogSubCategory;
@@ -69,7 +82,20 @@ class AdminBlogSubCategoryController extends Controller
 
     public function update($id)
     {
-        // dd($this->request->all());
+        $validator = validator($this->request->all(), [
+            'category' => 'required|string|max:225',
+            'title' => 'required|string|unique:blog_sub_categories,title,'. $id,
+        ], [
+            'title.unique' => 'This sub category already exists. Please use a different sub category.',
+        ]);
+
+        if ($validator->fails()) {
+            toast($validator->errors()->first(), 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        }
+
         DB::beginTransaction();
         try {
             $subcategory = $this->blogSubCategory->where('id', $id)->first();
