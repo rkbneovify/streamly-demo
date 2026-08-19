@@ -26,8 +26,9 @@ class ApiBlogController extends Controller
 
         try {
             $query = $this->blogCategory->query();
-            $data = $query->where('status', 1)
-            ->paginate($limit, ['title'], 'page', $page);
+            $data = $query->where('status', 1)->withSearchBlog($this->request->search)
+            ->paginate($limit, ['id','title'], 'page', $page);
+          $data->getCollection()->each->makeHidden('blog');
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {
             //throw $th;

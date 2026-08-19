@@ -15,11 +15,27 @@ class BlogCategory extends Model
         'status' => 'boolean'
     ];
 
-    public function subCategories()
+
+    public function blog()
     {
-        return $this->hasMany(BlogSubCategory::class, 'category', 'title');
+        return $this->hasMany(Blog::class, 'category', 'title');
     }
 
+    public function scopeWithSearchBlog($query, $txt)
+    {
+        if ($txt != "") {
+            return $query->where(function ($query) use ($txt) {
+                $query->where('title', 'like', "%{$txt}%")
+                    ->orWhereHas('blog', function ($query) use ($txt) {
+                        $query->where('title', 'like', "%{$txt}%")
+                            ->orWhere('sub_category', 'like', "%{$txt}%");
+                    });
+            })->withWhereHas('blog', function ($query) use ($txt) {
+                $query->where('title', 'like', "%{$txt}%")
+                    ->orWhere('sub_category', 'like', "%{$txt}%");
+            });
+        }
+    }
     public function scopeSearch($query, $txt)
     {
         if ($txt != null) {

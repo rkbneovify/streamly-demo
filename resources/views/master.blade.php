@@ -53,7 +53,8 @@
 
     <!-- ./wrapper -->
     <!-- jQuery -->
-    {{-- <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> --}}
+    {{--
+    <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script> --}}
 
 
     <!-- Bootstrap -->
@@ -67,6 +68,22 @@
     @yield('scripts')
     @stack('scripts')
     @include('sweetalert::alert')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toast = document.querySelector('.swal2-toast');
+
+            if (toast) {
+                toast.addEventListener('mouseenter', function () {
+                    Swal.stopTimer();
+                });
+
+                toast.addEventListener('mouseleave', function () {
+                    Swal.resumeTimer();
+                });
+            }
+        });
+    </script>
     <script>
         function showLoader(title = 'Please wait...', text = 'Processing your request') {
             Swal.fire({

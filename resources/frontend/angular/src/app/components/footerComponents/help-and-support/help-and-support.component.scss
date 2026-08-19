@@ -58,6 +58,24 @@
     background: #ffffff;
     border-radius: 15px;
     padding: 0 24px;
+
+    .clear-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: #ffd83f;
+      padding: 0;
+      border-radius: 15px;
+      font-size: 22px;
+      line-height: 1;
+      color: #999;
+      cursor: pointer;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
   }
 
   .search-icon {
@@ -67,6 +85,8 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
+    
 
     svg {
       width: 24px;
@@ -139,7 +159,7 @@
   }
 
   .category-card {
-    min-height: 298px;
+    min-height: 100px;
     background: #002d4d;
     border-radius: 15px;
     padding: 35px 24px 30px;
@@ -335,7 +355,6 @@
   // --------------------------------
 
   @media (max-width: 1100px) {
-
     .container {
       max-width: 100%;
     }
@@ -358,7 +377,6 @@
   // --------------------------------
 
   @media (max-width: 768px) {
-
     .container {
       padding-left: 18px;
       padding-right: 18px;
