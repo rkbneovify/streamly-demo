@@ -1,62 +1,36 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Location, NgIf } from '@angular/common';
-import { CrudService } from '../../../services/crud.service';
-import { ToastrService } from 'ngx-toastr';
-import { HttpHeaders } from '@angular/common/http';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [ReactiveFormsModule,NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.scss'
 })
 export class ContactUsComponent {
-  contactForm: FormGroup;
-  showbackbtn:boolean = true;
-
-  constructor(private location: Location, private crud: CrudService, private fb: FormBuilder,private toast:ToastrService) {
-    this.contactForm = this.fb.group({
-      name: ['', Validators.required],
+  myForm: FormGroup;
+  constructor(private fb: FormBuilder) {
+    this.myForm = this.fb.group({
+      name: ['', [Validators.required, Validators.max(225)]],
       email: ['', [Validators.required, Validators.email]],
-      message: ['', Validators.required]
+      message: ['', [Validators.required]]
     });
-
-    if(localStorage.getItem('token')){
-      this.showbackbtn = false;
-    }else{
-      this.showbackbtn = true
-    }
   }
 
-  goBack(): void {
-    this.location.back();
+  submitForm(): void {
+    if (this.myForm.invalid) {
+    this.myForm.markAllAsTouched();
+    return;
   }
 
-  onSubmit() {
-    if (this.contactForm.valid) {
-      const formValue = this.contactForm.value;
-      this.crud.postRequest('auth/contactForm', formValue,this.getAuthHeaders()).subscribe({
-        next: (response:any) => {
-          this.toast.success(response?.message);
-          this.contactForm.reset()
-        },
-        error: (error) => {
-          console.error('Error submitting form', error);
-          this.toast.error(error.error)
-        }
-      });
-    }
-  }
-
-  getAuthHeaders(): HttpHeaders {
-    const tokenData = JSON.parse(
-      localStorage.getItem('deviceInfo') || ''
-    ).access_token;
-    return new HttpHeaders({
-      Authorization: `Bearer ${tokenData}`,
-      Accept: 'application/json',
-    });
+  console.log(this.myForm.value);
   }
 }

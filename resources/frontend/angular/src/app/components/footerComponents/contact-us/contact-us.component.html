@@ -1,100 +1,229 @@
-
-<div class="container-contactUs">
-    <div class="main-contactUs" *ngIf="showbackbtn">
-      <div class="main-term-text mt-3 position-relative" >
-        <div class="position-absolute d-flex back-btn_go" (click)="goBack()">
-            <div>
-                <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="">
-            </div>
-            Go Back
-        </div>
-
+<section class="contact-section">
+  <div class="contact-container">
+    <!-- Header -->
+    <div class="contact-header">
+      <div class="contact-icon">
+        <svg
+          width="150"
+          height="150"
+          viewBox="0 0 150 150"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M23.4375 65.625C23.4375 32.5781 42.6562 11.7188 75 11.7188C107.344 11.7188 126.562 32.3438 126.562 65.625"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M23.9062 107.812C11.9531 107.812 2.34375 98.4375 2.34375 86.7188C2.34375 75 11.9531 65.625 23.9062 65.625C35.625 65.625 35.625 107.812 23.9062 107.812Z"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M126.094 107.812C138.047 107.812 147.656 98.4375 147.656 86.7188C147.656 75 138.047 65.625 126.094 65.625C114.375 65.625 114.375 107.812 126.094 107.812Z"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            d="M128.906 108.047C128.906 130.312 101.484 128.672 93.9844 128.672"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            d="M80.8594 138.281C87.9787 138.281 93.75 134.084 93.75 128.906C93.75 123.729 87.9787 119.531 80.8594 119.531C73.7401 119.531 67.9688 123.729 67.9688 128.906C67.9688 134.084 73.7401 138.281 80.8594 138.281Z"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            d="M11.9531 103.125C11.9531 103.125 22.2656 86.4844 11.9531 70.5469"
+            stroke="white"
+            stroke-width="3"
+          />
+          <path
+            d="M138.281 70.5469C138.281 70.5469 127.969 87.1875 138.281 103.125"
+            stroke="white"
+            stroke-width="3"
+          />
+        </svg>
       </div>
-    </div>
-    <div class="mainSub-contactUs">
-        <div>
-            <h2>Contact Form</h2>
-        </div>
-        <div class="contact-form">
-            <form class="contactForm" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-                <div class="input_group">
-                    <label class="label" for="name">Full Name<span class="text-danger">*</span></label>   
-                    <input class="input_standred input_contact " type="text" placeholder="Enter name"
-                    id="name" formControlName="name">
-                                <!-- Error message -->
-            <div *ngIf="contactForm.get('name').touched && contactForm.get('name').invalid" class="text-danger">
-              <small *ngIf="contactForm.get('name').errors?.['required']">Name is required.</small>
-            </div>
-                </div>
-                <div class="input_group">
-                    <label class="label" for="email">Email<span class="text-danger">*</span></label>
-                    <input class="input_standred input_contact " type="text" placeholder="Enter Email"id="email" formControlName="email" 
-                    >
 
-                                <!-- Error message -->
-            <div *ngIf="contactForm.get('email').touched && contactForm.get('email').invalid" class="text-danger">
-            <small *ngIf="contactForm.get('email').errors?.['required']">Email is required.</small>
-            <small *ngIf="contactForm.get('email').errors?.['email']">Enter a valid email.</small>
+      <h1>Contact Us</h1>
+    </div>
+
+    <!-- Form -->
+    <form class="contact-form" [formGroup]="myForm" (ngSubmit)="submitForm()">
+      <div class="form-row">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">
+            <span class="field-icon">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M19.8002 11.3996C19.8002 14.0505 17.6511 16.1996 15.0002 16.1996C12.3493 16.1996 10.2002 14.0505 10.2002 11.3996C10.2002 8.74864 12.3493 6.59961 15.0002 6.59961C16.2733 6.59961 17.4942 7.10533 18.3943 8.00549C19.2945 8.90567 19.8002 10.1266 19.8002 11.3996Z"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.59961 23.399C11.7451 20.2081 18.2541 20.2081 23.3996 23.399"
+                  stroke="white"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+
+            <span>Your Name <b>*</b></span>
+          </label>
+
+          <input
+            formControlName="name"
+            placeholder="Enter Your full name"
+            required
+          />
+          <div
+            *ngIf="myForm.get('name').touched && myForm.get('name').invalid"
+            class="text-danger"
+          >
+            <small *ngIf="myForm.get('name').errors?.['required']"
+              >* Name is required.</small
+            >
           </div>
-                </div>
-                <div class="input_group">
-                    <label for="textarea" class="label" for="message">Message<span class="text-danger">*</span></label>
-                    <textarea name="" id="textarea" cols="30" rows="8" class="input_standred input_contact " placeholder="Enter Message"
-                    id="message" formControlName="message"></textarea>
-            <!-- Error message -->
-            <div *ngIf="contactForm.get('message').touched && contactForm.get('message').invalid" class="text-danger">
-              <small *ngIf="contactForm.get('message').errors?.['required']">Message is required.</small>
-            </div>
-                </div>
-
-                <div class="contactBtn">
-                    <button type="submit" class="btn_2 btn-bg-gold" [disabled]="contactForm.invalid">
-                        Submit
-                    </button>
-                </div>
-            </form>
         </div>
-    </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">
+            <span class="field-icon">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.4119 25.6683H23.412C24.6849 25.6683 25.9059 25.1625 26.806 24.2624C27.7062 23.3622 28.212 22.1414 28.212 20.8683V8.86836C28.212 7.59533 27.7062 6.37435 26.806 5.47417C25.9059 4.574 24.6849 4.06836 23.412 4.06836H9.01191C7.73887 4.06836 6.51797 4.574 5.6178 5.47417C4.71762 6.37435 4.21191 7.59533 4.21191 8.86836V14.8683"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M1.81152 22.0684H13.8116"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M1.81152 18.4688H6.61152"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M27.2509 6.50391C20.5189 19.2719 11.879 19.2599 5.14697 6.50391"
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>Email Address <b>*</b></span>
+          </label>
+
+          <input
+            formControlName="email"
+            placeholder="your@email.com"
+            required
+          />
+          <div
+            *ngIf="myForm.get('email').touched && myForm.get('email').invalid"
+            class="text-danger"
+          >
+            <small *ngIf="myForm.get('email').errors?.['required']"
+              >* Email is required.</small
+            >
+              <small *ngIf="myForm.get('email').errors?.['email']"
+              >* Email is invaied.</small
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group message-group">
+        <label for="message">
+          <span class="field-icon">
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 13.75H10.0125M15 13.75H15.0125M20 13.75H20.0125M26.25 25L22.0946 22.9222C21.7796 22.7647 21.6221 22.686 21.457 22.6305C21.3105 22.5813 21.1596 22.5456 21.0065 22.5241C20.834 22.5 20.6579 22.5 20.3057 22.5H7.75C6.34986 22.5 5.6498 22.5 5.11503 22.2275C4.64461 21.9879 4.26216 21.6054 4.02249 21.135C3.75 20.6003 3.75 19.9001 3.75 18.5V9C3.75 7.59986 3.75 6.8998 4.02249 6.36503C4.26216 5.89461 4.64461 5.51216 5.11503 5.27249C5.6498 5 6.34987 5 7.75 5H22.25C23.6501 5 24.3503 5 24.885 5.27249C25.3554 5.51216 25.7379 5.89461 25.9775 6.36503C26.25 6.8998 26.25 7.59987 26.25 9V25Z"
+                stroke="white"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+
+          <span>Message <b>*</b></span>
+        </label>
+
+        <textarea
+          formControlName="message"
+          placeholder="Type your Message here"
+          required
+        ></textarea>
+
+        <div
+          *ngIf="myForm.get('message').touched && myForm.get('message').invalid"
+          class="text-danger"
+        >
+          <small *ngIf="myForm.get('message').errors?.['required']"
+            >* Message is required.</small
+          >
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-wrapper">
+        <button type="submit" [disabled]="myForm.valid">
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 26 26"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.36842 8.25644C-1.12758 12.3725 9.87645 16.0685 9.87645 16.0685C9.87645 16.0685 13.5725 27.0725 17.6885 24.5765C22.0565 21.9125 27.2885 5.54445 23.8325 2.11245C20.3765 -1.31955 4.03242 3.88844 1.36842 8.25644Z"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <span>Submit</span>
+        </button>
+      </div>
+    </form>
   </div>
-  
-
-
-   <!-- <div class="container-contactUs">
-    <div class="main-contactUs">
-      <div class="main-term-text mt-3 position-relative">
-        <div class="position-absolute d-flex back-btn_go" (click)="goBack()">
-          <div>
-            <img src="../../assets/dummy-img/chevron-left.svg" alt="">
-          </div>
-          Go Back
-        </div>
-      </div>
-    </div>
-    <div class="mainSub-contactUs">
-      <div>
-        <h2>Contact Form</h2>
-      </div>
-      <div class="contact-form">
-        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-          <div class="input_group">
-            <label class="label" for="name">Full Name</label>   
-            <input class="input_standred input_contact" id="name" formControlName="name" type="text" placeholder="Enter name">
-          </div>
-          <div class="input_group">
-            <label class="label" for="email">Email</label>
-            <input class="input_standred input_contact" id="email" formControlName="email" type="text" placeholder="Enter Email">
-          </div>
-          <div class="input_group">
-            <label class="label" for="message">Message</label>
-            <textarea id="message" formControlName="message" cols="30" rows="8" class="input_standred input_contact" placeholder="Enter Message"></textarea>
-          </div>
-          <div class="contactBtn">
-            <button type="submit" class="btn_2 btn-bg-gold" [disabled]="contactForm.invalid">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
-  
+</section>
