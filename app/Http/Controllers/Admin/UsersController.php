@@ -944,49 +944,49 @@ class UsersController extends Controller
 
                 $subscription = Subscription::where('user_id', $id)->first();
 
-                $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
-
-
-
-                if ($subscription->plan_duration == null) {
-                    // if user have stripe Subscription cancel then apply custom subscription
+                if ($subscription != null) {
                     $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
-                    // return response()->json($stripeSubscription);
 
-                    if (count($stripeSubscription) > 0 && in_array($stripeSubscription->first()->status, ['active', 'past_due'])) {
 
-                        if ($stripeSubscription->first()->livemode == true) {
-                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
-                        } elseif ($stripeSubscription->first()->livemode == false) {
-                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
+
+                    if ($subscription->plan_duration == null) {
+                        // if user have stripe Subscription cancel then apply custom subscription
+                        $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+                        // return response()->json($stripeSubscription);
+
+                        if (count($stripeSubscription) > 0 && in_array($stripeSubscription->first()->status, ['active', 'past_due'])) {
+
+                            if ($stripeSubscription->first()->livemode == true) {
+                                $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
+                            } elseif ($stripeSubscription->first()->livemode == false) {
+                                $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
+                            }
+
+
+                            DB::table('subscriptions')->where('user_id', $user->id)->update(
+                                [
+                                    'name' => 'main',
+                                    'stripe_status' => 'canceled',
+                                    'plan_duration' => $request->plan_duration,
+                                    'is_custom' => 1,
+                                    'ends_at' => null,
+                                    'custom_status' => 'active',
+                                    'current_period_start' => now(),
+                                    'renews_at' => $endsAt,
+                                    'quantity' => $newDeviceCount,
+                                    'updated_at' => now(),
+                                ]
+                            );
+
+                            $user->is_custom_user = 1;
+                            $user->mode = 'custom';
+                            $user->save();
                         }
-
-
-                        DB::table('subscriptions')->where('user_id', $user->id)->update(
-                            [
-                                'name' => 'main',
-                                'stripe_status' => 'canceled',
-                                'plan_duration' => $request->plan_duration,
-                                'is_custom' => 1,
-                                'ends_at' => null,
-                                'custom_status' => 'active',
-                                'current_period_start' => now(),
-                                'renews_at' => $endsAt,
-                                'quantity' => $newDeviceCount,
-                                'updated_at' => now(),
-                            ]
-                        );
-
-                        $user->is_custom_user = 1;
-                        $user->mode = 'custom';
-                        $user->save();
                     }
-                }
-
-
-                if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
-                    DB::table('subscriptions')->where('user_id', $user->id)->update(
+                } elseif ($subscription == null) {
+                    DB::table('subscriptions')->insert(
                         [
+                            'user_id'=> $user->id,
                             'name' => 'main',
                             'stripe_status' => 'canceled',
                             'plan_duration' => $request->plan_duration,
@@ -1004,6 +1004,25 @@ class UsersController extends Controller
                     $user->mode = 'custom';
                     $user->save();
                 }
+            } elseif ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
+                DB::table('subscriptions')->where('user_id', $user->id)->update(
+                    [
+                        'name' => 'main',
+                        'stripe_status' => 'canceled',
+                        'plan_duration' => $request->plan_duration,
+                        'is_custom' => 1,
+                        'ends_at' => null,
+                        'canceled_at' => null,
+                        'custom_status' => 'active',
+                        'current_period_start' => now(),
+                        'renews_at' => $endsAt,
+                        'quantity' => $newDeviceCount,
+                        'updated_at' => now(),
+                    ]
+                );
+                $user->is_custom_user = 1;
+                $user->mode = 'custom';
+                $user->save();
             }
 
 
@@ -1110,7 +1129,7 @@ class UsersController extends Controller
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
-            //throw $th;
+            throw $th;
             return redirect('admin/users')
                 ->with('info', $th->getMessage());
         }
@@ -1162,9 +1181,9 @@ class UsersController extends Controller
             }
         }
 
-        if ($subscription->is_custom == 0 && $subscription->plan_duration == null) {
+        if ($subscription && $subscription->is_custom == 0 && $subscription->plan_duration == null) {
             $planDuration = '';
-        } elseif ($subscription->is_custom == 1 && $subscription->plan_duration != null) {
+        } elseif ($subscription && $subscription->is_custom == 1 && $subscription->plan_duration != null) {
             $planDuration = $subscription->plan_duration;
         }
 
