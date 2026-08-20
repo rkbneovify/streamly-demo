@@ -86,7 +86,7 @@
     justify-content: center;
     flex-shrink: 0;
 
-    
+
 
     svg {
       width: 24px;
@@ -395,9 +395,10 @@
     }
 
     .search-wrapper {
-      height: 150px;
-      flex-direction: column;
-      gap: 15px;
+     height: 78px;
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 22px;
     }
 
     .search-box {
@@ -428,7 +429,7 @@
     }
 
     .category-card {
-      min-height: 245px;
+      min-height: 95px;
       padding: 25px 20px;
 
       .category-icon {
