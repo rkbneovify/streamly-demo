@@ -983,8 +983,16 @@ class UsersController extends Controller
                             $user->save();
                         }
                     }
+<<<<<<< HEAD
                 } elseif ($subscription == null) {
                     DB::table('subscriptions')->insert(
+=======
+                }
+
+                // Custom user subscription update
+                if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
+                    DB::table('subscriptions')->where('user_id', $user->id)->update(
+>>>>>>> dc79be53a44eccbfccf2930b45c623ea526b05fa
                         [
                             'user_id'=> $user->id,
                             'name' => 'main',

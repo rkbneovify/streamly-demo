@@ -555,11 +555,12 @@ class StripeController extends Controller
                 }
             }
 
+            // Subscription
             $subscription_data = [
                 'id' => (string) $subscription->id,
-                'name' => $plan_name ?? null,
-                'plan_type' => $plan_type ?? null,
-                'renewaldatetime' => $renewaldatetime ?? null,
+                'name' => $plan_name,
+                'plan_type' => $plan_type,
+                'renewaldatetime' => $renewaldatetime,
                 'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
                 'canceled' => $subscription->cancel_at_period_end,
                 'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
