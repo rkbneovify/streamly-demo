@@ -555,6 +555,7 @@ class StripeController extends Controller
                 }
             }
 
+            // Subscription
             $subscription_data = [
                 'id' => (string) $subscription->id,
                 'name' => $plan_name,
