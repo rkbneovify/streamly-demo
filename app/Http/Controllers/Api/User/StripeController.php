@@ -264,10 +264,10 @@ class StripeController extends Controller
                     if ($request->trial_days > 0) {
                         $user->trial_taken = 1;
                         $user->save();
-                        $subscription =  $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        $subscription = $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
                         Mail::to($user->email)->send(new TrialSubscriptionWelcomeMail($user, $password, $subscription->trial_start, $subscription->trial_end, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_start, $login_link));
                     } else {
-                        $subscription =  $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        $subscription = $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
                         Mail::to($user->email)->send(new SubscriptionWelcomeMail($user, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_end, $login_link));
                     }
                 } catch (\Exception $e) {
@@ -606,12 +606,14 @@ class StripeController extends Controller
             }
             if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
-                $subscription_data['name'] =   $request->user()->subscription('main')->plan_duration;
+                $subscription_data['name'] = $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
                     $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
                     $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
                 }
+
+
             }
 
             $response_to_send['subscription'] = $subscription_data;
@@ -651,7 +653,7 @@ class StripeController extends Controller
 
             if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
-                $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
+                $response_to_send['subscription']['name'] = $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
                     $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
@@ -670,7 +672,7 @@ class StripeController extends Controller
         } else {
             $response_to_send['card_details'] = [];
         }
-
+        $response_to_send['subscription']['renewaldatetime'] = '';
         return response()->json($response_to_send);
     }
 
