@@ -983,7 +983,7 @@ class UsersController extends Controller
                     }
                 }
 
-
+                // Custom user subscription update
                 if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
                     DB::table('subscriptions')->where('user_id', $user->id)->update(
                         [
