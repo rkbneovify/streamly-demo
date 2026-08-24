@@ -95,7 +95,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('epgguide', 'Api\User\NewGracenoteController@epg_guide')->middleware(['jwt.verify']);
     Route::get('fetchGracenoteData', 'Api\User\NewGracenoteController@fetchGracenoteData');
 
-    Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
+    Route::post('contactForm', 'Api\User\FooterApiController@newContectForm')->middleware(['jwt.verify']);
 
     Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify', 'subscribed']);
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
