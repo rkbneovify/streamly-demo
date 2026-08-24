@@ -776,7 +776,7 @@ export class PlaylistScheduleComponent
       this.sweetAlert.loading();
     }
 
-    this.apiService.postRequest('auth/epg-guide-v2', body).pipe(
+    this.apiService.postRequest('v2/auth/epg-guide', body).pipe(
 
       takeUntil(this.stopScheduleRequest$),
       finalize(() => {
@@ -808,7 +808,7 @@ export class PlaylistScheduleComponent
 
         this.page++;
 
-        return this.apiService.postRequest('auth/epg-guide-v2', {
+        return this.apiService.postRequest('v2/auth/epg-guide', {
           ...body,
           page: this.page
         }).pipe(
