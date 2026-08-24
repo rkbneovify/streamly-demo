@@ -16,7 +16,7 @@
         <select class="input-field" formControlName="category" (change)="onCategoryChange($event)">
 
           <option [ngValue]="null">
-            Select Category
+            Select category
           </option>
 
           <option *ngFor="let category of categories" [value]="category">
@@ -42,7 +42,7 @@
         <select class="input-field" formControlName="subCategory">
 
           <option [ngValue]="null">
-            Select Sub Category
+            Select sub category
           </option>
 
           <option *ngFor="let item of subCategories" [value]="item">

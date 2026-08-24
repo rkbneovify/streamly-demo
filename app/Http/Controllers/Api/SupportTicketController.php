@@ -70,7 +70,7 @@ class SupportTicketController extends Controller
         if (! $recaptcha->verify($request->captcha_token, $request->ip())) {
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid reCAPTCHA.'
+                'message' => 'Invalid captcha !'
             ], 422);
         }
 

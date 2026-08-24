@@ -56,7 +56,7 @@
     </div>
 
     <!-- Form -->
-    <form class="contact-form" [formGroup]="myForm" (ngSubmit)="submitForm()">
+    <form class="contact-form" [formGroup]="myForm" (ngSubmit)="submitForm(captchaRef)">
       <div class="form-row">
         <!-- Name -->
         <div class="form-group">
@@ -97,9 +97,10 @@
             *ngIf="myForm.get('name').touched && myForm.get('name').invalid"
             class="text-danger"
           >
-            <small *ngIf="myForm.get('name').errors?.['required']"
-              >* Name is required.</small
-            >
+            <span *ngIf="myForm.get('name')?.errors as e">
+            {{ e['required'] && '* Name is required.' }}
+
+            </span>
           </div>
         </div>
 
@@ -153,12 +154,13 @@
             *ngIf="myForm.get('email').touched && myForm.get('email').invalid"
             class="text-danger"
           >
-            <small *ngIf="myForm.get('email').errors?.['required']"
-              >* Email is required.</small
-            >
-              <small *ngIf="myForm.get('email').errors?.['email']"
-              >* Email is invaied.</small
-            >
+
+
+             <span *ngIf="myForm.get('email')?.errors as e">
+            {{ e['required'] && '* Email is required.' }}
+              {{ e['email'] && '* Email is invalied.' }}
+
+            </span>
           </div>
         </div>
       </div>
@@ -196,15 +198,18 @@
           *ngIf="myForm.get('message').touched && myForm.get('message').invalid"
           class="text-danger"
         >
-          <small *ngIf="myForm.get('message').errors?.['required']"
-            >* Message is required.</small
-          >
+          <span *ngIf="myForm.get('message')?.errors as e">
+            {{ e['required'] && '* Message is required.' }}
+
+
+            </span>
         </div>
       </div>
-
+ <re-captcha #captchaRef="reCaptcha" size="invisible" [siteKey]="siteKey" (resolved)="resolved($event)">
+      </re-captcha>
       <!-- Submit -->
       <div class="submit-wrapper">
-        <button type="submit" [disabled]="myForm.valid">
+        <button type="submit" [disabled]="!myForm.valid">
           <svg
             width="26"
             height="26"
