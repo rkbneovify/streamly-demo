@@ -10,29 +10,31 @@ use Illuminate\Database\Eloquent\Model;
 @property text $message message
 @property timestamp $created_at created at
 @property timestamp $updated_at updated at
-   
+
  */
-class BugReporting extends Model 
+class BugReporting extends Model
 {
-    
+
     /**
-    * Database table name
-    */
+     * Database table name
+     */
     protected $table = 'bug_reporting';
 
     /**
-    * Mass assignable columns
-    */
-    protected $fillable=['email',
-'occurences',
-'bug_severity',
-'platform',
-'message'];
+     * Mass assignable columns
+     */
+    protected $fillable = [
+        'email',
+        'occurences',
+        'bug_severity',
+        'platform',
+        'message'
+    ];
 
     /**
-    * Date time columns.
-    */
-    protected $dates=['updated_at','created_at'];
+     * Date time columns.
+     */
+    protected $dates = ['updated_at', 'created_at'];
 
 
 
