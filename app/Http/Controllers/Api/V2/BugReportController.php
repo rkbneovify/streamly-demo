@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Enums\ActivityEventType;
 use App\Http\Controllers\Controller;
 use App\Mail\BugReportMail;
 use App\Models\BugReporting;
 use App\Models\File;
+use App\Services\RecaptchaService;
+use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\Traits\FileUploadTrait;
 use DB;
@@ -15,11 +18,12 @@ use Illuminate\Support\Facades\Validator;
 
 class BugReportController extends Controller
 {
-    use ApiResponseTrait, FileUploadTrait;
+    use ApiResponseTrait, FileUploadTrait, ActivityLogger;
     public function __construct(
         public Request $request,
         public BugReporting $bugReporting,
-        public File $file
+        public File $file,
+        public RecaptchaService $recaptchaService
     ) {
 
     }
@@ -42,6 +46,14 @@ class BugReportController extends Controller
         if ($validator->fails()) {
             return $this->validationErrorResponse($validator->errors()->first(), $validator->errors());
         }
+
+        if (!$this->recaptchaService->verify($this->request->captcha_token, $this->request->ip())) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid captcha !'
+            ], 422);
+        }
+
         DB::beginTransaction();
         try {
             $report = $this->bugReporting;
@@ -96,7 +108,17 @@ class BugReportController extends Controller
                 'priority' => $this->request->priority,
                 'platform' => $this->request->platform,
             ];
-            Mail::to(env('MAIL_FROM_ADDRESS'))->send(new BugReportMail($bugData, $attachments));
+            Mail::to($this->request->email)->send(new BugReportMail($bugData, $attachments));
+
+              $this->activity()->event("Bug Report")
+                ->eventType("New Bug Report")
+                ->description("Bug Report - Send by user")
+                ->isAdmin()
+                ->properties([
+                    "data" => $report
+
+                ])->save();
+
             DB::commit();
             return $this->successResponse("Submitted Successfully !");
         } catch (\Throwable $th) {
