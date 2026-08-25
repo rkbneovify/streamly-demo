@@ -302,3 +302,12 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whe
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
 Route::get('/notification/send', 'Api\ApiNotificationController@send');
+
+
+require __DIR__ . '/api-v2.php';
+
+
+
+
+
+
