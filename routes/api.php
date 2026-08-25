@@ -307,7 +307,13 @@ Route::get('/notification/send', 'Api\ApiNotificationController@send');
 
 // Blog
 
-Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
+// Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
+//     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
+//     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
+//     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
+// });
+
+Route::group(['prefix' => 'blogs'], function () {
     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
