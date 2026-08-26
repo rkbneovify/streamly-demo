@@ -12,8 +12,8 @@ use FFMpeg\Format\Video\X264;
 
 trait FileUploadTrait
 {
-    
-    public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = null)
+
+    public function uploadFile(UploadedFile $file, $folder = 'uploads', $disk = 'public')
 {
     $disk = $disk ?: config('filesystems.default');
 
