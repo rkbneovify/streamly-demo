@@ -563,6 +563,14 @@
                         </p>
                     </a>
                 </li>
+                 <li class="nav-item {{ request()->is('admin/new-bug-report') ? 'menu-open' : '' }}">
+                    <a href=" {{ url('/admin/new-bug-report') }}" class="nav-link">
+                        <i class="nav-icon fas fa-search-location"></i>
+                        <p>
+                            New Bug report
+                        </p>
+                    </a>
+                </li>
                 <!-- add Naresh 15-11-2022 -->
                 <li class="nav-item {{ request()->is('admin/affiliatereport') ? 'menu-open' : '' }}">
                     <a href=" {{ url('/admin/affiliatereport') }}" class="nav-link">

@@ -10,26 +10,27 @@
 |
 */
 
+use App\Http\Controllers\Admin\AdminBugReportController;
+use App\Http\Controllers\Admin\AdminBlogCategoryController;
+use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\Admin\AdminSupportTicketController;
-use App\Http\Controllers\Admin\AdminBlogCategoryController;
-use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
-use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminTimezoneController;
-use App\Http\Controllers\BotManController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\AngularController;
-use App\Http\Controllers\SubscriptionCronController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\AngularController;
 use App\Http\Controllers\Api\ApiHoaController;
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\GracenoteCron\GracenoteCronController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SubscriptionCronController;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 // qrcode generate
@@ -393,6 +394,12 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::get('/chat/{ticket}', [AdminSupportTicketController::class, 'chat'])->name('ticket.chat');
         Route::post('/chat/reply/{ticket}', [AdminSupportTicketController::class, 'ticketReply'])->name('ticket.reply');
     });
+
+    Route::prefix('/new-bug-report')->group(function () {
+        Route::get('/', [AdminBugReportController::class  , 'index'])->name('bug-report');
+        Route::get('/show/{id}', [AdminBugReportController::class  , 'show'])->name('bug-report.show');
+    });
+
 });
 
 /*Prev Next channel*/

@@ -36,6 +36,26 @@ class BugReporting extends Model
      */
     protected $dates = ['updated_at', 'created_at'];
 
+    public function files(){
+        return $this->hasMany(File::class, 'bug_report_id', 'id');
+    }
+
+      public function scopeSearch($query, $txt)
+    {
+        if ($txt != null) {
+            $query->where('email', 'like', '%' . $txt . '%')
+            ->orWhere('name', 'like', '%' . $txt . '%');
+        }
+    }
+    public function scopeFilterDateOrder($query, ?string $date, string $column = 'created_at')
+    {
+        if (!$date) {
+            return $query;
+        }
+
+
+        return $query->orderBy($column, $date);
+    }
 
 
 
