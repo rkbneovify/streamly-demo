@@ -13,6 +13,7 @@ import { SweetalertService } from '../../../services/SweetAlert/sweetalert.servi
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { RecaptchaComponent, RecaptchaModule } from 'ng-recaptcha';
+import { finalize } from 'rxjs';
 
 interface PreviewFile {
   file: File;
@@ -52,11 +53,15 @@ export class ReportFormComponent implements OnInit, OnDestroy {
     'image/heif'
   ];
 
-  constructor(private fb: FormBuilder, private sweetAlert: SweetalertService) {}
+  constructor(
+    private fb: FormBuilder,
+    private sweetAlert: SweetalertService,
+    private api: CrudService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
-     const user = JSON.parse(localStorage.getItem('userDetails') || null);
+    const user = JSON.parse(localStorage.getItem('userDetails') || null);
     if (user != null) {
       this.bugForm.patchValue({
         name: user.name,
@@ -71,7 +76,7 @@ export class ReportFormComponent implements OnInit, OnDestroy {
 
       email: ['', [Validators.required, Validators.email]],
 
-      bugTitle: ['', Validators.required],
+      bug_title: ['', Validators.required],
 
       description: ['', Validators.required],
 
@@ -84,13 +89,13 @@ export class ReportFormComponent implements OnInit, OnDestroy {
    * Submit bug report
    */
 
-   resolved(token: any) {
+  resolved(token: any) {
     if (token == null) {
       return;
     }
 
     const formData = new FormData();
-
+    formData.append('captcha_token', token);
     Object.keys(this.bugForm.controls).forEach(key => {
       const value = this.bugForm.get(key)?.value;
 
@@ -101,25 +106,31 @@ export class ReportFormComponent implements OnInit, OnDestroy {
      * Append files
      */
     this.selectedFiles.forEach(item => {
-      formData.append('files[]', item.file);
+      formData.append('file[]', item.file);
     });
 
-    console.log('Form:', this.bugForm.value);
-    console.log('Files:', this.selectedFiles);
-
-    /**
-     * API call example:
-     *
-     * this.apiService.submitBugReport(formData)
-     *   .subscribe({
-     *     next: response => {
-     *       console.log(response);
-     *     },
-     *     error: error => {
-     *       console.error(error);
-     *     }
-     *   });
-     */
+    this.sweetAlert.loading();
+    this.api
+      .postRequest('v2/bug-report', formData)
+      .pipe(
+        finalize(() => {
+          this.sweetAlert.close();
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.bugForm.reset();
+          this.selectedFiles = [];
+          setTimeout(() => {
+            this.sweetAlert.toast(res.message);
+          }, 1000);
+        },
+        error: (err: any) => {
+          setTimeout(() => {
+            this.sweetAlert.toast(err.error.message,'error');
+          }, 1000);
+        }
+      });
   }
 
   submitBugReport(captcha: RecaptchaComponent): void {
@@ -127,8 +138,7 @@ export class ReportFormComponent implements OnInit, OnDestroy {
       this.bugForm.markAllAsTouched();
       return;
     }
-
-
+    captcha.execute();
   }
 
   /**

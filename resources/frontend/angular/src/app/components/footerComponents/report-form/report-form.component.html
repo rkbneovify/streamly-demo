@@ -154,15 +154,15 @@
           <input
             id="bugTitle"
             type="text"
-            formControlName="bugTitle"
+            formControlName="bug_title"
             placeholder="Enter bug title"
           />
 
           <small
             class="error"
             *ngIf="
-              bugForm.get('bugTitle')?.touched &&
-              bugForm.get('bugTitle')?.invalid
+              bugForm.get('bug_title')?.touched &&
+              bugForm.get('bug_title')?.invalid
             "
           >
             * Please enter bug title.

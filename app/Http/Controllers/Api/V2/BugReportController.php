@@ -11,6 +11,7 @@ use App\Services\RecaptchaService;
 use App\Traits\ActivityLogger;
 use App\Traits\ApiResponseTrait;
 use App\Traits\FileUploadTrait;
+use App\User;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -110,7 +111,9 @@ class BugReportController extends Controller
             ];
             Mail::to($this->request->email)->send(new BugReportMail($bugData, $attachments));
 
-              $this->activity()->event("Bug Report")
+            $user = User::where('email', $this->request->email)->first();
+
+            $this->activity($user?->id)->event("Bug Report")
                 ->eventType("New Bug Report")
                 ->description("Bug Report - Send by user")
                 ->isAdmin()
