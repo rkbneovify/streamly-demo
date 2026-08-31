@@ -13,12 +13,29 @@ class ApiBlogController extends Controller
     use ApiResponseTrait;
     public function __construct(
         public Request $request,
-        public BlogCategory $blogCategory
+        public BlogCategory $blogCategory,
+        public Blog $blog
 
-    ) {
+    ) {}
 
+
+    public function index(){
+        $limit = $this->request->input('limit', 10);
+        $page = $this->request->input('page', 1);
+
+        try {
+             $query = $this->blogCategory->query();
+             $data = $query->where('status', 1)
+             ->with('subCategory')
+             ->withCount('blogs')
+
+           ->paginate($limit, ['*'], 'page', $page);
+            return $this->paginateResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
     }
-
     public function categoriesList()
     {
         $limit = $this->request->input('limit', 10);
@@ -26,9 +43,10 @@ class ApiBlogController extends Controller
 
         try {
             $query = $this->blogCategory->query();
-            $data = $query->where('status', 1)->withSearchBlog($this->request->search)
-            ->paginate($limit, ['id','title'], 'page', $page);
-          $data->getCollection()->each->makeHidden('blog');
+            $data = $query->where('status', 1)->with('blog')
+            ->withSearchBlog($this->request->search)
+            ->paginate($limit, ['*'], 'page', $page);
+        //   $data->getCollection()->each->makeHidden('blog');
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {
             //throw $th;

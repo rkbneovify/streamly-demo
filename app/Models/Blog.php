@@ -15,6 +15,13 @@ class Blog extends Model
     protected $cast = [
         'status' => 'boolean'
     ];
+
+    public function categoryList() {
+       return $this->hasOne(BlogCategory::class, 'title','category');
+    }
+
+    
+
     public function scopeSearch($query, $txt)
     {
         if ($txt != null) {
