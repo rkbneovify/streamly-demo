@@ -1100,6 +1100,12 @@ class ChannelController extends Controller
                         : (array) $channel;
 
                     unset($channel['phx_local']);
+                    // here just hidding relation data
+                    $channel = $channel instanceof \Illuminate\Database\Eloquent\Model
+                        ? $channel->toArray()
+                        : (array) $channel;
+
+                    unset($channel['east_coast']);
 
                     return $channel;
                 }));
