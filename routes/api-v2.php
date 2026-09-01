@@ -9,6 +9,7 @@ Route::prefix('v2')->group(function () {
     Route::group(['prefix' => 'auth', 'middleware' => ['jwt.verify', 'hoa.subuser.subscription',  'stripe.sync', 'subscribed']], function () {
         Route::post('epg-guide', [ChannelController::class, 'epgGuideWithPagination']);
         Route::post('epg-guide-test', [ChannelController::class, 'epgGuide']);
+        Route::post('epg-guide-pagination-key-remove', [ChannelController::class, 'epgGuideWithPaginationAndKeyRemove']);
     });
     Route::post('/subscription/check', [SubscriptionController::class, 'subscriptionCheck'])->middleware(['jwt.verify']);
 });
