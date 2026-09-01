@@ -9,6 +9,7 @@ use App\HotelRoomTable;
 use App\Models\PersonalDevice;
 use Carbon\Carbon;
 use DeviceDetector\DeviceDetector;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SessionTable extends Model
 {
@@ -21,7 +22,7 @@ class SessionTable extends Model
     protected $casts = [
         'device' => 'array'
     ];
-    protected $appends = ['device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
+    protected $appends = ['token_expire_at', 'remaining_days', 'device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
     protected $hidden = ['device_detail']; //device detail from json
     protected $fillable = [
         'users_id',
@@ -145,6 +146,44 @@ class SessionTable extends Model
         parent::boot();
     }
      */
+
+    public function getTokenExpireAtAttribute()
+    {
+        if (!$this->access_token) {
+            return null;
+        }
+
+        try {
+            $payload = JWTAuth::setToken($this->access_token)->getPayload();
+
+            return Carbon::createFromTimestamp(
+                $payload->get('exp')
+            )->toDateTimeString();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    public function getRemainingDaysAttribute()
+    {
+        if (!$this->access_token) {
+            return null;
+        }
+
+        try {
+            $payload = JWTAuth::setToken($this->access_token)->getPayload();
+
+            $expiresAt = Carbon::createFromTimestamp($payload->get('exp'));
+
+            return max(
+                0,
+                (int) ceil(now()->diffInSeconds($expiresAt) / 86400)
+            );
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     public function getId()
     {
         return $this->getKey();
