@@ -1560,6 +1560,26 @@ class UsersController extends Controller
 
     public function connectedDeviceNew($id, Request $request)
     {
+
+        // $session =   SessionTable::where('users_id', $id)->latest('created_on')->first();
+
+        // return response()->json($session);
+        // $payload = JWTAuth::setToken($session->access_token)->getPayload();
+
+        // $createdAt = Carbon::createFromTimestamp($payload->get('iat'));
+        // $expiresAt = Carbon::createFromTimestamp($payload->get('exp'));
+
+        // $diff = $createdAt->diff($expiresAt);
+        // $expireInDays = max(0, now()->diffInDays($expiresAt, false));
+        // return response()->json([
+        //     'created_at' => $createdAt->toDateTimeString(),
+        //     'expires_at' => $expiresAt->toDateTimeString(),
+        //     'duration' => "{$diff->m} months {$diff->d} days",
+        //     // Total token duration
+        //     'total_days' => $createdAt->diffInDays($expiresAt),
+        //     'remaining_days' => $expireInDays,
+        // ]);
+
         try {
             $user = User::find($id);
             $roles = Role::get(); //get all roles
@@ -1605,6 +1625,7 @@ class UsersController extends Controller
                 $query->orderBy('created_on', 'desc');
                 $allSession = $query->get();
             }
+
 
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();

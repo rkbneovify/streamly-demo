@@ -1912,6 +1912,8 @@ class AuthController extends Controller
         }
     }
 
+    
+
     public function isSubscriptionExpired(Request $request, $userId)
     {
         $user = User::where('id', $userId)->first();
