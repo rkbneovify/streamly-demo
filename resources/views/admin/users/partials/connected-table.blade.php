@@ -74,6 +74,7 @@
                         @endif
 
                         <th>Date added</th>
+                        <th>Expire At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -92,26 +93,21 @@
                         {{-- MAIN ROW --}}
                         <tr>
                             <td style="vertical-align: middle;">
-                                <input type="checkbox" name="user_ids[]" class="row-checkbox"
-                                    value="{{ $user->id }}">
+                                <input type="checkbox" name="user_ids[]" class="row-checkbox" value="{{ $user->id }}">
                             </td>
 
                             <td>
                                 <div class="flex">
-                                    <div class="device-box">
-                                        @php
-                                            $device = detectDeviceByUserAgent($user->useragent ?? '');
-                                        @endphp
+                                    <div class="device-box"> @php
+                                        $device = detectDeviceByUserAgent($user->useragent ?? '');
+                                    @endphp
 
                                         @if (preg_match('/pc|tv/i', $device))
-                                            <img class="device-icon" src="{{ asset('images/desktop.png') }}"
-                                                alt="device icon">
+                                            <img class="device-icon" src="{{ asset('images/desktop.png') }}" alt="device icon">
                                         @elseif (preg_match('/pc|tv/i', $user->device_title))
-                                            <img class="device-icon" src="{{ asset('images/desktop.png') }}"
-                                                alt="device icon">
+                                            <img class="device-icon" src="{{ asset('images/desktop.png') }}" alt="device icon">
                                         @else
-                                            <img class="device-icon" src="{{ asset('images/mobile.png') }}"
-                                                alt="device icon">
+                                            <img class="device-icon" src="{{ asset('images/mobile.png') }}" alt="device icon">
                                         @endif
                                     </div>
 
@@ -170,9 +166,14 @@
                                 <br>
                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                             </td>
+                              <td style="vertical-align: middle;">
+                                {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
+                                <br>
+                                {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+                            </td>
 
                             <td style="vertical-align: middle;">
-                                <a class="btn-delete" href="{{ route('admin.users.session.destroy', $user->id) }}"
+                                <a class=" btn-delete" href="{{ route('admin.users.session.destroy', $user->id) }}"
                                     data-url="{{ route('admin.users.session.destroy', $user->id) }}">
                                     <img class="img-delete" src="{{ asset('images/trash.png') }}" alt="Delete Icon">
                                 </a>
@@ -180,16 +181,17 @@
                         </tr>
 
                         {{-- ✅ DETAILS ROW (NEXT ROW) --}}
-                        {{-- IMPORTANT: This <tr> must be immediately after the <details> element sibling for CSS selector to work.
-                             Because <details> is inside <td>, we can't use "details + tr" reliably in pure CSS.
-                             So we use a tiny JS below to toggle this row. --}}
-                        <tr class="details-row" data-user="{{ $user->id }}">
+                        {{-- IMPORTANT: This <tr> must be immediately after the <details> element sibling for CSS selector to
+                                work.
+                                Because <details> is inside <td>, we can't use "details + tr" reliably in pure CSS.
+                                        So we use a tiny JS below to toggle this row. --}}
+                        <tr class="details-row" data-user=" {{ $user->id }}">
                             <td colspan="{{ $colspan }}">
                                 <div class="timelinex">
                                     <h5> Device Id : {{ $user->device_id }}</h5>
                                     <hr>
                                     @foreach ($user->subSession as $item)
-                                        <div class="timelinex-item">
+                                        <div class=" timelinex-item">
                                             <div class="timelinex-content">
                                                 <div class="row">
 
@@ -244,12 +246,13 @@
                         <th>OS Version</th>
                         <th>Zipcode</th>
                         <th>Date added</th>
+                        <th>Expire At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="9"> Data not found !</td>
+                        <td colspan="10"> Data not found !</td>
                     </tr>
                 </tbody>
             </table>
@@ -258,19 +261,19 @@
 </form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Select all
         const selectAll = document.getElementById('selectAll');
         if (selectAll) {
-            selectAll.addEventListener('change', function() {
+            selectAll.addEventListener('change', function () {
                 document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = selectAll
                     .checked);
             });
         }
 
         // Toggle next row by clicking summary
-        document.querySelectorAll('details.device-toggle').forEach(function(d) {
-            d.addEventListener('toggle', function() {
+        document.querySelectorAll('details.device-toggle').forEach(function (d) {
+            d.addEventListener('toggle', function () {
                 const mainRow = d.closest('tr');
                 const detailsRow = mainRow ? mainRow.nextElementSibling : null;
 
