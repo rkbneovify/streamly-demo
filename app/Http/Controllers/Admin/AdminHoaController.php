@@ -31,7 +31,6 @@ class AdminHoaController extends Controller
                 $query->orderByDesc('session_count');
             } elseif ($request->device == 'asc') {
                 $query->orderBy('session_count');
-
             }
             $query->when($request->has('search'), function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
@@ -53,7 +52,6 @@ class AdminHoaController extends Controller
                     } else {
                         $q->latest();
                     }
-
                 });
             }
             $limit = $request->input('limit', 10);
@@ -100,7 +98,6 @@ class AdminHoaController extends Controller
                         ->orWhere('device_model', 'like', '%' . $request->search . '%')
                         ->orWhere('build_version', 'like', '%' . $request->search . '%')
                         ->orWhere('zipcode', 'like', '%' . $request->search . '%');
-
                 });
 
 
@@ -149,8 +146,6 @@ class AdminHoaController extends Controller
             // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
-
-
     }
 
     public function houseListOrdering($id)

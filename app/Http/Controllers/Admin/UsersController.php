@@ -1563,7 +1563,7 @@ class UsersController extends Controller
 
         // $session =   SessionTable::where('users_id', $id)->latest('created_on')->first();
 
-        // return response()->json($session);
+        // // return response()->json($session);
         // $payload = JWTAuth::setToken($session->access_token)->getPayload();
 
         // $createdAt = Carbon::createFromTimestamp($payload->get('iat'));

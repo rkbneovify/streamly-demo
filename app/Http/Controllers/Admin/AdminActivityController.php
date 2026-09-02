@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminActivityController extends Controller
 {
@@ -37,7 +38,6 @@ class AdminActivityController extends Controller
             Alert::error("Something went wrong !");
             return redirect()->back();
         }
-
     }
 
     public function index2($id, Request $request)
@@ -69,7 +69,40 @@ class AdminActivityController extends Controller
             Alert::error("Something went wrong !");
             return redirect()->back();
         }
+    }
 
+    public function bySession($token = null, Request $request)
+    {
+
+
+        $activity =  ActivityLog::where('auth_token', $token)->first();
+        dd($activity);
+        DB::beginTransaction();
+        try {
+
+            ActivityLog::resolveNotification();
+            $user = User::where('id', $userId)->with('roles')->first();
+            if ($user == null) {
+                toast('User not found !', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+                return redirect()->back();
+            }
+
+            $data = ActivityLog::where('auth_token', $token)->latest()
+                ->paginate(10);
+            // return response()->json(["activity" => $activities, "paginator" => $paginator]);
+            DB::commit();
+            if ($request->ajax()) {
+                return view('admin.activity.table-user', compact('user', 'data'));
+            }
+            return view('admin.activity.index-user', compact('user', 'data'));
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            Alert::error("Something went wrong !");
+            return redirect()->back();
+        }
     }
 
     public function subUserActivity($passcode, Request $request)
@@ -101,8 +134,5 @@ class AdminActivityController extends Controller
             Alert::error("Something went wrong !");
             return redirect()->back();
         }
-
     }
-
-
 }
