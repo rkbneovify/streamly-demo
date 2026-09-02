@@ -18,7 +18,8 @@ trait ActivityLogger
         $this->activity->user_id = $userId ?? Auth::id();
         $this->activity->user_ip_address = request()->ip();
         $this->activity->is_user = 1;
-
+        $token =  request()->bearerToken();
+        $this->activity->auth_token = $token;
 
         return $this;
     }
@@ -163,7 +164,15 @@ trait ActivityLogger
 
     public function save()
     {
+
         $this->activity->save();
         return $this->activity;
+    }
+
+    public function authToken($token)
+    {
+
+        $this->activity->auth_token = $token;
+        return $this;
     }
 }
