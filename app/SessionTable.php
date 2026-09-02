@@ -22,7 +22,7 @@ class SessionTable extends Model
     protected $casts = [
         'device' => 'array'
     ];
-    protected $appends = ['token_expire_at', 'remaining_days', 'device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
+    protected $appends = ['logout_at', 'token_expire_at', 'remaining_days', 'device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
     protected $hidden = ['device_detail']; //device detail from json
     protected $fillable = [
         'users_id',
@@ -146,6 +146,20 @@ class SessionTable extends Model
         parent::boot();
     }
      */
+
+
+    public function getLogoutAtAttribute()
+    {
+        if ($this->users_id) {
+            return null;
+        }
+
+        try {
+            return  ActivityLog::where('properties->data->users_id', $this->users_id)->first();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
     public function getTokenExpireAtAttribute()
     {

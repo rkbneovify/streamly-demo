@@ -57,7 +57,7 @@ class AdminActivityController extends Controller
 
             $data = ActivityLog::where('user_id', $id)->latest()
                 ->paginate(10);
-            // return response()->json(["activity" => $activities, "paginator" => $paginator]);
+            // return response()->json($data);
             DB::commit();
             if ($request->ajax()) {
                 return view('admin.activity.table-user', compact('user', 'data'));
