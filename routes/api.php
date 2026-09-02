@@ -128,7 +128,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('/subscription/check', 'Auth\AuthController@subscriptionCheck')->middleware(['jwt.verify']);
-     Route::post('/subscriptionx/check', [SubscriptionController::class, 'subscriptionCheck'])->middleware(['jwt.verify']);
+    //  Route::post('/subscriptionx/check', [SubscriptionController::class, 'subscriptionCheck'])->middleware(['jwt.verify']);
     Route::post('/subscription/plan-request', [ApiSubscriptionPlanRequestController::class, 'planRequestByUser'])->middleware(['jwt.verify']);
     Route::get('/custom/subscription/plan', [ApiSubscriptionPlanController::class, 'index']);
 

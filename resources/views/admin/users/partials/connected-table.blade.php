@@ -47,6 +47,13 @@
     details.device-toggle[open]+tr.details-row {
         display: table-row;
     }
+
+    .btn-activity:hover {
+        border: 2px solid #333;
+        border-radius: 50%;
+        padding: 2px;
+
+    }
 </style>
 
 <form id="tbl-form" method="POST" action="{{ route('admin.users.bulk.action') }}">
@@ -68,7 +75,7 @@
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
-
+                        <th>Status</th>
                         @if ($allSession->first()->user->roles->first()->id == 5 && $allSession->first()->user->user_type != 'custom')
                             <th>Hotel room</th>
                         @endif
@@ -91,7 +98,7 @@
                         @endphp
 
                         {{-- MAIN ROW --}}
-                        <tr>
+                        <tr class="{{ $user->status == 0 ? 'text-muted bg-light' : '' }}">
                             <td style="vertical-align: middle;">
                                 <input type="checkbox" name="user_ids[]" class="row-checkbox" value="{{ $user->id }}">
                             </td>
@@ -151,6 +158,18 @@
                                 {{ $user->zipcode ?? 'N/A' }}
                             </td>
 
+                            <td style="vertical-align: middle;">
+                                @if ($user->status == 1 && $user->token_expire_at != null)
+                                    <span class="badge badge-info badge-pill p-2  px-3">Active</span>
+
+                                @else
+
+                                    <span class="badge badge-danger badge-pill p-2 px-3">Expired</span>
+                                @endif
+
+
+                            </td>
+
                             @if ($showHotelRoom)
                                 <td style="vertical-align: middle;">
                                     @if ($user->hotel != null)
@@ -166,17 +185,42 @@
                                 <br>
                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                             </td>
-                              <td style="vertical-align: middle;">
-                                {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
-                                <br>
-                                {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+                            <td style="vertical-align: middle;">
+                                @if($user->token_expire_at != null)
+                                    {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
+                                    <br>
+                                    {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+
+                                @else
+                                    <span class="badge badge-danger badge-pill p-2 px-3">Logout</span>
+                                @endif
                             </td>
 
                             <td style="vertical-align: middle;">
-                                <a class=" btn-delete" href="{{ route('admin.users.session.destroy', $user->id) }}"
-                                    data-url="{{ route('admin.users.session.destroy', $user->id) }}">
-                                    <img class="img-delete" src="{{ asset('images/trash.png') }}" alt="Delete Icon">
-                                </a>
+                                <div class="d-flex">
+                                    <a class=" btn-delete" href="{{ route('admin.users.session.destroy', $user->id) }}"
+                                        data-url="{{ route('admin.users.session.destroy', $user->id) }}">
+                                        <img class="img-delete" src="{{ asset('images/trash.png') }}" alt="Delete Icon">
+                                    </a>
+                                    {{-- <a class="btn-activity"
+                                        href="{{ route('admin.users.activity.session.token', $user->access_token) }}"
+                                        data-url="{{ route('admin.users.activity.session.token', $user->access_token) }}">
+                                        <svg width="25px" height="25px" viewBox="0 -0.5 25 25" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M15.5 7.75C15.0858 7.75 14.75 8.08579 14.75 8.5C14.75 8.91421 15.0858 9.25 15.5 9.25V7.75ZM19.5 9.25C19.9142 9.25 20.25 8.91421 20.25 8.5C20.25 8.08579 19.9142 7.75 19.5 7.75V9.25ZM20.25 8.5C20.25 8.08579 19.9142 7.75 19.5 7.75C19.0858 7.75 18.75 8.08579 18.75 8.5H20.25ZM18.75 12.5C18.75 12.9142 19.0858 13.25 19.5 13.25C19.9142 13.25 20.25 12.9142 20.25 12.5H18.75ZM20.0303 9.03033C20.3232 8.73744 20.3232 8.26256 20.0303 7.96967C19.7374 7.67678 19.2626 7.67678 18.9697 7.96967L20.0303 9.03033ZM12.5 15.5L11.9697 16.0303C12.2626 16.3232 12.7374 16.3232 13.0303 16.0303L12.5 15.5ZM9.5 12.5L10.0303 11.9697C9.73744 11.6768 9.26256 11.6768 8.96967 11.9697L9.5 12.5ZM4.96967 15.9697C4.67678 16.2626 4.67678 16.7374 4.96967 17.0303C5.26256 17.3232 5.73744 17.3232 6.03033 17.0303L4.96967 15.9697ZM15.5 9.25H19.5V7.75H15.5V9.25ZM18.75 8.5V12.5H20.25V8.5H18.75ZM18.9697 7.96967L11.9697 14.9697L13.0303 16.0303L20.0303 9.03033L18.9697 7.96967ZM13.0303 14.9697L10.0303 11.9697L8.96967 13.0303L11.9697 16.0303L13.0303 14.9697ZM8.96967 11.9697L4.96967 15.9697L6.03033 17.0303L10.0303 13.0303L8.96967 11.9697Z"
+                                                    fill="#000000" />
+                                            </g>
+
+                                        </svg>
+                                    </a> --}}
+                                </div>
                             </td>
                         </tr>
 
@@ -245,6 +289,7 @@
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
+                        <th>Status</th>
                         <th>Date added</th>
                         <th>Expire At</th>
                         <th>Action</th>
@@ -252,7 +297,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="10"> Data not found !</td>
+                        <td colspan="11"> Data not found !</td>
                     </tr>
                 </tbody>
             </table>
