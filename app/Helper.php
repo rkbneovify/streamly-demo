@@ -1355,6 +1355,8 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     }
     // dd($deviceInfoClasses);
 
+    
+
     $date = date('Y-m-d H:i:s');
     $session_tab = new SessionTable();
     $session_tab->users_id = $user_id;
