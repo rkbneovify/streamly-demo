@@ -172,7 +172,8 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 259200; //one month in minutes
+        // $expirationInMinutes = 259200; //one month in minutes
+        $expirationInMinutes = 259200; // 180 days
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
         if (!$token = JWTAuth::attempt($credentials)) {
@@ -402,7 +403,7 @@ class AuthController extends Controller
         }
         // $user = User::where('email', '=', $email)->first();
 
-        $expirationInMinutes = 43800; //one month in minutes
+        $expirationInMinutes = 259200; //180 days
         JWTAuth::factory()->setTTL($expirationInMinutes);
         $token = JWTAuth::fromUser($user);
         // $credentials = c;
