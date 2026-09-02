@@ -192,7 +192,9 @@
                                     {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
 
                                 @else
-                                    <span class="badge badge-danger badge-pill p-2 px-3">Logout</span>
+                                      {{ date('d/m/Y', strtotime($user->updated_at)) }}
+                                    <br>
+                                    {{ \Carbon\Carbon::parse($user->updated_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                                 @endif
                             </td>
 
