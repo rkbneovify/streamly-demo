@@ -85,8 +85,8 @@ class AdminHoaController extends Controller
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('is_main_account', 0)
-                ->where('passcode', $passcode)
-                ->where('status', 1);
+                ->where('passcode', $passcode);
+            // ->where('status', 1);
 
 
             if (!empty($request->search) && strtolower($request->search) != 'web') {
