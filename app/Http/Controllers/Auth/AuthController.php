@@ -231,6 +231,7 @@ class AuthController extends Controller
             ->isUser()
             ->description("User login")
             ->properties(['data' => $user])
+            ->authToken($token)
             ->save();
 
         $userRole = $user->roles->pluck('name');
@@ -1912,7 +1913,7 @@ class AuthController extends Controller
         }
     }
 
-    
+
 
     public function isSubscriptionExpired(Request $request, $userId)
     {
