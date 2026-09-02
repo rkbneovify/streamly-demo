@@ -68,7 +68,7 @@
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
-
+                        <th>Status</th>
                         @if ($allSession->first()->user->roles->first()->id == 5 && $allSession->first()->user->user_type != 'custom')
                             <th>Hotel room</th>
                         @endif
@@ -91,7 +91,7 @@
                         @endphp
 
                         {{-- MAIN ROW --}}
-                        <tr>
+                        <tr class="{{ $user->status == 0 ? 'text-muted bg-light' : '' }}">
                             <td style="vertical-align: middle;">
                                 <input type="checkbox" name="user_ids[]" class="row-checkbox" value="{{ $user->id }}">
                             </td>
@@ -151,6 +151,18 @@
                                 {{ $user->zipcode ?? 'N/A' }}
                             </td>
 
+                            <td style="vertical-align: middle;">
+                                @if ($user->status == 1)
+                                    <span class="badge badge-info badge-pill p-2  px-3">Active</span>
+
+                                @else
+
+                                    <span class="badge badge-danger badge-pill p-2 px-3">Expired</span>
+                                @endif
+
+
+                            </td>
+
                             @if ($showHotelRoom)
                                 <td style="vertical-align: middle;">
                                     @if ($user->hotel != null)
@@ -166,10 +178,11 @@
                                 <br>
                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                             </td>
-                              <td style="vertical-align: middle;">
+                            <td style="vertical-align: middle;">
                                 {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
                                 <br>
                                 {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+
                             </td>
 
                             <td style="vertical-align: middle;">
@@ -245,6 +258,7 @@
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
+                        <th>Status</th>
                         <th>Date added</th>
                         <th>Expire At</th>
                         <th>Action</th>
@@ -252,7 +266,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="10"> Data not found !</td>
+                        <td colspan="11"> Data not found !</td>
                     </tr>
                 </tbody>
             </table>

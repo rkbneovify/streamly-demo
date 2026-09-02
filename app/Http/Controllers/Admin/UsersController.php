@@ -1594,8 +1594,8 @@ class UsersController extends Controller
             $query->selectRaw("*,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
-                ->where('users_id', $id)
-                ->where('status', 1);
+                ->where('users_id', $id);
+            // ->where('status', 1);
 
 
             if (!empty($request->search) && strtolower($request->search) != 'web') {
@@ -1622,11 +1622,13 @@ class UsersController extends Controller
                     })->values();
                 }
             } else {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
+                // $query->orderBy('created_on', 'desc');
             }
 
-
+            $allSession = $query
+                ->orderBy('status', 'desc')       // status = 1 first
+                ->orderBy('created_on', 'desc')   // latest first within status
+                ->get();
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
