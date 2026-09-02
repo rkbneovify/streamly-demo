@@ -192,9 +192,9 @@
                                     {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
 
                                 @else
-                                      {{ date('d/m/Y', strtotime($user->updated_at)) }}
+                                    {{ date('d/m/Y', strtotime($user->modified_on)) }}
                                     <br>
-                                    {{ \Carbon\Carbon::parse($user->updated_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+                                    {{ \Carbon\Carbon::parse($user->modified_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                                 @endif
                             </td>
 
