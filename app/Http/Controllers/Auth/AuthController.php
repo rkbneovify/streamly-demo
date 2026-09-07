@@ -173,8 +173,8 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
         // $expirationInMinutes = 259200; //one month in minutes
-        $expirationInMinutes = 259200; // 180 days
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 259200; // 180 days
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -227,13 +227,7 @@ class AuthController extends Controller
             }
         }
 
-        $this->activity($user->id)->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->isUser()
-            ->description("User login")
-            ->properties(['data' => $user])
-            ->authToken($token)
-            ->save();
+
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
@@ -266,8 +260,8 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 43800; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 43800; //one month in minutes
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -307,8 +301,8 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 43800; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 43800; //one month in minutes
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -403,8 +397,8 @@ class AuthController extends Controller
         }
         // $user = User::where('email', '=', $email)->first();
 
-        $expirationInMinutes = 259200; //180 days
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 259200; //180 days
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
         $token = JWTAuth::fromUser($user);
         // $credentials = c;
         // $user=JWTAuth::user();
@@ -762,7 +756,8 @@ class AuthController extends Controller
                     ->save();
             } else {
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
-                $this->activity()->event("User")
+                $this->activity(null, request()->bearerToken())
+                    ->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "user logout <br>" .
