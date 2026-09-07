@@ -227,13 +227,7 @@ class AuthController extends Controller
             }
         }
 
-        $this->activity($user->id)->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->isUser()
-            ->description("User login")
-            ->properties(['data' => $user])
-            ->authToken($token)
-            ->save();
+
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
@@ -762,7 +756,8 @@ class AuthController extends Controller
                     ->save();
             } else {
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
-                $this->activity()->event("User")
+                $this->activity(null, request()->bearerToken())
+                    ->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "user logout <br>" .
