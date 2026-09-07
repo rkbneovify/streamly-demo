@@ -177,10 +177,16 @@
         <!-- Silver 34fn sd  -->
         <div *ngIf="!subscreptionCanceled" class="acoount_user_email my-4">
           <label>Plan Renewal Date</label>
-          <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
+
+          @if (renewalDate != null && renewalDate != '') {
+          <p>{{ renewalDate }}</p>
+          } @else if (planExpiredAt != null) {
+          <p>{{ planExpiredAt }}</p>
+          }
+          <!-- <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
           <ng-template #formatDate>
             <p>{{ renewalDate | date }}</p>
-          </ng-template>
+          </ng-template> -->
         </div>
 
         <div *ngIf="subscreptionCanceled" class="acoount_user_email my-4">
