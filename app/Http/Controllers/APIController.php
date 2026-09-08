@@ -173,8 +173,7 @@ class APIController extends Controller
     public function unhashid($id)
     {
 
-        $User = UnHashUserID($id);
-        ;
+        $User = UnHashUserID($id);;
         if ($User) {
             $response = array('status' => true, 'message' => "id unhashed retrieved.", 'data' => $User);
             return response()->json($response, 200);
@@ -254,8 +253,7 @@ class APIController extends Controller
         $jwtToken = new JwtToken();
         $jwtToken->user_id = $user->id;
         $jwtToken->token = $token;
-        $jwtToken->browser = $agent->browser();
-        ;
+        $jwtToken->browser = $agent->browser();;
         $jwtToken->platform = $agent->platform();
         $jwtToken->device = $agent->device();
         $mobileHeader = $request->header('x_platform');
@@ -417,8 +415,6 @@ class APIController extends Controller
                 ];
 
                 return response()->json($response, 200);
-
-
             } elseif ($userRole == 'hoa') {
                 $prevConnectDevicecount1 = SessionTable::with([
                     'pdname' => function ($q) use ($uid) {
@@ -548,8 +544,6 @@ class APIController extends Controller
         ];
 
         return response()->json($response, 200);
-
-
     }
 
 
@@ -695,6 +689,16 @@ class APIController extends Controller
                 'message' => 'Successfully added to favourite channel',
                 'response_code' => 200,
             ];
+
+            $this->activity()
+                ->event('Channel')
+                ->eventType('Favorite')
+                ->isUser()
+                ->descriptionSimple("Channel favorite by user")
+                ->properties([
+                    "data" => Channel::find($channelid)->refresh()
+                ])->save();
+
             return response()->json($response, 200);
         } catch (Exception $exception) {
 
@@ -726,6 +730,16 @@ class APIController extends Controller
                 'message' => 'Successfully removed from favourite channel list',
                 'response_code' => 200,
             ];
+
+            $this->activity()
+                ->event('Channel')
+                ->eventType('Unfavorite')
+                ->isUser()
+                ->descriptionSimple("Channel unfavorite by user")
+                ->properties([
+                    "data" => Channel::find($channelid)->refresh()
+                ])->save();
+
             return response()->json($response, 200);
         } catch (Exception $exception) {
 
@@ -1174,7 +1188,6 @@ class APIController extends Controller
             ->where('status', 1)
             ->get()->map(function ($item) {
                 JWTAuth::setToken($item->access_token)->invalidate();
-
             });
         // delete session
         DB::table('session_table')
@@ -1203,13 +1216,9 @@ class APIController extends Controller
 
             if ($request->user()->is_custom_user != 1) {
                 $request->user()->subscription('main')->skipTrial()->cancelNow();
-
-
-
             }
 
             return $this->handleTwoWayDeleteAccount();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -1218,12 +1227,6 @@ class APIController extends Controller
                 "message" => "Something went wrong. Please try again later."
             ], 500);
         }
-
-
-
-
-
-
     }
 
 
@@ -1280,9 +1283,7 @@ class APIController extends Controller
                                 DB::table('subscriptions')
                                     ->where(['user_id' => $id, 'stripe_status' => 'active'])
                                     ->update(['stripe_status' => "canceled"]);
-
                             }
-
                         } catch (Exception $e) {
                             DB::rollBack();
                             return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);

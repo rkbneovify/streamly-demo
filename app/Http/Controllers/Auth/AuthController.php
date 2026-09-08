@@ -243,6 +243,16 @@ class AuthController extends Controller
 
         $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
 
+
+
+        $this->activity($user->id, $token)
+            ->event("User")
+            ->eventType(ActivityEventType::LOGIN)
+            ->isUser()
+            ->description("User login")
+            ->properties(['data' => User::find($user->id)->refresh()])
+            ->save();
+
         $this->authenticated($request, $user, $token, $validateFlag);
 
         return $this->respondWithToken($token, $validateFlag);
@@ -429,34 +439,7 @@ class AuthController extends Controller
         //todo hotel check
 
 
-        $this->activity($user->id)
-            ->event("User")
-            ->eventType(ActivityEventType::LOGIN);
 
-        if ($isMainUser && $userRole[0] == "hoa") {
-            $this->description("Hoa main use login with passcode")
-                ->isUser()
-                ->properties([
-                    "user" => $user
-                ])
-                ->save();
-        } elseif (!$isMainUser && $userRole[0] == "hoa") {
-            $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
-            $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
-                ->isUser()
-                ->passcode($hoaUser->passcode)
-                ->properties([
-                    "user" => $hoaUser
-                ])
-                ->save();
-        } else {
-            $this->description("Login with passcode")
-                ->isUser()
-                ->properties([
-                    "user" => $hoaUser
-                ])
-                ->save();
-        }
 
 
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
@@ -464,6 +447,36 @@ class AuthController extends Controller
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
+
+        // $this->activity($user->id, $token)
+        //     ->event("User")
+        //     ->eventType(ActivityEventType::LOGIN);
+
+        // if ($isMainUser && $userRole[0] == "hoa") {
+        //     $this->description("Hoa main use login with passcode")
+        //         ->isUser()
+        //         ->properties([
+        //             "user" => $user
+        //         ])
+        //         ->save();
+        // } elseif (!$isMainUser && $userRole[0] == "hoa") {
+        //     $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
+        //     $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
+        //         ->isUser()
+        //         ->passcode($hoaUser->passcode)
+        //         ->properties([
+        //             "user" => $hoaUser
+        //         ])
+        //         ->save();
+        // } else {
+        //     $this->description("Login with passcode")
+        //         ->isUser()
+        //         ->properties([
+        //             "user" => $hoaUser
+        //         ])
+        //         ->save();
+        // }
+
         //  hoa main login limit
 
         // $user_data=array('name'=>$user->name,'email'=>$user->email,'token'=>$token);

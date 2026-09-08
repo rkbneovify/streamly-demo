@@ -928,6 +928,16 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         // hoa sub user subscription check
         if (HoaUser::getCurrentHoaUser()) {
 
+         (new ActivityLogService)
+                ->activity($user_id, $token)
+                ->event("User")
+                ->eventType(ActivityEventType::LOGIN)
+                ->isUser()
+                ->passcode(HoaUser::getCurrentHoaUser()->passcode)
+                ->descriptionSimple('Hoa sub user login')
+                ->properties(['data' => User::find($user_id)->refresh()])
+                ->save();
+
             if (!str_starts_with(request()->deviceid, 'web')) {
                 $subsCheck = isHoaSubUserSubscription(HoaUser::getCurrentHoaUser()->passcode);
                 if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
@@ -942,6 +952,15 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
                     ])->send();
                 }
             }
+        } else {
+            (new ActivityLogService)
+                ->activity($user_id, $token)
+                ->event("User")
+                ->eventType(ActivityEventType::LOGIN)
+                ->isUser()
+                ->description("User login")
+                ->properties(['data' => User::find($user_id)->refresh()])
+                ->save();
         }
 
         // subscription check and verify before login
@@ -967,14 +986,6 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         }
 
 
-        (new ActivityLogService)
-            ->activity($user_id, $token)
-            ->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->isUser()
-            ->description("User login")
-            ->properties(['data' => User::find($user_id)->refresh()])
-            ->save();
 
         return response()->json(
             $response,

@@ -204,7 +204,7 @@
                                         data-url="{{ route('admin.users.session.destroy', $user->id) }}">
                                         <img class="img-delete" src="{{ asset('images/trash.png') }}" alt="Delete Icon">
                                     </a>
-                                    {{-- <a class="btn-activity"
+                                    <a class="btn-activity" target="_blank"
                                         href="{{ route('admin.users.activity.session.token', $user->access_token) }}"
                                         data-url="{{ route('admin.users.activity.session.token', $user->access_token) }}">
                                         <svg width="25px" height="25px" viewBox="0 -0.5 25 25" fill="none"
@@ -221,7 +221,7 @@
                                             </g>
 
                                         </svg>
-                                    </a> --}}
+                                    </a>
                                 </div>
                             </td>
                         </tr>

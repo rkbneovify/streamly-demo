@@ -169,6 +169,98 @@
         .vertical-align {
             vertical-align: middle;
         }
+
+        .nav-pills .nav-link {
+            border-radius: 20px;
+        }
+    </style>
+    <style>
+        .select-wrapper {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .select-wrapper:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .select-wrapper img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .select-custom {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .select-custom:focus {
+            border-color: none;
+            box-shadow: none;
+        }
+
+        .btn-add-user {
+            text-decoration: none;
+            color: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-daterange {
+            width: 100%;
+            padding: 4px 10px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: none;
+            /* border-radius: 4px; */
+            font-size: 13.8px;
+            font-weight: 600;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            /* Remove default arrow for most browsers */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: none;
+        }
     </style>
 @endsection
 @section('content')
@@ -242,6 +334,21 @@
 
 
                         </div>
+
+
+                        <div class="col-md-2 mb-3">
+                            <div class="select-wrapper">
+                                <img src="{{ asset('images/user-mode.png') }}" alt="status icon">
+                                <select name="status" id="sel_status" class="select-custom">
+                                    <option value="">Select Status</option>
+                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active
+                                    </option>
+                                    <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>
+                                        Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col">
                             <a href="javascript:void(0)" id="btn-show-selected">
                                 <h3 id="selected" class="card-title mt-2"></h3>
@@ -280,244 +387,281 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
-    <script>
-        let storageKey = "selected_sessions";
 
-        // Get selected IDs from localStorage
-        function getSelected() {
-            return JSON.parse(localStorage.getItem(storageKey)) || [];
+<script>
+    $(document).on('click', 'a[data-toggle="pill"]', function () {
+        const event = $(this).data('event');
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('event', event);
+
+        window.location.href = url.toString();
+    });
+</script>
+
+
+<script>
+    $(document).on('change', '#sel_status', function (e) {
+        let url = new URL(window.location.href);
+        let params = url.searchParams;
+        let page = parseInt(params.get("page")) || 1;
+
+
+        if (page > 1) {
+            // reset URL (remove params except page)
+            url.search = "";
+            url.searchParams.delete("page");
+            url.searchParams.set("status", $(this).val());
+        } else if ($(this).val() == "") {
+            url.searchParams.delete("status");
+        } else {
+            // just add role param
+            url.searchParams.set("status", $(this).val());
         }
 
-        // Save to localStorage
-        function saveSelected(ids) {
-            localStorage.setItem(storageKey, JSON.stringify(ids));
-        }
+        window.history.pushState({}, '', url.toString());
+        window.location.href = url.toString();
+    });
+</script>
 
-        function removeAll() {
-            localStorage.removeItem(storageKey);
-            restoreSelectedData();
-        }
+<script>
+    let storageKey = "selected_sessions";
 
-        function restoreSelectedData() {
-            let selected = getSelected();
+    // Get selected IDs from localStorage
+    function getSelected() {
+        return JSON.parse(localStorage.getItem(storageKey)) || [];
+    }
+
+    // Save to localStorage
+    function saveSelected(ids) {
+        localStorage.setItem(storageKey, JSON.stringify(ids));
+    }
+
+    function removeAll() {
+        localStorage.removeItem(storageKey);
+        restoreSelectedData();
+    }
+
+    function restoreSelectedData() {
+        let selected = getSelected();
 
 
-            $('.row-checkbox').each(function() {
-                $(this).prop('checked', selected.includes($(this).val()));
-            });
-            let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-                '.row-checkbox').length;
-            $('#selectAll').prop('checked', allChecked);
+        $('.row-checkbox').each(function () {
+            $(this).prop('checked', selected.includes($(this).val()));
+        });
+        let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+            '.row-checkbox').length;
+        $('#selectAll').prop('checked', allChecked);
 
-            // let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
-            //     '.row-checkbox').length;
-            // $('#selectAll').prop('checked', allChecked);
-            // allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
+        // let allChecked = $('.row-checkbox').length > 0 && $('.row-checkbox:checked').length === $(
+        //     '.row-checkbox').length;
+        // $('#selectAll').prop('checked', allChecked);
+        // allChecked == true ? $('#btnDeleteAll').show() : $('#btnDeleteAll').hide()
 
-            if ($('.row-checkbox:checked').length <= 0) {
-                $('#selected').text("")
+        if ($('.row-checkbox:checked').length <= 0) {
+            $('#selected').text("")
+            $('#btnDeleteAll').hide()
+        } else {
+            $('#selected').text("Selected : " + $('.row-checkbox:checked').length)
+            if ($('.row-checkbox:checked').length > 1) {
+                $('#btnDeleteAll').show()
+            } else {
                 $('#btnDeleteAll').hide()
-            } else {
-                $('#selected').text("Selected : " + $('.row-checkbox:checked').length)
-                if ($('.row-checkbox:checked').length > 1) {
-                    $('#btnDeleteAll').show()
-                } else {
-                    $('#btnDeleteAll').hide()
-                }
-
-
             }
+
+
+        }
+    }
+
+    window.addEventListener("load", () => {
+        const [nav] = performance.getEntriesByType("navigation");
+        const hasParams = window.location.search.length > 0;
+
+        if (nav.type !== "reload" && !hasParams) {
+            removeAll();
+
         }
 
-        window.addEventListener("load", () => {
-            const [nav] = performance.getEntriesByType("navigation");
-            const hasParams = window.location.search.length > 0;
 
-            if (nav.type !== "reload" && !hasParams) {
-                removeAll();
+    });
 
-            }
-
-
-        });
-
-        $(document).ready(function() {
-            restoreSelectedData();
-        });
-    </script>
-    <script>
-        const txtSearch = document.getElementById("txtSearch");
-        const btnClear = document.getElementById("btnClear");
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const btnDeleteAll = document.getElementById('btnDeleteAll');
-        const userCheckboxes = document.querySelectorAll('.row-checkbox');
+    $(document).ready(function () {
+        restoreSelectedData();
+    });
+</script>
+<script>
+    const txtSearch = document.getElementById("txtSearch");
+    const btnClear = document.getElementById("btnClear");
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const btnDeleteAll = document.getElementById('btnDeleteAll');
+    const userCheckboxes = document.querySelectorAll('.row-checkbox');
 
 
 
 
 
-        $('#btnDeleteAll').hide();
-        txtSearch.addEventListener("input", () => {
-            btnClear.style.display = txtSearch.value ? "block" : "none";
-        });
+    $('#btnDeleteAll').hide();
+    txtSearch.addEventListener("input", () => {
+        btnClear.style.display = txtSearch.value ? "block" : "none";
+    });
 
-        btnClear.addEventListener("click", () => {
-            txtSearch.value = "";
-            btnClear.style.display = "none";
-            txtSearch.focus();
-            fetchData();
-        });
-
-
-
-        $(document).on('change', '.row-checkbox', function() {
-            let selected = getSelected();
-            if ($(this).is(':checked')) {
-                if (!selected.includes($(this).val())) {
-                    selected.push($(this).val());
-                    saveSelected(selected);
-                }
-
-            } else {
+    btnClear.addEventListener("click", () => {
+        txtSearch.value = "";
+        btnClear.style.display = "none";
+        txtSearch.focus();
+        fetchData();
+    });
 
 
-                selected = selected.filter(id => id !== $(this).val());
+
+    $(document).on('change', '.row-checkbox', function () {
+        let selected = getSelected();
+        if ($(this).is(':checked')) {
+            if (!selected.includes($(this).val())) {
+                selected.push($(this).val());
                 saveSelected(selected);
             }
 
-            restoreSelectedData();
+        } else {
 
-        });
 
-        $(document).on('change', '#selectAll', function() {
-            let selected = getSelected();
-            const userCheckboxes = $('.row-checkbox');
-            if ($(this).is(':checked')) {
-                userCheckboxes.each(function() {
-                    this.checked = true;
-                    if (!selected.includes(this.value)) {
-                        selected.push(this.value);
-                    }
-                });
-                $('#btnDeleteAll').show();
-            } else {
-                $('#btnDeleteAll').hide();
-                userCheckboxes.each(function() {
-                    this.checked = false;
-                    if (selected.includes(this.value)) {
-                        selected = selected.filter(id => id !== this.value);
-                    }
-
-                });
-
-            }
+            selected = selected.filter(id => id !== $(this).val());
             saveSelected(selected);
-            restoreSelectedData();
-        });
-
-        btnDeleteAll.addEventListener('click', (e) => {
-            e.preventDefault();
-            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-            if (checkedBoxes.length == 0) {
-                Swal.fire({
-                    toast: true,
-                    icon: 'error',
-                    title: 'Please select at least one',
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                }).then(() => {
-                    location.reload(); // reload after toast timeout
-                });
-
-            } else {
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: `Do you really want to remove sessions?`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: `Yes`,
-                    cancelButtonText: "Cancel",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('#tbl-form').submit();
-                        showLoader();
-                    } else {
-                        location.reload();
-                    }
-                });
-            }
-
-
-
-        })
-
-        document.querySelectorAll('.btn-delete').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const url = btn.getAttribute('data-url');
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: `Do you really want to remove sessions?`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: `Yes`,
-                    cancelButtonText: "Cancel",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        showLoader();
-                        window.location.href = url;
-                    } else {
-                        location.reload();
-                    }
-                });
-            });
-        });
-
-        function toggleDeviceId(element) {
-            const fullId = element.getAttribute('data-full');
-            const shortId = fullId.substring(0, 10) + '...';
-            console.log(element.innerText);
-
-
-            if (element.innerText === shortId) {
-                element.innerText = fullId;
-            } else {
-                element.innerText = shortId;
-            }
         }
 
-        function fetchData(page = 1) {
+        restoreSelectedData();
 
-            let search = $('input[name="search"]').val();
+    });
 
+    $(document).on('change', '#selectAll', function () {
+        let selected = getSelected();
+        const userCheckboxes = $('.row-checkbox');
+        if ($(this).is(':checked')) {
+            userCheckboxes.each(function () {
+                this.checked = true;
+                if (!selected.includes(this.value)) {
+                    selected.push(this.value);
+                }
+            });
+            $('#btnDeleteAll').show();
+        } else {
+            $('#btnDeleteAll').hide();
+            userCheckboxes.each(function () {
+                this.checked = false;
+                if (selected.includes(this.value)) {
+                    selected = selected.filter(id => id !== this.value);
+                }
 
-            $.ajax({
-                url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
-                success: function(data) {
-                    $('#user-data').html(data);
-                    restoreSelectedData()
+            });
+
+        }
+        saveSelected(selected);
+        restoreSelectedData();
+    });
+
+    btnDeleteAll.addEventListener('click', (e) => {
+        e.preventDefault();
+        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+        if (checkedBoxes.length == 0) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Please select at least one',
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                location.reload(); // reload after toast timeout
+            });
+
+        } else {
+            Swal.fire({
+                title: "Are you sure?",
+                text: `Do you really want to remove sessions?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: `Yes`,
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#tbl-form').submit();
+                    showLoader();
+                } else {
+                    location.reload();
                 }
             });
         }
 
 
 
-        $(document).on('keyup', 'input[name="search"]', function() {
-            let search = $('input[name="search"]').val();
-            if (search.length > 0) {
-                $('#btnClear').show();
-            }
-            fetchData();
+    })
+
+    document.querySelectorAll('.btn-delete').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const url = btn.getAttribute('data-url');
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: `Do you really want to remove sessions?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: `Yes`,
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    showLoader();
+                    window.location.href = url;
+                } else {
+                    location.reload();
+                }
+            });
         });
+    });
+
+    function toggleDeviceId(element) {
+        const fullId = element.getAttribute('data-full');
+        const shortId = fullId.substring(0, 10) + '...';
+        console.log(element.innerText);
+
+
+        if (element.innerText === shortId) {
+            element.innerText = fullId;
+        } else {
+            element.innerText = shortId;
+        }
+    }
+
+    function fetchData(page = 1) {
+
+        let search = $('input[name="search"]').val();
+
+
+        $.ajax({
+            url: "{{ url()->current() }}" + "?page=" + page + "&search=" + search,
+            success: function (data) {
+                $('#user-data').html(data);
+                restoreSelectedData()
+            }
+        });
+    }
+
+
+
+    $(document).on('keyup', 'input[name="search"]', function () {
+        let search = $('input[name="search"]').val();
+        if (search.length > 0) {
+            $('#btnClear').show();
+        }
+        fetchData();
+    });
+</script>
+@if (session()->pull('remove-all'))
+    <script>
+        removeAll();
     </script>
-    @if (session()->pull('remove-all'))
-        <script>
-            removeAll();
-        </script>
-    @endif
+@endif
 @stop
