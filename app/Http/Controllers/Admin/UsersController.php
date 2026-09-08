@@ -1558,7 +1558,7 @@ class UsersController extends Controller
         }
     }
 
-    public function connectedDeviceNew($id, Request $request)
+    public function connectedDeviceNew_08_09_26($id, Request $request)
     {
 
         // $session =   SessionTable::where('users_id', $id)->latest('created_on')->first();
@@ -1654,6 +1654,89 @@ class UsersController extends Controller
                 ->timerProgressBar()
                 ->autoClose(3000);
             // Alert::error('Oops !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function connectedDeviceNew($id, Request $request)
+    {
+        try {
+            $user = User::find($id);
+
+            $roles = Role::get();
+            $userRoles = $user->roles->pluck('id')->toArray();
+
+            $query = SessionTable::query();
+
+            $query->with([
+                'user.roles',
+                'hotel',
+                'pdInfo' => fn($query) => $query->where('user_id', $id),
+                'subSession'
+            ]);
+
+            $query->selectRaw("
+            *,
+            SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+            JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent
+        ")->where('users_id', $id);
+
+            /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
+            $query->filterSearch($request->search)
+                ->filterStatus($request->status);
+
+            /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
+
+            $perPage = $request->get('per_page', 10);
+
+            $allSession = $query
+                ->orderBy('status', 'desc')
+                ->orderBy('created_on', 'desc')
+                ->paginate($perPage)
+                ->withQueryString();
+
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+
+            /*
+        |--------------------------------------------------------------------------
+        | AJAX
+        |--------------------------------------------------------------------------
+        */
+
+            if ($request->ajax()) {
+                return view(
+                    'admin.users.partials.connected-table',
+                    compact('allSession', 'totalRooms')
+                );
+            }
+
+            if ($allSession->total() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+
+                return redirect()->back();
+            }
+
+            return view(
+                'admin.users.connected-new',
+                compact('allSession', 'totalRooms')
+            );
+        } catch (\Throwable $th) {
+
+            toast('Something went wrong! Try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            // Alert::error('error', $th->getMessage());
             return redirect()->back();
         }
     }

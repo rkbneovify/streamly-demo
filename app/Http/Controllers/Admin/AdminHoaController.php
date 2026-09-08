@@ -89,43 +89,46 @@ class AdminHoaController extends Controller
             // ->where('status', 1);
 
 
-            if (!empty($request->search) && strtolower($request->search) != 'web') {
+            // if (!empty($request->search) && strtolower($request->search) != 'web') {
 
 
-                $query->whereHas('pdInfoPasscode', function ($query) use ($request) {
-                    $query->where('personal_devicename', 'like', '%' . $request->search . '%')
-                        ->orWhere('platform', 'like', '%' . $request->search . '%')
-                        ->orWhere('device_model', 'like', '%' . $request->search . '%')
-                        ->orWhere('build_version', 'like', '%' . $request->search . '%')
-                        ->orWhere('zipcode', 'like', '%' . $request->search . '%');
-                });
-
-
-
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-            } elseif (!empty($request->search) && strtolower($request->search) == 'web') {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-                if (!empty($request->search) && strtolower($request->search) == 'web') {
-                    $allSession = $allSession->filter(function ($item) {
-                        return strtolower($item->device_type) === 'web';
-                    })->values();
-                }
-            } else {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-            }
+            //     $query->whereHas('pdInfoPasscode', function ($query) use ($request) {
+            //         $query->where('personal_devicename', 'like', '%' . $request->search . '%')
+            //             ->orWhere('platform', 'like', '%' . $request->search . '%')
+            //             ->orWhere('device_model', 'like', '%' . $request->search . '%')
+            //             ->orWhere('build_version', 'like', '%' . $request->search . '%')
+            //             ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+            //     });
 
 
 
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            // } elseif (!empty($request->search) && strtolower($request->search) == 'web') {
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            //     if (!empty($request->search) && strtolower($request->search) == 'web') {
+            //         $allSession = $allSession->filter(function ($item) {
+            //             return strtolower($item->device_type) === 'web';
+            //         })->values();
+            //     }
+            // } else {
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            // }
 
-            if ($allSession->count() <= 0) {
-                toast('No active device.', 'error')
-                    ->timerProgressBar()
-                    ->autoClose(3000);
-                return redirect()->back();
-            }
+            $query->filterSearch($request->search)
+                ->filterStatus($request->status)
+                ->orderBy('created_on', 'desc');
+            $allSession = $query->get();
+
+
+            // if ($allSession->count() <= 0) {
+            //     toast('No active device.', 'error')
+            //         ->timerProgressBar()
+            //         ->autoClose(3000);
+            //     return redirect()->back();
+            // }
 
             // return response()->json($allSession);
 

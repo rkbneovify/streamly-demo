@@ -238,7 +238,10 @@
                                     @default
                                         @if ($user->is_active == 1)
                                             @if ($user->sessions_count > 0)
-                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                                <a href="{{ route('admin.users.connected.devices.new', [
+                                                    'id'=> $user->id,
+                                                    'status'=>1
+                                                ]) }}">
                                                     {{ $user->sessions_count }} / 5
                                                 </a>
                                             @else

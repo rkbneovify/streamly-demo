@@ -213,6 +213,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/activities/users/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
     Route::get('/activities/session/{token?}', 'Admin\AdminActivityController@bySession')->name('users.activity.session.token');
     Route::get('/activities/sub-users/{passcode}', 'Admin\AdminActivityController@subUserActivity')->name('sub-user.activity');
+    Route::get('/activities/sub-users/session/{token?}', 'Admin\AdminActivityController@subUserBySession')->name('sub-user.activity.session');
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create')->name('channel.create'); //channels Statust

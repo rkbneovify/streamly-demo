@@ -48,6 +48,41 @@ class SessionTable extends Model
      * @var array
      */
     protected $guarded = [];
+
+
+    public function scopeFilterStatus($query, $status)
+    {
+        if ($status !== null) {
+            return $query->where('status', $status);
+        }
+    }
+
+    public function scopeFilterSearch($query, $search)
+    {
+
+        if (!empty($search)) {
+
+            if (strtolower($search) !== 'web') {
+
+
+
+                $query->whereHas('pdInfo', function ($query) use ($search) {
+                    $query->where('personal_devicename', 'like', "%{$search}%")
+                        ->orWhere('platform', 'like', "%{$search}%")
+                        ->orWhere('device_model', 'like', "%{$search}%")
+                        ->orWhere('build_version', 'like', "%{$search}%")
+                        ->orWhere('zipcode', 'like', "%{$search}%");
+                });
+            } else {
+
+                // Filter web sessions directly in SQL
+                $query->whereRaw("LOWER(device_type) = 'web'");
+            }
+        }
+    }
+
+    public function status() {}
+
     public function user()
     {
         return $this->belongsTo(User::class, 'users_id');
