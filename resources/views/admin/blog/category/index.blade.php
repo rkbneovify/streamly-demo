@@ -223,7 +223,7 @@
                                     <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active
                                     </option>
                                     <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>
-                                       Deactive</option>
+                                        Deactive</option>
 
                                 </select>
                             </div>
@@ -285,7 +285,7 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            Add Sub Category
+                            Add Category
                         </h5>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -295,11 +295,12 @@
 
                     <div class="modal-body">
 
-                        
+
                         <div class="form-group">
                             <label for="title">Category</label>
                             <input type="text" name="title" class="form-control" placeholder="Enter category" required>
                         </div>
+
 
                     </div>
 

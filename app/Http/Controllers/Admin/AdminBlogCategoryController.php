@@ -10,9 +10,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminBlogCategoryController extends Controller
 {
-    public function __construct(public Request $request, public BlogCategory $blogCategory)
-    {
-    }
+    public function __construct(public Request $request, public BlogCategory $blogCategory) {}
 
     public function index()
     {
@@ -39,7 +37,7 @@ class AdminBlogCategoryController extends Controller
     public function store()
     {
         $validator = validator($this->request->all(), [
-           
+
             'title' => 'required|string|unique:blog_categories,title',
         ], [
             'title.unique' => 'This category already exists. Please use a different category.',
@@ -77,7 +75,7 @@ class AdminBlogCategoryController extends Controller
     {
 
         $validator = validator($this->request->all(), [
-           
+
             'title' => 'required|string|max:225|unique:blog_categories,title,' . $id,
         ], [
             'title.unique' => 'This category already exists. Please use a different category.',
@@ -198,7 +196,6 @@ class AdminBlogCategoryController extends Controller
                     ]);
                     $message = 'deactive';
                     break;
-
             }
 
 
@@ -216,5 +213,4 @@ class AdminBlogCategoryController extends Controller
             return redirect()->back();
         }
     }
-
 }

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SVG Icon Editor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+
+            font-family: Arial, sans-serif;
+
+            background: #f5f6f8;
+        }
+
+
+        /* =========================================
+           EDITOR
+        ========================================= */
+
+        .svg-editor {
+
+            width: 100%;
+            max-width: 420px;
+
+            margin: 0 auto;
+
+            padding: 25px;
+
+            background: #ffffff;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .svg-editor h2 {
+
+            margin: 0 0 5px;
+
+            font-size: 22px;
+
+            color: #222;
+        }
+
+
+        .svg-editor .description {
+
+            margin: 0 0 25px;
+
+            font-size: 13px;
+
+            color: #888;
+        }
+
+
+        /* =========================================
+           PREVIEW AREA
+        ========================================= */
+
+        .preview-wrapper {
+
+            width: 100%;
+
+            min-height: 220px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            border-radius: 10px;
+
+            background: #f8f8f8;
+        }
+
+
+        /* =========================================
+           CIRCLE
+        ========================================= */
+
+        .icon-preview {
+
+            width: 80px;
+            height: 80px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background-color: #dffbff;
+
+            overflow: hidden;
+        }
+
+
+        /* Uploaded SVG */
+
+        .icon-preview svg {
+
+            display: block;
+
+            width: 35px;
+            height: 35px;
+
+            max-width: none;
+            max-height: none;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           UPLOAD
+        ========================================= */
+
+        .upload-label {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 13px;
+
+            text-align: center;
+
+            border: 1px dashed #cfcfcf;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            color: #555;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .upload-label:hover {
+
+            border-color: #777;
+
+            background: #fafafa;
+        }
+
+
+        #svgInput {
+
+            display: none;
+        }
+
+
+        .file-name {
+
+            min-height: 16px;
+
+            margin-top: 8px;
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color: #888;
+        }
+
+
+        /* =========================================
+           CONTROL
+        ========================================= */
+
+        .control {
+
+            margin-top: 20px;
+        }
+
+
+        .control label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #333;
+        }
+
+
+        /* =========================================
+           COLOR CONTROL
+        ========================================= */
+
+        .color-control {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .color-picker {
+
+            width: 45px;
+            height: 40px;
+
+            padding: 2px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            background: #fff;
+        }
+
+
+        .color-input {
+
+            flex: 1;
+
+            width: 100%;
+
+            height: 40px;
+
+            padding: 0 10px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+
+        .color-input:focus {
+
+            border-color: #777;
+        }
+
+
+        /* =========================================
+           RANGE SLIDER
+        ========================================= */
+
+        .range-wrapper {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .range-wrapper input[type="range"] {
+
+            flex: 1;
+
+            width: 100%;
+
+            cursor: pointer;
+        }
+
+
+        .size-value {
+
+            min-width: 48px;
+
+            text-align: right;
+
+            font-size: 13px;
+
+            color: #666;
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
+        .buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+
+        button {
+
+            flex: 1;
+
+            height: 42px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+
+            opacity: 0.85;
+        }
+
+
+        .reset-btn {
+
+            background: #eeeeee;
+
+            color: #333;
+        }
+
+
+        .download-btn {
+
+            background: #111111;
+
+            color: #ffffff;
+        }
+
+
+        .copy-btn {
+
+            background: #e8f4ff;
+
+            color: #145a8d;
+        }
+
+
+        .copy-btn:focus-visible,
+        button:focus-visible {
+
+            outline: 2px solid #145a8d;
+
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 480px) {
+
+            body {
+
+                padding: 20px 15px;
+            }
+
+
+            .svg-editor {
+
+                padding: 20px;
+            }
+
+
+            .preview-wrapper {
+
+                min-height: 180px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="svg-editor">
+
+
+        <!-- =========================================
+         TITLE
+    ========================================= -->
+
+        <h2>
+            SVG Icon Editor
+        </h2>
+
+        <p class="description">
+            Upload an SVG and customize your icon.
+        </p>
+
+
+        <!-- =========================================
+         PREVIEW
+    ========================================= -->
+
+        <div class="preview-wrapper">
+
+            <div class="icon-preview" id="iconPreview">
+
+                <!-- Default Icon -->
+
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                    <rect x="3" y="3" width="6" height="6" rx="1" stroke="#00BBD4" stroke-width="1.5" />
+
+                    <rect x="15" y="3" width="6" height="6" rx="1" stroke="#00BBD4" stroke-width="1.5" />
+
+                    <rect x="3" y="15" width="6" height="6" rx="1" stroke="#00BBD4" stroke-width="1.5" />
+
+                    <rect x="15" y="15" width="6" height="6" rx="1" stroke="#00BBD4" stroke-width="1.5" />
+
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+         UPLOAD SVG
+    ========================================= -->
+
+        <label for="svgInput" class="upload-label">
+
+            Upload SVG Icon
+
+        </label>
+
+
+        <input type="file" id="svgInput" accept=".svg,image/svg+xml">
+
+
+        <div class="file-name" id="fileName"></div>
+
+
+        <!-- =========================================
+         ICON COLOR
+    ========================================= -->
+
+        <div class="control">
+
+            <label>
+                Icon Color
+            </label>
+
+
+            <div class="color-control">
+
+                <input type="color" id="iconColorPicker" class="color-picker" value="#00BBD4">
+
+
+                <input type="text" id="iconColor" class="color-input" value="#00BBD4" maxlength="7"
+                    placeholder="#000000">
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================================
+         BACKGROUND COLOR
+    ========================================= -->
+
+        <div class="control">
+
+            <label>
+                Background Color
+            </label>
+
+
+            <div class="color-control">
+
+                <input type="color" id="backgroundColorPicker" class="color-picker" value="#DFFBFF">
+
+
+                <input type="text" id="backgroundColor" class="color-input" value="#DFFBFF" maxlength="7"
+                    placeholder="#FFFFFF">
+
+            </div>
+
+
+            <button type="button" class="copy-btn" id="copyBackgroundButton">
+                Copy Background Color
+            </button>
+
+        </div>
+
+
+        <!-- =========================================
+         ICON SIZE
+    ========================================= -->
+
+        <div class="control">
+
+            <label>
+                Icon Size
+            </label>
+
+
+            <div class="range-wrapper">
+
+                <input type="range" id="iconSize" min="10" max="70" value="35">
+
+
+                <span class="size-value" id="sizeValue">
+                    35px
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+         BUTTONS
+    ========================================= -->
+
+        <div class="buttons">
+
+            <button type="button" class="reset-btn" id="resetButton">
+                Reset
+            </button>
+
+
+            <button type="button" class="download-btn" id="downloadButton">
+                Download SVG
+            </button>
+
+
+            <button type="button" class="copy-btn" id="copySvgButton">
+                Copy SVG
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+
+        /* =========================================
+           ELEMENTS
+        ========================================= */
+
+        const svgInput =
+            document.getElementById(
+                'svgInput'
+            );
+
+
+        const iconPreview =
+            document.getElementById(
+                'iconPreview'
+            );
+
+
+        const fileName =
+            document.getElementById(
+                'fileName'
+            );
+
+
+        const iconColorPicker =
+            document.getElementById(
+                'iconColorPicker'
+            );
+
+
+        const iconColor =
+            document.getElementById(
+                'iconColor'
+            );
+
+
+        const backgroundColorPicker =
+            document.getElementById(
+                'backgroundColorPicker'
+            );
+
+
+        const backgroundColor =
+            document.getElementById(
+                'backgroundColor'
+            );
+
+
+        const iconSize =
+            document.getElementById(
+                'iconSize'
+            );
+
+
+        const sizeValue =
+            document.getElementById(
+                'sizeValue'
+            );
+
+
+        const resetButton =
+            document.getElementById(
+                'resetButton'
+            );
+
+
+        const downloadButton =
+            document.getElementById(
+                'downloadButton'
+            );
+
+
+        const copyBackgroundButton =
+            document.getElementById(
+                'copyBackgroundButton'
+            );
+
+
+        const copySvgButton =
+            document.getElementById(
+                'copySvgButton'
+            );
+
+
+        /* =========================================
+           VARIABLES
+        ========================================= */
+
+        let originalSvg = '';
+
+        let uploadedFileName = 'icon.svg';
+
+
+        function showCopied(button, defaultText) {
+
+            button.textContent = 'Copied!';
+
+            setTimeout(
+                function () {
+
+                    button.textContent = defaultText;
+
+                },
+                1200
+            );
+
+        }
+
+
+        function copyText(text, button, defaultText) {
+
+            if (!navigator.clipboard) {
+
+                alert('Copy is not supported in this browser.');
+
+                return;
+
+            }
+
+
+            navigator.clipboard.writeText(text)
+                .then(
+                    function () {
+
+                        showCopied(button, defaultText);
+
+                    }
+                )
+                .catch(
+                    function () {
+
+                        alert('Unable to copy to the clipboard.');
+
+                    }
+                );
+
+        }
+
+
+        copyBackgroundButton.addEventListener(
+            'click',
+            function () {
+
+                copyText(
+                    backgroundColor.value,
+                    copyBackgroundButton,
+                    'Copy Background Color'
+                );
+
+            }
+        );
+
+
+        copySvgButton.addEventListener(
+            'click',
+            function () {
+
+                const svg =
+                    iconPreview.querySelector(
+                        'svg'
+                    );
+
+
+                if (!svg) {
+
+                    alert('Please upload an SVG first.');
+
+                    return;
+
+                }
+
+
+                const svgClone =
+                    svg.cloneNode(true);
+
+
+                svgClone.setAttribute(
+                    'xmlns',
+                    'http://www.w3.org/2000/svg'
+                );
+
+
+                svgClone.setAttribute(
+                    'width',
+                    iconSize.value
+                );
+
+
+                svgClone.setAttribute(
+                    'height',
+                    iconSize.value
+                );
+
+
+                const svgString =
+                    new XMLSerializer().serializeToString(
+                        svgClone
+                    );
+
+
+                copyText(
+                    svgString,
+                    copySvgButton,
+                    'Copy SVG'
+                );
+
+            }
+        );
+
+
+        /* =========================================
+           UPLOAD SVG
+        ========================================= */
+
+        svgInput.addEventListener(
+            'change',
+            function () {
+
+                const file = this.files[0];
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                /* Validate SVG */
+
+                const isSvg =
+                    file.type === 'image/svg+xml' ||
+                    file.name
+                        .toLowerCase()
+                        .endsWith('.svg');
+
+
+                if (!isSvg) {
+
+                    alert(
+                        'Please select a valid SVG file.'
+                    );
+
+                    this.value = '';
+
+                    return;
+                }
+
+
+                uploadedFileName =
+                    file.name;
+
+
+                fileName.textContent =
+                    file.name;
+
+
+                /* Read file */
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+                        originalSvg =
+                            event.target.result;
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Remove XML / DOCTYPE if required
+                        |--------------------------------------------------------------------------
+                        */
+
+                        let svgContent =
+                            originalSvg;
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Show SVG
+                        |--------------------------------------------------------------------------
+                        */
+
+                        iconPreview.innerHTML =
+                            svgContent;
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Apply current settings
+                        |--------------------------------------------------------------------------
+                        */
+
+                        updateIconSize();
+
+                        updateIconColor();
+
+                        updateBackground();
+
+                    };
+
+
+                reader.readAsText(file);
+
+            }
+        );
+
+
+        /* =========================================
+           ICON COLOR
+        ========================================= */
+
+        function updateIconColor() {
+
+            const svg =
+                iconPreview.querySelector(
+                    'svg'
+                );
+
+
+            if (!svg) {
+                return;
+            }
+
+
+            const color =
+                iconColor.value;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Elements
+            |--------------------------------------------------------------------------
+            */
+
+            const elements =
+                svg.querySelectorAll(
+                    '*'
+                );
+
+
+            elements.forEach(
+                function (element) {
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Fill
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const fill =
+                        element.getAttribute(
+                            'fill'
+                        );
+
+
+                    if (
+                        fill &&
+                        fill.toLowerCase() !== 'none'
+                    ) {
+
+                        element.setAttribute(
+                            'fill',
+                            color
+                        );
+
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Stroke
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const stroke =
+                        element.getAttribute(
+                            'stroke'
+                        );
+
+
+                    if (
+                        stroke &&
+                        stroke.toLowerCase() !== 'none'
+                    ) {
+
+                        element.setAttribute(
+                            'stroke',
+                            color
+                        );
+
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Style fill
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (
+                        element.style.fill &&
+                        element.style.fill !== 'none'
+                    ) {
+
+                        element.style.fill =
+                            color;
+
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Style stroke
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (
+                        element.style.stroke &&
+                        element.style.stroke !== 'none'
+                    ) {
+
+                        element.style.stroke =
+                            color;
+
+                    }
+
+                }
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SVG level fill
+            |--------------------------------------------------------------------------
+            */
+
+            const svgFill =
+                svg.getAttribute(
+                    'fill'
+                );
+
+
+            if (
+                svgFill &&
+                svgFill.toLowerCase() !== 'none'
+            ) {
+
+                svg.setAttribute(
+                    'fill',
+                    color
+                );
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SVG level stroke
+            |--------------------------------------------------------------------------
+            */
+
+            const svgStroke =
+                svg.getAttribute(
+                    'stroke'
+                );
+
+
+            if (
+                svgStroke &&
+                svgStroke.toLowerCase() !== 'none'
+            ) {
+
+                svg.setAttribute(
+                    'stroke',
+                    color
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           ICON COLOR PICKER
+        ========================================= */
+
+        iconColorPicker.addEventListener(
+            'input',
+            function () {
+
+                iconColor.value =
+                    this.value;
+
+
+                updateIconColor();
+
+            }
+        );
+
+
+        /* =========================================
+           ICON COLOR TEXT
+        ========================================= */
+
+        iconColor.addEventListener(
+            'input',
+            function () {
+
+                const value =
+                    this.value;
+
+
+                if (
+                    /^#[0-9A-F]{6}$/i
+                        .test(value)
+                ) {
+
+                    iconColorPicker.value =
+                        value;
+
+
+                    updateIconColor();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           BACKGROUND COLOR PICKER
+        ========================================= */
+
+        backgroundColorPicker.addEventListener(
+            'input',
+            function () {
+
+                backgroundColor.value =
+                    this.value;
+
+
+                updateBackground();
+
+            }
+        );
+
+
+        /* =========================================
+           BACKGROUND COLOR TEXT
+        ========================================= */
+
+        backgroundColor.addEventListener(
+            'input',
+            function () {
+
+                const value =
+                    this.value;
+
+
+                if (
+                    /^#[0-9A-F]{6}$/i
+                        .test(value)
+                ) {
+
+                    backgroundColorPicker.value =
+                        value;
+
+
+                    updateBackground();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           BACKGROUND
+        ========================================= */
+
+        function updateBackground() {
+
+            iconPreview.style.backgroundColor =
+                backgroundColor.value;
+
+        }
+
+
+        /* =========================================
+           ICON SIZE
+        ========================================= */
+
+        iconSize.addEventListener(
+            'input',
+            function () {
+
+                updateIconSize();
+
+            }
+        );
+
+
+        function updateIconSize() {
+
+            const svg =
+                iconPreview.querySelector(
+                    'svg'
+                );
+
+
+            if (!svg) {
+                return;
+            }
+
+
+            const size =
+                iconSize.value;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Set SVG width
+            |--------------------------------------------------------------------------
+            */
+
+            svg.style.width =
+                size + 'px';
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Set SVG height
+            |--------------------------------------------------------------------------
+            */
+
+            svg.style.height =
+                size + 'px';
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Update label
+            |--------------------------------------------------------------------------
+            */
+
+            sizeValue.textContent =
+                size + 'px';
+
+        }
+
+
+        /* =========================================
+           RESET
+        ========================================= */
+
+        resetButton.addEventListener(
+            'click',
+            function () {
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Default icon color
+                |--------------------------------------------------------------------------
+                */
+
+                const defaultIconColor =
+                    '#00BBD4';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Default background
+                |--------------------------------------------------------------------------
+                */
+
+                const defaultBackgroundColor =
+                    '#DFFBFF';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Default size
+                |--------------------------------------------------------------------------
+                */
+
+                const defaultIconSize =
+                    35;
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Set icon color
+                |--------------------------------------------------------------------------
+                */
+
+                iconColorPicker.value =
+                    defaultIconColor;
+
+
+                iconColor.value =
+                    defaultIconColor;
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Set background
+                |--------------------------------------------------------------------------
+                */
+
+                backgroundColorPicker.value =
+                    defaultBackgroundColor;
+
+
+                backgroundColor.value =
+                    defaultBackgroundColor;
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Set size
+                |--------------------------------------------------------------------------
+                */
+
+                iconSize.value =
+                    defaultIconSize;
+
+
+                sizeValue.textContent =
+                    defaultIconSize + 'px';
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Restore original SVG
+                |--------------------------------------------------------------------------
+                */
+
+                if (originalSvg) {
+
+                    iconPreview.innerHTML =
+                        originalSvg;
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Apply settings
+                |--------------------------------------------------------------------------
+                */
+
+                updateBackground();
+
+                updateIconColor();
+
+                updateIconSize();
+
+            }
+        );
+
+
+        /* =========================================
+           DOWNLOAD SVG
+        ========================================= */
+
+        downloadButton.addEventListener(
+            'click',
+            function () {
+
+
+                const svg =
+                    iconPreview.querySelector(
+                        'svg'
+                    );
+
+
+                if (!svg) {
+
+                    alert(
+                        'Please upload an SVG first.'
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Clone SVG
+                |--------------------------------------------------------------------------
+                */
+
+                const svgClone =
+                    svg.cloneNode(true);
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Add namespace
+                |--------------------------------------------------------------------------
+                */
+
+                svgClone.setAttribute(
+                    'xmlns',
+                    'http://www.w3.org/2000/svg'
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Set final icon size
+                |--------------------------------------------------------------------------
+                */
+
+                const size =
+                    iconSize.value;
+
+
+                svgClone.setAttribute(
+                    'width',
+                    size
+                );
+
+
+                svgClone.setAttribute(
+                    'height',
+                    size
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Convert SVG to string
+                |--------------------------------------------------------------------------
+                */
+
+                const serializer =
+                    new XMLSerializer();
+
+
+                const svgString =
+                    serializer.serializeToString(
+                        svgClone
+                    );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Create Blob
+                |--------------------------------------------------------------------------
+                */
+
+                const blob =
+                    new Blob(
+                        [svgString],
+                        {
+                            type:
+                                'image/svg+xml'
+                        }
+                    );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Create URL
+                |--------------------------------------------------------------------------
+                */
+
+                const url =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Create download link
+                |--------------------------------------------------------------------------
+                */
+
+                const link =
+                    document.createElement(
+                        'a'
+                    );
+
+
+                link.href =
+                    url;
+
+
+                link.download =
+                    uploadedFileName
+                        .replace(
+                            /\.svg$/i,
+                            ''
+                        ) +
+                    '-edited.svg';
+
+
+                document.body.appendChild(
+                    link
+                );
+
+
+                link.click();
+
+
+                document.body.removeChild(
+                    link
+                );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Cleanup
+                |--------------------------------------------------------------------------
+                */
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>
