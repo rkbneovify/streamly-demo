@@ -928,7 +928,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         // hoa sub user subscription check
         if (HoaUser::getCurrentHoaUser()) {
 
-         (new ActivityLogService)
+            (new ActivityLogService)
                 ->activity($user_id, $token)
                 ->event("User")
                 ->eventType(ActivityEventType::LOGIN)

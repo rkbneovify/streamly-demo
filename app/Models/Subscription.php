@@ -6,6 +6,7 @@ use App\SubscriptionPlanRequest;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /**
    @property bigint unsigned $user_id user id
@@ -114,6 +115,75 @@ class Subscription extends Model
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
+        }
+    }
+
+    public static function stripeSyncById($id)
+    {
+        try {
+            // Get Stripe Secret
+            $secret = DB::table('Stripe_keys')
+                ->where('status', 'active')
+                ->value('stripe_secret');
+
+            if (!$secret) {
+
+                // Alert::error('Error', 'Stripe secret not found.');
+                // return redirect()->back();
+            }
+
+            \Stripe\Stripe::setApiKey($secret);
+
+            // Fetch subscription from Stripe by ID
+            $subscription = \Stripe\Subscription::retrieve([
+                'id'     => $id,
+                'expand' => ['latest_invoice'],
+            ]);
+
+            $item = $subscription->items->data[0] ?? null;
+
+            if (!$item || !isset($item->price)) {
+
+
+                // Alert::error('Error', "No price found for subscription");
+                // return redirect()->back();
+            }
+
+            $priceId    = $item->price->id ?? null;
+            $planAmount = isset($item->price->unit_amount)
+                ? $item->price->unit_amount / 100
+                : 0;
+
+            $updated = DB::table('subscriptions')
+                ->where('stripe_id', $id)
+                ->update([
+                    'stripe_plan'          => $priceId,
+                    'stripe_status'        => $subscription->status,
+                    'quantity'             => $subscription->quantity ?? 1,
+                    'livemode'             => (int) $subscription->livemode,
+                    'current_period_start' => Carbon::createFromTimestamp($subscription->current_period_start),
+                    'renews_at'            => Carbon::createFromTimestamp($subscription->current_period_end),
+                    'amount'               => $planAmount,
+                    'updated_at'           => now(),
+                ]);
+
+            if (!$updated) {
+
+                // Alert::error('Error', "No local record found for subscription");
+                // return redirect()->back();
+            }
+
+
+            // Alert::success('Success', 'Subscription synced successfully.');
+            return redirect()->back();
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+
+            // Alert::error('Error', "Stripe subscription not found !");
+            // return redirect()->back();
+        } catch (\Exception $e) {
+
+            // Alert::error('Error', 'Sync failed: ' . $e->getMessage());
+            // return redirect()->back();
         }
     }
 }

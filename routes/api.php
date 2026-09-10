@@ -143,6 +143,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('same-device-id-logout', 'Auth\AuthController@samedevicelogout')->name('samedeviceidlogout');
     Route::post('logout-device-session', 'Auth\AuthController@logoutDevice')->name('logoutdeveicesession');
     Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::post('refresh/token', 'Auth\AuthController@refreshToken');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
@@ -307,9 +308,3 @@ Route::get('/notification/send', 'Api\ApiNotificationController@send');
 
 
 require __DIR__ . '/api-v2.php';
-
-
-
-
-
-
