@@ -147,9 +147,9 @@
                                 <select name="status" id="sel_status" class="select-custom">
                                     <option value="">Select Status</option>
                                     @foreach ($statusTypes as $status)
-                                        <option value="{{ $status }}"
-                                            {{ Request()->status == $status ? 'selected' : '' }}>
-                                            {{ ucfirst($status) }}</option>
+                                        <option value="{{ $status }}" {{ Request()->status == $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -166,7 +166,7 @@
                         <div class="col-md-2 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/export.png') }}" alt="status icon">
-                                <a href="{{ route('admin.subscriptions.users.export', ['type' => 'xlsx'] + request()->query()) }}"
+                                <a href="{{ route('admin.custom.subscriptions.export', [] + request()->query()) }}"
                                     class="btn-add-user">Export</a>
                             </div>
                         </div>
@@ -200,10 +200,10 @@
 @endsection
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#btnClear').hide();
 
-            $(document).on('keyup', 'input[name="search"]', function() {
+            $(document).on('keyup', 'input[name="search"]', function () {
                 let search = $(this).val();
                 if (search.length > 0) {
                     $('#btnClear').show();
@@ -211,24 +211,24 @@
                 // alert($(this).val());
                 fetchData();
             });
-            $('select[name="plan"]').change(function() {
+            $('select[name="plan"]').change(function () {
                 let url = new URL(window.location.href);
                 url.searchParams.set('plan', $(this).val());
                 window.location.href = url.toString();
             });
-            $('select[name="status"]').change(function() {
+            $('select[name="status"]').change(function () {
                 let url = new URL(window.location.href);
                 url.searchParams.set('status', $(this).val());
                 window.location.href = url.toString();
             });
-            $('#btnClear').click(function() {
+            $('#btnClear').click(function () {
 
                 $('input[name="search"]').val('');
                 fetchData();
                 $('#btnClear').hide();
 
             });
-            $('#btnReset').click(function() {
+            $('#btnReset').click(function () {
 
                 window.location.href = window.location.href.split('?')[0];
             });
@@ -244,7 +244,7 @@
 
             $.ajax({
                 url: url + "?page=" + page + "&search=" + search,
-                success: function(data) {
+                success: function (data) {
                     $('#user-data').html(data);
                 }
             });
