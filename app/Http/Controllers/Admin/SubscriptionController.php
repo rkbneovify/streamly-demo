@@ -126,7 +126,11 @@ class SubscriptionController extends Controller
         }
 
         $subscriptions = $query->latest()->paginate(10)->appends($request->query());
-        // return response()->json($subscriptions);
+        foreach ($subscriptions->items() as $item) {
+            Subscription::stripeSyncById($item->stripe_id);
+        }
+
+        // return response()->json($subscriptions->items());
 
 
         if ($request->ajax()) {
