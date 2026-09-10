@@ -333,28 +333,20 @@ class AuthController extends Controller
             $this->activity($oldSession->users_id, $oldSession->access_token)
                 ->event('User')
                 ->eventType('Refresh Token')
-                ->isUser();
+                ->isUser()
+                ->oldData($oldSession);
             if ($oldSession->passcode != null && $oldSession->is_main_account == 0) {
                 $hoaUser = HoaUser::where('passcode', $oldSession->passcode)->first();
                 if ($hoaUser != null) {
                     $newSession->is_main_account = 0;
-                    $this->passcode($oldSession->passcode)
-                        ->oldData($oldSession);
+                    $this->passcode($oldSession->passcode);
                 }
             }
             $oldSession->status = 0;
             $oldSession->save();
-
-
-
-
             $this->descriptionSimple("User refresh the current access token")
-
                 ->newData($newSession)
                 ->save();
-
-
-
             DB::commit();
             return response()->json([
                 'success' => true,
