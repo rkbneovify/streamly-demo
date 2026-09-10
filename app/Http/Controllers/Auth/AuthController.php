@@ -328,7 +328,7 @@ class AuthController extends Controller
             $newSession->status = 1;
             $newSession->created_on =  Carbon::now();
             $newSession->modified_on = Carbon::now();
-            $newSession->save();
+
 
             $this->activity($oldSession->users_id, $oldSession->access_token)
                 ->event('User')
@@ -338,10 +338,15 @@ class AuthController extends Controller
             if ($oldSession->passcode != null && $oldSession->is_main_account == 0) {
                 $hoaUser = HoaUser::where('passcode', $oldSession->passcode)->first();
                 if ($hoaUser != null) {
+                    $newSession->passcode = $oldSession->passcode;
                     $newSession->is_main_account = 0;
+                    $newSession->save();
                     $this->passcode($oldSession->passcode);
                 }
+            } else {
+                $newSession->save();
             }
+
             $oldSession->status = 0;
             $oldSession->save();
             $this->descriptionSimple("User refresh the current access token")
