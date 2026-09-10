@@ -39,6 +39,7 @@ use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
 
 class AuthController extends Controller
 {
@@ -50,7 +51,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminate', 'subscriptionTerminateWithoutLogin']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminate', 'subscriptionTerminateWithoutLogin', 'refreshToken']]);
     }
 
     public function register(Request $request)
@@ -256,6 +257,120 @@ class AuthController extends Controller
         $this->authenticated($request, $user, $token, $validateFlag);
 
         return $this->respondWithToken($token, $validateFlag);
+    }
+
+    public function refreshToken()
+    {
+
+
+        DB::beginTransaction();
+        try {
+
+            $oldSession =  SessionTable::where('access_token',  FacadesJWTAuth::getToken())
+                ->where('status', 1)
+                ->first();
+            if ($oldSession == null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid token !',
+
+                ], 422);
+            }
+
+            if ($oldSession->token_expire_at == null) {
+                $oldSession->status = 0;
+                $oldSession->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token refresh failed',
+
+                ], 401);
+            }
+
+            if ($oldSession->remaining_days == null) {
+                $oldSession->status = 0;
+                $oldSession->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token refresh failed',
+
+                ], 401);
+            }
+
+
+
+
+
+            $token = FacadesJWTAuth::refresh(
+                FacadesJWTAuth::getToken()
+            );
+
+
+
+
+
+
+            $newSession = new SessionTable();
+            $newSession->users_id = $oldSession->users_id;
+            $newSession->access_token = $token;
+            $newSession->user_ip = request()->ip();
+            $newSession->mac_address = $oldSession->mac_address;
+            $newSession->device_id =  $oldSession->device_id;
+            $newSession->connected_devices =  $oldSession->connected_devices;
+            $newSession->device =  $oldSession->device;
+            $newSession->platform =  $oldSession->platform;
+            $newSession->device_title = $oldSession->device_title;
+            $newSession->device_model = $oldSession->device_model;
+            $newSession->build_version =  $oldSession->build_version;
+            $newSession->device_os_version =  $oldSession->device_os_version;
+            $newSession->zipcode =  $oldSession->zipcode;
+            $newSession->logintime = Carbon::now();
+            $newSession->status = 1;
+            $newSession->created_on =  Carbon::now();
+            $newSession->modified_on = Carbon::now();
+            $newSession->save();
+
+            $this->activity($oldSession->users_id, $oldSession->access_token)
+                ->event('User')
+                ->eventType('Refresh Token')
+                ->isUser();
+            if ($oldSession->passcode != null && $oldSession->is_main_account == 0) {
+                $hoaUser = HoaUser::where('passcode', $oldSession->passcode)->first();
+                if ($hoaUser != null) {
+                    $newSession->is_main_account = 0;
+                    $this->passcode($oldSession->passcode)
+                        ->oldData($oldSession);
+                }
+            }
+            $oldSession->status = 0;
+            $oldSession->save();
+
+
+
+
+            $this->descriptionSimple("User refresh the current access token")
+
+                ->newData($newSession)
+                ->save();
+
+
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => FacadesJWTAuth::factory()->getTTL() * 60,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Token refresh failed',
+                'exception' => $th->getMessage()
+
+            ], 401);
+        }
     }
 
 
