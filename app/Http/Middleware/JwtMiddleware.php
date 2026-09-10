@@ -28,6 +28,8 @@ class JwtMiddleware extends BaseMiddleware
             JWTAuth::parseToken()->authenticate();
             $token = $request->bearerToken();
 
+            
+
             $acctoken = SessionTable::where('access_token', $request->bearerToken())->first();
 
             if ($acctoken == null) {
