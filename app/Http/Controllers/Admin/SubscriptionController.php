@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\ActivityEventType;
+use App\Exports\CustomSubscriptionExport;
 use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
 use App\HoaUser;
@@ -1461,11 +1462,11 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     public function exportCustomSubscription(Request $request)
     {
 
-        $query = Subscription::query()
-            ->whereHas('user')   // only subscriptions with a related user
-            ->with(['user.roles', 'plan'])      // still eager load user data
-            ->whereNotNull('custom_status');
-        return response()->json($query->get());
+        // $query = Subscription::query()
+        //     ->whereHas('user')   // only subscriptions with a related user
+        //     ->with(['user.roles', 'plan'])      // still eager load user data
+        //     ->whereNotNull('custom_status');
+        // return response()->json($query->get());
 
 
         // $query = Subscription::query()
@@ -1479,9 +1480,9 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
         try {
 
-            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . 'xlsx';
             // return Excel::download(new UsersSubscriptionExport($filters), $filename);
-            return Excel::download(new SubscriptionNewReportExport($request), $filename);
+            return Excel::download(new CustomSubscriptionExport($request), $filename);
         } catch (\Throwable $th) {
             //throw $th;
             Alert::error('Error', $th->getMessage());
