@@ -8,6 +8,8 @@ Route::prefix('v2')->group(function () {
 
     Route::group(['prefix' => 'auth', 'middleware' => ['jwt.verify', 'hoa.subuser.subscription', 'stripe.sync', 'subscribed']], function () {
         Route::post('epg-guide', [ChannelController::class, 'epgGuideWithPagination']);
+        Route::post('epg-guide-test', [ChannelController::class, 'epgGuide']);
     });
+
     Route::post('bug-report', [BugReportController::class, 'submitBugReport']);
 });

@@ -1,148 +1,294 @@
-<div class="help-support-page">
-  <!-- Header -->
-  <section class="hero">
-    <div class="container">
-      <h1>Help &amp; Support</h1>
+<div class="support-page">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero-section">
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+
+      <div class="hero-left">
+
+        <div class="brand-logo">
+          <a href="/">
+            <svg _ngcontent-ng-c1011070633="" width="167" height="42" viewBox="0 0 167 42" fill="none"
+              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+              class="ng-tns-c1011070633-0">
+              <rect _ngcontent-ng-c1011070633="" width="167" height="42" fill="url(#pattern0)"
+                class="ng-tns-c1011070633-0"></rect>
+              <defs _ngcontent-ng-c1011070633="" class="ng-tns-c1011070633-0">
+                <pattern _ngcontent-ng-c1011070633="" id="pattern0" patternContentUnits="objectBoundingBox" width="1"
+                  height="1" class="ng-tns-c1011070633-0">
+                  <use _ngcontent-ng-c1011070633="" xlink:href="#image0_499_1356"
+                    transform="scale(0.00598802 0.0238095)" class="ng-tns-c1011070633-0"></use>
+                </pattern>
+                <image _ngcontent-ng-c1011070633="" id="image0_499_1356" width="167" height="42"
+                  xlink:href="data:image/png;base64,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"
+                  class="ng-tns-c1011070633-0"></image>
+              </defs>
+            </svg>
+          </a>
+        </div>
+
+        <h1>How Can We help you?</h1>
+
+        <p class="hero-description">
+          Find answers, issues and make the most of your StreamlyTV
+          <br class="desktop-only">
+          experiences
+        </p>
+
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+
+          <input type="text" placeholder="Search for help, articles, queries, or error codes">
+        </div>
+
+        <div class="popular-searches">
+          <span class="popular-label">Popular :</span>
+
+          <button *ngFor="let item of popularSearches" type="button" (click)="selectPopular(item)">
+            {{ item }}
+          </button>
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- Search -->
-  <section class="search-section">
-    <div class="container search-wrapper">
-      <div class="search-box">
-        <span class="search-icon">
-          <svg viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="M16.5 16.5L21 21"></path>
-          </svg>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main-container">
+
+    <!-- Important Update -->
+    <section class="update-banner">
+
+      <div class="update-icon">
+        <i class="bi bi-megaphone"></i>
+      </div>
+
+      <div class="update-content">
+
+        <h3>Important Update!</h3>
+
+        <p>
+          We’ve refreshed our subscription plans with updated benefits & pricing.
+          Explore new plans starting at just $12
+          <br class="desktop-only">
+          and pick the one that's right for you.
+        </p>
+
+      </div>
+
+      <button class="know-more-btn">
+        Know More
+      </button>
+
+    </section>
+
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+
+      <div class="quick-card" *ngFor="let item of quickLinks">
+
+        <div class="quick-icon" [ngClass]="'icon-' + item.color">
+          <i [class]="'bi ' + item.icon"></i>
+        </div>
+
+        <h3>{{ item.title }}</h3>
+
+        <p>{{ item.description }}</p>
+
+        <span class="arrow">
+          →
         </span>
 
-        <input type="text" placeholder="Search . ." [formControl]="txtSearch" />
-
-        <button
-          type="button"
-          class="clear-btn"
-          *ngIf="txtSearch.value"
-          (click)="resetSearch()"
-          aria-label="Clear search"
-        >
-          ×
-        </button>
       </div>
 
-      <!-- <button class="generate-btn" (click)="generateTicket()">
-        Generate Ticket
-      </button> -->
-    </div>
-  </section>
+    </section>
 
-  <!-- Help Categories -->
-  <section class="categories-section">
-    <div class="container">
-      <h2>What Can We Help You With?</h2>
-      <div
-        class="scroll-container"
-        infiniteScroll
-        [infiniteScrollDistance]="2"
-        [infiniteScrollThrottle]="500"
-        (scrolled)="onScrollDown()"
-      >
-        <div class="category-grid">
-          <div
-            class="category-card"
-            *ngFor="let item of categories"
-            (click)="openCategory(item)"
-          >
-            <!-- <div class="category-icon">
-            <img [src]="item.icon" [alt]="item.title">
-          </div> -->
 
-            <!-- <h3>{{ item.title }}</h3> -->
+    <!-- Categories Header -->
+    <section class="section-heading">
 
-            <p>{{ item.title }}</p>
+      <h2>Categories</h2>
+
+      <a href="javascript:void(0)">
+        View all
+        <span>→</span>
+      </a>
+
+    </section>
+
+
+    <!-- Categories -->
+    <section class="categories-grid">
+
+      <article class="category-card" *ngFor="let category of categories">
+
+        <div class="category-header">
+
+          <div class="category-icon" [ngClass]="'icon-' + category.color">
+            <i [class]="'bi ' + category.icon"></i>
           </div>
+
+          <h3>
+            {{ category.title }}
+          </h3>
+
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Top Articles -->
-  <section class="articles-section">
-    <div class="container">
-      <h2>Quick Actions</h2>
+        <div class="article-list">
 
-      <div class="articles-grid">
-        <div
-          class="article-card"
-          *ngFor="let action of actions"
-          (click)="openAction(action)"
-        >
-          <div class="article-icon">
-            <img [src]="action.icon" [alt]="action.title" />
-          </div>
+          <a href="javascript:void(0)" *ngFor="let article of category.articles">
+            <span>{{ article }}</span>
+            <i class="bi bi-chevron-right"></i>
+          </a>
 
-          <h3>{{ action.title }}</h3>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Contact -->
-  <section class="contact-section">
-    <div class="container contact-container">
-      <h2>We’re here to help</h2>
-
-      <p class="contact-description">
-        Our team is available <strong>24*7.</strong> we’ll do our best to
-        respond to your inquiries as soon as possible<br />
-
-        Need help or have a question? Our support team is here to assist you.
-        You can reach us at the following.
-      </p>
-
-      <div class="contact-grid">
-        <!-- Phone -->
-        <a href="tel:+16022450986" class="contact-card">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M21 16.5v3a2 2 0 0 1-2.18 2
-                19.8 19.8 0 0 1-8.63-3.07
-                19.5 19.5 0 0 1-6-6
-                A19.8 19.8 0 0 1 1.12 3.8
-                A2 2 0 0 1 3.11 1.6h3
-                a2 2 0 0 1 2 1.72
-                c.12.9.35 1.78.68 2.62
-                a2 2 0 0 1-.45 2.11L7.07 9.32
-                a16 16 0 0 0 6 6l1.27-1.27
-                a2 2 0 0 1 2.11-.45
-                c.84.33 1.72.56 2.62.68
-                A2 2 0 0 1 21 16.5z"
-              ></path>
-            </svg>
-          </div>
-
-          <div class="contact-content">
-            <h3>(602) 245 - 0986</h3>
-            <span>Call us anytime</span>
-          </div>
+        <a href="javascript:void(0)" class="view-articles">
+          View all 8 articles
+          <span>→</span>
         </a>
 
-        <!-- Email -->
-        <a href="mailto:support@streamlytv.com" class="contact-card">
-          <div class="contact-icon">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-              <path d="M3 6l9 7 9-7"></path>
-            </svg>
-          </div>
+      </article>
 
-          <div class="contact-content">
-            <h3>Support&#64;streamlytv.com</h3>
-            <span>we’ll reply via email</span>
-          </div>
-        </a>
+    </section>
+
+
+    <!-- ================= SUPPORT CTA ================= -->
+    <section class="support-cta">
+
+      <div class="headphone-image">
+        <div class="headphone">
+          <div class="headphone-band"></div>
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="mic"></div>
+        </div>
       </div>
-    </div>
-  </section>
+
+      <div class="support-text">
+
+        <h2>Still need help?</h2>
+
+        <p>
+          Our support team is here for you 24/7.
+        </p>
+
+      </div>
+
+      <div class="support-actions">
+
+        <a href="tel:+16022450986" class="chat-btn">
+          <svg width="20" height="20" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M64.0791 53.4627C64.0791 54.5127 63.8457 55.5918 63.3499 56.6418C62.8541 57.6918 62.2124 58.6835 61.3666 59.6168C59.9374 61.1918 58.3624 62.3293 56.5832 63.0585C54.8332 63.7877 52.9374 64.1668 50.8958 64.1668C47.9208 64.1668 44.7416 63.4668 41.3874 62.0377C38.0332 60.6085 34.6791 58.6835 31.3541 56.2627C27.9999 53.8127 24.8208 51.1002 21.7874 48.096C18.7833 45.0627 16.0708 41.8835 13.6499 38.5585C11.2583 35.2335 9.33325 31.9085 7.93325 28.6127C6.53325 25.2877 5.83325 22.1085 5.83325 19.0752C5.83325 17.0918 6.18325 15.196 6.88325 13.446C7.58325 11.6668 8.69159 10.0335 10.2374 8.57516C12.1041 6.73766 14.1458 5.8335 16.3041 5.8335C17.1208 5.8335 17.9374 6.0085 18.6666 6.3585C19.4249 6.7085 20.0958 7.2335 20.6208 7.99183L27.3874 17.5293C27.9124 18.2585 28.2916 18.9293 28.5541 19.571C28.8166 20.1835 28.9624 20.796 28.9624 21.3502C28.9624 22.0502 28.7583 22.7502 28.3499 23.421C27.9708 24.0918 27.4166 24.7918 26.7166 25.4918L24.4999 27.796C24.1791 28.1168 24.0333 28.496 24.0333 28.9627C24.0333 29.196 24.0624 29.4002 24.1208 29.6335C24.2083 29.8668 24.2958 30.0418 24.3541 30.2168C24.8791 31.1793 25.7833 32.4335 27.0666 33.9502C28.3791 35.4668 29.7791 37.0127 31.2957 38.5585C32.8707 40.1043 34.3874 41.5335 35.9332 42.846C37.4499 44.1293 38.7041 45.0043 39.6957 45.5293C39.8416 45.5877 40.0166 45.6752 40.2207 45.7627C40.4541 45.8502 40.6874 45.8793 40.9499 45.8793C41.4457 45.8793 41.8249 45.7043 42.1457 45.3835L44.3624 43.196C45.0916 42.4668 45.7916 41.9127 46.4624 41.5627C47.1333 41.1543 47.8041 40.9502 48.5332 40.9502C49.0874 40.9502 49.6707 41.0668 50.3124 41.3293C50.9541 41.5918 51.6249 41.971 52.3541 42.4668L62.0082 49.321C62.7666 49.846 63.2916 50.4585 63.6124 51.1877C63.9041 51.9168 64.0791 52.646 64.0791 53.4627Z"
+              stroke="black" stroke-width="4" stroke-miterlimit="10" />
+          </svg>
+
+          Talk with us
+        </a>
+
+        <a href="mailto:support@streamlytv.com" class="email-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M22 7L13.009 12.727C12.7039 12.9042 12.3573 12.9976 12.0045 12.9976C11.6517 12.9976 11.3051 12.9042 11 12.727L2 7"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4Z"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+
+          Email us
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= BOTTOM LINKS ================= -->
+     
+    <section class="bottom-links">
+
+      <a href="/user/faq">
+        <span class="bottom-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9.5 9a2.5 2.5 0 1 1 4.7 1.2c-.7 1.1-2.2 1.3-2.2 2.8" />
+            <path d="M12 16h.01" />
+          </svg>
+
+        </span>
+
+        <span>
+          <strong>FAQs</strong>
+          <small>Find answers to common questions</small>
+        </span>
+      </a>
+
+
+      <a href="/user/support-ticket">
+        <span class="bottom-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4a2 2 0 0 0 0 4v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4a2 2 0 0 0 0-4V5z" />
+            <path d="M9 7h6" />
+            <path d="M9 12h6" />
+            <path d="M9 17h4" />
+          </svg>
+
+        </span>
+
+        <span>
+          <strong>Support Ticket</strong>
+          <small>Get help from our experts</small>
+        </span>
+      </a>
+
+
+      <a href="/user/supported-devices">
+        <span class="bottom-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polyline points="12 7 12 12 15 14"></polyline>
+          </svg>
+
+        </span>
+
+        <span>
+          <strong>System status</strong>
+          <small>All Systems operational</small>
+        </span>
+      </a>
+
+
+      <a href="/user/privacy-policy">
+        <span class="bottom-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+
+        </span>
+
+        <span>
+          <strong>Privacy Policy</strong>
+          <small>We protect your privacy</small>
+        </span>
+      </a>
+
+    </section>
+
+  </main>
+
 </div>
