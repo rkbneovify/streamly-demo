@@ -39,9 +39,7 @@ class SyncCustomSubscription extends Command
      */
     public function handle()
     {
-        $subscriptions = Subscription::whereHas('user')   // only subscriptions with a related user
-            ->with('user')      // still eager load user data
-            ->whereNotNull('custom_status')
+        $subscriptions = Subscription::where('stripe_id', 'Like', '%sub_custom_%')
             ->where('renews_at', '<', Carbon::now())
             ->get();
 
