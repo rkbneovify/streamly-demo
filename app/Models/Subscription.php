@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\SubscriptionPlanRequest;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +64,7 @@ class Subscription extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function planRequest()

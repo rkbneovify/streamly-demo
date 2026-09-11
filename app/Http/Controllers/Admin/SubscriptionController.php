@@ -305,12 +305,25 @@ class SubscriptionController extends Controller
         // custom subscription
         Subscription::syncCustomExpired();
 
+        // $query = Subscription::query()
+        //     ->whereHas('user')
+        //     ->with(['user.roles', 'planRequest.plan'])
+        //     ->withCount('planRequest')
+        //     ->whereNotNull('custom_status')
+        //     ->orderByDesc('plan_request_count');
+
+        $latestSubscriptionIds = Subscription::query()
+            ->where('stripe_id', 'LIKE', '%sub_custom_%')
+            ->selectRaw('MAX(id)')
+            ->groupBy('user_id');
+
         $query = Subscription::query()
             ->whereHas('user')
             ->with(['user.roles', 'planRequest.plan'])
-            ->withCount('planRequest')
-            ->whereNotNull('custom_status')
-            ->orderByDesc('plan_request_count');
+            ->whereIn('id', $latestSubscriptionIds);
+
+
+        // return response()->json($query->get());
 
         // Filter by status if provided
         if (!empty($request->status)) {
@@ -339,14 +352,15 @@ class SubscriptionController extends Controller
 
         $subscriptions->getCollection()->transform(function ($item) {
 
-            $role =  $item->user->roles[0]->id;
-            $item->user->device_limit = 5;
-            if (strtolower($role) == 5) {
-                $item->user->device_limit =  HotelRoomTable::getTotalRoomCount($item->user->id);
-            } elseif (strtolower($role) == 7) {
-                $item->user->device_limit =  HoaUser::getTotalDeviceCount($item->user->id);
+            if ($item->user != null) {
+                $role =   $item->user->roles[0]->id;
+                $item->user->device_limit = 5;
+                if (strtolower($role) == 5) {
+                    $item->user->device_limit =  HotelRoomTable::getTotalRoomCount($item->user->id);
+                } elseif (strtolower($role) == 7) {
+                    $item->user->device_limit =  HoaUser::getTotalDeviceCount($item->user->id);
+                }
             }
-
             return $item;
         });
         // return response()->json($subscriptions);

@@ -71,9 +71,8 @@
                     Subscribe At
 
                     <a href="{{ request()->fullUrlWithQuery([
-                        'sort_subscribe_at' => request()->get('sort_subscribe_at', 'desc') === 'desc' ? 'asc' : 'desc',
-                    ]) }}"
-                        class="text-primary ms-1">↑↓</a>
+            'sort_subscribe_at' => request()->get('sort_subscribe_at', 'desc') === 'desc' ? 'asc' : 'desc',
+        ]) }}" class="text-primary ms-1">↑↓</a>
                 </th>
                 <th>
                     Subscription
@@ -95,31 +94,47 @@
                     </td>
 
                     <td style="vertical-align: middle;">
-                        <a href="{{ route('admin.users.view', $subscription->user->id) }}">
-                            <div class="mb-2"
-                                style="width:40px; height:40px;
-                                            background:#d62d41;
-                                            color:white; display:flex; align-items:center; justify-content:center;
-                                            border-radius:50%; font-weight:bold;">
-                                {{ getAvatarName($subscription->user->name) }}
-                            </div>
+                        @if($subscription->user != null)
+                            <a href="{{ route('admin.users.view', $subscription->user->id) }}">
+                                <div class="mb-2"
+                                    style="width:40px; height:40px;
+                                                                                                                                                                                                                                                                                                                                background:#d62d41;
+                                                                                                                                                                                                                                                                                                                                color:white; display:flex; align-items:center; justify-content:center;
+                                                                                                                                                                                                                                                                                                                                border-radius:50%; font-weight:bold;">
+                                    {{ getAvatarName($subscription->user->name) }}
+                                </div>
 
 
-                            {{ ucwords(Str::limit($subscription->user->name, 10, '...')) }}
-                        </a>
+                                {{ ucwords(Str::limit($subscription->user->name, 10, '...')) }}
+                            </a>
+                        @else
+                            N/A
+                        @endif
 
                     </td>
                     <td style="vertical-align: middle;">
 
-                        {{ limitEmailName($subscription->user->email, 10, '...') }}
+                        @if ($subscription->user != null)
+                            {{ limitEmailName($subscription->user->email, 10, '...') }}
+                        @else
+                            N/A
+                        @endif
                     </td>
 
 
                     <td style="vertical-align: middle;">
-                        {{ $subscription->user->roles[0]->name }}</td>
+
+                        @if ($subscription->user != null)
+                            {{ $subscription->user->roles[0]->name }}
+                        @else
+                            N/A
+                        @endif
+
+                    </td>
                     <td style="vertical-align: middle;">
 
-                        {{ $subscription->plan_duration }}</td>
+                        {{ $subscription->plan_duration }}
+                    </td>
 
 
                     </td>
@@ -145,9 +160,9 @@
 
                     <td style="vertical-align: middle; text-align: center;">
 
-                        @if ($subscription->planRequest != null)
+                        @if ($subscription->planRequest != null && $subscription->user != null)
                             <button class="btn btn-danger btn-xs w-100 mb-1"
-                                onclick="openModal('{{ $subscription->planRequest->id }}','{{ $subscription->planRequest->plan->product_name }}','{{ $subscription->planRequest->plan->interval_count . ' ' . $subscription->planRequest->plan->interval }}','{{ $subscription->planRequest->plan->amount }}','{{ $subscription->user->roles[0]->name }}','{{ $subscription->user->device_limit }}')">
+                                onclick="openModal('{{ optional($subscription->planRequest)->id }}','{{ optional($subscription->planRequest)->plan->product_name }}','{{ optional($subscription->planRequest)->plan->interval_count . ' ' . optional($subscription->planRequest)->plan->interval }}','{{ optional($subscription->planRequest)->plan->amount }}','{{ optional($subscription->user)->roles[0]->name }}','{{ optional($subscription->user)->device_limit }}')">
                                 Plan Request
                             </button>
                         @endif
@@ -160,42 +175,7 @@
                         @endif
 
 
-                        {{-- @if ($subscription->livemode == null || $subscription->stripe_status == 'canceled')
-                            <a href="{{ route('admin.subscriptions.custom.view', $subscription->user_id) }}"
-                                class="btn btn-xs btn-link mb-1 w-75">Subscribe Now</a>
-                            <br>
-                            <a href="{{ route('admin.subscriptions.user.mail.upgrade', $subscription->user_id) }}"
-                                class="btn btn-xs btn-secondary mb-1 w-75 send-mail-btn"
-                                data-url="{{ route('admin.subscriptions.user.mail.upgrade', $subscription->user_id) }}">
-                                <span class="btn-text">Send Mail</span>
-                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
-                                    aria-hidden="true"></span>
-                            </a>
-                            @if ($subscription->stripe_status == 'canceled')
-                                <a class="btn btn-xs btn-outline-primary mb-1 w-75"
-                                    href="{{ route('admin.report.subscription.detail', $subscription->user->id) }}">
-                                    {{ trans('View') }}
-                                </a>
-                            @endif
-                        @else
-                            <a style="width: 80px;" class="btn btn-xs btn-outline-primary mb-1"
-                                href="{{ route('admin.report.subscription.detail', $subscription->user->id) }}">
-                                {{ trans('View') }}
-                            </a>
 
-                            <a style="width: 80px;" class="btn btn-xs btn-info mb-1"
-                                href="{{ url('admin/subscriptions/edit', $subscription->id) }}">
-                                {{ trans('Edit') }}
-                            </a>
-
-                            <form action="{{ url('admin/subscriptiondestroy', $subscription->user_id) }}"
-                                method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');"
-                                style="display: inline-block;">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input style="width: 80px;" type="submit" class="btn btn-xs btn-danger" value="Cancel">
-                            </form>
-                        @endif --}}
 
 
 
@@ -258,8 +238,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog model-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -358,7 +337,7 @@
 </script>
 <script>
     document.querySelectorAll('.btn-cancel-subscription').forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
 
             const url = this.href;
