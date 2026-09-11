@@ -1474,14 +1474,6 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         //     ->with(['user.roles', 'plan'])      // still eager load user data
         //     ->whereNotNull('custom_status');
         // return response()->json($query->get());
-
-        // test
-
-
-
-
-
-
         try {
 
             $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . 'xlsx';
