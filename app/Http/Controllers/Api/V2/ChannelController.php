@@ -637,7 +637,7 @@ class ChannelController extends Controller
             $hoursoffset = $request->get('hoursoffset');
             $pattern = '/^(-?\d{2}:\d{2})$/';
 
-            $limit = $request->input('per_page', 10);
+            $limit = $request->input('limit', 10);
             $page = $request->input('page', 1);
 
             // Insert zipcode only if it doesn't already exist for this user
@@ -881,7 +881,7 @@ class ChannelController extends Controller
             $hoursoffset = $request->get('hoursoffset');
             $pattern = '/^(-?\d{2}:\d{2})$/';
 
-            $limit = $request->input('per_page', 10);
+            $limit = $request->input('limit', 10);
             $page = $request->input('page', 1);
 
             // Insert zipcode only if it doesn't already exist for this user
