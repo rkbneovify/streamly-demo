@@ -314,6 +314,7 @@ class SubscriptionController extends Controller
 
         $latestSubscriptionIds = Subscription::query()
             ->where('stripe_id', 'LIKE', '%sub_custom_%')
+            ->orWhereNotNull('custom_status')
             ->selectRaw('MAX(id)')
             ->groupBy('user_id');
 
@@ -377,17 +378,6 @@ class SubscriptionController extends Controller
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user')->whereNotNull('custom_status')->pluck('custom_status')->unique()->values();
-
-
-
-
-
-
-
-
-
-
-
 
 
         if ($request->ajax()) {
