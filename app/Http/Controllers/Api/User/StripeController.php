@@ -6,6 +6,8 @@ use App\Enums\ActivityEventType;
 use App\HoaSubUserSubscription;
 use App\HoaUser;
 use App\Http\Controllers\Controller;
+use App\Mail\SubscriptionWelcomeMail;
+use App\Mail\TrialSubscriptionWelcomeMail;
 use App\Models\EmailOtp;
 use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
@@ -29,6 +31,7 @@ use Stripe\Subscription;
 use App\SessionTable;
 use Laravel\Cashier\Cashier;
 use Ratchet\App;
+use Stripe\StripeClient;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
@@ -228,17 +231,18 @@ class StripeController extends Controller
                 ]);
 
                 // Generate email HTML
+
                 $login_link = env('FRONTEND_URL') . '/auth/login';
-                $html = '<html>
-                            Hi, ' . $request['name'] . '<br><br>
-                            Thank you for registering for ' . env('APP_NAME') . '.
-                            <br><br>Username: ' . $user->email . '
-                            <br>Password: ' . $password . '<br><br>
-                            Please click the following link to login to your account.
-                            <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
-                            Thank you!<br>
-                            The ' . env('APP_NAME') . ' Team!
-                        </html>';
+                // $html = '<html>
+                //             Hi, ' . $request['name'] . '<br><br>
+                //             Thank you for registering for ' . env('APP_NAME') . '.
+                //             <br><br>Username: ' . $user->email . '
+                //             <br>Password: ' . $password . '<br><br>
+                //             Please click the following link to login to your account.
+                //             <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
+                //             Thank you!<br>
+                //             The ' . env('APP_NAME') . ' Team!
+                //         </html>';
 
 
 
@@ -260,6 +264,11 @@ class StripeController extends Controller
                     if ($request->trial_days > 0) {
                         $user->trial_taken = 1;
                         $user->save();
+                        $subscription = $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        Mail::to($user->email)->send(new TrialSubscriptionWelcomeMail($user, $password, $subscription->trial_start, $subscription->trial_end, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_start, $login_link));
+                    } else {
+                        $subscription = $this->subscriptionDetailsforTrailMail($subscription_details->stripe_id);
+                        Mail::to($user->email)->send(new SubscriptionWelcomeMail($user, $subscription->items->data[0]->price->recurring->interval, $subscription->items->data[0]->price->unit_amount, $subscription->current_period_end, $login_link));
                     }
                 } catch (\Exception $e) {
 
@@ -273,10 +282,11 @@ class StripeController extends Controller
 
 
                 // Send email
-                Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
-                    $message->to($request->input('email'), $request->input('name'))
-                        ->subject(env('APP_NAME') . ': Account Registration');
-                });
+                // Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
+                //     $message->to($request->input('email'), $request->input('name'))
+                //         ->subject(env('APP_NAME') . ': Account Registration');
+                // });
+
                 return response()->json([
                     'message' => 'User Registered Successfully !',
                     'subscription_details' => $subscription_details
@@ -545,11 +555,12 @@ class StripeController extends Controller
                 }
             }
 
+            // Subscription
             $subscription_data = [
                 'id' => (string) $subscription->id,
-                'name' => $plan_name ?? null,
-                'plan_type' => $plan_type ?? null,
-                'renewaldatetime' => $renewaldatetime ?? null,
+                'name' => $plan_name,
+                'plan_type' => $plan_type,
+                'renewaldatetime' => $renewaldatetime,
                 'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
                 'canceled' => $subscription->cancel_at_period_end,
                 'plan_expired_at' => date('Y-m-d H:i:s', $subscription->current_period_end)
@@ -595,12 +606,14 @@ class StripeController extends Controller
             }
             if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
-                $subscription_data['name'] =   $request->user()->subscription('main')->plan_duration;
+                $subscription_data['name'] = $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
                     $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
                     $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
                 }
+
+
             }
 
             $response_to_send['subscription'] = $subscription_data;
@@ -640,7 +653,7 @@ class StripeController extends Controller
 
             if ($response_to_send['hoa_sub_user_subscription'] == null && $request->user()->subscription('main')->plan_duration != null) {
                 $response_to_send['is_custom_subscription'] = true;
-                $response_to_send['subscription']['name'] =   $request->user()->subscription('main')->plan_duration;
+                $response_to_send['subscription']['name'] = $request->user()->subscription('main')->plan_duration;
                 if ($request->user()->subscription('main')->renews_at != null) {
                     $response_to_send['subscription']['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->renews_at));
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
@@ -659,7 +672,7 @@ class StripeController extends Controller
         } else {
             $response_to_send['card_details'] = [];
         }
-
+        $response_to_send['subscription']['renewaldatetime'] = '';
         return response()->json($response_to_send);
     }
 
@@ -948,5 +961,23 @@ class StripeController extends Controller
                 'error' => $e->getMessage(),
             ];
         }
+    }
+
+    private function subscriptionDetailsforTrailMail($subscriptionId)
+    {
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        $subscription = $stripe->subscriptions->retrieve(
+            $subscriptionId,
+            [
+                'expand' => [
+                    'customer',
+                    'default_payment_method',
+                    'latest_invoice.payment_intent',
+                    'items.data.price.product',
+                ],
+            ]
+        );
+        return $subscription;
     }
 }

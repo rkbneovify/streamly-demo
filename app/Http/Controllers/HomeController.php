@@ -613,11 +613,18 @@ class HomeController extends Controller
             } catch (Exception $e) {
                 $plans = \Stripe\Plan::all(['active' => true, 'expand' => ['data.tiers']]);
             }
-
+            $trialTaken = null;
+            $user = SessionTable::getCurrentUserByToken();
+            if ($user != null) {
+                $trialTaken = $user->trial_taken;
+            }
+            // 79.89 doller plan id
+            $oldPlanId = 'price_1MqxXZGbCi8tAySGisSrhf0S';
             // Extract metadata for each plan
-            $formattedPlans = collect($plans->data)->map(function ($plan) {
-                $product =  \Stripe\Product::retrieve($plan->product);
-                return [
+            $formattedPlans = collect($plans->data)->map(function ($plan) use ($trialTaken) {
+                $product = \Stripe\Product::retrieve($plan->product);
+
+                $data = [
                     'id' => $plan->id,
                     'nickname' => $plan->nickname,
                     'product_name' => $product->name,
@@ -627,9 +634,19 @@ class HomeController extends Controller
                     'metadata' => $plan->metadata,
                     'type' => $plan->billing_scheme,
                     'tiers' => $plan->billing_scheme == "tiered" ? $plan->tiers : [],
-                    'trial_period_days' => $plan->trial_period_days
                 ];
+
+                if ($trialTaken != 1) {
+                    $data['trial_period_days'] = $plan->trial_period_days;
+                }
+
+                return $data;
             });
+
+            // Remove old plan
+            $formattedPlans = $formattedPlans
+                ->reject(fn($plan) => $plan['id'] === $oldPlanId)
+                ->values();
 
             return response()->json([$formattedPlans], 200);
         } catch (\Exception $e) {

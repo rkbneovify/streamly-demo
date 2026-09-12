@@ -8,14 +8,15 @@ use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
 use App\Models\SupportTicket;
+use App\Services\ActivityLogService;
 use Illuminate\Mail\Events\MessageSent;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Stripe\Stripe;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.debug')) {
             $this->app->singleton(DebugKernel::class);
         }
+        $this->app->singleton(ActivityLogService::class);
     }
 
     /**
