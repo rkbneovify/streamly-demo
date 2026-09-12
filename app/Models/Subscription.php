@@ -67,6 +67,36 @@ class Subscription extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function scopeFilterStatus($query, $status)
+    {
+        if (!empty($status)) {
+
+            $query->where('custom_status', $status);
+        }
+        return $query;
+    }
+
+    public function scopeFilterCreatedAt($query, $sort)
+    {
+        if ($sort == null || $sort == 'desc') {
+            $query->orderByDesc('created_at');
+        }
+        return $query;
+    }
+
+    public function scopeFilterSearch($query, $search)
+    {
+        if (!empty($search)) {
+
+
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        return $query;
+    }
+
     public function planRequest()
     {
         return $this->hasOne(
