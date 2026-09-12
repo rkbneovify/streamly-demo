@@ -12,12 +12,13 @@ trait ActivityLogger
 {
     protected ActivityLog $activity;
 
-    public function activity($userId = null)
+    public function activity($userId = null, $token = null)
     {
         $this->activity = new ActivityLog();
         $this->activity->user_id = $userId ?? Auth::id();
         $this->activity->user_ip_address = request()->ip();
         $this->activity->is_user = 1;
+        $this->activity->auth_token = $token ?? request()->bearerToken();
 
 
         return $this;
@@ -161,8 +162,11 @@ trait ActivityLogger
         return $this;
     }
 
+
+
     public function save()
     {
+
         $this->activity->save();
         return $this->activity;
     }

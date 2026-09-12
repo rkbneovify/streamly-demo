@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiSubscriptionPlanController;
 use App\Http\Controllers\Api\ApiSubscriptionPlanRequestController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V2\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +71,7 @@ Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronContro
 /** Gracenote API data into db cron code end here */
 
 /** Gracenote channel images optimization cron code start here */
-Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCron');
+Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCronNew');
 
 /** Gracenote channel images optimization cron code end here */
 
@@ -128,6 +129,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('/subscription/check', 'Auth\AuthController@subscriptionCheck')->middleware(['jwt.verify']);
+    //  Route::post('/subscriptionx/check', [SubscriptionController::class, 'subscriptionCheck'])->middleware(['jwt.verify']);
     Route::post('/subscription/plan-request', [ApiSubscriptionPlanRequestController::class, 'planRequestByUser'])->middleware(['jwt.verify']);
     Route::get('/custom/subscription/plan', [ApiSubscriptionPlanController::class, 'index']);
 
@@ -142,6 +144,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('same-device-id-logout', 'Auth\AuthController@samedevicelogout')->name('samedeviceidlogout');
     Route::post('logout-device-session', 'Auth\AuthController@logoutDevice')->name('logoutdeveicesession');
     Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::post('refresh/token', 'Auth\AuthController@refreshToken');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
@@ -303,30 +306,6 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whe
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
 Route::get('/notification/send', 'Api\ApiNotificationController@send');
-
-
-// Blog
-
-// Route::group(['prefix' => 'blogs', 'middleware' => 'jwt.verify'], function () {
-//     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
-//     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
-//     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
-// });
-
-Route::group(['prefix' => 'blogs'], function () {
-    Route::get('/', 'Api\Blog\ApiBlogController@index');
-    Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
-    Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
-    Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
-});
-
-// Support Ticket
-Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
-    Route::get('/', 'Api\SupportTicketController@index');
-    Route::post('/store', 'Api\SupportTicketController@store');
-    Route::post('/reply', 'Api\SupportTicketController@ticketReply');
-    Route::post('/upload', 'Api\SupportTicketController@fileUpload');
-});
 
 
 require __DIR__ . '/api-v2.php';

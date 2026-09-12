@@ -52,6 +52,8 @@ class RokuChannelImagesCronController extends Controller
 
         // $query = Channel::select('gracenote_sources.assets')
         //     ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
+
         $folderPath = storage_path('app/public/channel_roku_images/');
         $this->clearFolder($folderPath);
         $query = GracenoteSource::select('assets');
@@ -73,6 +75,53 @@ class RokuChannelImagesCronController extends Controller
 
         ];
         return response()->json($response, 200);
+    }
+
+    public function RokuChannelImagesCronNew()
+    {
+        // for local testing
+        // set_time_limit(0); // No execution time limit
+        // // or
+        // ini_set('max_execution_time', 0);
+
+
+        // $query = Channel::select('gracenote_sources.assets')
+        //     ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+
+
+        try {
+            $folderPath = storage_path('app/public/channel_roku_images/');
+            // $this->clearFolder($folderPath);
+            $query = GracenoteSource::select('assets');
+
+            // return $query->get();
+            $record = $query->get()->map(function ($channel) {
+                // return $channel->assets;
+                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->roku_image = $channel->image != null ? $this->resizeAndStoreImage($channel->image) : null;
+                unset($channel->assets);
+                return $channel;
+            });
+
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Channel Images optimised for Roku successfully.',
+                'data' => $record,
+
+            ];
+            return response()->json($response, 200);
+        } catch (\Throwable $th) {
+            $response['message'] = $th->getMessage();
+            $response['php_version'] = phpversion();
+            $response['gd_module_load'] = extension_loaded('gd');
+            $response['function_exists'] = function_exists('imagecreatefrompng');
+            $response['ini_path'] = php_ini_loaded_file();
+            $response['exception'] = class_basename($th);
+            $response['file'] = $th->getFile();
+            $response['line'] = $th->getLine();
+            return response()->json($response, 500);
+        }
     }
 
     private function resizeAndStoreImage($imageUrl)

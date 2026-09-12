@@ -89,29 +89,26 @@
                         <th>
                             Status
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?status=' . (request()->get('status', '1') === '1' ? '0' : '1')
-                                : request()->fullUrlWithQuery([
-                                    'status' => request()->get('status', '1') === '1' ? '0' : '1',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?status=' . (request()->get('status', '1') === '1' ? '0' : '1')
+            : request()->fullUrlWithQuery([
+                'status' => request()->get('status', '1') === '1' ? '0' : '1',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Active <br> Devices
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?device=' . (request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc')
-                                : request()->fullUrlWithQuery([
-                                    'device' => request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?device=' . (request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc')
+            : request()->fullUrlWithQuery([
+                'device' => request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Created At
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?created=' . (request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc')
-                                : request()->fullUrlWithQuery([
-                                    'created' => request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?created=' . (request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc')
+            : request()->fullUrlWithQuery([
+                'created' => request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
 
 
@@ -125,9 +122,9 @@
                             <td>
                                 <div class="mb-2"
                                     style="width:40px; height:40px;
-                                            background:#d62d41;
-                                            color:white; display:flex; align-items:center; justify-content:center;
-                                            border-radius:50%; font-weight:bold;">
+                                                                                                                                                                            background:#d62d41;
+                                                                                                                                                                            color:white; display:flex; align-items:center; justify-content:center;
+                                                                                                                                                                            border-radius:50%; font-weight:bold;">
                                     {{ getAvatarName($item->name ?? 'N/A') }}
                                 </div>
 
@@ -156,13 +153,19 @@
                                 @endif
                             </td>
                             <td style="vertical-align:middle;">
-                                @if ($item->session_count > 0)
-                                    <a href="{{ route('admin.hoa.sub-users-session', $item->passcode) }}">
-                                        {{ $item->session_count }} / {{ $item->device_limit ?? 0 }}
-                                    </a>
+                                {{-- @if ($item->session_count > 0)
+                                <a
+                                    href="{{ route('admin.hoa.sub-users-session', ['passcode' => $item->passcode, 'status' => 1]) }}">
+                                    {{ $item->session_count }} / {{ $item->device_limit ?? 0 }}
+                                </a>
                                 @else
-                                    {{ $item->session_count ?? 0 }} / {{ $item->device_limit ?? 0 }}
-                                @endif
+                                {{ $item->session_count ?? 0 }} / {{ $item->device_limit ?? 0 }}
+                                @endif --}}
+
+                                <a
+                                    href="{{ route('admin.hoa.sub-users-session', ['passcode' => $item->passcode, 'status' => $item->session_count > 0 ? 1 : 0]) }}">
+                                    {{ $item->session_count }} / {{ $item->device_limit ?? 0 }}
+                                </a>
 
                             </td>
                             <td style="vertical-align:middle;">{{ date('d/m/Y', strtotime($item->created_at)) }}</td>
@@ -188,29 +191,26 @@
                         <th>
                             Status
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?status=' . (request()->get('status', 'active') === 'active' ? 'inactive' : 'active')
-                                : request()->fullUrlWithQuery([
-                                    'status' => request()->get('status', 'active') === 'active' ? 'inactive' : 'active',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?status=' . (request()->get('status', 'active') === 'active' ? 'inactive' : 'active')
+            : request()->fullUrlWithQuery([
+                'status' => request()->get('status', 'active') === 'active' ? 'inactive' : 'active',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Active <br> Devices
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?device=' . (request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc')
-                                : request()->fullUrlWithQuery([
-                                    'device' => request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?device=' . (request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc')
+            : request()->fullUrlWithQuery([
+                'device' => request()->get('device', 'asc') === 'asc' ? 'desc' : 'asc',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
                         <th>
                             Created At
                             <a href="{{ request()->get('page', 1) > 1
-                                ? request()->url() . '?created=' . (request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc')
-                                : request()->fullUrlWithQuery([
-                                    'created' => request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc',
-                                ]) }}"
-                                class="text-primary ms-1">↑↓</a>
+            ? request()->url() . '?created=' . (request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc')
+            : request()->fullUrlWithQuery([
+                'created' => request()->get('created', 'desc') === 'desc' ? 'asc' : 'desc',
+            ]) }}" class="text-primary ms-1">↑↓</a>
                         </th>
 
 

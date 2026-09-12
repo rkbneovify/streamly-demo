@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ActivityEventType;
 use App\HoaUser;
 use Carbon\Carbon;
 use App\SessionTable;
@@ -8,6 +9,7 @@ use App\HotelRoomTable;
 use App\Models\Subscription;
 use App\Models\Zipcode;
 use App\Models\PersonalDevice;
+use App\Services\ActivityLogService;
 use App\Services\StripeService;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
@@ -891,6 +893,8 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
         // $hoaUserHouses = getHousesOfHoaUser($user_id);
 
+
+
         $response = [
             'success' => true,
             'message' => 'logged in successfully ',
@@ -924,6 +928,16 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
         // hoa sub user subscription check
         if (HoaUser::getCurrentHoaUser()) {
 
+            (new ActivityLogService)
+                ->activity($user_id, $token)
+                ->event("User")
+                ->eventType(ActivityEventType::LOGIN)
+                ->isUser()
+                ->passcode(HoaUser::getCurrentHoaUser()->passcode)
+                ->descriptionSimple('Hoa sub user login')
+                ->properties(['data' => User::find($user_id)->refresh()])
+                ->save();
+
             if (!str_starts_with(request()->deviceid, 'web')) {
                 $subsCheck = isHoaSubUserSubscription(HoaUser::getCurrentHoaUser()->passcode);
                 if ($subsCheck != null && $subsCheck->getData()->response_code == 410) {
@@ -938,6 +952,15 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
                     ])->send();
                 }
             }
+        } else {
+            (new ActivityLogService)
+                ->activity($user_id, $token)
+                ->event("User")
+                ->eventType(ActivityEventType::LOGIN)
+                ->isUser()
+                ->description("User login")
+                ->properties(['data' => User::find($user_id)->refresh()])
+                ->save();
         }
 
         // subscription check and verify before login
@@ -961,6 +984,7 @@ function sessionTable($user_id, $token, $deviceDetails, $connected_devices)
                 ])->send();
             }
         }
+
 
 
         return response()->json(
@@ -1149,6 +1173,17 @@ function sessionTable2($user_id, $token, $deviceDetails, $connected_devices)
         $rooms = getActiveHotelRooms($user_id);
         $subscriptionStatus = GetSubscriptionStatusOfUser($user_id);
         $kindlysubscribemsg = $subscriptionStatus ? null : KindlySubscribeMsg();
+
+        (new ActivityLogService)
+            ->activity($user_id, $token)
+            ->event("User")
+            ->eventType(ActivityEventType::LOGIN)
+            ->isUser()
+            ->description("User login")
+            ->properties(['data' => User::find($user_id)->refresh()])
+            ->save();
+
+
         return response()->json([
 
             'success' => true,
@@ -1355,6 +1390,8 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     }
     // dd($deviceInfoClasses);
 
+
+
     $date = date('Y-m-d H:i:s');
     $session_tab = new SessionTable();
     $session_tab->users_id = $user_id;
@@ -1384,10 +1421,10 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
         }
     }
     $result = $session_tab->save();
-
-
-
     $LastInsertId = $session_tab->id;
+
+
+
     return ['result' => $result, 'LastInsertId' => $LastInsertId];
 }
 
