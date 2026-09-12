@@ -326,29 +326,11 @@ class SubscriptionController extends Controller
 
         // return response()->json($query->get());
 
-        // Filter by status if provided
-        if (!empty($request->status)) {
 
-            $query->where('custom_status', $request->status);
-        }
-
-        // Apply search filter if provided
-        if (!empty($request->search)) {
-
-            $search = $request->search;
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            });
-        }
-
-        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-            $query->orderByDesc('created_at');
-        } else {
-            $query->orderBy('created_at');
-        }
-        // return response()->json($query->get());
-        $subscriptions = $query->paginate(10)
+        $subscriptions = $query->filterStatus($request->status)
+            ->filterSearch($request->search)
+            ->filterCreatedAt($request->sort_subscribe_at)
+            ->paginate(10)
             ->appends($request->query());
 
         $subscriptions->getCollection()->transform(function ($item) {
