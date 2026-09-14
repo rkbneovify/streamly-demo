@@ -45,6 +45,15 @@
         border-radius: 20px;
         padding: 10px;
     }
+
+    .svg-bg {
+        display: flex;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
 
@@ -89,6 +98,12 @@
                             Category
                         </th>
                         <th>
+                            SVG
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
                             Status
                         </th>
 
@@ -118,7 +133,15 @@
                                 {{ $item->title }}
                             </td>
 
+                            <td style="vertical-align: middle;">
+                                <div class="svg-bg" style="background:{{ $item->background_color}}">
+                                    {!! $item->svg_content !!}
+                                </div>
+                            </td>
 
+                            <td style="vertical-align: middle;">
+                                {{ $item->icon_size }}
+                            </td>
 
                             <td style="vertical-align: middle;">
                                 <a href="#" data-url="{{ route('admin.blog.category.status', $item->id) }}"
@@ -135,13 +158,15 @@
                             <td style="vertical-align: middle;">
                                 {{ $item->created_at->format('d/m/Y') }}
                             </td>
-                            <td>
-                                <a class="btn btn-sm btn-info edit-category shadow text-white" data-toggle="modal"
+                            <td style="vertical-align: middle;">
+                                <button type="button" class="btn btn-sm btn-primary" onclick='editCategory(@json($item))'>
+                                    Edit </button>
+                                {{-- <a class="btn btn-sm btn-info edit-category shadow text-white" data-toggle="modal"
                                     data-target="#editCategoryModal"
                                     data-url="{{ route('admin.blog.category.update', $item->id) }}"
                                     data-name="{{ $item->title }}">
                                     Edit
-                                </a>
+                                </a> --}}
                                 <a data-url="{{ route('admin.blog.category.destroy', $item->id) }}"
                                     class="btn-delete btn btn-sm btn-danger shadow text-white">
                                     Delete

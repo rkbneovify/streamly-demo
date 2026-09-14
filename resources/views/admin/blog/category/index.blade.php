@@ -275,7 +275,7 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- Add Category Modal -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel"
+    {{-- <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -318,9 +318,11 @@
 
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <!-- Edit Category -->
+    {{-- @include('admin.blog.category.model') --}}
+
+    {{-- <!-- Edit Category -->
 
     <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -370,7 +372,8 @@
             </div>
         </div>
     </div>
-    <!-- Edit Category -->
+    <!-- Edit Category --> --}}
+    @include('admin.blog.category.model')
 @endsection
 
 
