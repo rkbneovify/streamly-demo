@@ -1017,7 +1017,7 @@ class ChannelController extends Controller
 
                     $channel->program = $this->getProgramScheduleByIdWithCache($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
                         // station name inside program
-                        $item->stationName = $channel->stationName;
+                        // $item->stationName = $channel->stationName;
                         return $item;
                     });
                     unset($channel->assets);
@@ -1078,7 +1078,7 @@ class ChannelController extends Controller
                         'quals',
                         'time',
                         'image',
-                        'stationName',
+
                     ]);
                     $channel->makeHidden([
                         'type',
@@ -1089,7 +1089,6 @@ class ChannelController extends Controller
                         'genre_name',
                         'ratio',
                         'premium',
-                        'stationName',
                         'east_coast',
                     ]);
 
