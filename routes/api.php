@@ -312,6 +312,7 @@ Route::group(['prefix' => 'blogs'], function () {
     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
+    Route::get('/{category}/{subcategory}/list', 'Api\Blog\BlogSubCategoryController@subcategoryList');
 });
 
 require __DIR__ . '/api-v2.php';

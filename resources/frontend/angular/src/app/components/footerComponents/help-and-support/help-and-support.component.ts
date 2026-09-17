@@ -15,7 +15,7 @@ import { SweetalertService } from '../../../services/SweetAlert/sweetalert.servi
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CacheService } from '../../../services/cacheService/cacheservice.service';
-
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 interface QuickLink {
   icon: string;
   title: string;
@@ -51,10 +51,20 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: CrudService,
     private alert: SweetalertService,
-    private myCache: CacheService
+    private myCache: CacheService,
+    private sanitizer: DomSanitizer
   ) { }
 
-   popularSearches = [
+  page: number = 1;
+  limit: number = 9;
+  hasMore: boolean = true;
+  categoryList: any[] = [];
+  private pageSubject = new Subject<number>();
+  private destroy$ = new Subject<void>();
+  private dataKey = "blog_categories";
+  private hasMoreKey: string = 'blog_categories_has_more'
+
+  popularSearches = [
     'Subscription & Billing',
     'Login Issues',
     'App on TV',
@@ -204,9 +214,104 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.loadCategories();
+    this.pageSubject.next(this.page);
+  }
+
+  getSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+
+
+  onScrollDown() {
+    if (!this.hasMore) {
+      return;
+    }
+
+    this.pageSubject.next(this.page);
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
+
+  loadCategories() {
+    this.dataKey +=
+      JSON.stringify({
+        page: this.page,
+        limit: this.limit,
+
+      });
+
+    const cachedData = this.myCache.get(this.dataKey);
+    if (cachedData) {
+      this.hasMore = this.myCache.get(this.hasMoreKey);
+      this.categoryList = [...cachedData];
+      return;
+    }
+
+    this.pageSubject.pipe(
+      distinctUntilChanged(),
+      exhaustMap(page => {
+        const params = new URLSearchParams();
+        params.set('limit', String(this.limit));
+        params.set('page', String(page));
+        this.alert.loading();
+        return this.api
+          .getRequest(`blogs/categories/list?${params.toString()}`);
+
+      }),
+
+      takeUntil(this.destroy$)
+    )
+      .subscribe({
+        next: (res: any) => {
+          this.alert.close();
+          this.categoryList = this.myCache.removeDuplicates([
+            ...this.categoryList,
+            ...res.data
+          ]);
+
+          this.hasMore = res.has_more;
+          this.myCache.set(this.hasMoreKey, this.hasMore);
+          this.myCache.set(this.dataKey, this.categoryList);
+
+          if (this.hasMore) {
+            this.page += 1;
+          }
+        },
+
+        error: (err: any) => {
+          this.alert.close();
+          this.alert.error(err.error.message)
+        }
+      });
+
+
+
+  }
+
+  onSelectCategory(svgIcon: string, backgroundColor: string, title: string, subCategory?: string | null): void {
+
+    const data = {
+      title,
+      icon: svgIcon,
+      backgroundColor,
+      sub_category: subCategory
+    };
+
+    if (subCategory) {
+      this.router.navigate(['/user/article', title, subCategory], {
+        state: data
+      });
+    } else {
+      this.router.navigate(['/user/article', title], {
+        state: data
+      });
+    }
 
   }
 }

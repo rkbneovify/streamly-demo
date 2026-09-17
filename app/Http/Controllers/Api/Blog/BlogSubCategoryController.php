@@ -34,6 +34,26 @@ class BlogSubCategoryController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function subcategoryList($category, $subCategory, Request $request)
+    {
+        $limit = $request->input('limit', 10);
+        $page = $request->input('page', 1);
+        try {
+            $query  = BlogSubCategory::query();
+            $query->with('blog')->where('category', $category)
+               ->where('status', 1);
+            $data = $query->paginate($limit, ['*'], 'page', $page);
+            if (count($data->items()) == 0) {
+                return $this->errorResponse("Data not found !", 404);
+            }
+            return  $this->paginateResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function store(Request $request, BlogSubCategory $blogCategory)
     {
         $validator = Validator::make($request->all(), [

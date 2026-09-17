@@ -1,0 +1,606 @@
+* {
+  box-sizing: border-box;
+}
+
+.help-center {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #111111;
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1148px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  height: 114px;
+  background: #062e50;
+  color: #ffffff;
+}
+
+.header-inner {
+  max-width: 1148px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 43px;
+  font-weight: 600;
+  letter-spacing: -2px;
+  line-height: 1;
+
+  // If you have actual Streamly logo,
+  // replace this text with an image.
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.search-box {
+  width: 340px;
+  height: 43px;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 25px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 17px;
+
+  i {
+    font-size: 16px;
+    margin-right: 11px;
+  }
+
+  input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+
+    color: #ffffff;
+    font-size: 13px;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #ffffff;
+      opacity: 1;
+    }
+  }
+}
+
+.language {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  font-size: 14px;
+  white-space: nowrap;
+
+  .bi-globe2 {
+    font-size: 20px;
+  }
+
+  .bi-chevron-down {
+    font-size: 11px;
+    margin-left: 2px;
+  }
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 166px;
+  background: #f1f7fe;
+
+  padding: 36px 0 30px;
+}
+
+.hero-shape {
+  position: absolute;
+  right: -70px;
+  top: 0;
+  width: 283px;
+  height: 100%;
+  background: #d8ebff;
+  clip-path: polygon(65% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.breadcrumb {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  font-size: 27px;
+  font-weight: 600;
+
+  .back-arrow {
+    color: #005eb8;
+    font-size: 30px;
+    display: flex;
+  }
+
+  .help-text {
+    color: #111111;
+  }
+
+  >.bi-chevron-right {
+    color: #111111;
+    font-size: 18px;
+  }
+
+  .current {
+    color: #124a84;
+  }
+}
+
+.hero-description {
+  position: relative;
+  z-index: 1;
+
+  margin: 27px 0 0;
+
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #111111;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.content {
+  padding-top: 47px;
+  padding-bottom: 38px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 455px 1fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.subscription-card,
+.articles-card {
+  border: 1px solid #eeeeee;
+  border-radius: 0 0 14px 14px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.18);
+
+  overflow: hidden;
+}
+
+.subscription-card {
+  padding: 22px 16px 15px;
+}
+
+.articles-card {
+  padding: 22px 16px 15px;
+  color: #111111;
+}
+
+
+/* =========================
+   SECTION HEADING
+========================= */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #111111;
+
+  margin-bottom: 25px;
+
+  padding-left: 0;
+}
+
+.icon-box {
+  width: 53px;
+  height: 53px;
+
+  border-radius: 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  i {
+    font-size: 21px;
+  }
+}
+
+.subscription-icon {
+  background: #91c5fa;
+  color: #0566bd;
+}
+
+.article-icon {
+  background: #fff0ad;
+  color: #111111;
+}
+
+.section-heading h2 {
+  margin: 0;
+
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.section-heading p {
+  margin: 5px 0 0;
+
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+
+/* =========================
+   ARTICLE ITEMS
+========================= */
+
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+
+}
+
+.article-item {
+  min-height: 82px;
+  color: #111111;
+  border: 1px solid #ededed;
+  border-radius: 14px;
+
+  padding: 18px 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  font-size: 14px;
+  line-height: 1.45;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+
+  span {
+    display: block;
+  }
+
+  i {
+    color: #b7b7b7;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: #f8fbff;
+    border-color: #d9e7f5;
+
+    i {
+      color: #1264ae;
+    }
+  }
+}
+
+
+/* Active subscription item */
+
+.subscription-card .article-item.active {
+  background: #f0f3fc;
+  border-color: transparent;
+
+  font-weight: 600;
+
+  i {
+    color: #0067c5;
+    font-size: 16px;
+  }
+}
+
+
+/* =========================
+   SUPPORT
+========================= */
+
+.support-section {
+  margin-top: 38px;
+
+  min-height: 107px;
+
+  padding: 21px 39px;
+
+  border-radius: 13px;
+
+  background: #f0f7ff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.support-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.support-icon {
+  width: 61px;
+  height: 61px;
+
+  border-radius: 50%;
+
+  background: #062f52;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 28px;
+  }
+}
+
+.support-text {
+  color: #111111;
+
+  h3 {
+    margin: 0 0 3px;
+
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 13px;
+  }
+}
+
+.support-actions {
+  display: flex;
+  gap: 13px;
+}
+
+.support-btn {
+  height: 40px;
+  min-width: 147px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: #ffd83d;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f6cc25;
+  }
+
+  i {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-card,
+  .articles-card {
+    width: 100%;
+  }
+
+  .header-inner {
+    max-width: 100%;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .header {
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 36px;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .search-box {
+    flex: 1;
+    width: auto;
+  }
+
+  .language {
+    flex-shrink: 0;
+  }
+
+  .hero {
+    padding: 28px 0;
+  }
+
+  .breadcrumb {
+    font-size: 21px;
+    gap: 9px;
+
+    .back-arrow {
+      font-size: 24px;
+    }
+  }
+
+  .hero-description {
+    font-size: 15px;
+    margin-top: 20px;
+  }
+
+  .content {
+    padding-top: 30px;
+  }
+
+  .support-section {
+    padding: 22px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .support-actions {
+    width: 100%;
+  }
+
+  .support-btn {
+    flex: 1;
+  }
+}
+
+
+@media (max-width: 576px) {
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .header-inner {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .header-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .language {
+    justify-content: flex-end;
+  }
+
+  .breadcrumb {
+    flex-wrap: wrap;
+    font-size: 18px;
+  }
+
+  .breadcrumb .current {
+    width: 100%;
+    margin-left: 38px;
+    margin-top: -5px;
+  }
+
+  .section-heading h2 {
+    font-size: 21px;
+  }
+
+  .section-heading p {
+    font-size: 12px;
+  }
+
+  .article-item {
+    min-height: 70px;
+    padding: 15px 17px;
+    font-size: 13px;
+  }
+
+  .support-left {
+    align-items: flex-start;
+  }
+
+  .support-actions {
+    flex-direction: column;
+  }
+
+  .support-btn {
+    width: 100%;
+  }
+}

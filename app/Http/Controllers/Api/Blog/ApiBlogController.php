@@ -39,19 +39,39 @@ class ApiBlogController extends Controller
     }
     public function categoriesList()
     {
+
+
+
+
         $limit = $this->request->input('limit', 10);
         $page = $this->request->input('page', 1);
 
         try {
             $query = $this->blogCategory->query();
             $data = $query->where('status', 1)
-                ->with('subCategory', function ($query) {
-                    return  $query->pluck('title');
-                })
+                ->with('subCategory')
                 ->withCount('blog')
                 ->withSearchBlog($this->request->search)
                 ->paginate($limit, ['*'], 'page', $page);
-            //   $data->getCollection()->each->makeHidden('blog');
+            $data->getCollection()->each(function ($item) {
+                $item->setRelation(
+                    'subCategory',
+                    $item->subCategory->take(3)
+                );
+            });
+            return $this->paginateResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+    public function categoriesListNoExtraData()
+    {
+
+        try {
+            $query = $this->blogCategory->query();
+            $data = $query->where('status', 1)->latest('id')->take(6);
+
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {
             //throw $th;

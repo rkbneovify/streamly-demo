@@ -92,15 +92,15 @@
     <!-- Quick Links -->
     <section class="quick-links">
 
-      <div class="quick-card" *ngFor="let item of quickLinks">
+      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)">
 
-        <div class="quick-icon" [ngClass]="'icon-' + item.color">
-          <i [class]="'bi ' + item.icon"></i>
+        <div class="quick-icon" [style.background-color]="item.background_color" [innerHTML]="getSvg(item.svg_content)">
+
         </div>
 
         <h3>{{ item.title }}</h3>
 
-        <p>{{ item.description }}</p>
+
 
         <span class="arrow">
           →
@@ -125,39 +125,54 @@
 
 
     <!-- Categories -->
-    <section class="categories-grid">
+    <div class="scroll-container" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
+      (scrolled)="onScrollDown()">
+      <section class="categories-grid">
 
-      <article class="category-card" *ngFor="let category of categories">
+        <article class="category-card" *ngFor="let category of categoryList">
 
-        <div class="category-header">
+          <div class="category-header">
 
-          <div class="category-icon" [ngClass]="'icon-' + category.color">
+            <!-- <div class="category-icon" [ngClass]="'icon-' + category.color">
             <i [class]="'bi ' + category.icon"></i>
+          </div> -->
+
+            <div class="category-icon" [style.background-color]="category.background_color"
+              [innerHTML]="getSvg(category.svg_content)"></div>
+
+            <h3>
+              {{ category.title }}
+            </h3>
+
           </div>
 
-          <h3>
-            {{ category.title }}
-          </h3>
+          <div class="article-list">
 
-        </div>
 
-        <div class="article-list">
+            <div *ngFor=" let
+                item of category.sub_category">
+              <a href="javascript:void(0)"
+                (click)="onSelectCategory(category.svg_content, category.background_color, category.title, item.title)">
+                <span>{{ item.title }}</span>
+                <i class=" bi bi-chevron-right"></i>
+              </a>
+            </div>
 
-          <a href="javascript:void(0)" *ngFor="let article of category.articles">
-            <span>{{ article }}</span>
-            <i class="bi bi-chevron-right"></i>
+
+
+          </div>
+
+          <a *ngIf="category.blog_count > 0" href="javascript:void(0)"
+            (click)="onSelectCategory(category.svg_content, category.background_color, category.title)"
+            class="view-articles">
+            View All
+            <span>→</span>
           </a>
 
-        </div>
+        </article>
 
-        <a href="javascript:void(0)" class="view-articles">
-          View all 8 articles
-          <span>→</span>
-        </a>
-
-      </article>
-
-    </section>
+      </section>
+    </div>
 
 
     <!-- ================= SUPPORT CTA ================= -->
@@ -213,7 +228,7 @@
 
 
     <!-- ================= BOTTOM LINKS ================= -->
-     
+
     <section class="bottom-links">
 
       <a href="/user/faq">

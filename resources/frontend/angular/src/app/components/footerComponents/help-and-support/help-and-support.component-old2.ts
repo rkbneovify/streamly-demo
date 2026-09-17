@@ -49,7 +49,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     private api: CrudService,
     private alert: SweetalertService,
     private myCache: CacheService
-  ) {}
+  ) { }
 
   categories: any[] = [];
   limit: number = 12;
@@ -145,7 +145,6 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     this.pageSubject
       .pipe(
         distinctUntilChanged(),
-
         exhaustMap(page => {
           const params = new URLSearchParams();
           params.set('limit', String(this.limit));
@@ -176,7 +175,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
           this.myCache.set(this.hasMoreKey, this.hasMore);
           this.myCache.set(this.dataCacheKey, this.categories);
           if (this.hasMore) {
-           this.page +=1;
+            this.page += 1;
           }
         },
 
@@ -219,7 +218,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     this.pageSubject.next(this.page);
   }
 
-  resetSearch(){
+  resetSearch() {
     this.txtSearch.setValue('');
     this.page = 1;
     this.hasMore = true;
