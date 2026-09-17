@@ -580,7 +580,6 @@ class ChannelController extends Controller
                     'genre_name',
                     'ratio',
                     'premium',
-                    'stationName',
                     'east_coast',
                 ]);
 
