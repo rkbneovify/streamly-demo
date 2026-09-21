@@ -309,6 +309,7 @@ Route::get('/notification/send', 'Api\ApiNotificationController@send');
 
 Route::group(['prefix' => 'blogs'], function () {
     Route::get('/', 'Api\Blog\ApiBlogController@index');
+     Route::get('/{id}', 'Api\Blog\ApiBlogController@byId');
     Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');

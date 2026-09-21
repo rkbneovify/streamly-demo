@@ -44,11 +44,11 @@
           <input type="text" placeholder="Search for help articles . ." />
         </div>
 
-        <div class="language">
+        <!-- <div class="language">
           <i class="bi bi-globe2"></i>
           <span>English</span>
           <i class="bi bi-chevron-down"></i>
-        </div>
+        </div> -->
 
       </div>
 
@@ -71,23 +71,22 @@
           </span>
         </a>
 
-        <span class="help-text">Help center</span>
+        <span class="help-text">Help Center</span>
 
         <i class="bi bi-chevron-right"></i>
 
         <span class="help-text">
-          {{ redirectData.category }}
+          {{ category }}
         </span>
         <i class="bi bi-chevron-right"></i>
 
         <span class="current">
-          {{ redirectData.subCategory }}
+          {{ subcategory }}
         </span>
       </div>
 
       <p class="hero-description">
-        Find answers to your subscription related queries and manage
-        your account with ease.
+        {{ blog.title }}
       </p>
 
     </div>
@@ -103,29 +102,17 @@
       <!-- Subscription -->
       <section class="subscription-card">
 
-        <div class="section-heading">
-
-          <div class="icon-box subscription-icon" [innerHTML]="getSvg(redirectData.icon)"
-            [style.background-color]="redirectData.backgroundColor">
-            <!-- <i class="bi bi-credit-card"></i> -->
-          </div>
-
-          <div>
-            <h2> {{ redirectData.title }}</h2>
-
-          </div>
-
-        </div>
+        <div class="section-blog" [innerHTML]="blog.content"></div>
 
 
         <div class="article-list">
-
-          <div class="article-item" *ngFor="let item of subcategories; let i = index"
+          {{ blog.category }}
+          <!-- <div class="article-item" *ngFor="let item of subcategories; let i = index"
             [ngClass]="{ 'active': selectedIndex === i }" (click)="onSelect(item, i)">
             <span>{{ item.title }}</span>
 
             <i class="bi bi-chevron-right"></i>
-          </div>
+          </div> -->
 
         </div>
 
@@ -139,22 +126,24 @@
 
           <div class="icon-box article-icon">
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="80" height="80" rx="10" fill="#FFEFB0" />
+              <rect width="80" height="80" rx="10" fill="#005CAC" />
+              <path d="M43.8747 49.25H36.583" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M48.2497 43.4167H36.583" stroke="white" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
               <path
-                d="M49.7083 26.375H29.2917C27.6808 26.375 26.375 27.6808 26.375 29.2917V49.7083C26.375 51.3192 27.6808 52.625 29.2917 52.625H49.7083C51.3192 52.625 52.625 51.3192 52.625 49.7083V29.2917C52.625 27.6808 51.3192 26.375 49.7083 26.375Z"
-                stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M32.208 33.666H43.8747" stroke="black" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-              <path d="M32.208 39.5H46.7913" stroke="black" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-              <path d="M32.208 45.334H40.958" stroke="black" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
+                d="M27.8337 55.0834H51.167C51.9405 55.0834 52.6824 54.7761 53.2294 54.2291C53.7764 53.6822 54.0837 52.9403 54.0837 52.1667V28.8334C54.0837 28.0599 53.7764 27.318 53.2294 26.771C52.6824 26.224 51.9405 25.9167 51.167 25.9167H33.667C32.8934 25.9167 32.1516 26.224 31.6046 26.771C31.0576 27.318 30.7503 28.0599 30.7503 28.8334V52.1667C30.7503 52.9403 30.443 53.6822 29.8961 54.2291C29.3491 54.7761 28.6072 55.0834 27.8337 55.0834ZM27.8337 55.0834C27.0601 55.0834 26.3182 54.7761 25.7713 54.2291C25.2243 53.6822 24.917 52.9403 24.917 52.1667V39.0417C24.917 38.2682 25.2243 37.5263 25.7713 36.9794C26.3182 36.4324 27.0601 36.1251 27.8337 36.1251H30.7503"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path
+                d="M46.7913 31.75H38.0413C37.2359 31.75 36.583 32.4029 36.583 33.2083V36.125C36.583 36.9304 37.2359 37.5833 38.0413 37.5833H46.7913C47.5968 37.5833 48.2497 36.9304 48.2497 36.125V33.2083C48.2497 32.4029 47.5968 31.75 46.7913 31.75Z"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
+
 
           </div>
 
           <div>
-            <h2>Articles</h2>
+            <h2>Related Articles</h2>
             <p>
               Explore detailed guides and troubleshooting articles.
             </p>
@@ -165,7 +154,7 @@
 
         <div class="article-list">
 
-          <div class="article-item" *ngFor="let item of blogs">
+          <div class="article-item" *ngFor="let item of relatedBlog" (click)="onRelatedBlogSelect(item)">
             <span>{{ item.title }}</span>
 
             <i class="bi bi-chevron-right"></i>
@@ -197,15 +186,15 @@
 
       <div class="support-actions">
 
-        <button class="support-btn">
+        <a href="mailto:support@streamlytv.com" class="support-btn">
           <i class="bi bi-headset"></i>
           Contact us
-        </button>
+        </a>
 
-        <button class="support-btn">
+        <a href="tel:+16022450986" class="support-btn">
           <i class="bi bi-chat-square-text"></i>
-          Chat with us
-        </button>
+          Talk with us
+        </a>
 
       </div>
 

@@ -70,7 +70,7 @@ const routes: Routes = [
       { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
       { path: 'article/:category', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
       { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
-      { path: 'article/:category/:subcategory/:slug', component: ArticleComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent, canActivate: [authguardGuard] },
     ]
   }
 ];

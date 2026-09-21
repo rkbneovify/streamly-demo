@@ -37,6 +37,22 @@ class ApiBlogController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function byId($id)
+    {
+        try {
+            $blog = $this->blog->find($id);
+            $relatedBlogs = $this->blog->whereNot('id', $id)->where('category', $blog->category)->get();
+            return $this->dataResponse([
+                'blog' => $blog,
+                'related' => $relatedBlogs
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function categoriesList()
     {
 

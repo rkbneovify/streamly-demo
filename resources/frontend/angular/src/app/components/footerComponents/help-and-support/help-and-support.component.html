@@ -92,16 +92,13 @@
     <!-- Quick Links -->
     <section class="quick-links">
 
-      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)">
+      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)" (click)="selectPopular(item)">
 
         <div class="quick-icon" [style.background-color]="item.background_color" [innerHTML]="getSvg(item.svg_content)">
 
         </div>
 
         <h3>{{ item.title }}</h3>
-
-
-
         <span class="arrow">
           →
         </span>
@@ -116,10 +113,10 @@
 
       <h2>Categories</h2>
 
-      <a href="javascript:void(0)">
+      <!-- <a href="javascript:void(0)">
         View all
         <span>→</span>
-      </a>
+      </a> -->
 
     </section>
 

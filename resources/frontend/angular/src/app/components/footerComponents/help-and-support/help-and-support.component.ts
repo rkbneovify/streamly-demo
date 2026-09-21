@@ -208,8 +208,21 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     console.log('Search clicked');
   }
 
-  selectPopular(item: string): void {
+  selectPopular(item: any): void {
     console.log('Selected:', item);
+
+    const data = {
+      title: item.title,
+      icon: item.svg_content,
+      backgroundColor: item.background_color,
+      sub_category: undefined
+    };
+
+    this.router.navigate(['/user/article', item.title], {
+      state: data
+    });
+
+
   }
 
   ngOnInit(): void {
@@ -286,7 +299,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
 
         error: (err: any) => {
           this.alert.close();
-          this.alert.error(err.error.message)
+          this.alert.error(err.error.message);
         }
       });
 

@@ -1,6 +1,6 @@
 import { Location, NgClass, NgFor } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
@@ -18,34 +18,21 @@ import { CacheService } from '../../../../services/cacheService/cacheservice.ser
 export class ArticleComponent implements OnInit, OnDestroy {
   redirectData: any = {};
   selectedIndex: number = 0;
-  subcategories: any[] = [];
-  blogs: any[] = [];
-  page: number = 1;
-  limit: number = 9;
-  hasMore: boolean = true;
-  private pageSubject = new Subject<number>();
-  private destroy$ = new Subject<void>();
+  blog: any = {};
+  relatedBlog: any[] = [];
+  category: string;
+  subcategory: string;
+  slug: string;
+  blogId!: number;
 
-  subscriptionArticles: string[] = [
-    "I’ve changed my phone number. How can I access my subscription?",
-    "How Do I Cancel My Subscription?",
-    "How do I manage my subscriptions via iTunes?",
-    "Cancel Subscription (Google Play Users)",
-    "How to delete my account",
-    "Cancel Subscription (iOS Users)"
-  ];
 
-  articles: string[] = [
-    "I’ve changed my phone number. How can I access my subscription?",
-    "How Do I Cancel My Subscription?",
-    "How do I manage my subscriptions via iTunes?",
-    "Cancel Subscription (Google Play Users)",
-    "How to delete my account",
-    "Cancel Subscription (iOS Users)"
-  ];
+
+
+
   constructor(
     private router: Router,
     private location: Location,
+    private activatedRoute: ActivatedRoute,
     private api: CrudService,
     private alert: SweetalertService,
     private myCache: CacheService,
@@ -54,25 +41,28 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.redirectData = history.state;
-    console.log(this.redirectData);
-    // this.loadSubCategories(this.redirectData);
-    // this.pageSubject.next(this.page);
+
+    this.activatedRoute.paramMap.subscribe(params => {
+
+      this.category = params.get('category')
+      this.subcategory = params.get('subcategory');
+      this.slug = params.get('slug');
+      this.blogId = Number(params.get('id'));
+      this.getBlog(this.blogId);
+    });
+
+
+
+
 
 
   }
 
-  onScrollDown() {
-    if (!this.hasMore) {
-      return;
-    }
 
-    this.pageSubject.next(this.page);
-  }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.blog = {};
+    this.relatedBlog = [];
   }
 
   goBack(): void {
@@ -83,42 +73,30 @@ export class ArticleComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
-  onSelect(item: any, index: number): void {
-    this.selectedIndex = index;
-    this.blogs = item.blog;
-    console.log('Selected item:', item);
+  onRelatedBlogSelect(item: any): void {
+    // this.blogId = item.id;
+    // const data = {
+    //   blogId: item.id,
+    //   category: item.category,
+    //   subCategory: item.sub_category
+    // };
+
+    this.router.navigate(['/user/article', item.category, item.sub_category, item.id, item.slug], {
+
+    });
+
   }
 
-  loadSubCategories(stateData: any) {
-    this.pageSubject.pipe(
-      distinctUntilChanged(),
-      exhaustMap(page => {
-        const params = new URLSearchParams();
-        params.set('limit', String(this.limit));
-        params.set('page', String(page));
-        this.alert.loading();
-        return this.api
-          .getRequest(`blogs/${stateData.title}/${stateData.sub_category}/list?${params.toString()}`);
+  getBlog(blogId: number) {
 
-      }),
-
-      takeUntil(this.destroy$)
-    )
+    this.alert.loading();
+    this.api
+      .getRequest(`blogs/${blogId}`)
       .subscribe({
         next: (res: any) => {
           this.alert.close();
-          this.subcategories = this.myCache.removeDuplicates([
-            ...this.subcategories,
-            ...res.data
-          ]);
-
-          this.blogs = this.subcategories[0].blog;
-          this.hasMore = res.has_more;
-
-
-          if (this.hasMore) {
-            this.page += 1;
-          }
+          this.blog = res.data.blog;
+          this.relatedBlog = res.data.related;
         },
 
         error: (err: any) => {

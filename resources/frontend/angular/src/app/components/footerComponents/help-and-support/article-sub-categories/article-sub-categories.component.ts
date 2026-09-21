@@ -1,6 +1,6 @@
 import { Location, NgClass, NgFor } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
@@ -18,6 +18,7 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
 
   redirectData: any = {};
   selectedIndex: number = 0;
+  category: string;
   subcategories: any[] = [];
   blogs: any[] = [];
   page: number = 1;
@@ -46,6 +47,7 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private location: Location,
+    private activatedRoute: ActivatedRoute,
     private api: CrudService,
     private alert: SweetalertService,
     private myCache: CacheService,
@@ -57,6 +59,10 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
     this.redirectData = history.state;
     this.loadSubCategories(this.redirectData);
     this.pageSubject.next(this.page);
+
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.category = params.get('category');
+    });
 
 
   }
@@ -131,15 +137,15 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
   }
 
   onArticleSelect(item: any) {
-    const data = {
-      blogId: item.id,
-      category: item.category,
-      subCategory: item.sub_category
-    };
-    console.log(item);
-    console.log(data);
-    this.router.navigate(['/user/article', data.category, data.subCategory, item.slug], {
-      state: data
+    // const data = {
+    //   blogId: item.id,
+    //   category: item.category,
+    //   subCategory: item.sub_category
+    // };
+    // console.log(item);
+    // console.log(data);
+    this.router.navigate(['/user/article', item.category, item.sub_category, item.id, item.slug], {
+      // state: data
     });
   }
 
