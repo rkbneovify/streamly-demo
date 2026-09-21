@@ -23,9 +23,7 @@ class AdminBlogController extends Controller
         public Blog $blog,
         public BlogCategory $blogCategory,
         public BlogSubCategory $blogSubCategory
-    ) {
-
-    }
+    ) {}
     public function index()
     {
         $limit = $this->request->input('limit', 10);
@@ -46,10 +44,7 @@ class AdminBlogController extends Controller
         try {
             $subcategories = $this->blogSubCategory->where('category', $category)
                 ->where('status', 1)->pluck('title');
-            return $this->dataResponse([
-                "data" => $subcategories,
-
-            ], "Data fetched successfully !");
+            return $this->dataResponse($subcategories, "Data fetched successfully !");
         } catch (\Throwable $th) {
             //throw $th;
         }
@@ -110,7 +105,6 @@ class AdminBlogController extends Controller
             // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
-
     }
 
     public function edit($id)
@@ -190,7 +184,6 @@ class AdminBlogController extends Controller
             // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
-
     }
 
     public function updateStatus($id)
@@ -316,7 +309,6 @@ class AdminBlogController extends Controller
                         ])->save();
 
                     break;
-
             }
 
 

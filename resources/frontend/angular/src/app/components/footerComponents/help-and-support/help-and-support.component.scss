@@ -283,7 +283,7 @@ $yellow: #ffd84d;
 }
 
 .quick-card {
-  min-height: 151px;
+  // min-height: 151px;
 
   padding: 20px 14px 14px;
 
@@ -298,6 +298,8 @@ $yellow: #ffd84d;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 
   transition: 0.2s ease;
+
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-2px);
@@ -516,11 +518,12 @@ $yellow: #ffd84d;
 }
 
 .view-articles {
-  display: inline-flex;
+  width: 100%;
+  display: flex;
   align-items: center;
-
+  justify-content: center;
   margin-top: 13px;
-  margin-left: 40px;
+  // margin-left: 40px;
 
   color: #111111;
 

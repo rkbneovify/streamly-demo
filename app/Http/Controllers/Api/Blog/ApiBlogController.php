@@ -37,21 +37,57 @@ class ApiBlogController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function byId($id)
+    {
+        try {
+            $blog = $this->blog->find($id);
+            $relatedBlogs = $this->blog->whereNot('id', $id)->where('category', $blog->category)->get();
+            return $this->dataResponse([
+                'blog' => $blog,
+                'related' => $relatedBlogs
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function categoriesList()
     {
+
+
+
+
         $limit = $this->request->input('limit', 10);
         $page = $this->request->input('page', 1);
 
         try {
             $query = $this->blogCategory->query();
             $data = $query->where('status', 1)
-                ->with('subCategory', function ($query) {
-                    return  $query->pluck('title');
-                })
+                ->with('subCategory')
                 ->withCount('blog')
                 ->withSearchBlog($this->request->search)
                 ->paginate($limit, ['*'], 'page', $page);
-            //   $data->getCollection()->each->makeHidden('blog');
+            $data->getCollection()->each(function ($item) {
+                $item->setRelation(
+                    'subCategory',
+                    $item->subCategory->take(3)
+                );
+            });
+            return $this->paginateResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+    public function categoriesListNoExtraData()
+    {
+
+        try {
+            $query = $this->blogCategory->query();
+            $data = $query->where('status', 1)->latest('id')->take(6);
+
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {
             //throw $th;

@@ -32,6 +32,8 @@ import { LocationAccessComponent } from './location-access/location-access.compo
 import { ConnectedHousesComponent } from './connected-houses/connected-houses.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
+import { ArticleSubCategoriesComponent } from '../components/footerComponents/help-and-support/article-sub-categories/article-sub-categories.component';
+import { ArticleComponent } from '../components/footerComponents/help-and-support/article/article.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -66,6 +68,9 @@ const routes: Routes = [
       { path: 'location-access', component: LocationAccessComponent },
       { path: 'search', component: SearchComponent, canActivate: [authguardGuard] },
       { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent, canActivate: [authguardGuard] },
     ]
   }
 ];

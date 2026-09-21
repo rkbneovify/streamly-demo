@@ -23,14 +23,12 @@ trait ApiResponseTrait
     public function dataResponse($data = [], $message = null, $code = 200, $success = true)
     {
 
-        return response()->json(
-            array_merge([
-                'success' => $success,
-                'response_code' => $code,
-                'message' => $message ?? 'Request processed successfully !',
-            ], $data),
-            $code
-        );
+        return response()->json([
+            'success' => $success,
+            'response_code' => $code,
+            'message' => $message ?? 'Request processed successfully !',
+            'data' => $data,
+        ], $code);
     }
 
     public function paginateResponse($data, $message = null, $code = 200, $success = true)
