@@ -25,11 +25,9 @@ class ApiBlogController extends Controller
         $page = $this->request->input('page', 1);
 
         try {
-            $query = $this->blogCategory->query();
+            $query = $this->blog->query();
             $data = $query->where('status', 1)
-                ->with('subCategory')
-                ->withCount('blogs')
-
+                ->search($this->request->search)
                 ->paginate($limit, ['*'], 'page', $page);
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {

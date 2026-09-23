@@ -38,17 +38,18 @@
           experiences
         </p>
 
-        <div class="search-box">
+        <!-- <div class="search-box">
           <i class="bi bi-search"></i>
 
           <input type="text" placeholder="Search for help, articles, queries, or error codes">
-        </div>
+        </div> -->
+        <app-article-search></app-article-search>
 
         <div class="popular-searches">
           <span class="popular-label">Popular :</span>
 
-          <button *ngFor="let item of popularSearches" type="button" (click)="selectPopular(item)">
-            {{ item }}
+          <button *ngFor="let item of  categoryList.slice(0, 6)" type="button" (click)="selectPopular(item)">
+            {{ item.title }}
           </button>
         </div>
 
@@ -92,7 +93,7 @@
     <!-- Quick Links -->
     <section class="quick-links">
 
-      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)" (click)="selectPopular(item)">
+      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)" (click)="selectQuickLink(item)">
 
         <div class="quick-icon" [style.background-color]="item.background_color" [innerHTML]="getSvg(item.svg_content)">
 

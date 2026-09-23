@@ -3,14 +3,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
 import { CrudService } from '../../../../services/crud.service';
 import { SweetalertService } from '../../../../services/SweetAlert/sweetalert.service';
 import { CacheService } from '../../../../services/cacheService/cacheservice.service';
+import { ArticleSearchComponent } from '../article-search/article-search.component';
+import { FormControl, FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-article-sub-categories',
   standalone: true,
-  imports: [NgFor, NgClass, InfiniteScrollDirective],
+  imports: [NgFor, FormsModule, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
   templateUrl: './article-sub-categories.component.html',
   styleUrl: './article-sub-categories.component.scss'
 })
@@ -26,6 +28,7 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
   hasMore: boolean = true;
   private pageSubject = new Subject<number>();
   private destroy$ = new Subject<void>();
+  txtSearch = new FormControl('');
 
   subscriptionArticles: string[] = [
     "I’ve changed my phone number. How can I access my subscription?",
@@ -65,6 +68,8 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
     });
 
 
+
+
   }
 
   onScrollDown() {
@@ -101,6 +106,7 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
         const params = new URLSearchParams();
         params.set('limit', String(this.limit));
         params.set('page', String(page));
+        params.set('search', this.txtSearch.value);
         this.alert.loading();
         return this.api
           .getRequest(`blogs/${stateData.title}/${stateData.sub_category}/list?${params.toString()}`);

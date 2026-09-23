@@ -16,6 +16,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CacheService } from '../../../services/cacheService/cacheservice.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ArticleSearchComponent } from './article-search/article-search.component';
 interface QuickLink {
   icon: string;
   title: string;
@@ -41,7 +42,8 @@ interface Category {
     InfiniteScrollDirective,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ArticleSearchComponent
   ],
   templateUrl: './help-and-support.component.html',
   styleUrl: './help-and-support.component.scss'
@@ -210,6 +212,23 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
 
   selectPopular(item: any): void {
     console.log('Selected:', item);
+
+    const data = {
+      title: item.title,
+      icon: item.svg_content,
+      backgroundColor: item.background_color,
+      sub_category: undefined
+    };
+
+    this.router.navigate(['/user/article', item.title], {
+      state: data
+    });
+
+
+  }
+
+  selectQuickLink(item: any): void {
+    // console.log('Selected:', item);
 
     const data = {
       title: item.title,
