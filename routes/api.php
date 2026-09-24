@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiAnnouncementController;
 use App\Http\Controllers\Api\ApiSubscriptionPlanController;
 use App\Http\Controllers\Api\ApiSubscriptionPlanRequestController;
 use Illuminate\Http\Request;
@@ -314,6 +315,11 @@ Route::group(['prefix' => 'blogs'], function () {
     Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
     Route::get('/{category}/{subcategory}/list', 'Api\Blog\BlogSubCategoryController@subcategoryList');
+});
+
+Route::group(['prefix' => 'announcement'], function () {
+    Route::get('/', [ApiAnnouncementController::class,'index']);
+    
 });
 
 require __DIR__ . '/api-v2.php';

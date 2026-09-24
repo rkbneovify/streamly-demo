@@ -248,7 +248,7 @@ $yellow: #ffd84d;
     font-weight: 700;
   }
 
-  p {
+  .announcement {
     margin: 0;
 
     font-size: 12px;
@@ -269,6 +269,7 @@ $yellow: #ffd84d;
   font-weight: 700;
 
   cursor: pointer;
+  text-decoration: none;
 }
 
 

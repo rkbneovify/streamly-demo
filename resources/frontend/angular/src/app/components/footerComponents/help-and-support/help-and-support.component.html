@@ -74,16 +74,11 @@
 
         <h3>Important Update!</h3>
 
-        <p>
-          We’ve refreshed our subscription plans with updated benefits & pricing.
-          Explore new plans starting at just $12
-          <br class="desktop-only">
-          and pick the one that's right for you.
-        </p>
+        <div class="announcement" [innerHTML]="announcement[0].content"></div>
 
       </div>
 
-      <button class="know-more-btn">
+      <button routerLink="{{ announcement[0].url }}" class="know-more-btn">
         Know More
       </button>
 
