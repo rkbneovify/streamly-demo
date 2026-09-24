@@ -15,18 +15,22 @@ import { SweetalertService } from '../../../services/SweetAlert/sweetalert.servi
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CacheService } from '../../../services/cacheService/cacheservice.service';
-
-interface Category {
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ArticleSearchComponent } from './article-search/article-search.component';
+interface QuickLink {
+  icon: string;
   title: string;
   description: string;
-  icon: string;
+  color: string;
 }
 
-interface Actions {
-  title: string;
+interface Category {
   icon: string;
-  url: string;
+  title: string;
+  color: string;
+  articles: string[];
 }
+
 
 @Component({
   selector: 'app-help-and-support',
@@ -38,7 +42,8 @@ interface Actions {
     InfiniteScrollDirective,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ArticleSearchComponent
   ],
   templateUrl: './help-and-support.component.html',
   styleUrl: './help-and-support.component.scss'
@@ -48,168 +53,207 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: CrudService,
     private alert: SweetalertService,
-    private myCache: CacheService
-  ) {}
+    private myCache: CacheService,
+    private sanitizer: DomSanitizer
+  ) { }
 
-  categories: any[] = [];
-  limit: number = 12;
   page: number = 1;
+  limit: number = 9;
   hasMore: boolean = true;
-  txtSearch = new FormControl('');
-  hasMoreKey: string = 'blog_categories_has_More';
-  dataCacheKey: string = '';
+  categoryList: any[] = [];
   private pageSubject = new Subject<number>();
   private destroy$ = new Subject<void>();
+  private dataKey = "blog_categories";
+  private hasMoreKey: string = 'blog_categories_has_more';
+  private announcementDataKey = "announcement";
+  announcement: any[] = [];
 
-  // categories: Category[] = [
-  //   {
-  //     title: 'Reports & Dashboards',
-  //     description: 'Get insights and learn how to use reports.',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'How to get help',
-  //     description: 'Contact our support system & find answers',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Notification',
-  //     description: 'Manage alerts & notification settings',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Video Data',
-  //     description: 'Learn about video data & usage.',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Sports Data',
-  //     description: 'Explore sports data options & formats.',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Audio Data',
-  //     description: 'Understand audio data & integrations.',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Automotive Data',
-  //     description: 'Discover automotive data solutions.',
-  //     icon: 'assets/icons/article.svg'
-  //   },
-  //   {
-  //     title: 'Studio System',
-  //     description: 'Learn about studio system & setup',
-  //     icon: 'assets/icons/article.svg'
-  //   }
-  // ];
+  popularSearches = [
+    'Subscription & Billing',
+    'Login Issues',
+    'App on TV',
+    'Buffering',
+    'Supported Devices'
+  ];
 
-  actions: Actions[] = [
+  quickLinks: QuickLink[] = [
     {
-      title: 'Support Ticket',
-      icon: 'assets/icons/support-ticket.svg',
-      url: '/user/support-ticket'
+      icon: 'bi-credit-card',
+      title: 'Manage Subscription',
+      description: 'Update or cancel',
+      color: 'blue'
     },
     {
-      title: 'Report A BUG',
-      icon: 'assets/icons/bug.svg',
-      url: '/user/report'
+      icon: 'bi-person-check',
+      title: 'Account Settings',
+      description: 'Profile & security',
+      color: 'green'
     },
     {
-      title: 'FAQs',
-      icon: 'assets/icons/faq.svg',
-      url: '/user/faq'
+      icon: 'bi-tv',
+      title: 'Watch on TV',
+      description: 'Setup & activate',
+      color: 'purple'
     },
     {
-      title: 'Privacy Policy',
-      icon: 'assets/icons/policy.svg',
-      url: '/user/privacy-policy'
+      icon: 'bi-phone',
+      title: 'Supported Devices',
+      description: 'See all devices',
+      color: 'pink'
+    },
+    {
+      icon: 'bi-grid',
+      title: 'App & Features',
+      description: 'Explore features',
+      color: 'cyan'
+    },
+    {
+      icon: 'bi-headset',
+      title: 'Contact Support',
+      description: 'We’re here 24 / 7',
+      color: 'yellow'
     }
   ];
 
-  getCategories(search: string = '') {
-    this.dataCacheKey =
-      'blog_categories_' +
-      JSON.stringify({
-        page: this.page,
-        limit: this.limit,
-        search: this.txtSearch.value
-      });
-    const cachedData = this.myCache.get(this.dataCacheKey);
-    if (cachedData) {
-      this.hasMore = this.myCache.get(this.hasMoreKey);
-      this.categories = [...cachedData];
-      return;
+  categories: Category[] = [
+    {
+      icon: 'bi-credit-card',
+      title: 'Subscription & Billing',
+      color: 'blue',
+      articles: [
+        'Plans and pricing',
+        'Payment methods',
+        'How to cancel subscription'
+      ]
+    },
+    {
+      icon: 'bi-person-check',
+      title: 'Account Settings',
+      color: 'green',
+      articles: [
+        'Create Account',
+        'Update Account Information',
+        'Reset Password'
+      ]
+    },
+    {
+      icon: 'bi-grid',
+      title: 'App & Features',
+      color: 'cyan',
+      articles: [
+        'Download the app',
+        'Features overview',
+        'Content recommendations'
+      ]
+    },
+    {
+      icon: 'bi-tv',
+      title: 'Devices and Compatibility',
+      color: 'purple',
+      articles: [
+        'Supported Devices',
+        'How to install on TV',
+        'Device Requirements'
+      ]
+    },
+    {
+      icon: 'bi-broadcast',
+      title: 'Playback & Streaming',
+      color: 'pink',
+      articles: [
+        'Buffering issues',
+        'Video Quality',
+        'Playback error messages'
+      ]
+    },
+    {
+      icon: 'bi-bug',
+      title: 'Troubleshooting',
+      color: 'dark-blue',
+      articles: [
+        'App not working',
+        'Login issues',
+        'Error codes explained'
+      ]
+    },
+    {
+      icon: 'bi-shield-check',
+      title: 'Safety & Privacy',
+      color: 'brown',
+      articles: [
+        'Privacy policy',
+        'Data & security',
+        'Report inappropriate content'
+      ]
+    },
+    {
+      icon: 'bi-handshake',
+      title: 'Partner & Promotions',
+      color: 'navy',
+      articles: [
+        'Partner Offers',
+        'Redeem promo code',
+        'Promotions FAQ'
+      ]
+    },
+    {
+      icon: 'bi-file-earmark-text',
+      title: 'General',
+      color: 'red',
+      articles: [
+        'Terms of use',
+        'Refund Policy',
+        'Accessibility'
+      ]
     }
+  ];
 
-    this.pageSubject
-      .pipe(
-        distinctUntilChanged(),
 
-        exhaustMap(page => {
-          const params = new URLSearchParams();
-          params.set('limit', String(this.limit));
-          params.set('page', String(page));
-          params.set('search', this.txtSearch.value);
 
-          this.alert.loading();
+  selectPopular(item: any): void {
+    // console.log('Selected:', item);
 
-          return this.api
-            .getRequest(`blogs/categories/list?${params.toString()}`)
-            .pipe(
-              finalize(() => {
-                this.alert.close();
-              })
-            );
-        }),
+    const data = {
+      title: item.title,
+      icon: item.svg_content,
+      backgroundColor: item.background_color,
+      sub_category: undefined
+    };
 
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.categories = this.myCache.removeDuplicates([
-            ...this.categories,
-            ...res.data
-          ]);
+    this.router.navigate(['/user/article', item.title], {
+      state: data
+    });
 
-          this.hasMore = res.has_more;
-          this.myCache.set(this.hasMoreKey, this.hasMore);
-          this.myCache.set(this.dataCacheKey, this.categories);
-          if (this.hasMore) {
-           this.page +=1;
-          }
-        },
 
-        error: (err: any) => {
-          console.log('Error:', err);
-        }
-      });
+  }
+
+  selectQuickLink(item: any): void {
+    // console.log('Selected:', item);
+
+    const data = {
+      title: item.title,
+      icon: item.svg_content,
+      backgroundColor: item.background_color,
+      sub_category: undefined
+    };
+
+    this.router.navigate(['/user/article', item.title], {
+      state: data
+    });
+
+
   }
 
   ngOnInit(): void {
-    this.getCategories();
+    this.loadAnnouncement();
+    this.loadCategories();
     this.pageSubject.next(this.page);
-    this.txtSearch.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe(txt => {
-        if (txt !== '' && txt.length > 2) {
-          this.myCache.remove(this.dataCacheKey);
-          this.categories = [];
-          this.page = 1;
-          this.hasMore = true;
-
-          this.pageSubject.next(this.page);
-        }
-      });
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
-  // generateTicket(): void {
-  //   this.router.navigate(['/user/support-ticket']);
-  // }
+  getSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+
 
   onScrollDown() {
     if (!this.hasMore) {
@@ -219,22 +263,122 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     this.pageSubject.next(this.page);
   }
 
-  resetSearch(){
-    this.txtSearch.setValue('');
-    this.page = 1;
-    this.hasMore = true;
-    this.myCache.remove(this.dataCacheKey);
-    this.categories = [];
-    this.getCategories();
-    this.pageSubject.next(this.page);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  openCategory(category: Category): void {
-    console.log('Category:', category);
+
+
+  loadCategories() {
+    this.dataKey +=
+      JSON.stringify({
+        page: this.page,
+        limit: this.limit,
+
+      });
+
+    const cachedData = this.myCache.get(this.dataKey);
+    if (cachedData) {
+      this.hasMore = this.myCache.get(this.hasMoreKey);
+      this.categoryList = [...cachedData];
+      return;
+    }
+
+    this.pageSubject.pipe(
+      distinctUntilChanged(),
+      exhaustMap(page => {
+        const params = new URLSearchParams();
+        params.set('limit', String(this.limit));
+        params.set('page', String(page));
+        this.alert.loading();
+        return this.api
+          .getRequest(`blogs/categories/list?${params.toString()}`);
+
+      }),
+
+      takeUntil(this.destroy$)
+    )
+      .subscribe({
+        next: (res: any) => {
+          this.alert.close();
+          this.categoryList = this.myCache.removeDuplicates([
+            ...this.categoryList,
+            ...res.data
+          ]);
+
+          this.hasMore = res.has_more;
+          this.myCache.set(this.hasMoreKey, this.hasMore);
+          this.myCache.set(this.dataKey, this.categoryList);
+
+          if (this.hasMore) {
+            this.page += 1;
+          }
+        },
+
+        error: (err: any) => {
+          this.alert.close();
+          this.alert.error(err.error.message);
+        }
+      });
+
+
+
   }
 
-  openAction(action: Actions): void {
-    this.router.navigate([action.url]);
-    console.log(action.url);
+  loadAnnouncement() {
+
+
+    const cachedData = this.myCache.get(this.announcementDataKey);
+    if (cachedData) {
+
+      this.announcement = [...cachedData];
+      return;
+    }
+
+    this.api.getRequest('announcement')
+      .subscribe({
+        next: (res: any) => {
+          this.alert.close();
+          this.announcement = this.myCache.removeDuplicates([
+            ...this.announcement,
+            ...res.data
+          ]);
+
+
+          this.myCache.set(this.announcementDataKey, this.announcement);
+
+
+        },
+
+        error: (err: any) => {
+          this.alert.close();
+          this.alert.error(err.error.message);
+        }
+      });
+
+
+
+  }
+
+  onSelectCategory(svgIcon: string, backgroundColor: string, title: string, subCategory?: string | null): void {
+
+    const data = {
+      title,
+      icon: svgIcon,
+      backgroundColor,
+      sub_category: subCategory
+    };
+
+    if (subCategory) {
+      this.router.navigate(['/user/article', title, subCategory], {
+        state: data
+      });
+    } else {
+      this.router.navigate(['/user/article', title], {
+        state: data
+      });
+    }
+
   }
 }

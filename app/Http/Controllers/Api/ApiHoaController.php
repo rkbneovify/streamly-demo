@@ -1027,7 +1027,6 @@ class ApiHoaController extends Controller
 
 
 
-
         $sessions = SessionTable::where('passcode', $passcode)
             ->where('users_id', $userId)
             ->where('status', 1)

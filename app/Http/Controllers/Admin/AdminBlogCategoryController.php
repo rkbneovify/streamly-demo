@@ -10,9 +10,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminBlogCategoryController extends Controller
 {
-    public function __construct(public Request $request, public BlogCategory $blogCategory)
-    {
-    }
+    public function __construct(public Request $request, public BlogCategory $blogCategory) {}
 
     public function index()
     {
@@ -38,11 +36,17 @@ class AdminBlogCategoryController extends Controller
 
     public function store()
     {
+        // dd($this->request->all());
         $validator = validator($this->request->all(), [
-           
+
             'title' => 'required|string|unique:blog_categories,title',
+            'iconColor' => 'required',
+            'backgroundColor' => 'required',
+            'iconSize' => 'required',
+            'svg_content' => 'required',
         ], [
             'title.unique' => 'This category already exists. Please use a different category.',
+
         ]);
 
         if ($validator->fails()) {
@@ -56,6 +60,10 @@ class AdminBlogCategoryController extends Controller
         try {
             $category = $this->blogCategory;
             $category->title = $this->request->title;
+            $category->icon_color = $this->request->iconColor;
+            $category->background_color = $this->request->backgroundColor;
+            $category->icon_size = $this->request->iconSize;
+            $category->svg_content = $this->request->svg_content;
             $category->status = 1;
             $category->save();
             DB::commit();
@@ -77,8 +85,12 @@ class AdminBlogCategoryController extends Controller
     {
 
         $validator = validator($this->request->all(), [
-           
+
             'title' => 'required|string|max:225|unique:blog_categories,title,' . $id,
+            'iconColor' => 'required',
+            'backgroundColor' => 'required',
+            'iconSize' => 'required',
+            'svg_content' => 'required',
         ], [
             'title.unique' => 'This category already exists. Please use a different category.',
         ]);
@@ -99,6 +111,10 @@ class AdminBlogCategoryController extends Controller
                 return redirect()->back();
             }
             $category->title = $this->request->title;
+            $category->icon_color = $this->request->iconColor;
+            $category->background_color = $this->request->backgroundColor;
+            $category->icon_size = $this->request->iconSize;
+            $category->svg_content = $this->request->svg_content;
             $category->save();
             DB::commit();
             toast('Data updated Successfully !', 'success')
@@ -198,7 +214,6 @@ class AdminBlogCategoryController extends Controller
                     ]);
                     $message = 'deactive';
                     break;
-
             }
 
 
@@ -216,5 +231,4 @@ class AdminBlogCategoryController extends Controller
             return redirect()->back();
         }
     }
-
 }

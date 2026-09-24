@@ -73,18 +73,15 @@
     </div>
 
 </div>
-<form id="tbl-form" method="POST" action="#">
-    @csrf
 
-    <input hidden type="text" name="action">
+
+   
     @if ($data->count() > 0)
         <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" class="custom-checkbox" id="selectAll">
-                        </th>
+                       
                         <th>
                             Name
                         </th>
@@ -119,9 +116,7 @@
                 <tbody>
                     @foreach ($data as $item)
                         <tr>
-                            <td style="vertical-align: middle;">
-                                <input type="checkbox" class="row-checkbox custom-checkbox" value="{{ $item->id }}">
-                            </td>
+                           
 
                             <td style="vertical-align: middle;">
                                 {{ $item->name }}
@@ -160,9 +155,7 @@
             <table class="table table-striped projects">
                  <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" class="custom-checkbox" id="selectAll">
-                        </th>
+                       
                         <th>
                             Name
                         </th>
@@ -201,7 +194,7 @@
             </table>
         </div>
     @endif
-</form>
+
 <div class="d-flex justify-content-end mt-5 mr-1">
     {{ $data->links() }}
 </div>

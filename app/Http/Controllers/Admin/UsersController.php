@@ -944,66 +944,67 @@ class UsersController extends Controller
 
                 $subscription = Subscription::where('user_id', $id)->first();
 
-                $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
-
-
-
-                if ($subscription->plan_duration == null) {
-                    // if user have stripe Subscription cancel then apply custom subscription
+                if ($subscription != null) {
                     $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
-                    // return response()->json($stripeSubscription);
 
-                    if (count($stripeSubscription) > 0 && in_array($stripeSubscription->first()->status, ['active', 'past_due'])) {
 
-                        if ($stripeSubscription->first()->livemode == true) {
-                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
-                        } elseif ($stripeSubscription->first()->livemode == false) {
-                            $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
+
+                    if ($subscription->plan_duration == null) {
+                        // if user have stripe Subscription cancel then apply custom subscription
+                        $stripeSubscription = $this->stripeService->getAllSubscriptionsById($subscription->stripe_id);
+                        // return response()->json($stripeSubscription);
+
+                        if (count($stripeSubscription) > 0 && in_array($stripeSubscription->first()->status, ['active', 'past_due'])) {
+
+                            if ($stripeSubscription->first()->livemode == true) {
+                                $this->stripeService->cancelSubscriptionNow($subscription->stripe_id);
+                            } elseif ($stripeSubscription->first()->livemode == false) {
+                                $this->stripeService->cancelSubscriptionNow($subscription->stripe_id, 'Testing');
+                            }
+
+
+                            DB::table('subscriptions')->where('user_id', $user->id)->update(
+                                [
+                                    'name' => 'main',
+                                    'stripe_status' => 'canceled',
+                                    'plan_duration' => $request->plan_duration,
+                                    'is_custom' => 1,
+                                    'ends_at' => null,
+                                    'custom_status' => 'active',
+                                    'current_period_start' => now(),
+                                    'renews_at' => $endsAt,
+                                    'quantity' => $newDeviceCount,
+                                    'updated_at' => now(),
+                                ]
+                            );
+
+                            $user->is_custom_user = 1;
+                            $user->mode = 'custom';
+                            $user->save();
                         }
-
-
-                        DB::table('subscriptions')->where('user_id', $user->id)->update(
-                            [
-                                'name' => 'main',
-                                'stripe_status' => 'canceled',
-                                'plan_duration' => $request->plan_duration,
-                                'is_custom' => 1,
-                                'ends_at' => null,
-                                'custom_status' => 'active',
-                                'current_period_start' => now(),
-                                'renews_at' => $endsAt,
-                                'quantity' => $newDeviceCount,
-                                'updated_at' => now(),
-                            ]
-                        );
-
-                        $user->is_custom_user = 1;
-                        $user->mode = 'custom';
-                        $user->save();
                     }
                 }
+            }
 
-
-                if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
-                    DB::table('subscriptions')->where('user_id', $user->id)->update(
-                        [
-                            'name' => 'main',
-                            'stripe_status' => 'canceled',
-                            'plan_duration' => $request->plan_duration,
-                            'is_custom' => 1,
-                            'ends_at' => null,
-                            'canceled_at' => null,
-                            'custom_status' => 'active',
-                            'current_period_start' => now(),
-                            'renews_at' => $endsAt,
-                            'quantity' => $newDeviceCount,
-                            'updated_at' => now(),
-                        ]
-                    );
-                    $user->is_custom_user = 1;
-                    $user->mode = 'custom';
-                    $user->save();
-                }
+            if ($request->plan_duration != null && $request->plan_duration != $subscription->plan_duration) {
+                DB::table('subscriptions')->where('user_id', $user->id)->update(
+                    [
+                        'name' => 'main',
+                        'stripe_status' => 'canceled',
+                        'plan_duration' => $request->plan_duration,
+                        'is_custom' => 1,
+                        'ends_at' => null,
+                        'canceled_at' => null,
+                        'custom_status' => 'active',
+                        'current_period_start' => now(),
+                        'renews_at' => $endsAt,
+                        'quantity' => $newDeviceCount,
+                        'updated_at' => now(),
+                    ]
+                );
+                $user->is_custom_user = 1;
+                $user->mode = 'custom';
+                $user->save();
             }
 
 
@@ -1110,7 +1111,7 @@ class UsersController extends Controller
             return redirect('admin/users')->with('info', 'User Updated Successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
-            //throw $th;
+            throw $th;
             return redirect('admin/users')
                 ->with('info', $th->getMessage());
         }
@@ -1162,9 +1163,9 @@ class UsersController extends Controller
             }
         }
 
-        if ($subscription->is_custom == 0 && $subscription->plan_duration == null) {
+        if ($subscription && $subscription->is_custom == 0 && $subscription->plan_duration == null) {
             $planDuration = '';
-        } elseif ($subscription->is_custom == 1 && $subscription->plan_duration != null) {
+        } elseif ($subscription && $subscription->is_custom == 1 && $subscription->plan_duration != null) {
             $planDuration = $subscription->plan_duration;
         }
 
@@ -1557,8 +1558,28 @@ class UsersController extends Controller
         }
     }
 
-    public function connectedDeviceNew($id, Request $request)
+    public function connectedDeviceNew_08_09_26($id, Request $request)
     {
+
+        // $session =   SessionTable::where('users_id', $id)->latest('created_on')->first();
+
+        // // return response()->json($session);
+        // $payload = JWTAuth::setToken($session->access_token)->getPayload();
+
+        // $createdAt = Carbon::createFromTimestamp($payload->get('iat'));
+        // $expiresAt = Carbon::createFromTimestamp($payload->get('exp'));
+
+        // $diff = $createdAt->diff($expiresAt);
+        // $expireInDays = max(0, now()->diffInDays($expiresAt, false));
+        // return response()->json([
+        //     'created_at' => $createdAt->toDateTimeString(),
+        //     'expires_at' => $expiresAt->toDateTimeString(),
+        //     'duration' => "{$diff->m} months {$diff->d} days",
+        //     // Total token duration
+        //     'total_days' => $createdAt->diffInDays($expiresAt),
+        //     'remaining_days' => $expireInDays,
+        // ]);
+
         try {
             $user = User::find($id);
             $roles = Role::get(); //get all roles
@@ -1573,8 +1594,8 @@ class UsersController extends Controller
             $query->selectRaw("*,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
-                ->where('users_id', $id)
-                ->where('status', 1);
+                ->where('users_id', $id);
+            // ->where('status', 1);
 
 
             if (!empty($request->search) && strtolower($request->search) != 'web') {
@@ -1601,10 +1622,13 @@ class UsersController extends Controller
                     })->values();
                 }
             } else {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
+                // $query->orderBy('created_on', 'desc');
             }
 
+            $allSession = $query
+                ->orderBy('status', 'desc')       // status = 1 first
+                ->orderBy('created_on', 'desc')   // latest first within status
+                ->get();
 
             $totalRooms = HotelRoomTable::where('user_id', $id)->count();
 
@@ -1630,6 +1654,89 @@ class UsersController extends Controller
                 ->timerProgressBar()
                 ->autoClose(3000);
             // Alert::error('Oops !', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+    public function connectedDeviceNew($id, Request $request)
+    {
+        try {
+            $user = User::find($id);
+
+            $roles = Role::get();
+            $userRoles = $user->roles->pluck('id')->toArray();
+
+            $query = SessionTable::query();
+
+            $query->with([
+                'user.roles',
+                'hotel',
+                'pdInfo' => fn($query) => $query->where('user_id', $id),
+                'subSession'
+            ]);
+
+            $query->selectRaw("
+            *,
+            SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
+            JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent
+        ")->where('users_id', $id);
+
+            /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
+            $query->filterSearch($request->search)
+                ->filterStatus($request->status);
+
+            /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
+
+            $perPage = $request->get('per_page', 10);
+
+            $allSession = $query
+                ->orderBy('status', 'desc')
+                ->orderBy('created_on', 'desc')
+                ->paginate($perPage)
+                ->withQueryString();
+
+            $totalRooms = HotelRoomTable::where('user_id', $id)->count();
+
+            /*
+        |--------------------------------------------------------------------------
+        | AJAX
+        |--------------------------------------------------------------------------
+        */
+
+            if ($request->ajax()) {
+                return view(
+                    'admin.users.partials.connected-table',
+                    compact('allSession', 'totalRooms')
+                );
+            }
+
+            if ($allSession->total() <= 0) {
+                toast('No active device.', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+
+                return redirect()->back();
+            }
+
+            return view(
+                'admin.users.connected-new',
+                compact('allSession', 'totalRooms')
+            );
+        } catch (\Throwable $th) {
+
+            toast('Something went wrong! Try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            // Alert::error('error', $th->getMessage());
             return redirect()->back();
         }
     }

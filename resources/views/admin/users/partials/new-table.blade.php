@@ -207,46 +207,31 @@
 
                                 @switch(optional($user->roles->first())->name)
                                     @case('hoa')
-                                        @if ($user->is_active == 1)
-                                            @if ($user->hoa_houses_count > 0)
-                                                <a href="{{ route('admin.hoa.sub-users', $user->id) }}">
+                                       <a href="{{ route('admin.hoa.sub-users', [
+                                                  'id'=> $user->id,
+                                                    'status'=>  $user->sessions_count > 0 ? 1:0
+                                                ]) }}">
                                                     {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses }}
                                                 </a>
-                                            @else
-                                                {{ $user->hoa_houses_count ?? 0 }} / {{ $user->num_of_houses }}
-                                            @endif
-                                        @else
-                                            0
-                                        @endif
                                     @break
 
                                     @case('tieruser')
-                                        @if ($user->is_active == 1)
-                                            @if ($user->sessions_count > 0)
-                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                       <a href="{{ route('admin.users.connected.devices.new',[
+                                                 'id'=> $user->id,
+                                                    'status'=>  $user->sessions_count > 0 ? 1:0
+                                                ]) }}">
                                                     {{ $user->sessions_count ?? 0 }} / {{ $user->rooms_count ?? 0 }}
 
                                                 </a>
-                                            @else
-                                                0 / {{ $user->rooms_count ?? 0 }}
-                                            @endif
-                                        @else
-                                            0
-                                        @endif
                                     @break
 
                                     @default
-                                        @if ($user->is_active == 1)
-                                            @if ($user->sessions_count > 0)
-                                                <a href="{{ route('admin.users.connected.devices.new', $user->id) }}">
+                                        <a href="{{ route('admin.users.connected.devices.new', [
+                                                    'id'=> $user->id,
+                                                    'status'=>  $user->sessions_count > 0 ? 1:0
+                                                ]) }}">
                                                     {{ $user->sessions_count }} / 5
                                                 </a>
-                                            @else
-                                                0 / 5
-                                            @endif
-                                        @else
-                                            0
-                                        @endif
                                 @endswitch
 
 

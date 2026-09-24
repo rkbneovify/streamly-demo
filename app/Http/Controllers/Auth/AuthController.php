@@ -39,6 +39,7 @@ use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
 
 class AuthController extends Controller
 {
@@ -50,7 +51,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminate', 'subscriptionTerminateWithoutLogin']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register', 'verify', 'samedevicelogout', 'loginWithPasscode', 'loginEntry', 'loginCheck', 'hoteladminlogin', 'getZipcodes', 'failedzipinquery', 'checkEmail', 'deviceDetail', 'sendOtp', 'verifyOtp', 'subscriptionTerminate', 'subscriptionTerminateWithoutLogin', 'refreshToken']]);
     }
 
     public function register(Request $request)
@@ -172,8 +173,9 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 259200; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 259200; //one month in minutes
+        // $expirationInMinutes = 259200; // 180 days
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -226,12 +228,7 @@ class AuthController extends Controller
             }
         }
 
-        $this->activity($user->id)->event("User")
-            ->eventType(ActivityEventType::LOGIN)
-            ->isUser()
-            ->description("User login")
-            ->properties(['data' => $user])
-            ->save();
+
 
         $userRole = $user->roles->pluck('name');
         if ($userRole[0] == 'user' || 'tieruser') {
@@ -247,9 +244,130 @@ class AuthController extends Controller
 
         $validateFlag = $zipcodeRule ? $zipcodeRule->validate : null;
 
+
+
+        $this->activity($user->id, $token)
+            ->event("User")
+            ->eventType(ActivityEventType::LOGIN)
+            ->isUser()
+            ->description("User login")
+            ->properties(['data' => User::find($user->id)->refresh()])
+            ->save();
+
         $this->authenticated($request, $user, $token, $validateFlag);
 
         return $this->respondWithToken($token, $validateFlag);
+    }
+
+    public function refreshToken()
+    {
+
+
+        DB::beginTransaction();
+        try {
+
+            $oldSession =  SessionTable::where('access_token',  FacadesJWTAuth::getToken())
+                ->where('status', 1)
+                ->first();
+            if ($oldSession == null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid token !',
+
+                ], 422);
+            }
+
+            if ($oldSession->token_expire_at == null) {
+                $oldSession->status = 0;
+                $oldSession->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token refresh failed',
+
+                ], 401);
+            }
+
+            if ($oldSession->remaining_days == null) {
+                $oldSession->status = 0;
+                $oldSession->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token refresh failed',
+
+                ], 401);
+            }
+
+
+
+
+
+            $token = FacadesJWTAuth::refresh(
+                FacadesJWTAuth::getToken()
+            );
+
+
+
+
+
+
+            $newSession = new SessionTable();
+            $newSession->users_id = $oldSession->users_id;
+            $newSession->access_token = $token;
+            $newSession->user_ip = request()->ip();
+            $newSession->mac_address = $oldSession->mac_address;
+            $newSession->device_id =  $oldSession->device_id;
+            $newSession->connected_devices =  $oldSession->connected_devices;
+            $newSession->device =  $oldSession->device;
+            $newSession->platform =  $oldSession->platform;
+            $newSession->device_title = $oldSession->device_title;
+            $newSession->device_model = $oldSession->device_model;
+            $newSession->build_version =  $oldSession->build_version;
+            $newSession->device_os_version =  $oldSession->device_os_version;
+            $newSession->zipcode =  $oldSession->zipcode;
+            $newSession->logintime = Carbon::now();
+            $newSession->status = 1;
+            $newSession->created_on =  Carbon::now();
+            $newSession->modified_on = Carbon::now();
+
+
+            $this->activity($oldSession->users_id, $oldSession->access_token)
+                ->event('User')
+                ->eventType('Refresh Token')
+                ->isUser()
+                ->oldData($oldSession);
+            if ($oldSession->passcode != null && $oldSession->is_main_account == 0) {
+                $hoaUser = HoaUser::where('passcode', $oldSession->passcode)->first();
+                if ($hoaUser != null) {
+                    $newSession->passcode = $oldSession->passcode;
+                    $newSession->is_main_account = 0;
+                    $newSession->save();
+                    $this->passcode($oldSession->passcode);
+                }
+            } else {
+                $newSession->save();
+            }
+
+            $oldSession->status = 0;
+            $oldSession->save();
+            $this->descriptionSimple("User refresh the current access token")
+                ->newData($newSession)
+                ->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => FacadesJWTAuth::factory()->getTTL() * 60,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Token refresh failed',
+                'exception' => $th->getMessage()
+
+            ], 401);
+        }
     }
 
 
@@ -264,8 +382,8 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 43800; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 43800; //one month in minutes
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -305,8 +423,8 @@ class AuthController extends Controller
         if (empty(request('deviceid'))) {
             return response()->json(['success' => false, 'response_code' => 401, 'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 43800; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 43800; //one month in minutes
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid credentials', 'response_code' => 401], 401);
@@ -401,8 +519,8 @@ class AuthController extends Controller
         }
         // $user = User::where('email', '=', $email)->first();
 
-        $expirationInMinutes = 43800; //one month in minutes
-        JWTAuth::factory()->setTTL($expirationInMinutes);
+        // $expirationInMinutes = 259200; //180 days
+        JWTAuth::factory()->setTTL(env('JWT_TOKEN_EXPIRE_IN_DAYS'));
         $token = JWTAuth::fromUser($user);
         // $credentials = c;
         // $user=JWTAuth::user();
@@ -433,34 +551,7 @@ class AuthController extends Controller
         //todo hotel check
 
 
-        $this->activity($user->id)
-            ->event("User")
-            ->eventType(ActivityEventType::LOGIN);
 
-        if ($isMainUser && $userRole[0] == "hoa") {
-            $this->description("Hoa main use login with passcode")
-                ->isUser()
-                ->properties([
-                    "user" => $user
-                ])
-                ->save();
-        } elseif (!$isMainUser && $userRole[0] == "hoa") {
-            $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
-            $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
-                ->isUser()
-                ->passcode($hoaUser->passcode)
-                ->properties([
-                    "user" => $hoaUser
-                ])
-                ->save();
-        } else {
-            $this->description("Login with passcode")
-                ->isUser()
-                ->properties([
-                    "user" => $hoaUser
-                ])
-                ->save();
-        }
 
 
         if (in_array($userRole[0], ['user', 'tieruser', 'hoa'])) {
@@ -468,6 +559,36 @@ class AuthController extends Controller
             checkLoginLimit($uid, $token, $deviceDetails);
             exit;
         }
+
+        // $this->activity($user->id, $token)
+        //     ->event("User")
+        //     ->eventType(ActivityEventType::LOGIN);
+
+        // if ($isMainUser && $userRole[0] == "hoa") {
+        //     $this->description("Hoa main use login with passcode")
+        //         ->isUser()
+        //         ->properties([
+        //             "user" => $user
+        //         ])
+        //         ->save();
+        // } elseif (!$isMainUser && $userRole[0] == "hoa") {
+        //     $houseNo = $hoaUser->house_no ?? "House" . $hoaUser->ordering;
+        //     $this->descriptionSimple("Hoa sub user login with passcode | " . $hoaUser->passcode . " | " . $hoaUser->email . " | " . $houseNo)
+        //         ->isUser()
+        //         ->passcode($hoaUser->passcode)
+        //         ->properties([
+        //             "user" => $hoaUser
+        //         ])
+        //         ->save();
+        // } else {
+        //     $this->description("Login with passcode")
+        //         ->isUser()
+        //         ->properties([
+        //             "user" => $hoaUser
+        //         ])
+        //         ->save();
+        // }
+
         //  hoa main login limit
 
         // $user_data=array('name'=>$user->name,'email'=>$user->email,'token'=>$token);
@@ -760,7 +881,8 @@ class AuthController extends Controller
                     ->save();
             } else {
                 $personalDevice = PersonalDevice::where('device_id', $session->device_id)->latest()->first();
-                $this->activity()->event("User")
+                $this->activity(null, request()->bearerToken())
+                    ->event("User")
                     ->eventType(ActivityEventType::LOGOUT)
                     ->descriptionSimple(
                         "user logout <br>" .
@@ -1911,6 +2033,8 @@ class AuthController extends Controller
             return $this->isSubscriptionExpired($request, Auth::id());
         }
     }
+
+
 
     public function isSubscriptionExpired(Request $request, $userId)
     {

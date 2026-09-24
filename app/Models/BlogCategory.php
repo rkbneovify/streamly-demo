@@ -20,6 +20,16 @@ class BlogCategory extends Model
     {
         return $this->hasMany(Blog::class, 'category', 'title');
     }
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'category', 'title');
+    }
+
+    public function subCategory()
+    {
+        return $this->hasMany(BlogSubCategory::class, 'category', 'title')
+            ->where('status', 1);
+    }
 
     public function scopeWithSearchBlog($query, $txt)
     {
