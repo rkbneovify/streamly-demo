@@ -16,6 +16,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CacheService } from '../../../services/cacheService/cacheservice.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ArticleSearchComponent } from './article-search/article-search.component';
 interface QuickLink {
   icon: string;
   title: string;
@@ -41,7 +42,8 @@ interface Category {
     InfiniteScrollDirective,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ArticleSearchComponent
   ],
   templateUrl: './help-and-support.component.html',
   styleUrl: './help-and-support.component.scss'
@@ -62,7 +64,9 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
   private pageSubject = new Subject<number>();
   private destroy$ = new Subject<void>();
   private dataKey = "blog_categories";
-  private hasMoreKey: string = 'blog_categories_has_more'
+  private hasMoreKey: string = 'blog_categories_has_more';
+  private announcementDataKey = "announcement";
+  announcement: any[] = [];
 
   popularSearches = [
     'Subscription & Billing',
@@ -204,12 +208,27 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
     }
   ];
 
-  search(): void {
-    console.log('Search clicked');
-  }
+
 
   selectPopular(item: any): void {
-    console.log('Selected:', item);
+    // console.log('Selected:', item);
+
+    const data = {
+      title: item.title,
+      icon: item.svg_content,
+      backgroundColor: item.background_color,
+      sub_category: undefined
+    };
+
+    this.router.navigate(['/user/article', item.title], {
+      state: data
+    });
+
+
+  }
+
+  selectQuickLink(item: any): void {
+    // console.log('Selected:', item);
 
     const data = {
       title: item.title,
@@ -226,7 +245,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    this.loadAnnouncement();
     this.loadCategories();
     this.pageSubject.next(this.page);
   }
@@ -295,6 +314,41 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
           if (this.hasMore) {
             this.page += 1;
           }
+        },
+
+        error: (err: any) => {
+          this.alert.close();
+          this.alert.error(err.error.message);
+        }
+      });
+
+
+
+  }
+
+  loadAnnouncement() {
+
+
+    const cachedData = this.myCache.get(this.announcementDataKey);
+    if (cachedData) {
+
+      this.announcement = [...cachedData];
+      return;
+    }
+
+    this.api.getRequest('announcement')
+      .subscribe({
+        next: (res: any) => {
+          this.alert.close();
+          this.announcement = this.myCache.removeDuplicates([
+            ...this.announcement,
+            ...res.data
+          ]);
+
+
+          this.myCache.set(this.announcementDataKey, this.announcement);
+
+
         },
 
         error: (err: any) => {

@@ -38,17 +38,18 @@
           experiences
         </p>
 
-        <div class="search-box">
+        <!-- <div class="search-box">
           <i class="bi bi-search"></i>
 
           <input type="text" placeholder="Search for help, articles, queries, or error codes">
-        </div>
+        </div> -->
+        <app-article-search></app-article-search>
 
         <div class="popular-searches">
           <span class="popular-label">Popular :</span>
 
-          <button *ngFor="let item of popularSearches" type="button" (click)="selectPopular(item)">
-            {{ item }}
+          <button *ngFor="let item of  categoryList.slice(0, 6)" type="button" (click)="selectPopular(item)">
+            {{ item.title }}
           </button>
         </div>
 
@@ -73,16 +74,11 @@
 
         <h3>Important Update!</h3>
 
-        <p>
-          We’ve refreshed our subscription plans with updated benefits & pricing.
-          Explore new plans starting at just $12
-          <br class="desktop-only">
-          and pick the one that's right for you.
-        </p>
+        <div class="announcement" [innerHTML]="announcement[0].content"></div>
 
       </div>
 
-      <button class="know-more-btn">
+      <button routerLink="{{ announcement[0].url }}" class="know-more-btn">
         Know More
       </button>
 
@@ -92,7 +88,7 @@
     <!-- Quick Links -->
     <section class="quick-links">
 
-      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)" (click)="selectPopular(item)">
+      <div class="quick-card" *ngFor="let item of  categoryList.slice(0, 6)" (click)="selectQuickLink(item)">
 
         <div class="quick-icon" [style.background-color]="item.background_color" [innerHTML]="getSvg(item.svg_content)">
 

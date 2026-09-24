@@ -1,0 +1,31 @@
+<div class="search-container">
+
+  <!-- Search Input -->
+  <div class="search-boxx">
+
+    <input type="text" placeholder="Search for help articles . ." [(ngModel)]="searchText" (input)="searchItems()" />
+
+    <i *ngIf="searchText.length > 0" class="bi bi-x-circle-fill btn-clear" (click)="clearSearch()"></i>
+
+  </div>
+
+  <!-- Overlay Search Results -->
+  <div class="search-results" *ngIf="searchText.trim().length > 0">
+
+    <div class="search-item" *ngFor="let item of blogs">
+      <div class="item" (click)="onBlogSelect(item)">
+        {{ item.title }} <i class="bi bi-arrow-right"></i>
+      </div>
+    </div>
+
+    <div class="no-result" *ngIf="isLoading">
+      <span class="loader"></span>
+      <span>Loading...</span>
+    </div>
+
+    <div class="no-result" *ngIf="blogs.length === 0 && !isLoading">
+      No results found
+    </div>
+  </div>
+
+</div>

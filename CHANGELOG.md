@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Added admin announcement management with listing, filtering, search, pagination, create, edit, delete, and status controls.
+- Added announcement create and edit forms with rich-text content and URL validation.
+- Added an API controller for retrieving the active announcement.
+- Added announcement navigation to the admin sidebar.
+
 ### Changed
 
 - Changes currently in development are not yet assigned to a release.

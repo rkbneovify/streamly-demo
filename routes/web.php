@@ -11,6 +11,7 @@
 */
 
 use App\Http\Controllers\Admin\AdminBugReportController;
+use App\Http\Controllers\Admin\AdminAnnouncementController;
 use App\Http\Controllers\Admin\AdminBlogCategoryController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
@@ -355,9 +356,18 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
 
+    // Annoucement
+    Route::prefix('/announcement')->group(function () {
+        Route::get('/', [AdminAnnouncementController::class, 'index'])->name('announcement');
+        Route::get('/create', [AdminAnnouncementController::class, 'create'])->name('announcement.create');
+        Route::post('/store', [AdminAnnouncementController::class, 'store'])->name('announcement.store');
+        Route::get('/edit/{id}', [AdminAnnouncementController::class, 'edit'])->name('announcement.edit');
+        Route::post('/update/{id}', [AdminAnnouncementController::class, 'update'])->name('announcement.update');
+         Route::get('/status/{id}', [AdminAnnouncementController::class, 'status'])->name('announcement.status');
+        Route::get('/destroy/{id}', [AdminAnnouncementController::class, 'destroy'])->name('announcement.destroy');
+    });
     // Blog
     Route::prefix('/blog')->group(function () {
-
         Route::get('/', [AdminBlogController::class, 'index'])->name('blog.index');
         Route::get('/create', [AdminBlogController::class, 'create'])->name('blog.create');
         Route::post('/store', [AdminBlogController::class, 'store'])->name('blog.store');

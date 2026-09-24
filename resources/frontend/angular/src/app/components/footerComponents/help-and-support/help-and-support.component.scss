@@ -42,7 +42,7 @@ $yellow: #ffd84d;
 .hero-section {
   position: relative;
   min-height: 340px;
-  overflow: hidden;
+  // overflow: hidden;
 
   background-color: #020b20;
 
@@ -69,7 +69,7 @@ $yellow: #ffd84d;
   z-index: 2;
 
   max-width: 1390px;
-  min-height: 340px;
+  // min-height: 340px;
 
   margin: auto;
   padding: 45px 50px;
@@ -193,10 +193,12 @@ $yellow: #ffd84d;
 // ==========================================
 
 .main-container {
+  position: relative;
   width: calc(100% - 100px);
   max-width: 1390px;
 
   margin: 0 auto;
+
 }
 
 
@@ -246,7 +248,7 @@ $yellow: #ffd84d;
     font-weight: 700;
   }
 
-  p {
+  .announcement {
     margin: 0;
 
     font-size: 12px;
@@ -267,6 +269,7 @@ $yellow: #ffd84d;
   font-weight: 700;
 
   cursor: pointer;
+  text-decoration: none;
 }
 
 

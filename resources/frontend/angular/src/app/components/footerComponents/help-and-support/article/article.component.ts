@@ -7,11 +7,12 @@ import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
 import { CrudService } from '../../../../services/crud.service';
 import { SweetalertService } from '../../../../services/SweetAlert/sweetalert.service';
 import { CacheService } from '../../../../services/cacheService/cacheservice.service';
+import { ArticleSearchComponent } from '../article-search/article-search.component';
 
 @Component({
   selector: 'app-article',
   standalone: true,
-  imports: [NgFor, NgClass, InfiniteScrollDirective],
+  imports: [NgFor, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss'
 })
