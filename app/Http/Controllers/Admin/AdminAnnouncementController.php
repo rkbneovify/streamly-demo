@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActivityEventType;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Traits\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminAnnouncementController extends Controller
 {
+    use ActivityLogger;
     public function __construct(
         public Request $request,
         public Announcement $announcement
@@ -54,6 +57,16 @@ class AdminAnnouncementController extends Controller
             $this->announcement->url = $this->request->url;
             $this->announcement->status = 0;
             $this->announcement->save();
+
+
+            $this->activity()->event("Announcement")
+                ->eventType(ActivityEventType::CREATED)
+                ->description('New announcement created')
+                ->isAdmin()
+                ->properties([
+                    "data" => $this->announcement
+                ])->save();
+
             DB::commit();
             toast('Data saved successfully !', 'success')
                 ->timerProgressBar()
@@ -100,10 +113,17 @@ class AdminAnnouncementController extends Controller
                     ->autoClose(3000);
                 return redirect()->back();
             }
-
+            $this->activity()->event("Announcement")
+                ->eventType(ActivityEventType::UPDATED)
+                ->description('Announcement updated')
+                ->isAdmin()
+                ->oldData($announcement);
             $announcement->content = $this->request->input('content');
             $announcement->url = $this->request->url;
             $announcement->save();
+
+            $this->newData($announcement->refresh());
+
             DB::commit();
             toast('Data updated successfully !', 'success')
                 ->timerProgressBar()
@@ -134,7 +154,13 @@ class AdminAnnouncementController extends Controller
             $anno->status =   $anno->status == 1 ? 0 : 1;
             $anno->save();
 
-
+            $this->activity()->event("Announcement")
+                ->eventType($anno->status == 1 ? ActivityEventType::STATUSDISABLE : ActivityEventType::STATUSENABLE)
+                ->description('Announcement status changed')
+                ->isAdmin()
+                ->properties([
+                    "data" => $anno->refresh()
+                ])->save();
 
             DB::commit();
             toast('Status change successfully !', 'success')
@@ -159,6 +185,15 @@ class AdminAnnouncementController extends Controller
                     ->autoClose(3000);
                 return redirect()->back();
             }
+
+
+            $this->activity()->event("Announcement")
+                ->eventType(ActivityEventType::DELETED)
+                ->description('Announcement deleted')
+                ->isAdmin()
+                ->properties([
+                    "data" => $announcement->refresh()
+                ])->save();
 
             $announcement->delete();
             DB::commit();
