@@ -43,3 +43,7 @@ POST    http://laravel-jwt-api.local/auth/login
 #### Versioning
 
 This project uses uses [Semantic Versioning](http://semver.org/)
+
+#### Changelog
+
+See the [CHANGELOG](CHANGELOG.md) for the project history and recent updates.
