@@ -25,7 +25,10 @@ class AdminActivityController extends Controller
             ActivityLog::resolveNotification();
             // Step 1: get distinct dates
 
-            $events =  ActivityLog::where('is_admin', 1)->groupBy('event')->pluck('event');
+            $events =  ActivityLog::where('is_admin', 1)
+                ->groupBy('event')->pluck('event')
+                ->prepend('All');
+
             $data = ActivityLog::where('is_admin', 1)->filterEvent($request->event)->latest()
                 ->paginate(10);
 
@@ -57,7 +60,8 @@ class AdminActivityController extends Controller
                     ->autoClose(3000);
                 return redirect()->back();
             }
-            $events =  ActivityLog::where('user_id', $id)->groupBy('event')->pluck('event');
+            $events =  ActivityLog::where('user_id', $id)->groupBy('event')
+                ->pluck('event')->prepend('All');
             $data = ActivityLog::where('user_id', $id)->filterEvent($request->event)->latest()
                 ->paginate(10);
             // return response()->json($data);
@@ -97,7 +101,8 @@ class AdminActivityController extends Controller
                 return redirect()->back();
             }
 
-            $events =  ActivityLog::where('auth_token', $token)->groupBy('event')->pluck('event');
+            $events =  ActivityLog::where('auth_token', $token)->groupBy('event')
+                ->pluck('event')->prepend('All');
             $data = ActivityLog::where('auth_token', $token)->filterEvent($request->event)->latest()
                 ->paginate(10);
             // return response()->json($events);
@@ -130,7 +135,8 @@ class AdminActivityController extends Controller
                 return redirect()->back();
             }
 
-            $events =  ActivityLog::whereNull('category')->whereNotNull('passcode')->where('passcode', $passcode)->groupBy('event')->pluck('event');
+            $events =  ActivityLog::whereNull('category')->whereNotNull('passcode')->where('passcode', $passcode)->groupBy('event')
+                ->pluck('event')->prepend('All');
             $data = ActivityLog::whereNull('category')->whereNotNull('passcode')->where('passcode', $passcode)->latest()
                 ->paginate(10);
             // return response()->json(["activity" => $data]);
@@ -169,7 +175,8 @@ class AdminActivityController extends Controller
                     ->autoClose(3000);
                 return redirect()->back();
             }
-            $events =  ActivityLog::where('auth_token', $token)->groupBy('event')->pluck('event');
+            $events =  ActivityLog::where('auth_token', $token)->groupBy('event')
+                ->pluck('event')->prepend('All');
             $data = ActivityLog::where('auth_token', $token)
                 ->filterEvent($request->event)
                 ->latest()

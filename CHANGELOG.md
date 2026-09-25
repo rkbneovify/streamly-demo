@@ -16,6 +16,8 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Updated admin activity-log event filters with an `All` option for viewing all events.
+- Updated activity-log filtering to skip event constraints when `All` is selected.
 - Changes currently in development are not yet assigned to a release.
 
 ## [2026-09-11]

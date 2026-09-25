@@ -3,6 +3,8 @@
 /public/storage
 /storage/*.key
 /storage/framework
+/storage/framework/*
+/storage/botman/*
 /vendor
 /vendor
 .env

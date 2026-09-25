@@ -16,7 +16,9 @@ class ActivityLog extends Model
 
     public function scopeFilterEvent($query, $event)
     {
-        if ($event != null) {
+        if ($event == 'All') {
+            return $query;
+        } elseif ($event != null) {
             return  $query->where('event', $event);
         }
     }

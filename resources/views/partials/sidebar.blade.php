@@ -322,12 +322,7 @@
                             <p>Blogs</p>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->is('admin/blog/announcement') ? 'activeElement' : '' }}">
-                        <a href=" {{ url('/admin/blog/announcement') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Announcement</p>
-                        </a>
-                    </li>
+
                     <li class="nav-item {{ request()->is('admin/blog/categories') ? 'activeElement' : '' }}">
                         <a href=" {{ url('/admin/blog/categories') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
