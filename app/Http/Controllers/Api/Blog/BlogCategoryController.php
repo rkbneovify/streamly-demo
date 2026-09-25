@@ -15,7 +15,7 @@ class BlogCategoryController extends Controller
     {
         try {
             $data = BlogCategory::where('status', 1)->pluck('title');
-            return  $this->dataResponse(compact('data'), "Data fetch successfully !");
+            return  $this->dataResponse($data, "Data fetch successfully !");
         } catch (\Throwable $th) {
             //throw $th;
             return $this->exceptionResponse($th);
@@ -48,7 +48,7 @@ class BlogCategoryController extends Controller
             if ($data == null) {
                 return $this->errorResponse("Data not found !", 404);
             }
-            return $this->dataResponse(compact('data'));
+            return $this->dataResponse($data);
         } catch (\Throwable $th) {
             //throw $th;
             return $this->exceptionResponse($th);

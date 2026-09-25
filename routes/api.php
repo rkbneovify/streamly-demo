@@ -310,16 +310,21 @@ Route::get('/notification/send', 'Api\ApiNotificationController@send');
 
 Route::group(['prefix' => 'blogs'], function () {
     Route::get('/', 'Api\Blog\ApiBlogController@index');
-     Route::get('/{id}', 'Api\Blog\ApiBlogController@byId');
-    Route::get('/categories', 'Api\Blog\BlogCategoryController@index');
-    Route::get('/categories/list', 'Api\Blog\ApiBlogController@categoriesList');
+
+
+    Route::prefix('categories')->group(function () {
+        Route::get('/', 'Api\Blog\BlogCategoryController@index');
+        Route::get('/list', 'Api\Blog\ApiBlogController@categoriesList');
+    });
+
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
     Route::get('/{category}/{subcategory}/list', 'Api\Blog\BlogSubCategoryController@subcategoryList');
+
+    Route::get('/{id}', 'Api\Blog\ApiBlogController@byId');
 });
 
 Route::group(['prefix' => 'announcement'], function () {
-    Route::get('/', [ApiAnnouncementController::class,'index']);
-    
+    Route::get('/', [ApiAnnouncementController::class, 'index']);
 });
 
 require __DIR__ . '/api-v2.php';

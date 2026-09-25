@@ -63,7 +63,9 @@ trait ApiResponseTrait
             'success' => $success,
             'response_code' => $code,
             'message' => $errorMessage,
+            'file' => $th->getFile(),
             'line' => $th->getLine(),
+
         ], $code);
     }
 

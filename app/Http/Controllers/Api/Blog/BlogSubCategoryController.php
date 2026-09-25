@@ -15,7 +15,7 @@ class BlogSubCategoryController extends Controller
     {
         try {
             $data = BlogSubCategory::where('status', 1)->pluck('title');
-            return  $this->dataResponse(compact('data'), "Data fetch successfully !");
+            return  $this->dataResponse($data, "Data fetch successfully !");
         } catch (\Throwable $th) {
             //throw $th;
             return $this->exceptionResponse($th);
@@ -28,7 +28,7 @@ class BlogSubCategoryController extends Controller
             if ($data == null) {
                 return $this->errorResponse("Data not found !", 404);
             }
-            return  $this->dataResponse(compact('data'), "Data fetch successfully !");
+            return  $this->dataResponse($data, "Data fetch successfully !");
         } catch (\Throwable $th) {
             //throw $th;
             return $this->exceptionResponse($th);
@@ -42,7 +42,7 @@ class BlogSubCategoryController extends Controller
         try {
             $query  = BlogSubCategory::query();
             $query->with('blog')->where('category', $category)
-               ->where('status', 1);
+                ->where('status', 1);
             $data = $query->paginate($limit, ['*'], 'page', $page);
             if (count($data->items()) == 0) {
                 return $this->errorResponse("Data not found !", 404);
@@ -81,7 +81,7 @@ class BlogSubCategoryController extends Controller
             if ($data == null) {
                 return $this->errorResponse("Data not found !", 404);
             }
-            return $this->dataResponse(compact('data'));
+            return $this->dataResponse($data);
         } catch (\Throwable $th) {
             //throw $th;
             return $this->exceptionResponse($th);
