@@ -363,7 +363,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::post('/store', [AdminAnnouncementController::class, 'store'])->name('announcement.store');
         Route::get('/edit/{id}', [AdminAnnouncementController::class, 'edit'])->name('announcement.edit');
         Route::post('/update/{id}', [AdminAnnouncementController::class, 'update'])->name('announcement.update');
-         Route::get('/status/{id}', [AdminAnnouncementController::class, 'status'])->name('announcement.status');
+        Route::get('/status/{id}', [AdminAnnouncementController::class, 'status'])->name('announcement.status');
         Route::get('/destroy/{id}', [AdminAnnouncementController::class, 'destroy'])->name('announcement.destroy');
     });
     // Blog
