@@ -40,8 +40,8 @@ class AdminActivityController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            // Alert::error("Something went wrong !");
-            Alert::error($th->getMessage());
+            Alert::error("Something went wrong !");
+            // Alert::error($th->getMessage());
             return redirect()->back();
         }
     }
