@@ -282,7 +282,7 @@
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
-
+            <hr />
             <!-- /.tabs -->
             <div class="container mb-3">
                 <div class="d-flex align-items-center">
@@ -290,12 +290,14 @@
 
                     <ul class="nav nav-pills mb-0 flex-nowrap" id="myTab" role="tablist">
                         @foreach ($events as $key => $item)
-                            <li class="nav-item mx-1">
-                                <a class="nav-link {{ $item == request()->event ? 'active' : '' }}" id="{{ $key }}-tab"
-                                    data-toggle="pill" href="#{{ $key }}" role="tab" data-event="{{ $item }}">
-                                    {{ $item }}
-                                </a>
-                            </li>
+                                                <li class="nav-item mx-1">
+                                                    <a class="nav-link {{ request()->event == null
+                                    ? ($key == 0 ? 'active' : '')
+                                    : ($item == request()->event ? 'active' : '')
+                            }}" id="{{ $key }}-tab" data-toggle="pill" href="#{{ $key }}" role="tab" data-event="{{ $item }}">
+                                                        {{ $item }}
+                                                    </a>
+                                                </li>
                         @endforeach
                     </ul>
                 </div>

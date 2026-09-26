@@ -183,6 +183,10 @@
             scrollbar-width: none;
             /* Firefox */
         }
+
+        .nav-pills .nav-link {
+            border-radius: 20px;
+        }
     </style>
 @endsection
 @section('content')
@@ -278,7 +282,7 @@
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
-
+            <hr />
             <!-- /.tabs -->
             <div class="container mb-3">
                 <div class="d-flex align-items-center">
@@ -286,12 +290,14 @@
 
                     <ul class="nav nav-pills mb-0 flex-nowrap" id="myTab" role="tablist">
                         @foreach ($events as $key => $item)
-                            <li class="nav-item mx-1">
-                                <a class="nav-link {{ $item == request()->event ? 'active' : '' }}" id="{{ $key }}-tab"
-                                    data-toggle="pill" href="#{{ $key }}" role="tab" data-event="{{ $item }}">
-                                    {{ $item }}
-                                </a>
-                            </li>
+                                                <li class="nav-item mx-1">
+                                                    <a class="nav-link {{ request()->event == null
+                                    ? ($key == 0 ? 'active' : '')
+                                    : ($item == request()->event ? 'active' : '')
+                            }}" id="{{ $key }}-tab" data-toggle="pill" href="#{{ $key }}" role="tab" data-event="{{ $item }}">
+                                                        {{ $item }}
+                                                    </a>
+                                                </li>
                         @endforeach
                     </ul>
                 </div>
@@ -315,6 +321,17 @@
     <!-- /.content-wrapper -->
 @endsection
 @section('scripts')
+{{-- event filter --}}
+<script>
+    $(document).on('click', 'a[data-toggle="pill"]', function () {
+        const event = $(this).data('event');
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('event', event);
+
+        window.location.href = url.toString();
+    });
+</script>
 <script>
     let storageKey = "selected_sessions";
 
