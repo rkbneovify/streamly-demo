@@ -34,7 +34,7 @@ class BlogSubCategory extends Model
     public function scopeFilterDateOrder($query, ?string $date, string $column = 'created_at')
     {
         if (!$date) {
-            return $query;
+            return $query->latest();
         }
 
 

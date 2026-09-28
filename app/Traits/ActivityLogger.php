@@ -19,6 +19,7 @@ trait ActivityLogger
         $this->activity->user_ip_address = request()->ip();
         $this->activity->is_user = 1;
         $this->activity->auth_token = $token ?? request()->bearerToken();
+        $this->activity->url = request()->fullUrl();
 
 
         return $this;

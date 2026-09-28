@@ -16,11 +16,12 @@ class Blog extends Model
         'status' => 'boolean'
     ];
 
-    public function categoryList() {
-       return $this->hasOne(BlogCategory::class, 'title','category');
+    public function categoryList()
+    {
+        return $this->hasOne(BlogCategory::class, 'title', 'category');
     }
 
-    
+
 
     public function scopeSearch($query, $txt)
     {
@@ -39,11 +40,10 @@ class Blog extends Model
     public function scopeFilterDateOrder($query, ?string $date, string $column = 'created_at')
     {
         if (!$date) {
-            return $query;
+            return $query->latest();
         }
 
 
         return $query->orderBy($column, $date);
     }
 }
-

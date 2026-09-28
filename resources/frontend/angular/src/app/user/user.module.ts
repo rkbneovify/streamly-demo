@@ -68,9 +68,9 @@ const routes: Routes = [
       { path: 'location-access', component: LocationAccessComponent },
       { path: 'search', component: SearchComponent, canActivate: [authguardGuard] },
       { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
-      { path: 'article/:category', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
-      { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent, canActivate: [authguardGuard] },
-      { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category', component: ArticleSubCategoriesComponent },
+      { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent },
+      { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent },
     ]
   }
 ];
