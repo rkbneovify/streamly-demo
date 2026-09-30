@@ -96,7 +96,7 @@ class AdminBlogController extends Controller
             toast('Data saved Successfully !', 'success')
                 ->timerProgressBar()
                 ->autoClose(3000);
-            return redirect()->back();
+            return redirect()->route('admin.blog.index');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -175,7 +175,7 @@ class AdminBlogController extends Controller
             toast('Data updated successfully !', 'success')
                 ->timerProgressBar()
                 ->autoClose(3000);
-            return redirect()->back();
+            return redirect()->route('admin.blog.index');
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
