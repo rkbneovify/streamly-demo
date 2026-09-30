@@ -218,9 +218,9 @@ class AdminBlogController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            Alert::error('error', 'Something went wrong ! try again later.');
+            // Alert::error('error', 'Something went wrong ! try again later.');
 
-            // Alert::error('Oops !', $th->getMessage());
+            Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
     }
