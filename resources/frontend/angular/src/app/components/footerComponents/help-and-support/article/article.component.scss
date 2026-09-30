@@ -218,6 +218,9 @@
 .articles-card {
   padding: 22px 16px 15px;
   color: #111111;
+  max-height: 800px;
+  overflow-y: auto;
+
 }
 
 
