@@ -40,7 +40,9 @@ class ApiBlogController extends Controller
     {
         try {
             $blog = $this->blog->find($id);
-            $relatedBlogs = $this->blog->whereNot('id', $id)->where('category', $blog->category)->get();
+            $relatedBlogs = $this->blog->whereNot('id', $id)
+                ->where('category', $blog->category)
+                ->where('status', 1)->get();
             return $this->dataResponse([
                 'blog' => $blog,
                 'related' => $relatedBlogs
