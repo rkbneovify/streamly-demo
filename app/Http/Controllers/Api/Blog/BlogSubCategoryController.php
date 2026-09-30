@@ -42,6 +42,7 @@ class BlogSubCategoryController extends Controller
         try {
             $query  = BlogSubCategory::query();
             $query->with('blog')->where('category', $category)
+
                 ->where('status', 1);
             $data = $query->paginate($limit, ['*'], 'page', $page);
             if (count($data->items()) == 0) {

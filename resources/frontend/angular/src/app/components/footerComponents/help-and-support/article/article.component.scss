@@ -151,6 +151,7 @@
 
   .help-text {
     color: #111111;
+    cursor: pointer;
   }
 
   >.bi-chevron-right {
@@ -232,6 +233,28 @@
 
   padding: 0px 10px 0px 10px;
   text-align: justify;
+
+  ul,
+  ol {
+    display: block !important;
+    margin: 0 0 15px 0 !important;
+    padding-left: 30px !important;
+  }
+
+  ul {
+    list-style: disc outside !important;
+  }
+
+  ol {
+    list-style: decimal outside !important;
+  }
+
+  ul li,
+  ol li {
+    display: list-item !important;
+    margin-bottom: 8px !important;
+  }
+
 }
 
 .section-heading {
@@ -461,6 +484,10 @@
     font-size: 14px;
   }
 }
+
+
+
+
 
 
 /* =========================

@@ -67,11 +67,11 @@
           </span>
         </a>
 
-        <span class="help-text">Help Center</span>
+        <span class="help-text" routerLink="/user/help-and-support">Help center</span>
 
         <i class="bi bi-chevron-right"></i>
 
-        <span class="help-text">
+        <span class="help-text" [routerLink]="['/user/article', category,subcategory]">
           {{ category }}
         </span>
         <i class="bi bi-chevron-right"></i>
