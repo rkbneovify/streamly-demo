@@ -29,8 +29,12 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
   return next(authReq).pipe(
     catchError((err: any) => {
       if (err instanceof HttpErrorResponse) {
+        if (err.status === 0) {
+          localStorage.clear();
+          route.navigateByUrl('/auth/login');
+        }
         // Handle HTTP errors
-        if (err.error.response_code === 401 && err.error.message == 'Token is Invalid') {
+        else if (err.error.response_code === 401 && err.error.message == 'Token is Invalid') {
           localStorage.clear();
           route.navigateByUrl('/auth/login');
           toast.success('You are logged out');
@@ -47,7 +51,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
               }
 
               else {
-                // setLocal.setLocalStorage('cancelMessage',err.error.message);   
+                // setLocal.setLocalStorage('cancelMessage',err.error.message);
                 sendData.changeData(err.error.message);
                 route.navigateByUrl('user/subscription-cancel');
                 // with due bill url
@@ -59,13 +63,9 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
               console.error('Error parsing JSON data:', error);
             }
           }
-        } {
-          // Handle other HTTP error codes
-          console.error('HTTP error:', err);
         }
       } else {
-        // Handle non-HTTP errors
-        console.error('An error occurred:', err);
+        return throwError(() => err);
       }
 
       // Re-throw the error to propagate it further

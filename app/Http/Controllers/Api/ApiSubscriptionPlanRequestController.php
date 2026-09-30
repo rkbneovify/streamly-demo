@@ -68,7 +68,7 @@ class ApiSubscriptionPlanRequestController extends Controller
             return response()->json([
                 'status' => true,
                 'response_code' => 200,
-                'message' => 'Subscription sent successfully !',
+                'message' => 'Custom subscription plan request sent successfully !',
 
             ]);
         } catch (\Throwable $th) {

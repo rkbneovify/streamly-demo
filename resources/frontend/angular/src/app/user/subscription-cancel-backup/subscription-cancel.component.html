@@ -1,0 +1,135 @@
+<div class="pnf-background">
+  <img loading="lazy" src="../../assets/dummy-img/404-bg.png" alt="" />
+</div>
+
+<div class="container">
+  <div class="sub-container">
+    <div class="main-container justify-content-center">
+      <div class="pnf-heading">
+        <div class="pnf-subExp-img">
+          <img loading="lazy" src="../../../assets/dummy-img/subExp.svg" alt="" />
+        </div>
+        <div class="pnf-bottom-text">
+          @if ( error && error.stripe_status=='past_due') {
+          <h2>Auto Renewal Failed</h2>
+
+          <ul>
+            <li>1. We were unable to process your subscription auto-renewal payment, so your Streamly service is
+              currently inactive.</li>
+            <li>2. To continue using Streamly, please cancel your current subscription billing cycle and purchase a new
+              subscription plan.</li>
+            <li>3. After activating a new subscription, your Streamly service will be available again.</li>
+          </ul>
+
+          }
+          @else{
+          <h2 *ngIf="!receivedData">Your subscription has expired</h2>
+          <p>
+            {{receivedData}}
+          </p>
+          }
+
+
+
+        </div>
+        <div class="flex">
+
+          @if(error.plan_count > 1){
+          <div class="pnf-button">
+            <button [routerLink]="'/user/plan'">Subscribe Now</button>
+          </div>
+          }
+          @else if ( error && error.stripe_status=='past_due') {
+          <!-- <div class="pnf-button">
+            <a [href]="error.url" target="_blank">
+              <button>Pay Now</button>
+            </a>
+          </div> -->
+          <div class="btn-danger">
+            <button type="button" (click)="subscriptionTerminate()">Cancel Subscription</button>
+          </div>
+          }
+          @else {
+
+          <div class="pnf-button">
+            <button [routerLink]="'/user/plan'">Subscribe Now</button>
+          </div>
+          }
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  -->
+
+<!-- Modal for Cancel-subsc-->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#ShowPopPlan"
+  id="btnShowPopPlan"></button>
+<div class="modal fade" id="ShowPopPlan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered zipcode_correct">
+    <div class="modal-content showPopConf popup_bg margin-left-3">
+      <div class="modal-header p-0 m-0 d-flex justify-content-end">
+        <div class="btn-cl">
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg" alt="" />
+        </div>
+      </div>
+      <div class="modal-body p-0 m-0">
+        <div class="zip_top">
+          <h3 class="d-flex gap-2 mt-2 mb-0">
+            <span class="d-flex gap-2">
+              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              Enter password to cancel your
+            </span>
+          </h3>
+        </div>
+        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+          <div class="zip_bottom_p">
+            <!-- <form class="d-flex flex-column gap-2 justify-content-evenly" [formGroup]="cancelSubscription"
+              (ngSubmit)="cancelSubscriptionUserAccount()">
+              <input type="text" class="input_standred" placeholder="Enter Password" formControlName="password" />
+              <button class="btn_2 w-auto align-self-center" data-bs-dismiss="modal" type="submit">
+                Submit
+              </button>
+            </form> -->
+
+            <!-- Duration -->
+            <div class="duration-wrapper">
+
+              <button class="duration-btn active">
+                1 month
+              </button>
+
+              <button class="duration-btn">
+                3 month
+              </button>
+
+              <button class="duration-btn">
+                6 month
+              </button>
+
+              <button class="duration-btn">
+                12 month
+              </button>
+
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- @else if ( error && error.custom_subscription_expired) {
+
+          <div class="pnf-button">
+            <button type="button" (click)="handleBtnPlanRequest()">Plan Request</button>
+          </div>
+          } -->

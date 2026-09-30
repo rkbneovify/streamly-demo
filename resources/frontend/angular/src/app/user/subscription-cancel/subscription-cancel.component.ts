@@ -18,7 +18,13 @@ export class SubscriptionCancelComponent implements OnInit {
   receivedData: string;
   access_Token: any;
   error: any;
-
+  plans: any[] = [];
+  selectedPlan: number = 0;
+  customSubscriptionExpired: null | boolean = null;
+  customSubscriptionExpiredAt: null | Date = null;
+  deviceLimit: null | number = null;
+  customPlanRequest: null | any = null;
+  stripeSubscription: null | any = null;
   constructor(private route: Router,
     private currentData: DataSharingService,
     private crud: CrudService,
@@ -29,15 +35,43 @@ export class SubscriptionCancelComponent implements OnInit {
 
   // setData
   ngOnInit() {
-    this.error = history.state.error;
-    // console.log('subscription Errorxxxx : ', history.state.error)
-    this.currentData.currentData.subscribe(data => {
-      this.receivedData = data;
-    });
-    this.loginSliders();
+    this.loadCustomSubscriptionPlans();
+    this.subscriptionStatusCheck();
+    // this.error = history.state.error;
+    // // console.log('subscription Errorxxxx : ', history.state.error)
+    // this.currentData.currentData.subscribe(data => {
+    //   this.receivedData = data;
+    // });
+    // this.loginSliders();
+
   }
 
 
+  subscriptionStatusCheck() {
+    this.sweetAlert.loading();
+    this.crud.postRequest('auth/subscription/check')
+      .subscribe({
+        next: (res: any) => {
+          this.sweetAlert.close();
+          // console.log('Response : ', res.data);
+
+
+
+        },
+        error: (err: any) => {
+          this.sweetAlert.close();
+          // this.sweetAlert.toast(err.error.message, "error");
+          // console.log('Errorx : ', err.error.subscription);
+          this.customPlanRequest = err.error.plan_request;
+          this.deviceLimit = err.error.device_limit;
+          this.customSubscriptionExpired = err.error.custom_subscription_expired;
+          this.customSubscriptionExpiredAt = new Date(err.error.custom_subscription_expired_at.replace(' ', 'T'));
+          if (this.customPlanRequest != null) {
+            this.selectedPlan = this.customPlanRequest.plan_id;
+          }
+        }
+      });
+  }
 
   loginSliders() {
     this.sweetAlert.loading();
@@ -56,6 +90,28 @@ export class SubscriptionCancelComponent implements OnInit {
           this.sweetAlert.close();
           this.error = err.error;
           console.log('subscription Error : ', err.error)
+
+        }
+      });
+  }
+
+  loadCustomSubscriptionPlans() {
+    this.sweetAlert.loading();
+    this.crud.getRequest('auth/custom/subscription/plan')
+      .subscribe({
+        next: (res: any) => {
+          this.sweetAlert.close();
+          // console.log('Response : ', res.data);
+          this.plans = res.data;
+          if (this.plans.length > 0) {
+            this.selectedPlan = this.plans[0].id;
+          }
+
+
+        },
+        error: (err: any) => {
+          this.sweetAlert.close();
+          this.sweetAlert.toast(err.error.message, "error");
 
         }
       });
@@ -80,11 +136,64 @@ export class SubscriptionCancelComponent implements OnInit {
 
               this.route.navigateByUrl('/user');
             },
-            error: (err) => {
+            error: (err: any) => {
 
-              this.error = err.error;
+
               this.sweetAlert.toast(err.error.message, "error");
-              console.log('subscription Error : ', err.error)
+
+
+            }
+          });
+      }
+    });
+  }
+
+  selectPlan(plan: any): void {
+    this.selectedPlan = plan.id;
+  }
+
+  planRequestByUser(): void {
+    this.sweetAlert.confirm("Plant Request", "Do you want to request this plan?").then((result) => {
+      if (result.isConfirmed) {
+        this.sweetAlert.loading();
+        const data = {
+          'plan_id': String(this.selectedPlan)
+        };
+        this.crud.postRequest('auth/subscription/plan-request', data)
+          .subscribe({
+            next: (res: any) => {
+              this.sweetAlert.close();
+              this.sweetAlert.toast(res.message, "success");
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+              this.sweetAlert.toast(err.error.message, "error");
+            }
+          });
+      }
+    });
+  }
+
+  signOut(): void {
+    this.sweetAlert.confirm("Logout", "Do you want to logout?").then((result) => {
+      if (result.isConfirmed) {
+        this.sweetAlert.loading();
+        this.crud.postRequest('auth/logout')
+          .subscribe({
+            next: () => {
+              this.sweetAlert.close();
+              this.route.navigateByUrl('/user');
+            },
+            error: (err: any) => {
+              this.sweetAlert.close();
+
+              // here protecting from some unknon error
+              if (err.status !== 0) {
+                this.sweetAlert.toast(err.error.message, "error");
+              }
+
+
+
 
             }
           });
