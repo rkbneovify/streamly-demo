@@ -74,7 +74,7 @@ trait ApiResponseTrait
         return response()->json([
             'success' => $success,
             'response_code' => $code,
-            'message' => $message ?? 'Resource not found !',
+            'message' => $message ?? 'Data not found !',
 
         ], $code);
     }

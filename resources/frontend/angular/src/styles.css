@@ -1,4 +1,5 @@
 @import "../node_modules/ngx-toastr/toastr.css";
+
 *,
 *::after,
 *::before {
@@ -14,13 +15,13 @@ body {
   margin: 0;
 }
 
-li {
+/* li {
   list-style: none;
 }
 
 ul {
   padding-left: 0;
-}
+} */
 
 img,
 svg {
@@ -35,6 +36,8 @@ section {
   color: var(--clr-100);
 }
 
+
+
 /* ---------------------------- Theme Setup --------------------------- */
 
 :root {
@@ -48,11 +51,19 @@ section {
 
 /* ------------------------ Utilities ----------------------------- */
 
-.text-gold-400{
+.li-none {
+  list-style: none;
+}
+
+.ul-pl-0 {
+  padding-left: 0;
+}
+
+.text-gold-400 {
   color: var(--clr-400);
 }
 
-.text-White{
+.text-White {
   color: #ffffff;
 }
 
@@ -220,6 +231,7 @@ button.btn_2 {
   letter-spacing: 0em;
   text-align: left;
   color: #ffffff;
+
   &:focus {
     outline: none;
   }
@@ -241,6 +253,7 @@ button.btn_2 {
   letter-spacing: 0em;
   text-align: left;
   color: #ffffff;
+
   &::placeholder {
     font-family: Poppins;
     font-size: 14px;
@@ -250,6 +263,7 @@ button.btn_2 {
     text-align: left;
     color: #bdbdbd;
   }
+
   &:focus {
     outline: none;
   }
@@ -274,11 +288,13 @@ button.btn-count {
   border-radius: 6px;
   color: #36395a;
   transition: box-shadow 0.15s ease, transform 0.15s ease;
+
   &:hover {
     box-shadow: -3px 0px 4px rgb(45 35 66 / 40%),
       0px 7px 13px -11px rgb(45 35 66 / 30%), inset 0px -1px 6px #d6d6e7;
     transform: translateY(-2px);
   }
+
   &:active {
     box-shadow: inset 0px 3px 7px #d6d6e7;
     transform: translateY(2px);
@@ -304,9 +320,11 @@ button.btn-count {
 .taj {
   text-align: justify !important;
 }
+
 .rotate-90 {
   transform: rotate(-90deg);
 }
+
 /* ---------------- NAVBAR ---------------- */
 
 nav {
@@ -324,6 +342,7 @@ nav {
     white-space: no-wrap;
   }
 }
+
 .pointer {
   cursor: pointer;
 }
@@ -359,17 +378,13 @@ nav {
   text-align: left !important;
   color: #bdbdbd !important;
 }
+
 .res-ngselect .ng-select-container:focus,
-.res-ngselect
-  .ng-select
-  .ng-select-container
-  .ng-value-container
-  .ng-input
-  > input:focus {
+.res-ngselect .ng-select .ng-select-container .ng-value-container .ng-input>input:focus {
   outline: none !important;
 }
 
-.ng-select .ng-select-container .ng-value-container .ng-input > input {
+.ng-select .ng-select-container .ng-value-container .ng-input>input {
   padding: 9px 0 9px 0 !important;
   color: #ffffff !important;
 }
@@ -405,16 +420,17 @@ nav {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.2);
   }
+
   100% {
     transform: scale(1);
   }
 }
 
-#heart-icon.favAnimate {
-}
+#heart-icon.favAnimate {}
 
 ::-webkit-scrollbar {
   scrollbar-width: thin;
@@ -527,6 +543,7 @@ input:-webkit-autofill:active {
   justify-content: center;
   align-content: center;
   height: 100vh;
+
   p {
     color: white;
     font-size: 1.7rem;
@@ -546,6 +563,7 @@ input:-webkit-autofill:active {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -574,6 +592,7 @@ input:-webkit-autofill:active {
 }
 
 @media screen and (max-width: 750px) {
+
   .schedule_details_container,
   .schedule_details_container1 {
     flex-direction: column;

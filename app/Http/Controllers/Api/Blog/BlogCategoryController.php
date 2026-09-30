@@ -21,6 +21,23 @@ class BlogCategoryController extends Controller
             return $this->exceptionResponse($th);
         }
     }
+
+    public function detail($category)
+    {
+        try {
+            $data = BlogCategory::where('status', 1)
+            ->where('title', 'like', '%'.$category. '%')
+            ->first();
+            if($data == null){
+                return $this->notFoundResponse();
+            }
+            return  $this->dataResponse($data, "Data fetch successfully !");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function store(Request $request, BlogCategory $blogCategory)
     {
         $validator = Validator::make($request->all(), [

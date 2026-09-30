@@ -1,6 +1,6 @@
 import { Location, NgClass, NgFor } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { debounceTime, distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
@@ -12,7 +12,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-article-sub-categories',
   standalone: true,
-  imports: [NgFor, FormsModule, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
+  imports: [RouterLink, NgFor, FormsModule, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
   templateUrl: './article-sub-categories.component.html',
   styleUrl: './article-sub-categories.component.scss'
 })
@@ -20,7 +20,9 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
 
   redirectData: any = {};
   selectedIndex: number = 0;
-  category: string;
+  selectedCategory: string | null = null;
+  categoryDetails: any = {};
+  subcategory: string | null = null;
   subcategories: any[] = [];
   blogs: any[] = [];
   page: number = 1;
@@ -30,23 +32,7 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   txtSearch = new FormControl('');
 
-  subscriptionArticles: string[] = [
-    "I’ve changed my phone number. How can I access my subscription?",
-    "How Do I Cancel My Subscription?",
-    "How do I manage my subscriptions via iTunes?",
-    "Cancel Subscription (Google Play Users)",
-    "How to delete my account",
-    "Cancel Subscription (iOS Users)"
-  ];
 
-  articles: string[] = [
-    "I’ve changed my phone number. How can I access my subscription?",
-    "How Do I Cancel My Subscription?",
-    "How do I manage my subscriptions via iTunes?",
-    "Cancel Subscription (Google Play Users)",
-    "How to delete my account",
-    "Cancel Subscription (iOS Users)"
-  ];
   constructor(
     private router: Router,
     private location: Location,
@@ -60,11 +46,30 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.redirectData = history.state;
-    this.loadSubCategories(this.redirectData);
-    this.pageSubject.next(this.page);
+
+
+
 
     this.activatedRoute.paramMap.subscribe(params => {
-      this.category = params.get('category');
+      this.selectedCategory = params.get('category');
+      this.subcategory = params.get('subcategory');
+      this.loadCategory(this.selectedCategory);
+
+      if (this.selectedCategory != null) {
+        const data = {
+          title: this.selectedCategory,
+          sub_category: this.subcategory
+        }
+        this.loadSubCategories(data);
+        this.pageSubject.next(this.page);
+
+
+      } else {
+        this.loadSubCategories(this.redirectData);
+        this.pageSubject.next(this.page);
+      }
+
+
     });
 
 
@@ -97,6 +102,22 @@ export class ArticleSubCategoriesComponent implements OnInit, OnDestroy {
     this.selectedIndex = index;
     this.blogs = item.blog;
     console.log('Selected item:', item);
+  }
+
+  loadCategory(category: string) {
+    this.alert.loading();
+    this.api.getRequest(`blogs/categories/${category}`).subscribe({
+      next: (res: any) => {
+        this.alert.close();
+        this.categoryDetails = res.data;
+        console.log('category : ', res.data);
+      },
+      error: (err: any) => {
+        this.alert.close();
+        this.alert.error(err.error.message)
+
+      }
+    })
   }
 
   loadSubCategories(stateData: any) {

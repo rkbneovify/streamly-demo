@@ -1,6 +1,6 @@
 import { Location, NgClass, NgFor } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
@@ -12,7 +12,7 @@ import { ArticleSearchComponent } from '../article-search/article-search.compone
 @Component({
   selector: 'app-article',
   standalone: true,
-  imports: [NgFor, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
+  imports: [RouterLink, NgFor, NgClass, ArticleSearchComponent, InfiniteScrollDirective],
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss'
 })
@@ -25,6 +25,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   subcategory: string;
   slug: string;
   blogId!: number;
+  blogContent!: string;
 
 
 
@@ -98,6 +99,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
           this.alert.close();
           this.blog = res.data.blog;
           this.relatedBlog = res.data.related;
+          this.formateBlogContent(res.data.blog.content);
         },
 
         error: (err: any) => {
@@ -108,6 +110,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
 
 
+  }
+
+  formateBlogContent(content: string) {
+    this.blogContent = content.replace(/<span class="ql-cursor">[\s\S]*?<\/span>/g, '');
   }
 
 

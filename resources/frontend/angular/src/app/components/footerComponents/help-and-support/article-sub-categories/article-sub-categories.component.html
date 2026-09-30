@@ -68,12 +68,12 @@
           </span>
         </a>
 
-        <span class="help-text">Help center</span>
+        <span class="help-text" routerLink="/user/help-and-support">Help center</span>
 
         <i class="bi bi-chevron-right"></i>
 
-        <span class="current">
-          {{ category }}
+        <span class="current" [routerLink]="['/user/article', selectedCategory]">
+          {{ selectedCategory }}
         </span>
       </div>
 
@@ -97,13 +97,13 @@
 
         <div class="section-heading">
 
-          <div class="icon-box subscription-icon" [innerHTML]="getSvg(redirectData.icon)"
-            [style.background-color]="redirectData.backgroundColor">
+          <div class="icon-box subscription-icon" [innerHTML]="getSvg(categoryDetails.svg_content)"
+            [style.background-color]="categoryDetails.background_color">
             <!-- <i class="bi bi-credit-card"></i> -->
           </div>
 
           <div>
-            <h2> {{ redirectData.title }}</h2>
+            <h2> {{ categoryDetails.title }}</h2>
 
           </div>
 

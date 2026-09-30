@@ -315,6 +315,7 @@ Route::group(['prefix' => 'blogs'], function () {
     Route::prefix('categories')->group(function () {
         Route::get('/', 'Api\Blog\BlogCategoryController@index');
         Route::get('/list', 'Api\Blog\ApiBlogController@categoriesList');
+        Route::get('/{category}', 'Api\Blog\BlogCategoryController@detail');
     });
 
     Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');

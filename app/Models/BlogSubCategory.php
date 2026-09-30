@@ -17,7 +17,7 @@ class BlogSubCategory extends Model
 
     public function blog()
     {
-        return $this->hasMany(Blog::class, 'sub_category', 'title');
+        return $this->hasMany(Blog::class, 'sub_category', 'title')->where('status', 1);
     }
     public function scopeSearch($query, $txt)
     {
