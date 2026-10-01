@@ -166,8 +166,8 @@
     <div class="contain">
       <h2>Available Channels</h2>
       <ul class="channel-types">
-        <li class="pointer" [class.active]="category === activeCategoryTab" *ngFor="let category of categoryList"
-          (click)="changeActiveTab(category)">{{category}}
+        <li class="pointer li-none" [class.active]="category === activeCategoryTab"
+          *ngFor="let category of categoryList" (click)="changeActiveTab(category)">{{category}}
         </li>
       </ul>
       <menu class="channel-list">
