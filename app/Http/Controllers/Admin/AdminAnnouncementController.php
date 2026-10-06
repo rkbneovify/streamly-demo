@@ -71,7 +71,7 @@ class AdminAnnouncementController extends Controller
             toast('Data saved successfully !', 'success')
                 ->timerProgressBar()
                 ->autoClose(3000);
-            return redirect()->back();
+            return redirect()->route('admin.announcement');
         } catch (\Throwable $th) {
             DB::rollBack();
             Alert::error('Something went wrong !', 'error');
@@ -100,7 +100,6 @@ class AdminAnnouncementController extends Controller
     public function update($id)
     {
         $this->request->validate([
-
             'content' => 'required|string',
             'url' => 'required|string'
         ]);
@@ -204,6 +203,39 @@ class AdminAnnouncementController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             Alert::error('Something went wrong !', 'error');
+            return redirect()->back();
+        }
+    }
+
+
+    public function bulkAction()
+    {
+        $announcementIds = $this->request->announcements;
+        DB::beginTransaction();
+        try {
+            $this->announcement->whereIn('id', $announcementIds)->update([
+                'status' => 0
+            ]);
+
+
+            $this->activity()
+                ->event("announcement")
+                ->eventType(ActivityEventType::STATUSDISABLE)
+                ->isAdmin()
+                ->description("Multiple announcement disable")
+                ->properties([
+                    "data" =>  $this->announcement->whereIn('id', $announcementIds)->get()
+                ])->save();
+
+            DB::commit();
+            toast('Data inactive successfully !', 'success')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            Alert::error('error', 'Something went wrong !');
             return redirect()->back();
         }
     }

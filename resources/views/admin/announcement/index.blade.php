@@ -186,8 +186,8 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Blogs</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Announcement</li>
                         </ol>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
                                     <option value="">Bulk Action</option>
-                                    <option value="active">Active</option>
+                                    {{-- <option value="active">Active</option> --}}
                                     <option value="deactive">Deactive</option>
 
                                 </select>
@@ -233,23 +233,19 @@
                             </div>
                         </div>
 
-
-
-
-
-                        <div class="col-md-2 mb-3">
-                            <button id="btnResetFilter" type="button" class="btn-with-img">
-                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
-                                Reset filters
-                            </button>
-                        </div>
-
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
                                 <input type="text" name="search" id="search" value="{{ Request()->search }}"
                                     class="form-control input-custom" placeholder="Search by content">
                                 <span class="btn-clear" id="btnClear">×</span>
                             </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <button id="btnResetFilter" type="button" class="btn-with-img">
+                                <img src="{{ asset('images/clear-filter.png') }}" alt="status icon">
+                                Reset filters
+                            </button>
                         </div>
 
                         <div class="col-md-2 mb-3">
@@ -305,7 +301,7 @@
 </script>
 
 <script>
-    let storageKey = "selected_blog";
+    let storageKey = "selected_announcements";
 
     // Get selected IDs from localStorage
     function getSelected() {
@@ -509,7 +505,7 @@
 
                     $.each(selected, function (index, value) {
                         $("#tbl-form").append(
-                            `<input type="hidden" name="blogs[]" value="${value}">`
+                            `<input type="hidden" name="announcements[]" value="${value}">`
                         );
                     });
 
