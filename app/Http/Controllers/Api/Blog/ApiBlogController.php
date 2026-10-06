@@ -41,6 +41,8 @@ class ApiBlogController extends Controller
         try {
             $blog = $this->blog->find($id);
             $relatedBlogs = $this->blog->whereNot('id', $id)
+                ->whereHas('categoryList')
+                ->whereHas('subCategory')
                 ->where('category', $blog->category)
                 ->where('status', 1)->get();
             return $this->dataResponse([
