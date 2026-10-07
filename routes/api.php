@@ -241,10 +241,17 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
     });
+
+
+
+
 });
 
 
-
+    // Crash Report
+    Route::prefix('crash-report')->group(function(){
+      Route::post('/store', 'Api\ApiCrashReportController@store')->middleware(['jwt.verify']);
+    });
 
 Route::group(['prefix' => 'hoa/sub-user'], function () {
     Route::post("account-active", "Api\ApiHoaController@accountActive");

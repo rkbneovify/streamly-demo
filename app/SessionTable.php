@@ -335,4 +335,73 @@ class SessionTable extends Model
         }
         return null;
     }
+
+    public static function getCurrentSessionByToken()
+    {
+        $session =  SessionTable::where('access_token', request()->bearerToken())->first();
+        if ($session != null) {
+            return $session;
+        }
+        return null;
+    }
+
+
+    public static function  getJwtExpiryDate(string $token, string $timeZone): ?string
+    {
+
+
+        $parts = explode('.', $token);
+
+        if (count($parts) !== 3) {
+            return null;
+        }
+
+        $payload = json_decode(
+            base64_decode(strtr($parts[1], '-_', '+/')),
+            true
+        );
+
+        if (!isset($payload['exp'])) {
+            return null;
+        }
+
+        return Carbon::createFromTimestamp($payload['exp'])
+            ->timezone($timeZone)
+            ->format('d/m/Y H:i:s A');
+    }
+
+
+
+    public function checkTokenValidity()
+    {
+        if (empty($this->access_token)) {
+            $this->status = 0;
+            return;
+        }
+
+        try {
+            $parts = explode('.', $this->access_token);
+
+            if (count($parts) !== 3) {
+                $this->status = 0;
+                return;
+            }
+
+            $payload = json_decode(
+                base64_decode(strtr($parts[1], '-_', '+/')),
+                true
+            );
+
+            if (empty($payload['exp']) || $payload['exp'] <= time()) {
+                $this->status = 0;
+            }
+        } catch (\Exception $e) {
+            $this->status = 0;
+        }
+
+        // // Save only if status changed
+        // if ($this->isDirty('status')) {
+        //     $this->saveQuietly();
+        // }
+    }
 }

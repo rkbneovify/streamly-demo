@@ -18,7 +18,14 @@ class Blog extends Model
 
     public function categoryList()
     {
-        return $this->hasOne(BlogCategory::class, 'title', 'category');
+        return $this->hasOne(BlogCategory::class, 'title', 'category')
+            ->where('status', 1);
+    }
+
+    public function subCategory()
+    {
+        return $this->hasOne(BlogSubCategory::class, 'title', 'sub_category')
+            ->where('status', 1);
     }
 
 

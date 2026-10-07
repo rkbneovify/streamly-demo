@@ -1,0 +1,28 @@
+{
+    "crash_reports": [
+        {
+            "build_version": "5.2.1",
+            "platform": "Android",
+            "os_version": "Android 15",
+            "device_model": "Samsung S24",
+            "exception": "NullPointerException",
+            "message": "Unable to access property of null object",
+            "stack_trace": "...",
+            "screen": "EPG Screen",
+            "api_url": "/api/epg/guide",
+            "network_type": "WiFi"
+        },
+        {
+            "build_version": "5.2.1",
+            "platform": "Android",
+            "os_version": "Android 15",
+            "device_model": "Samsung S24",
+            "exception": "IllegalStateException",
+            "message": "Invalid state",
+            "stack_trace": "...",
+            "screen": "Login Screen",
+            "api_url": "/api/auth/login",
+            "network_type": "Mobile Data"
+        }
+    ]
+}
