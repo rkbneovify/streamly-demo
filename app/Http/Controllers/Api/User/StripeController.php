@@ -463,6 +463,7 @@ class StripeController extends Controller
         $response_to_send['success'] = true;
         $response_to_send['response_code'] = 200;
         $response_to_send['message'] = "Setting details successfully retrieved";
+        $response_to_send['auth_token_expire_at'] = SessionTable::getJwtExpiryDate($request->bearerToken());
         // Always include user data
 
         $hoaUser = HoaUser::getCurrentSubUserByToken();
@@ -612,8 +613,6 @@ class StripeController extends Controller
                 } elseif ($request->user()->subscription('main')->canceled_at != null) {
                     $subscription_data['plan_expired_at'] = date('Y-m-d H:i:s', strtotime($request->user()->subscription('main')->canceled_at));
                 }
-
-
             }
 
             $response_to_send['subscription'] = $subscription_data;

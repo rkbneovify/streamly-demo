@@ -65,7 +65,7 @@ class UsersController extends Controller
     }
     public function index(Request $request)
     {
-
+        SessionTable::where('status', 1)->resolveSession();
 
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
