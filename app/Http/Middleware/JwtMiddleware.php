@@ -28,8 +28,8 @@ class JwtMiddleware extends BaseMiddleware
             JWTAuth::parseToken()->authenticate();
             $token = $request->bearerToken();
 
-            
 
+            SessionTable::where('status', 1)->resolveSession();
             $acctoken = SessionTable::where('access_token', $request->bearerToken())->first();
 
             if ($acctoken == null) {
@@ -114,7 +114,7 @@ class JwtMiddleware extends BaseMiddleware
 
                     $myarr = [];
                     array_push($myarr, $rowid);
-                    $decremen = count($myarr);// number of id we will use this number to decrement the last value
+                    $decremen = count($myarr); // number of id we will use this number to decrement the last value
                     $updatedExpireConcrenteUser = SessionTable::whereIn('id', $myarr)->update(['status' => 0, 'modified_on' => Carbon::now()]);
                     SessionTable::where([
                         ['status', '=', '1'],
@@ -123,7 +123,6 @@ class JwtMiddleware extends BaseMiddleware
                         ->update([
                             'connected_devices' => DB::raw('`connected_devices` - 1 ')
                         ]);
-
                 }
                 $response = array('status' => false, 'success' => false, 'message' => 'Token is Expired', 'response_code' => 401);
                 return response()->json($response, 401);
