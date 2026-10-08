@@ -486,7 +486,6 @@ class ChannelController extends Controller
                 if (trim(strtolower($request->platform)) == 'rokutv') {
                     $channel->imagex = $this->getRokuImageFromAsset($channel->assets);
                     $channel->roku_image =  $channel->imagex != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->imagex)) : (env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? null);
-
                     unset($channel->imagex);
                 }
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
@@ -565,7 +564,9 @@ class ChannelController extends Controller
                     $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
                 }
 
-
+                if (trim(strtolower($request->platform)) == 'rokutv') {
+                    unset($channel->image);
+                }
                 // just for additional data hiding
                 unset($channel->zipcode);
                 unset($channel->primium);
