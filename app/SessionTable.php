@@ -335,4 +335,80 @@ class SessionTable extends Model
         }
         return null;
     }
+
+    public static function  getJwtExpiryDate(string $token): ?string
+    {
+
+
+        $parts = explode('.', $token);
+
+        if (count($parts) !== 3) {
+            return null;
+        }
+
+        $payload = json_decode(
+            base64_decode(strtr($parts[1], '-_', '+/')),
+            true
+        );
+
+        if (!isset($payload['exp'])) {
+            return null;
+        }
+
+        return Carbon::createFromTimestamp($payload['exp'])
+            ->timezone(config('app.timezone'))
+            ->format('d/m/Y h:i:s A');
+    }
+
+    public function checkTokenValidity()
+    {
+        if (empty($this->access_token)) {
+            $this->status = 0;
+            $this->expired_at = null;
+            $this->save();
+            return;
+        }
+
+        try {
+            $parts = explode('.', $this->access_token);
+
+            if (count($parts) !== 3) {
+                $this->status = 0;
+                $this->save();
+                return;
+            }
+
+            $payload = json_decode(
+                base64_decode(strtr($parts[1], '-_', '+/')),
+                true
+            );
+
+            if (empty($payload['exp'])) {
+                $this->status = 0;
+                $this->save();
+                return;
+            }
+
+            // Always store expiry date
+            // $this->expired_at = Carbon::createFromTimestamp($payload['exp'])->timestamp;
+
+            // Check token validity
+            $this->status = $payload['exp'] > time() ? 1 : 0;
+
+            $this->save();
+        } catch (\Exception $e) {
+            $this->status = 0;
+            $this->save();
+        }
+    }
+
+    public function scopeResolveSession($query)
+    {
+        return $query
+            ->where('created_on', '>=', now()->subMonth())
+            ->get()
+            ->each(function ($session) {
+                $session->checkTokenValidity();
+            });
+    }
 }
