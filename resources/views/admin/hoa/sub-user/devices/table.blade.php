@@ -200,9 +200,11 @@
                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                             </td>
                             <td style="vertical-align: middle;">
-                                @if(\App\SessionTable::getJwtExpiryDate($user->access_token, config('app.timezone')) != null)
-                                    {{ \App\SessionTable::getJwtExpiryDate($user->access_token, config('app.timezone'))  }}
+                                @if(\App\SessionTable::getJwtExpiryDate($user->access_token) != null)
+                                    {{ \App\SessionTable::getJwtExpiryDate($user->access_token)  }}
                                 @endif
+
+
                                 {{-- @if($user->token_expire_at != null)
                                 {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
                                 <br>

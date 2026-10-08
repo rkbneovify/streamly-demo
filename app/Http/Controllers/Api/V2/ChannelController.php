@@ -471,7 +471,7 @@ class ChannelController extends Controller
             } else {
                 $query->orderBy('channels.id', 'asc');
             }
-            $record = $query->get()->map(function ($channel) use ($day) {
+            $record = $query->get()->map(function ($channel) use ($day, $request) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)
                     ->where('user_id', JWTAuth::user()->id)
                     ->exists();
@@ -480,7 +480,9 @@ class ChannelController extends Controller
 
                 $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->ratio = $assetData['ratio'] ?? 'NA';
-
+                if (trim(strtolower($request->platform)) == 'rokutv') {
+                    $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : (env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? null);
+                }
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
                     // station name inside program
                     $item->stationName = $channel->stationName;
@@ -580,7 +582,6 @@ class ChannelController extends Controller
                     'genre_name',
                     'ratio',
                     'premium',
-                    'stationName',
                     'east_coast',
                 ]);
 
@@ -1017,7 +1018,7 @@ class ChannelController extends Controller
 
                     $channel->program = $this->getProgramScheduleByIdWithCache($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
                         // station name inside program
-                        $item->stationName = $channel->stationName;
+                        // $item->stationName = $channel->stationName;
                         return $item;
                     });
                     unset($channel->assets);
@@ -1078,7 +1079,7 @@ class ChannelController extends Controller
                         'quals',
                         'time',
                         'image',
-                        'stationName',
+
                     ]);
                     $channel->makeHidden([
                         'type',
@@ -1089,7 +1090,6 @@ class ChannelController extends Controller
                         'genre_name',
                         'ratio',
                         'premium',
-                        'stationName',
                         'east_coast',
                     ]);
 

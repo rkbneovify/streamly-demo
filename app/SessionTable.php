@@ -336,17 +336,7 @@ class SessionTable extends Model
         return null;
     }
 
-    public static function getCurrentSessionByToken()
-    {
-        $session =  SessionTable::where('access_token', request()->bearerToken())->first();
-        if ($session != null) {
-            return $session;
-        }
-        return null;
-    }
-
-
-    public static function  getJwtExpiryDate(string $token, string $timeZone): ?string
+    public static function  getJwtExpiryDate(string $token): ?string
     {
 
 
@@ -366,16 +356,16 @@ class SessionTable extends Model
         }
 
         return Carbon::createFromTimestamp($payload['exp'])
-            ->timezone($timeZone)
-            ->format('d/m/Y H:i:s A');
+            ->timezone(config('app.timezone'))
+            ->format('d/m/Y h:i:s A');
     }
-
-
 
     public function checkTokenValidity()
     {
         if (empty($this->access_token)) {
             $this->status = 0;
+            $this->expired_at = null;
+            $this->save();
             return;
         }
 
@@ -384,6 +374,7 @@ class SessionTable extends Model
 
             if (count($parts) !== 3) {
                 $this->status = 0;
+                $this->save();
                 return;
             }
 
@@ -392,16 +383,32 @@ class SessionTable extends Model
                 true
             );
 
-            if (empty($payload['exp']) || $payload['exp'] <= time()) {
+            if (empty($payload['exp'])) {
                 $this->status = 0;
+                $this->save();
+                return;
             }
+
+            // Always store expiry date
+            // $this->expired_at = Carbon::createFromTimestamp($payload['exp'])->timestamp;
+
+            // Check token validity
+            $this->status = $payload['exp'] > time() ? 1 : 0;
+
+            $this->save();
         } catch (\Exception $e) {
             $this->status = 0;
+            $this->save();
         }
+    }
 
-        // // Save only if status changed
-        // if ($this->isDirty('status')) {
-        //     $this->saveQuietly();
-        // }
+    public function scopeResolveSession($query)
+    {
+        return $query
+            ->where('created_on', '>=', now()->subMonth())
+            ->get()
+            ->each(function ($session) {
+                $session->checkTokenValidity();
+            });
     }
 }
