@@ -186,15 +186,8 @@
                                 {{ \Carbon\Carbon::parse($user->created_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
                             </td>
                             <td style="vertical-align: middle;">
-                                @if($user->token_expire_at != null)
-                                    {{ date('d/m/Y', strtotime($user->token_expire_at)) }}
-                                    <br>
-                                    {{ \Carbon\Carbon::parse($user->token_expire_at)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
-
-                                @else
-                                    {{ date('d/m/Y', strtotime($user->modified_on)) }}
-                                    <br>
-                                    {{ \Carbon\Carbon::parse($user->modified_on)->setTimezone(config('app.timezone'))->format('h:i:s A') }}
+                                @if(\App\SessionTable::getJwtExpiryDate($user->access_token) != null)
+                                    {{ \App\SessionTable::getJwtExpiryDate($user->access_token)  }}
                                 @endif
                             </td>
 
