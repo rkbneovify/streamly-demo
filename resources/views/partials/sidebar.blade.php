@@ -275,7 +275,7 @@
                 </ul>
             </li>
 
-            <!---->
+            <!--Announcement-->
             <li
                 class="nav-item has-treeview {{ request()->is('admin/announcement') ? 'menu-open' : '' }} {{ request()->is('admin/announcement') ? 'menu-open' : '' }} ">
                 <a href="#" class="nav-link">
@@ -303,6 +303,7 @@
                 </ul>
             </li>
             <!-- end -->
+            <!--Blog-->
             <li
                 class="nav-item has-treeview {{ request()->is('admin/blog') ? 'menu-open' : '' }}{{ request()->is('admin/blog/categories') ? 'menu-open' : '' }} {{ request()->is('admin/blog/sub-categories') ? 'menu-open' : '' }} ">
                 <a href="#" class="nav-link">
@@ -339,7 +340,35 @@
 
                 </ul>
             </li>
+            <!-- end -->
+            <!--Crash Report-->
+            <li
+                class="nav-item has-treeview {{ request()->is('admin/crash-report') ? 'menu-open' : '' }} {{ request()->is('admin/announcement') ? 'menu-open' : '' }} ">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-copy"></i>
+                    <p>
+                        Crash Managent
+                        <i class="fas fa-angle-left right"></i>
 
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+
+
+
+                    <li class="nav-item {{ request()->is('admin/crash-report') ? 'activeElement' : '' }}">
+                        <a href=" {{ route('admin.crash-report') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Crash Report</p>
+                        </a>
+                    </li>
+
+
+
+
+                </ul>
+            </li>
+            <!-- end -->
             <li
                 class="nav-item has-treeview {{ request()->is('admin/allgenre') ? 'menu-open' : '' }}{{ request()->is('admin/addgenre') ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/allgenre') }}" class="nav-link">

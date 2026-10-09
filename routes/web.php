@@ -12,6 +12,7 @@
 
 use App\Http\Controllers\Admin\AdminBugReportController;
 use App\Http\Controllers\Admin\AdminAnnouncementController;
+use App\Http\Controllers\Admin\AdminCrashReportController;
 use App\Http\Controllers\Admin\AdminBlogCategoryController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
@@ -365,8 +366,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::post('/update/{id}', [AdminAnnouncementController::class, 'update'])->name('announcement.update');
         Route::get('/status/{id}', [AdminAnnouncementController::class, 'status'])->name('announcement.status');
         Route::get('/destroy/{id}', [AdminAnnouncementController::class, 'destroy'])->name('announcement.destroy');
-         Route::post('/bulk/action', [AdminAnnouncementController::class, 'bulkAction'])->name('announcement.bulk.action');
+        Route::post('/bulk/action', [AdminAnnouncementController::class, 'bulkAction'])->name('announcement.bulk.action');
     });
+
     // Blog
     Route::prefix('/blog')->group(function () {
         Route::get('/', [AdminBlogController::class, 'index'])->name('blog.index');
@@ -398,6 +400,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         });
     });
 
+    // Annoucement
+    Route::prefix('/crash-report')->group(function () {
+        Route::get('/', [AdminCrashReportController::class, 'index'])->name('crash-report');
+        Route::get('/detail/{id}', [AdminCrashReportController::class, 'detail'])->name('crash-report.detail');
+    });
 
     // Support Ticket
     Route::prefix('/support-ticket')->group(function () {
