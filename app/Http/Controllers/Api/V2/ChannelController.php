@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v2;
 
 use App\GracenoteScheduleProgram;
 use App\GracenoteSource;
+use App\Http\Controllers\Api\RokuEpgGuideApiController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BugReporting\Store;
 use App\Models\Channel;
@@ -476,12 +477,16 @@ class ChannelController extends Controller
                     ->where('user_id', JWTAuth::user()->id)
                     ->exists();
 
+
+
                 $assetData = $this->getURIFromAsset($channel->assets);
 
                 $channel->image = $assetData['uri'] ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->ratio = $assetData['ratio'] ?? 'NA';
                 if (trim(strtolower($request->platform)) == 'rokutv') {
-                    $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : (env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? null);
+                    $channel->imagex = $this->getRokuImageFromAsset($channel->assets);
+                    $channel->roku_image =  $channel->imagex != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->imagex)) : (env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? null);
+                    unset($channel->imagex);
                 }
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day)->map(function ($item) use ($channel) {
                     // station name inside program
@@ -559,7 +564,9 @@ class ChannelController extends Controller
                     $channel->image = url('/uploads/channellogo') . '/' . $channel->local_image;
                 }
 
-
+                if (trim(strtolower($request->platform)) == 'rokutv') {
+                    unset($channel->image);
+                }
                 // just for additional data hiding
                 unset($channel->zipcode);
                 unset($channel->primium);
@@ -2018,6 +2025,40 @@ class ChannelController extends Controller
             return response()->json($response, 200);
         }
     }
+
+
+    public function getRokuImageFromAsset($assets)
+    {
+        $uri = NULL;
+        // Initialize URI variables
+        $uri_16_9 = null;
+        $uri_4_3 = null;
+        // Decode JSON to associative array
+        $data = json_decode($assets, true);
+        if (!empty($data)) {
+
+            // Iterate through the assets
+            foreach ($data['asset'] as $asset) {
+                if (($asset['category'] === 'Parent Source Logo - dark' || $asset['category'] === 'Source Logo - dark' || $asset['category'] === 'Iconic')) {
+                    if ($asset['ratio'] === '16:9') {
+                        $uri_16_9 = "https://demo.tmsimg.com/" . $asset['URI'];
+                        break; // Found the preferred ratio, no need to continue
+                    } elseif ($asset['ratio'] === '4:3') {
+                        $uri_4_3 = "https://demo.tmsimg.com/" . $asset['URI'];
+                    }
+                }
+            }
+
+            // Output the URI
+            if ($uri_16_9) {
+                $uri = $uri_16_9;
+            } elseif ($uri_4_3) {
+                $uri = $uri_4_3;
+            }
+        }
+        return $uri;
+    }
+
     // Function to resize an image to 100x100 pixels
     /* public function resizeImage($url = 'https://demo.tmsimg.com/assets/s57391_ld_h8_ae.png', $width = 100, $height = 100)
     {
