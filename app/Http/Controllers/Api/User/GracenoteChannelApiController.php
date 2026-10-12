@@ -99,7 +99,6 @@ class GracenoteChannelApiController extends Controller
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -128,19 +127,16 @@ class GracenoteChannelApiController extends Controller
                     $channel->stationName = 'FanDuel';
                     $channel->image = env('APP_URL') . '/uploads/fandue.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fandue.png';
-
                 }
                 if ($channel->id == 6) {
                     $channel->stationName = 'Trinity Broadcasting Network';
                     $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
-
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
-
                 }
 
                 if ($channel->id == 45) {
@@ -315,8 +311,6 @@ class GracenoteChannelApiController extends Controller
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
                         ->where('channels.status', 1);
-
-
                 }
             } elseif ($validate == 2) {
                 if (!empty($zipcode)) {
@@ -378,19 +372,16 @@ class GracenoteChannelApiController extends Controller
                     $channel->stationName = 'Trinity Broadcasting Network';
                     $channel->image = env('APP_URL') . '/uploads/tbn-6.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/tbn-6.png';
-
                 }
                 if ($channel->id == 19) {
                     $channel->stationName = 'Hallmark Family';
                     $channel->image = env('APP_URL') . '/uploads/hallm-fam-19.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/hallm-fam-19.png';
-
                 }
                 if ($channel->id == 45) {
                     $channel->stationName = 'Fuse Music';
                     $channel->image = env('APP_URL') . '/uploads/fuse-mu-45.png';
                     $channel->roku_image = env('APP_URL') . '/uploads/fuse-mu-45.png';
-
                 }
                 // if ($channel->id == 134) {
                 //     $channel->image = env('APP_URL') . '/uploads/ocbs-134.png';
