@@ -68,6 +68,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   planExpiredAt: Date;
   isCustomSubscription: boolean = false;
   subscriptionData: any = null;
+  // user login session
   sessionExpiresOn: string | null = null;
 
   constructor(
