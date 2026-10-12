@@ -72,6 +72,7 @@
                         <th>Device Name</th>
                         <th>Platform</th>
                         <th>Device Model</th>
+                        <th>Resolution</th>
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
@@ -146,6 +147,9 @@
                                 {{ getDeviceModel($user->useragent, $user->device_title, $user->device_model) ?? 'N/A' }}
                             </td>
 
+                            <td style="vertical-align: middle;">
+                                {{ $user->screen_resolution ?? 'N/A' }}
+                            </td>
                             <td style="vertical-align: middle;">
                                 {{ $user->build_version ?? 'N/A' }}
                             </td>
@@ -281,6 +285,9 @@
                         <th>Device Name</th>
                         <th>Platform</th>
                         <th>Device Model</th>
+                        <th>
+                            Resolution
+                        </th>
                         <th>Build Version</th>
                         <th>OS Version</th>
                         <th>Zipcode</th>
