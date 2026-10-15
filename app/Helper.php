@@ -1405,6 +1405,7 @@ function sessionTableStore($user_id, $token, $deviceDetails, $connected_devices)
     $session_tab->passcode = request()->passcode ?? null;
     $session_tab->device_title = request()->device_title ?? null;
     $session_tab->device_model = request()->device_model ?? null;
+    $session_tab->screen_resolution = request()->screen_resolution ?? null;
     $session_tab->build_version = request()->build_version ?? null;
     $session_tab->device_os_version = request()->device_os_version ?? null;
     $session_tab->zipcode = request()->zipcode ?? null;

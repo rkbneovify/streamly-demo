@@ -71,6 +71,9 @@
                             Device Model
                         </th>
                         <th>
+                            Screen Resolution
+                        </th>
+                        <th>
                             Build Version
                         </th>
                         <th>
@@ -170,7 +173,10 @@
 
 
                             </td>
+                            <td style="vertical-align: middle;">
 
+                                {{ $user->screen_resolution ?? 'N/A' }}
+                            </td>
                             <td style="vertical-align: middle;">
 
                                 {{ $user->build_version ?? 'N/A' }}
@@ -315,6 +321,9 @@
                             Device Model
                         </th>
                         <th>
+                            Screen Resolution
+                        </th>
+                        <th>
                             Build Version
                         </th>
                         <th>
@@ -339,7 +348,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="9"> Data not found !</td>
+                        <td colspan="10"> Data not found !</td>
                     </tr>
                 </tbody>
             </table>
