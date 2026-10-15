@@ -253,7 +253,7 @@
             </ul>
 
             <li
-                class="nav-item has-treeview {{ request()->is('admin/support-ticket') ? 'menu-open' : '' }}{{ request()->is('admin/users/session') ? 'menu-open' : '' }}">
+                class="nav-item has-treeview {{ request()->is('admin/support-ticket') ? 'menu-open' : '' }} {{ request()->is('admin/support-ticket/categories') ? 'menu-open' : '' }} {{ request()->is('admin/support-ticket/sub-categories') ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-copy"></i>
                     <p>
@@ -263,16 +263,31 @@
                     </p>
                 </a>
                 <ul class="nav nav-treeview">
-
                     <li class="nav-item {{ request()->is('admin/support-ticket') ? 'activeElement' : '' }}">
                         <a href=" {{ url('/admin/support-ticket') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Tickets</p>
                         </a>
                     </li>
-
-
                 </ul>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item {{ request()->is('admin/support-ticket/categories') ? 'activeElement' : '' }}">
+                        <a href=" {{ url('/admin/support-ticket/categories') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Category</p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                    <li
+                        class="nav-item {{ request()->is('admin/support-ticket/sub-categories') ? 'activeElement' : '' }}">
+                        <a href=" {{ url('/admin/support-ticket/sub-categories') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Sub Category</p>
+                        </a>
+                    </li>
+                </ul>
+
             </li>
 
             <!--Announcement-->
@@ -354,18 +369,12 @@
                 </a>
                 <ul class="nav nav-treeview">
 
-
-
                     <li class="nav-item {{ request()->is('admin/crash-report') ? 'activeElement' : '' }}">
                         <a href=" {{ route('admin.crash-report') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Crash Report</p>
                         </a>
                     </li>
-
-
-
-
                 </ul>
             </li>
             <!-- end -->

@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
 use App\Http\Controllers\Admin\AdminSupportTicketController;
+use App\Http\Controllers\Admin\AdminSupportTicketCategoryController;
+use App\Http\Controllers\Admin\AdminSupportTicketSubCategoryController;
 use App\Http\Controllers\Admin\AdminTimezoneController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AngularController;
@@ -408,6 +410,26 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     // Support Ticket
     Route::prefix('/support-ticket')->group(function () {
+
+        Route::prefix('/categories')->group(function () {
+          Route::get('/', [AdminSupportTicketCategoryController::class, 'index'])->name('support-ticket.category.index');
+          Route::post('/store', [AdminSupportTicketCategoryController::class, 'store'])->name('support-ticket.category.store');
+          Route::post('/update/{id}', [AdminSupportTicketCategoryController::class, 'update'])->name('support-ticket.category.update');
+          Route::get('/delete/{id}', [AdminSupportTicketCategoryController::class, 'delete'])->name('support-ticket.category.delete');
+          Route::get('/status/{id}', [AdminSupportTicketCategoryController::class, 'status'])->name('support-ticket.category.status');
+          Route::post('/bulk/action', [AdminSupportTicketCategoryController::class, 'bulkAction'])->name('support-ticket.category.bulk.action');
+        });
+
+        Route::prefix('/sub-categories')->group(function () {
+          Route::get('/', [AdminSupportTicketSubCategoryController::class, 'index'])->name('support-ticket.subcategory.index');
+          Route::post('/store', [AdminSupportTicketSubCategoryController::class, 'store'])->name('support-ticket.subcategory.store');
+          Route::post('/update/{id}', [AdminSupportTicketSubCategoryController::class, 'update'])->name('support-ticket.subcategory.update');
+          Route::get('/delete/{id}', [AdminSupportTicketSubCategoryController::class, 'delete'])->name('support-ticket.subcategory.delete');
+          Route::get('/status/{id}', [AdminSupportTicketSubCategoryController::class, 'status'])->name('support-ticket.subcategory.status');
+          Route::post('/bulk/action', [AdminSupportTicketSubCategoryController::class, 'bulkAction'])->name('support-ticket.subcategory.bulk.action');
+        });
+
+
         Route::get('/', [AdminSupportTicketController::class, 'index']);
         Route::get('/status/{status}/update/{id}', [AdminSupportTicketController::class, 'statusUpdate'])->name('ticket.status.update');
         Route::get('/priority/{priority}/update/{id}', [AdminSupportTicketController::class, 'priorityUpdate'])->name('ticket.priority.update');
@@ -416,6 +438,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::get('/chat/{ticket}', [AdminSupportTicketController::class, 'chat'])->name('ticket.chat');
         Route::post('/chat/reply/{ticket}', [AdminSupportTicketController::class, 'ticketReply'])->name('ticket.reply');
     });
+
 
     Route::prefix('/new-bug-report')->group(function () {
         Route::get('/', [AdminBugReportController::class, 'index'])->name('bug-report');
