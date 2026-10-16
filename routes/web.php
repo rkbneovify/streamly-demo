@@ -382,7 +382,8 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
         Route::get('/delete/{id}', [AdminBlogController::class, 'destroy'])->name('blog.destroy');
         Route::post('/bulk/action', [AdminBlogController::class, 'bulkAction'])->name('blog.bulk.action');
         Route::get('/sub-categories/{category}/list', [AdminBlogController::class, 'subCategoriesByCategory'])->name('blog.subcategory.list');
-
+        Route::post('/upload', [AdminBlogController::class, 'uploadImage'])->name('blog.image.upload');
+        Route::post('/delete', [AdminBlogController::class, 'deleteImage'])->name('blog.image.delete');
         Route::prefix('/categories')->group(function () {
             Route::get('/', [AdminBlogCategoryController::class, 'index'])->name('blog.category');
             Route::post('/store', [AdminBlogCategoryController::class, 'store'])->name('blog.category.store');
