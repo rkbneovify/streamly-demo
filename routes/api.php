@@ -319,6 +319,13 @@ Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], funct
     Route::group(['prefix' => 'categories'], function () {
         Route::get('/', 'Api\ApiSupportTicketCategoryController@index');
     });
+
+    Route::get('/', 'Api\SupportTicketController@index');
+    Route::post('/store', 'Api\SupportTicketController@store');
+    Route::post('/reply', 'Api\SupportTicketController@ticketReply');
+    Route::post('/upload', 'Api\SupportTicketController@fileUpload');
+
+      
 });
 
 

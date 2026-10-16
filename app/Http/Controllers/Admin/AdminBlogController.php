@@ -12,6 +12,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -325,5 +326,47 @@ class AdminBlogController extends Controller
             Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+        ]);
+
+        $path = $request->file('image')->store('blog-images', 'public');
+
+        return response()->json([
+            'url' => asset('storage/' . $path),
+        ]);
+    }
+
+    public function deleteImage(Request $request)
+    {
+        $request->validate([
+            'path' => ['required', 'string', 'max:255'],
+        ]);
+
+        $path = $request->input('path');
+
+        // Allow only files inside blog-images
+        if (
+            !str_starts_with($path, 'blog-images/') ||
+            str_contains($path, '..') ||
+            str_contains($path, '\\')
+        ) {
+            return response()->json([
+                'message' => 'Invalid image path.',
+            ], 422);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Image deleted successfully.',
+        ]);
     }
 }

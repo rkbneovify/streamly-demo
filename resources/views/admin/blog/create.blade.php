@@ -1,7 +1,27 @@
 @extends('master')
 @section('stylesheets')
     <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">    
+<style>
+#editor .ql-editor img {
+    cursor: wait;
+}
+
+#editor .image-remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 100px;
+    height: 100px;
+    border: none;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 100;
+}
+</style>
 @endsection
 @section('content')
 
@@ -213,7 +233,7 @@
                 toolbar: [
                     ['bold', 'italic', 'underline', 'strike'],
                     [{
-                        'header': [1, 2, 3, false]
+                        'header': [1, 2, 3, 4, false]
                     }],
                     [{
                         'list': 'ordered'
@@ -226,10 +246,11 @@
                         'indent': '+1'
                     }],
                     ['blockquote', 'code-block'],
-                    ['link'],
+                    ['link','image'],
                     [{
                         'align': []
                     }],
+                    
                     ['clean']
                 ]
             }
@@ -260,8 +281,84 @@
             this.submit();
         });
     </script>
+<script>
+    var toolbar = quill.getModule('toolbar');
 
+toolbar.addHandler('image', function () {
+    var input = document.createElement('input');
 
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = function () {
+        var file = input.files[0];
+
+        if (!file) return;
+
+        var formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/admin/blog/upload', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Image upload failed');
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            var range = quill.getSelection(true);
+
+            quill.insertEmbed(range.index, 'image', data.url);
+            quill.setSelection(range.index + 1);
+
+            $('#content').val(quill.root.innerHTML);
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Unable to upload image.');
+        });
+    };
+});
+</script>
+<script>
+  quill.on('text-change', function (delta, oldDelta, source) {
+    if (source !== 'user') return;
+
+    const oldImages = [];
+    const newImages = [];
+
+    quill.getContents().ops.forEach(op => {
+        if (op.insert && op.insert.image) {
+            newImages.push(op.insert.image);
+        }
+    });
+
+    oldDelta.ops?.forEach(op => {
+        if (op.insert && op.insert.image) {
+            oldImages.push(op.insert.image);
+        }
+    });
+
+    const removedImages = oldImages.filter(
+        image => !newImages.includes(image)
+    );
+
+   removedImages.forEach(imageUrl => {
+     console.log("ImageUrl:", imageUrl)
+       
+    });
+});
+</script>
 
 
 @stop
