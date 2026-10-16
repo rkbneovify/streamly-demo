@@ -353,7 +353,7 @@ export class HelpAndSupportComponent implements OnInit, OnDestroy {
 
         error: (err: any) => {
           this.alert.close();
-          this.alert.error(err.error.message);
+          // this.alert.error(err.error.message);
         }
       });
 

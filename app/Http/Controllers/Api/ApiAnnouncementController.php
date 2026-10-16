@@ -19,10 +19,13 @@ class ApiAnnouncementController extends Controller
         try {
 
             $data =   $this->announcement->where('status', 1)->first();
-           return $this->dataResponse([$data]);
+            if ($data == null) {
+                return $this->notFoundResponse();
+            }
+            return $this->dataResponse([$data]);
         } catch (\Throwable $th) {
             //throw $th;
-           return $this->exceptionResponse($th);
+            return $this->exceptionResponse($th);
         }
     }
 }
