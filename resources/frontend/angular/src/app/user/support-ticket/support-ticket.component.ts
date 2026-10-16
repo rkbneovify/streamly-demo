@@ -145,10 +145,10 @@ export class SupportTicketComponent implements OnInit {
       },
       error: (err: any) => {
         console.log("error:", err);
-         setTimeout(() => {
-         this.sweetAlert.toast(err.error.message, 'error')
+        setTimeout(() => {
+          this.sweetAlert.toast(err.error.message, 'error')
         }, 1000);
-        
+
       }
     });
 
@@ -156,7 +156,7 @@ export class SupportTicketComponent implements OnInit {
 
   getCategories() {
     this.sweetAlert.loading();
-    this.api.getRequest('blogs/categories')
+    this.api.getRequest('support-ticket/categories')
       .pipe(finalize(() => {
         this.sweetAlert.close();
       }))
@@ -175,7 +175,7 @@ export class SupportTicketComponent implements OnInit {
 
   getSubCategories(category: string) {
     this.sweetAlert.loading();
-    this.api.getRequest(`blogs/${category}/sub-categories`)
+    this.api.getRequest(`support-ticket/sub-categories/${category}`)
       .pipe(finalize(() => {
         this.sweetAlert.close();
       }))
