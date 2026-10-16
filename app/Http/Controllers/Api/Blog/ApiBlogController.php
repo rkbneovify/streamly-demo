@@ -65,18 +65,40 @@ class ApiBlogController extends Controller
         $page = $this->request->input('page', 1);
 
         try {
-            $query = $this->blogCategory->query();
-            $data = $query->where('status', 1)
-                ->with('subCategory')
-                ->withCount('blog')
-                ->withSearchBlog($this->request->search)
-                ->paginate($limit, ['*'], 'page', $page);
+            // $query = $this->blogCategory->query();
+            // $data = $query->where('status', 1)
+            //     ->with('subCategory')
+            //     ->withCount('blog')
+            //     ->withSearchBlog($this->request->search)
+            //     ->paginate($limit, ['*'], 'page', $page);
+            // $data->getCollection()->each(function ($item) {
+            //     $item->setRelation(
+            //         'subCategory',
+            //         $item->subCategory->take(3)
+            //     );
+            // });
+
+            $data = $this->blogCategory->where('status', 1)
+                ->whereHas('subCategory.blog', function ($query) {
+                    $query->where('status', 1);
+                })
+                ->with([
+                    'subCategory' => function ($query) {
+                        $query->whereHas('blog', function ($q) {
+                            $q->where('status', 1);
+                        });
+                    },
+                    'subCategory.blog' => function ($query) {
+                        $query->where('status', 1);
+                    }
+                ])->paginate($limit, ['*'], 'page', $page);
             $data->getCollection()->each(function ($item) {
                 $item->setRelation(
                     'subCategory',
                     $item->subCategory->take(3)
                 );
             });
+
             return $this->paginateResponse($data);
         } catch (\Throwable $th) {
             //throw $th;

@@ -241,17 +241,13 @@ Route::group(['prefix' => 'auth'], function ($router) {
         Route::post("delete-all-houses", "Api\ApiHoaController@deleteAll")->middleware(['jwt.verify', 'hoa.admin.check']);
         Route::get('export-into-excel', 'Api\ApiHoaController@exportIntoExcel')->middleware(['jwt.verify', 'hoa.admin.check']);
     });
-
-
-
-
 });
 
 
-    // Crash Report
-    Route::prefix('crash-report')->group(function(){
-      Route::post('/store', 'Api\ApiCrashReportController@store')->middleware(['jwt.verify']);
-    });
+// Crash Report
+Route::prefix('crash-report')->group(function () {
+    Route::post('/store', 'Api\ApiCrashReportController@store')->middleware(['jwt.verify']);
+});
 
 Route::group(['prefix' => 'hoa/sub-user'], function () {
     Route::post("account-active", "Api\ApiHoaController@accountActive");
@@ -314,6 +310,17 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whe
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
 Route::get('/notification/send', 'Api\ApiNotificationController@send');
+
+
+Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
+    Route::group(['prefix' => 'sub-categories'], function () {
+        Route::get('/{category}', 'Api\ApiSupportTicketSubCategoryController@index');
+    });
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/', 'Api\ApiSupportTicketCategoryController@index');
+    });
+});
+
 
 Route::group(['prefix' => 'blogs'], function () {
     Route::get('/', 'Api\Blog\ApiBlogController@index');

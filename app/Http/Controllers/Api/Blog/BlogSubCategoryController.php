@@ -21,7 +21,7 @@ class BlogSubCategoryController extends Controller
             return $this->exceptionResponse($th);
         }
     }
-    public function byCategory($category, BlogSubCategory $blogSubCategory)
+    public function byCategory($category)
     {
         try {
             $data = BlogSubCategory::where('category', $category)->where('status', 1)->pluck('title');
@@ -35,15 +35,17 @@ class BlogSubCategoryController extends Controller
         }
     }
 
-    public function subcategoryList($category, $subCategory, Request $request)
+    public function subcategoryList($category, Request $request)
     {
         $limit = $request->input('limit', 10);
         $page = $request->input('page', 1);
         try {
             $query  = BlogSubCategory::query();
-            $query->with('blog')->where('category', $category)
+            $query->where('status', 1)->whereHas('blog')
+                ->with('blog', function ($query) {
+                    $query->where('status', 1);
+                })->where('category', $category);
 
-                ->where('status', 1);
             $data = $query->paginate($limit, ['*'], 'page', $page);
             if (count($data->items()) == 0) {
                 return $this->errorResponse("Data not found !", 404);
