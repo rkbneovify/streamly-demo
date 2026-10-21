@@ -341,7 +341,7 @@ class ChannelController extends Controller
     public function update(Request $request, $id)
     {
 
-
+        // return response()->json($request->all());
         $request->validate([
             'name' => 'required|string|max:255',
             'stationName' => 'nullable|string|max:255',
@@ -373,6 +373,12 @@ class ChannelController extends Controller
         $input = $request->only('name', 'stationName', 'url', 'type', 'smooth_url', 'callSign', 'dash_url', 'genre_id');
         $alreadyAvalableZipcodes = array_unique(Channel::where('id', $id)->first()->zip_code);
 
+        if ($request->has('is_display_station_name') && $request->is_display_station_name == 'on') {
+            // Only update stationName if it is present in the request
+            $input['is_display_station_name'] = 1;
+        } else {
+            $input['is_display_station_name'] = 0;
+        }
 
         if ($request->has('stationName')) {
             // Only update stationName if it is present in the request
