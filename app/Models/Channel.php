@@ -47,6 +47,7 @@ class Channel extends Model
         'genres',
         'image',
         'stationName',
+        'is_display_station_name',
         'zip_code'
     ];
     // protected $appends = ['logo'];
