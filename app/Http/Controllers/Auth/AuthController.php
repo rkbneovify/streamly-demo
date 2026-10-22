@@ -665,6 +665,7 @@ class AuthController extends Controller
 
         if ($User) {
             $User->password = Hash::make($request->password);
+            $User->forced_change = 0;
             $User->save();
 
             $this->activity()
