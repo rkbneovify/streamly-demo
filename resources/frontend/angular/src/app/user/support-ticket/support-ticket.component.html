@@ -82,7 +82,17 @@
         </div>
       </div>
       <!--  -->
+      <!-- Device Model -->
+      <div class="form-group">
+        <label>Device Model</label>
+        <input type="text" class="input-field" placeholder="Device model" formControlName="device_model">
+        <div *ngIf="ticketForm.get('device_model')?.touched" class="text-danger">
+          <span *ngIf="ticketForm.get('device_model')?.errors as e">
+            {{ e['required'] && '* Device model is required.' }}
 
+          </span>
+        </div>
+      </div>
       <!-- Subject -->
       <div class="form-group">
         <label>Subject</label>
@@ -146,7 +156,7 @@
 
       <div class="contact-grid">
 
-         <a href="tel:+16022450986" class="contact-card">
+        <a href="tel:+16022450986" class="contact-card">
           <div class="icon">
             <img src="../../../assets/dummy-img/contact-call.png" alt="icon">
           </div>

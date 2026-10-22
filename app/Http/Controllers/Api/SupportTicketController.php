@@ -82,6 +82,7 @@ class SupportTicketController extends Controller
             $supportTicket->category = $request->category;
             $supportTicket->sub_category = $request->sub_category;
             $supportTicket->platform = $request->platform;
+            $supportTicket->device_model = $request->device_model;
             $supportTicket->subject = $request->subject;
             $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled | Closed
             $supportTicket->priority = 'low';  // High | Medium | Low | Critical
@@ -133,7 +134,7 @@ class SupportTicketController extends Controller
             ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
 
 
-             $this->activity()->event("Support Ticket")
+            $this->activity()->event("Support Ticket")
                 ->eventType(ActivityEventType::CREATED)
                 ->description("Support Ticket - Created by user")
                 ->isAdmin()

@@ -95,6 +95,9 @@
                             Platform
                         </th>
                         <th>
+                            Device Model
+                        </th>
+                        <th>
                             Subject
                         </th>
 
@@ -147,6 +150,9 @@
                             </td>
                             <td style="vertical-align: middle;">
                                 {{ $item->platform }}
+                            </td>
+                            <td style="vertical-align: middle;">
+                                {{ $item->device_model }}
                             </td>
                             <td style="vertical-align: middle;">
                                 {{ $item->subject }}
@@ -306,6 +312,9 @@
                             Platform
                         </th>
                         <th>
+                            Device Model
+                        </th>
+                        <th>
                             Subject
                         </th>
 
@@ -333,7 +342,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="8" class="text-center">No records found</td>
+                        <td colspan="9" class="text-center">No records found</td>
                     </tr>
             </table>
         </div>
