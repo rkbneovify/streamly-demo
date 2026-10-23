@@ -103,6 +103,10 @@ export class SupportTicketComponent implements OnInit {
       this.ticketForm.value.platform
     );
     formData.append(
+      'device_model',
+      this.ticketForm.value.device_model
+    );
+    formData.append(
       'subject',
       this.ticketForm.value.subject
     );
@@ -201,6 +205,7 @@ export class SupportTicketComponent implements OnInit {
       category: [null, Validators.required],
       subCategory: [null, Validators.required],
       platform: [null, Validators.required],
+      device_model: [null, Validators.required],
       subject: ['', [
         Validators.required,
         Validators.maxLength(255)

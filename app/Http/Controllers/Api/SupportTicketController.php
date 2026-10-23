@@ -38,8 +38,14 @@ class SupportTicketController extends Controller
             $page = $request->input('page', 1);
             $limit = $request->input('limit', 10);
             $query  =  $this->supportTicket->query();
-            $query->with('message.files.thambnail');
+            // $query->with('messages.files.thambnail');
             $query->where('user_id', Auth::id());
+            $query->priority($request->priority)
+                ->status($request->status)
+                ->filterDateOrder($request->date)
+                ->latest();
+
+
             $data =  $query->paginate($limit, ['*'], 'page', $page);
 
             return $this->paginateResponse($data);
@@ -82,6 +88,7 @@ class SupportTicketController extends Controller
             $supportTicket->category = $request->category;
             $supportTicket->sub_category = $request->sub_category;
             $supportTicket->platform = $request->platform;
+            $supportTicket->device_model = $request->device_model;
             $supportTicket->subject = $request->subject;
             $supportTicket->status = 'under review'; // Under Review | In Progress | On Hold | Completed | Cancelled | Closed
             $supportTicket->priority = 'low';  // High | Medium | Low | Critical
@@ -133,7 +140,7 @@ class SupportTicketController extends Controller
             ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
 
 
-             $this->activity()->event("Support Ticket")
+            $this->activity()->event("Support Ticket")
                 ->eventType(ActivityEventType::CREATED)
                 ->description("Support Ticket - Created by user")
                 ->isAdmin()

@@ -34,6 +34,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 import { ArticleSubCategoriesComponent } from '../components/footerComponents/help-and-support/article-sub-categories/article-sub-categories.component';
 import { ArticleComponent } from '../components/footerComponents/help-and-support/article/article.component';
+import { TicketListComponent } from './support-ticket/ticket-list/ticket-list.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -68,6 +69,7 @@ const routes: Routes = [
       { path: 'location-access', component: LocationAccessComponent },
       { path: 'search', component: SearchComponent, canActivate: [authguardGuard] },
       { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
+      { path: 'support-ticket/list', component: TicketListComponent, canActivate: [authguardGuard] },
       { path: 'article/:category', component: ArticleSubCategoriesComponent },
       { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent },
       { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent },

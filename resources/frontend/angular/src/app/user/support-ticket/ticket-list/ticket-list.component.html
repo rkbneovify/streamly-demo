@@ -1,0 +1,178 @@
+<div class="support-page">
+  <div class="page-header">
+    <h1>Support Ticket</h1>
+    <p>Manage and track all your support tickets in one place.</p>
+  </div>
+
+  <div class="search-section">
+    <div class="search-input">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+        aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m16 16 4 4"></path>
+      </svg>
+
+      <input type="search" [(ngModel)]="searchText" placeholder="Search by ticket number, platform, platform..."
+        aria-label="Search support tickets" />
+    </div>
+
+    <button type="button" class="search-button">
+      Search
+    </button>
+  </div>
+  <div class="scroll-container" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
+    (scrolled)="onScrollDown()">
+    <div class="table-wrapper">
+      <table class="ticket-table">
+        <thead>
+          <tr>
+
+
+            <th>
+              <button class="sort-button" (click)="sortBy('ticketNumber')">
+                Ticket No.
+                <!-- <span *ngIf="sortColumn === 'ticketNumber'">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span> -->
+              </button>
+            </th>
+
+            <th>
+              <button class="sort-button" (click)="sortBy('platform')">
+                Platform
+              </button>
+            </th>
+            <th>
+              <button class="sort-button" (click)="sortBy('platform')">
+                Device Model
+              </button>
+            </th>
+
+            <!-- <th>
+              <button class="sort-button" (click)="sortBy('subject')">
+                Subject
+              </button>
+            </th> -->
+
+
+            <th>
+              <div class="priority-header" (document:click)="closeDropdown()">
+                <button class="sort-button" (click)="togglePriorityDropdown($event)">
+                  Priority
+                  <span class="sort-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 16L7 20L11 16" stroke="black" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path d="M7 20V4" stroke="black" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path d="M11 4H21" stroke="black" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path d="M11 8H18" stroke="black" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                      <path d="M11 12H15" stroke="black" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </button>
+
+                <div class="priority-dropdown" *ngIf="showPriorityDropdown" (click)="$event.stopPropagation()">
+
+                  <button class="priority-option" *ngFor="let item of priorities" (click)="selectPriority(item)">
+                    <span class="priority-dot" [ngClass]="'priority-' + item.toLowerCase()">
+                    </span>
+                    <span>{{ item }}</span>
+                  </button>
+
+                </div>
+              </div>
+            </th>
+
+
+
+            <th>
+              <div class="status-header" (document:click)="closeDropdown()">
+                <button class="sort-button" (click)="toggleStatusDropdown($event)">
+                  Status
+                  <span class="sort-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 16L7 20L11 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="black" />
+                      <path d="M7 20V4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="black" />
+                      <path d="M11 4H21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="black" />
+                      <path d="M11 8H18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="black" />
+                      <path d="M11 12H15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="black" />
+                    </svg>
+                  </span>
+                </button>
+
+                <div class="status-dropdown" *ngIf="showStatusDropdown" (click)="$event.stopPropagation()">
+
+                  <button type="button" class="status-option" *ngFor="let status of statuses"
+                    (click)="selectStatus(status)">
+
+                    <span class="status-dot" [ngClass]="'status-' + statusClassName(status)">
+                    </span>
+
+                    <span>{{ status }}</span>
+                  </button>
+                </div>
+              </div>
+            </th>
+
+
+            <th>
+              <button class="sort-button" (click)="sortByCreatedAt()">
+                Created At <span class="sort-icon">
+
+                  <span>
+                    {{ createdAtSortOrder === null ? '' : (createdAtSortOrder === 'asc'? '↑' : '↓')}}
+                  </span>
+                </span>
+              </button>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let ticket of supportTicketList">
+
+
+            <td class="ticket-number">{{ ticket.ticket_number }}</td>
+            <td>{{ ticket.platform }}</td>
+            <td>{{ ticket.device_model }}</td>
+            <!-- <td>{{ ticket.subject }}</td> -->
+
+            <td>
+              <div class="priority-wrapper">
+                <span class="priority-badge" [ngClass]="priorityClass(ticket.priority)">
+                  {{ ticket.priority }}
+                </span>
+              </div>
+            </td>
+
+            <td>
+              <div class="status-wrapper">
+                <span class="status-badge" [ngClass]="statusClass(ticket.status)">
+                  {{ ticket.status }}
+                </span>
+              </div>
+            </td>
+
+            <td class="created-date">{{ ticket.created_at | date:'dd/MM/yyyy' }}</td>
+          </tr>
+
+          <tr *ngIf="!isLoading && supportTicketList.length === 0">
+            <td colspan="7" class="empty-state">
+              No support tickets found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
