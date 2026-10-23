@@ -4,7 +4,14 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class SweetalertService {
+  private isLoading = false;
   constructor() { }
+
+
+
+  get loadingState(): boolean {
+    return this.isLoading;
+  }
 
   toast(message: string, icon: any = 'success') {
     return Swal.fire({
@@ -66,18 +73,24 @@ export class SweetalertService {
   }
 
   loading(message: string = 'Please wait...') {
+    this.isLoading = true;
     Swal.fire({
       title: message,
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => {
         Swal.showLoading();
+      },
+      willClose: () => {
+        this.isLoading = false;
       }
     });
+
   }
 
   close() {
     Swal.close();
+    this.isLoading = false;
   }
 
 }

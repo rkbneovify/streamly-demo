@@ -58,6 +58,7 @@ class SupportTicket extends Model
     }
     public function scopePriority($query, $priority)
     {
+
         if ($priority != null) {
             $query->where('priority', $priority);
         }

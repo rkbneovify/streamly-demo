@@ -38,8 +38,14 @@ class SupportTicketController extends Controller
             $page = $request->input('page', 1);
             $limit = $request->input('limit', 10);
             $query  =  $this->supportTicket->query();
-            $query->with('message.files.thambnail');
+            // $query->with('messages.files.thambnail');
             $query->where('user_id', Auth::id());
+            $query->priority($request->priority)
+                ->status($request->status)
+                ->filterDateOrder($request->date)
+                ->latest();
+
+
             $data =  $query->paginate($limit, ['*'], 'page', $page);
 
             return $this->paginateResponse($data);
