@@ -40,7 +40,8 @@ class SupportTicketController extends Controller
             $query  =  $this->supportTicket->query();
             // $query->with('messages.files.thambnail');
             $query->where('user_id', Auth::id());
-            $query->priority($request->priority)
+            $query->search($request->txt)
+                ->priority($request->priority)
                 ->status($request->status)
                 ->filterDateOrder($request->date)
                 ->latest();
@@ -127,6 +128,7 @@ class SupportTicketController extends Controller
 
                 'ticket_no' => $supportTicket->ticket_number,
                 'platform' => $supportTicket->platform,
+                'device_model' => $supportTicket->device_model,
                 'subject' => $supportTicket->subject,
                 'description' => $supportTicketMessage->message
             ];

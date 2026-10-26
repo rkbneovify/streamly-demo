@@ -5,6 +5,7 @@ import { CrudService } from '../../../services/crud.service';
 import { SweetalertService } from '../../../services/SweetAlert/sweetalert.service';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { distinctUntilChanged, exhaustMap, Subject, takeUntil } from 'rxjs';
+
 interface SupportTicket {
   id: number;
   ticketNumber: string;
@@ -25,6 +26,7 @@ interface SupportTicket {
   styleUrl: './ticket-list.component.scss'
 })
 export class TicketListComponent implements OnInit, OnDestroy {
+
   searchText = '';
   sortColumn = '';
   sortDirection: 'asc' | 'desc' = 'asc';
@@ -74,6 +76,8 @@ export class TicketListComponent implements OnInit, OnDestroy {
   }
 
 
+
+
   getSupportTicketList() {
 
 
@@ -99,9 +103,15 @@ export class TicketListComponent implements OnInit, OnDestroy {
           }
 
         }
-
+        if (this.searchText != '') {
+          params.set('txt', this.searchText);
+        } else {
+          params.delete('txt');
+        }
         if (this.createdAtSortOrder != null) {
           params.set('date', this.createdAtSortOrder);
+        } else {
+          params.delete('date');
         }
         this.alert.loading();
         this.isLoading = this.alert.loadingState;
@@ -203,6 +213,10 @@ export class TicketListComponent implements OnInit, OnDestroy {
     return classMap[status] ?? '';
   }
 
+
+  onSearch() {
+    this.reloadSupportTickets();
+  }
 
 
   get filteredTickets(): SupportTicket[] {

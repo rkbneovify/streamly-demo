@@ -141,7 +141,7 @@
 
     &:hover {
       background: #fafcff;
-      cursor: pointer;
+      // cursor: pointer;
     }
   }
 
@@ -220,6 +220,7 @@ input[type='checkbox'] {
 
 .ticket-number {
   font-variant-numeric: tabular-nums;
+  cursor: pointer;
 }
 
 .select-wrapper {

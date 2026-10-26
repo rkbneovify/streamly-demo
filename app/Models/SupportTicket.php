@@ -47,7 +47,8 @@ class SupportTicket extends Model
         if ($txt != null) {
             $query->where('ticket_number', 'like', '%' . $txt . '%')
                 ->orWhere('platform', 'like', '%' . $txt . '%')
-                ->orWhere('subject', 'like', '%' . $txt . '%');
+                ->orWhere('subject', 'like', '%' . $txt . '%')
+                ->orWhere('device_model', 'like', '%' . $txt . '%');
         }
     }
     public function scopeStatus($query, $status)
