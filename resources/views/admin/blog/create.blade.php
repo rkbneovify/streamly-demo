@@ -1,7 +1,7 @@
 @extends('master')
 @section('stylesheets')
     <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">    
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
 #editor .ql-editor img {
     cursor: wait;
@@ -135,7 +135,7 @@
                                     {{-- <textarea name="content" id="content" rows="10" class="form-control @error('content') is-invalid @enderror"
                                         placeholder="Write your blog content...">{{ old('content') }}</textarea> --}}
 
-                                    <div id="editor" style="height:250px;"
+                                    <div id="editor" style="height:950px;"
                                         class="@error('content') is-invalid @enderror"></div>
                                     <input type="hidden" name="content" id="content">
 
@@ -250,7 +250,7 @@
                     [{
                         'align': []
                     }],
-                    
+
                     ['clean']
                 ]
             }
@@ -354,8 +354,47 @@ toolbar.addHandler('image', function () {
     );
 
    removedImages.forEach(imageUrl => {
-     console.log("ImageUrl:", imageUrl)
-       
+        try {
+            const url = new URL(imageUrl, window.location.origin);
+
+            // Only process images hosted on this website
+            if (url.origin !== window.location.origin) return;
+
+            const prefix = '/storage/blog-images/';
+
+            if (!url.pathname.startsWith(prefix)) return;
+
+            const path = 'blog-images/' +
+                decodeURIComponent(url.pathname.slice(prefix.length));
+
+            fetch("{{ route('admin.blog.image.delete') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ path: path })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Image deletion failed');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        } catch (error) {
+            console.error('Invalid image URL:', error);
+        }
     });
 });
 </script>

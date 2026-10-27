@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\ActivityEventType;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessSupportTicketCreatedMail;
 use App\Jobs\ProcessSupportTicketFile;
 use App\Jobs\ProcessSupportTicketMail;
 use App\Jobs\ProcessSupportTicketReplyMail;
@@ -125,7 +126,6 @@ class SupportTicketController extends Controller
             }
 
             $data = [
-
                 'ticket_no' => $supportTicket->ticket_number,
                 'platform' => $supportTicket->platform,
                 'device_model' => $supportTicket->device_model,
@@ -140,7 +140,8 @@ class SupportTicketController extends Controller
 
             // return response()->json($attachments);
             ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
-
+            // Support ticket created mail to user
+            ProcessSupportTicketCreatedMail::dispatch($supportTicket, Auth::user());
 
             $this->activity()->event("Support Ticket")
                 ->eventType(ActivityEventType::CREATED)

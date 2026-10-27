@@ -39,19 +39,10 @@ class SupportTicketMail extends Mailable
     public function build()
     {
 
-        $html =  "
-              <h2>Hi Streamly Team,</h2>
-                <p><strong>Email:</strong> {$this->email}</p>
-                <p><strong>Ticket No:</strong> {$this->data['ticket_no']}</p>
-                <p><strong>Device Model:</strong> {$this->data['device_model']}</p>
-                <p><strong>Platform:</strong> {$this->data['platform']}</p>
-                <p><strong>Subject:</strong> {$this->data['subject']}</p>
 
-                {$this->data['description']}
-            ";
 
         $mail = $this->subject("Support Ticket #{$this->supportTicket->ticket_number}")
-            ->html($html);
+            ->view('emails.support-ticket.admin');
         $mail->withSymfonyMessage(function ($message) {
             $message->getHeaders()->addTextHeader(
                 'support_ticket_number',

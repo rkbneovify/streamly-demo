@@ -344,7 +344,7 @@ class AdminBlogController extends Controller
     public function deleteImage(Request $request)
     {
         $request->validate([
-            'path' => ['required', 'string', 'max:255'],
+            'path' => 'required|string|max:225',
         ]);
 
         $path = $request->input('path');
