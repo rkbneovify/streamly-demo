@@ -76,7 +76,15 @@
                                         </a>
                                     </td>
                                 </tr>
-
+                                <tr>
+                                    <td
+                                        style="padding:12px; background:#f8fafc; border:1px solid #e5eaf1; color:#68758a;">
+                                        Platform
+                                    </td>
+                                    <td style="padding:12px; border:1px solid #e5eaf1; color:#263247;">
+                                        {{ $data['platform'] }}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td
                                         style="padding:12px; background:#f8fafc; border:1px solid #e5eaf1; color:#68758a;">
@@ -87,15 +95,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td
-                                        style="padding:12px; background:#f8fafc; border:1px solid #e5eaf1; color:#68758a;">
-                                        Platform
-                                    </td>
-                                    <td style="padding:12px; border:1px solid #e5eaf1; color:#263247;">
-                                        {{ $data['platform'] }}
-                                    </td>
-                                </tr>
+
 
                                 <tr>
                                     <td
