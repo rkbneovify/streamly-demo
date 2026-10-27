@@ -46,14 +46,10 @@ class SupportTicketReplyMail extends Mailable
     public function build()
     {
 
-        $html =  "
-              {$this->data['description']}
-
-
-            ";
+       
 
         $mail = $this->subject("Support Ticket #{$this->supportTicket->ticket_number}")
-            ->html($html);
+            ->view('emails.support-ticket.reply');
 
         foreach ($this->files as $file) {
             $mail->attach($file);

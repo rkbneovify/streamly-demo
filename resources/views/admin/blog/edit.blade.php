@@ -2,6 +2,7 @@
 @section('stylesheets')
     <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
 @endsection
 @section('content')
 
@@ -119,9 +120,9 @@
 
                                     {{-- <textarea name="content" id="content" rows="10" class="form-control @error('content') is-invalid @enderror"
                                         placeholder="Write your blog content...">{{ old('content') }}</textarea> --}}
-                                  
 
-                                    <div id="editor" style="height:250px;"
+
+                                    <div id="editor" style="height:950px;"
                                         class="@error('content') is-invalid @enderror"></div>
                                     <input type="hidden" name="content" id="content">
 
@@ -228,7 +229,7 @@
                             indent: '+1'
                         }],
                         ['blockquote', 'code-block'],
-                        ['link'],
+                         ['link','image'],
                         [{
                             align: []
                         }],
@@ -270,7 +271,123 @@
         });
     </script>
 
+<script>
+    var toolbar = quill.getModule('toolbar');
 
+toolbar.addHandler('image', function () {
+    var input = document.createElement('input');
+
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = function () {
+        var file = input.files[0];
+
+        if (!file) return;
+
+        var formData = new FormData();
+        formData.append('image', file);
+
+        fetch('/admin/blog/upload', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).getAttribute('content')
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Image upload failed');
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            var range = quill.getSelection(true);
+
+            quill.insertEmbed(range.index, 'image', data.url);
+            quill.setSelection(range.index + 1);
+
+            $('#content').val(quill.root.innerHTML);
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Unable to upload image.');
+        });
+    };
+});
+</script>
+<script>
+  quill.on('text-change', function (delta, oldDelta, source) {
+    if (source !== 'user') return;
+
+    const oldImages = [];
+    const newImages = [];
+
+    quill.getContents().ops.forEach(op => {
+        if (op.insert && op.insert.image) {
+            newImages.push(op.insert.image);
+        }
+    });
+
+    oldDelta.ops?.forEach(op => {
+        if (op.insert && op.insert.image) {
+            oldImages.push(op.insert.image);
+        }
+    });
+
+    const removedImages = oldImages.filter(
+        image => !newImages.includes(image)
+    );
+
+   removedImages.forEach(imageUrl => {
+        try {
+            const url = new URL(imageUrl, window.location.origin);
+
+            // Only process images hosted on this website
+            if (url.origin !== window.location.origin) return;
+
+            const prefix = '/storage/blog-images/';
+
+            if (!url.pathname.startsWith(prefix)) return;
+
+            const path = 'blog-images/' +
+                decodeURIComponent(url.pathname.slice(prefix.length));
+
+            fetch("{{ route('admin.blog.image.delete') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ path: path })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Image deletion failed');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        } catch (error) {
+            console.error('Invalid image URL:', error);
+        }
+    });
+});
+</script>
 
 
 @stop

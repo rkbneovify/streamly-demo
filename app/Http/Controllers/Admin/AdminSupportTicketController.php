@@ -27,8 +27,7 @@ class AdminSupportTicketController extends Controller
         public SupportTicket $supportTicket,
         public SupportTicketMessage $supportTicketMessage,
         public File $file
-    ) {
-    }
+    ) {}
     public function index(Request $request)
     {
         $limit = $request->input('limit', 10);
@@ -179,18 +178,6 @@ class AdminSupportTicketController extends Controller
                 ProcessSupportTicketFile::dispatch($this->supportTicketMessage->id, $files);
             }
 
-            $data = [
-
-                'ticket_no' => $supportTicket->ticket_number,
-                'subject' => $supportTicket->subject,
-                'description' => $this->supportTicketMessage->message
-            ];
-
-            $attachments = [];
-            foreach ($files as $file) {
-                $attachments[] = storage_path('app/' . $file['temp_path']);
-            }
-
             $user = User::where('id', $supportTicket->user_id)->first();
             if ($user == null) {
                 toast('user not found !', 'error')
@@ -198,6 +185,20 @@ class AdminSupportTicketController extends Controller
                     ->autoClose(3000);
                 return redirect()->back();
             }
+            $data = [
+                'user_name' => $user->name,
+                'ticket_no' => $supportTicket->ticket_number,
+                'subject' => $supportTicket->subject,
+                'description' => $this->supportTicketMessage->message,
+                // 'url' => url('/admin/support-ticket/chat/' . $supportTicket->ticket_number)
+            ];
+
+            $attachments = [];
+            foreach ($files as $file) {
+                $attachments[] = storage_path('app/' . $file['temp_path']);
+            }
+
+
             // return response()->json($attachments);
             ProcessSupportTicketReplyMail::dispatch($supportTicket, $user->email, $request->user()->roles[0]->name, $data, $attachments);
 
@@ -208,11 +209,11 @@ class AdminSupportTicketController extends Controller
                 ->description("Support Ticket - Reply to user")
                 ->properties([
                     "data" => $this->supportTicket
-                    ->where('ticket_number', $ticket)
-                    ->with(['messages.user.roles', 'messages.files'])->first()
+                        ->where('ticket_number', $ticket)
+                        ->with(['messages.user.roles', 'messages.files'])->first()
                 ])->save();
 
-                 $this->activity($supportTicket->user_id)
+            $this->activity($supportTicket->user_id)
                 ->event("Support Ticket")
                 ->isUser()
                 ->notification()
