@@ -194,7 +194,7 @@ class StripeController extends Controller
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $password = $this->generatePassword();
+            $password =  $this->generatePassword();
             $user->password = Hash::make($password);
             $user->forced_change = 1;
             $user->zipcode = $request->zip_code;
@@ -233,16 +233,16 @@ class StripeController extends Controller
                 // Generate email HTML
 
                 $login_link = env('FRONTEND_URL') . '/auth/login';
-                // $html = '<html>
-                //             Hi, ' . $request['name'] . '<br><br>
-                //             Thank you for registering for ' . env('APP_NAME') . '.
-                //             <br><br>Username: ' . $user->email . '
-                //             <br>Password: ' . $password . '<br><br>
-                //             Please click the following link to login to your account.
-                //             <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
-                //             Thank you!<br>
-                //             The ' . env('APP_NAME') . ' Team!
-                //         </html>';
+                $html = '<html>
+                            Hi, ' . $request['name'] . '<br><br>
+                            Thank you for registering for ' . env('APP_NAME') . '.
+                            <br><br>Username: ' . $user->email . '
+                            <br>Password: ' . $password . '<br><br>
+                            Please click the following link to login to your account.
+                            <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
+                            Thank you!<br>
+                            The ' . env('APP_NAME') . ' Team!
+                        </html>';
 
 
 
@@ -282,10 +282,10 @@ class StripeController extends Controller
 
 
                 // Send email
-                // Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
-                //     $message->to($request->input('email'), $request->input('name'))
-                //         ->subject(env('APP_NAME') . ': Account Registration');
-                // });
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
+                    $message->to($request->input('email'), $request->input('name'))
+                        ->subject(env('APP_NAME') . ': Account Registration');
+                });
 
                 return response()->json([
                     'message' => 'User Registered Successfully !',
