@@ -135,7 +135,7 @@
                                     {{-- <textarea name="content" id="content" rows="10" class="form-control @error('content') is-invalid @enderror"
                                         placeholder="Write your blog content...">{{ old('content') }}</textarea> --}}
 
-                                    <div id="editor" style="height:950px;"
+                                    <div id="editor" style="height:400px;"
                                         class="@error('content') is-invalid @enderror"></div>
                                     <input type="hidden" name="content" id="content">
 

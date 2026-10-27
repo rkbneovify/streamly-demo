@@ -218,7 +218,7 @@ class AdminSupportTicketController extends Controller
                 ->isUser()
                 ->notification()
                 ->eventType('Reply')
-                ->description("Support Ticket - Reply")
+                ->descriptionSimple("Support Ticket - Reply from support team")
                 ->save();
             DB::commit();
 

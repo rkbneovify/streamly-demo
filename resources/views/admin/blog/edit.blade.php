@@ -122,7 +122,7 @@
                                         placeholder="Write your blog content...">{{ old('content') }}</textarea> --}}
 
 
-                                    <div id="editor" style="height:950px;"
+                                    <div id="editor" style="height:400px;"
                                         class="@error('content') is-invalid @enderror"></div>
                                     <input type="hidden" name="content" id="content">
 
