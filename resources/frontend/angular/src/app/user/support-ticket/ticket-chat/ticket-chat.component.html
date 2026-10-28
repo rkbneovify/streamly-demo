@@ -1,0 +1,149 @@
+<div class="ticket-page">
+  <h1 class="page-title">Support Ticket Conversation/Chat</h1>
+
+  <section class="ticket-card">
+
+    <!-- Ticket information -->
+    <div class="ticket-header">
+      <div class="ticket-heading">
+        <h2>{{ ticket.subject }}</h2>
+
+
+
+      </div>
+
+      <div class="info-box">
+        <div class="ticket-info">
+          <p class="mb-3">
+            <strong>Ticket :</strong>
+            <span>{{ ticket.ticketNo }}</span>
+          </p>
+
+          <p class="mb-3">
+            <strong>Platform :</strong>
+            <span>{{ ticket.platform }}</span>
+          </p>
+        </div>
+        <div class="ticket-info">
+          <p class="mb-2">
+            <strong>Priority :</strong>
+            <span class="priority-badge" [ngClass]="'priority-' + ticket.priority.toLowerCase()">
+              {{ ticket.priority }}
+            </span>
+
+          </p>
+
+          <p class="mb-2">
+            <strong>Status :</strong>
+            <span class="status-badge" [ngClass]="'status-' + ticket.status.toLowerCase()">
+              {{ ticket.status }}
+            </span>
+          </p>
+        </div>
+        <div class="ticket-info">
+
+          <p>
+            <strong>Created At :</strong>
+            <span>{{ ticket.ticketNo }}</span>
+          </p>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation -->
+    <div class="conversation">
+
+      @for (message of messages; track message.id) {
+      <article class="message">
+
+        @if (message.role === 'Customer') {
+        <div class="customer-message">
+          <p class="message-content">
+            {{ message.content }}
+          </p>
+
+          @if (message.attachments.length > 0) {
+          <div class="attachments">
+            @for (file of message.attachments; track file.name) {
+            <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="attachment-link">
+              <img [src]="file.url" [alt]="file.name" class="attachment-image">
+            </a>
+            }
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="admin-message">
+
+          <div class="message-meta">
+            <div class="author-info">
+              <strong>{{ message.author }}</strong>
+              <span class="author-role">
+                ({{ message.role }})
+              </span>
+            </div>
+
+            <time>
+              {{ message.date | date:'MMM d,yyyy h:mm a' }}
+            </time>
+          </div>
+
+          <p class="message-content">
+            {{ message.content }}
+          </p>
+
+          @if (message.attachments.length > 0) {
+          <div class="attachments">
+            @for (file of message.attachments; track file.name) {
+            <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="attachment-link">
+              <img [src]="file.url" [alt]="file.name" class="attachment-image">
+            </a>
+            }
+          </div>
+          }
+
+          @if (message === messages[messages.length - 1]) {
+          <div class="reply-action">
+            <button type="button" class="reply-button" (click)="openReply()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 14 4 9l5-5"></path>
+                <path d="M4 9h10a6 6 0 0 1 6 6v1"></path>
+              </svg>
+              Reply
+            </button>
+          </div>
+          }
+
+        </div>
+        }
+
+      </article>
+      }
+
+    </div>
+
+    <!-- Reply form -->
+    @if (showReplyForm) {
+    <div class="reply-form">
+      <label for="replyMessage">Your reply</label>
+
+      <textarea id="replyMessage" [(ngModel)]="replyMessage" placeholder="Write your reply here..." rows="5">
+        </textarea>
+
+      <div class="reply-form-actions">
+        <button type="button" class="cancel-button" (click)="cancelReply()">
+          Cancel
+        </button>
+
+        <button type="button" class="reply-button" [disabled]="!replyMessage.trim()" (click)="sendReply()">
+          Send Reply
+        </button>
+      </div>
+    </div>
+    }
+
+  </section>
+</div>
