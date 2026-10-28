@@ -29,27 +29,25 @@
 
 
             <th>
-              <button class="sort-button" (click)="sortBy('ticketNumber')">
+              <button class="sort-button">
                 Ticket No.
-                <!-- <span *ngIf="sortColumn === 'ticketNumber'">
-                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                </span> -->
+
               </button>
             </th>
 
             <th>
-              <button class="sort-button" (click)="sortBy('platform')">
+              <button class="sort-button">
                 Platform
               </button>
             </th>
             <th>
-              <button class="sort-button" (click)="sortBy('platform')">
+              <button class="sort-button">
                 Device Model
               </button>
             </th>
 
             <!-- <th>
-              <button class="sort-button" (click)="sortBy('subject')">
+              <button class="sort-button">
                 Subject
               </button>
             </th> -->
@@ -141,7 +139,7 @@
           <tr *ngFor="let ticket of supportTicketList">
 
 
-            <td class="ticket-number">
+            <td class="ticket-number" (click)="onClickTicketNo(ticket.ticket_number)">
               {{ ticket.ticket_number }}
 
             </td>
@@ -179,5 +177,3 @@
   </div>
 
 </div>
-
-
