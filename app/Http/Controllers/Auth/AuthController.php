@@ -1104,7 +1104,7 @@ class AuthController extends Controller
             $this->activity($session->users_id)->event("Device")
                 ->eventType(ActivityEventType::REMOVED);
             $device = ($session->device_title ?? explode('#~', $session->mac_address)[0]);
-            if ($session->device_title != null) {
+            if ($session->device_title != null && $session->pdInfo != null) {
                 $this->descriptionSimple(
                     "Device limit exceed. Device removed"
                         . "Device: {$device} <br>"
