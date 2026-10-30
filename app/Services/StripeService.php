@@ -22,13 +22,13 @@ class StripeService
 
         return $subscription;
     }
-    public function getPlans($mode = 'Live')
+    public function getPlans($mode = 'Live', $active = true)
     {
         $key = DB::table('Stripe_keys')->where('type', $mode)->value('stripe_secret');
         $stripe = new StripeClient($key);
 
         return $stripe->prices->all([
-            'active' => true,
+            'active' => $active,
             'expand' => ['data.product'],
             'limit' => 100,
         ]);
@@ -44,11 +44,13 @@ class StripeService
         // }
 
         // Otherwise fetch from Stripe
-        $livePlans = $this->getPlans('Live');
-        $testPlans = $this->getPlans('Testing');
+        $livePlansActive = $this->getPlans('Live', true);
+        $testPlansActive = $this->getPlans('Testing', true);
+        $livePlansInactive = $this->getPlans('Live', false);
+        $testPlansInactive = $this->getPlans('Testing', false);
 
         // Merge both Live + Test plans into one flat array
-        $plans = array_merge($livePlans->data, $testPlans->data);
+        $plans = array_merge($livePlansActive->data, $testPlansActive->data, $livePlansInactive->data,  $testPlansInactive->data);
 
         // // Store in cache for 6 hours
         // Cache::put($cacheKey, $plans, now()->addHours(6));
