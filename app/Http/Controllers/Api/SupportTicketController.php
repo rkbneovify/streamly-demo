@@ -57,6 +57,23 @@ class SupportTicketController extends Controller
         }
     }
 
+    public function byTicketNo($ticketNo)
+    {
+        try {
+            $data =  $this->supportTicket->where('ticket_number', $ticketNo)
+                ->where('user_id', Auth::id())
+                ->with('messages.user:id,name')
+                ->with('messages.files.thambnail')->first();
+            if ($data == null) {
+                return $this->notFoundResponse();
+            }
+            return $this->dataResponse($data);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+    }
+
     public function store(Request $request, SupportTicket $supportTicket,  SupportTicketMessage $supportTicketMessage, File $file, RecaptchaService $recaptcha)
     {
         $validator = Validator::make($request->all(), [

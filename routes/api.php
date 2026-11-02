@@ -324,8 +324,9 @@ Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], funct
     Route::post('/store', 'Api\SupportTicketController@store');
     Route::post('/reply', 'Api\SupportTicketController@ticketReply');
     Route::post('/upload', 'Api\SupportTicketController@fileUpload');
+    Route::get('/{ticketNo}', 'Api\SupportTicketController@byTicketNo');
 
-      
+
 });
 
 

@@ -11,7 +11,8 @@ import { RecaptchaModule, RecaptchaComponent } from 'ng-recaptcha';
 @Component({
   selector: 'app-support-ticket',
   standalone: true,
-  imports: [FormsModule,
+  imports: [
+    FormsModule,
     ReactiveFormsModule,
     NgFor,
     NgIf,
@@ -132,26 +133,21 @@ export class SupportTicketComponent implements OnInit {
     }
 
     this.sweetAlert.loading();
-    this.isLoading = true;
-    this.api.postRequest('support-ticket/store', formData).pipe(finalize(() => {
-      this.sweetAlert.close();
-      this.isLoading = false;
-    })).subscribe({
+    this.isLoading = this.sweetAlert.loadingState;
+    this.api.postRequest('support-ticket/store', formData).subscribe({
       next: (res: any) => {
+        this.sweetAlert.close();
         console.log('res:', res);
 
         // this.sweetAlert.toast(res.message, 'success')
         this.fileUploadComponent.clearAll();
         this.ticketForm.reset();
-        setTimeout(() => {
-          this.sweetAlert.toast(res.message);
-        }, 1000);
+        this.sweetAlert.toast(res.message);
       },
       error: (err: any) => {
         console.log("error:", err);
-        setTimeout(() => {
-          this.sweetAlert.toast(err.error.message, 'error')
-        }, 1000);
+        this.sweetAlert.close();
+        this.sweetAlert.toast(err.error.message, 'error');
 
       }
     });

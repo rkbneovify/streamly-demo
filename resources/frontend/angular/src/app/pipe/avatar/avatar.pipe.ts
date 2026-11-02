@@ -1,0 +1,19 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'avatar',
+  standalone: true
+})
+export class AvatarPipe implements PipeTransform {
+
+  transform(value: string | null | undefined): string {
+    if (!value) return '';
+
+    return value
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(word => word.charAt(0).toUpperCase())
+      .join('');
+  }
+}

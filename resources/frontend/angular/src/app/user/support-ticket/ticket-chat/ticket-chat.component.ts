@@ -1,80 +1,123 @@
-import { Component } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CrudService } from '../../../services/crud.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SweetalertService } from '../../../services/SweetAlert/sweetalert.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { AvatarPipe } from '../../../pipe/avatar/avatar.pipe';
+import { QuillModule } from 'ngx-quill';
+import { ImageGalleryComponent } from '../../../components/image-gallery/image-gallery.component';
+import { FileUploadComponent } from '../../../components/file-upload/file-upload.component';
 
-interface TicketAttachment {
-  name: string;
-  url: string;
-}
-
-interface TicketMessage {
-  id: number;
-  author: string;
-  role: string;
-  date: Date;
-  content: string;
-  attachments: TicketAttachment[];
-}
 
 @Component({
   selector: 'app-ticket-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePipe,
+    NgIf,
+    NgFor,
+    AvatarPipe,
+    QuillModule,
+    ImageGalleryComponent,
+    FileUploadComponent],
   templateUrl: './ticket-chat.component.html',
   styleUrl: './ticket-chat.component.scss'
 })
-export class TicketChatComponent {
-  ticket = {
-    subject: 'Testing',
-    ticketNo: 'TCK-20260811-0001',
-    priority: 'Medium',
-    status: 'InProgress',
-    platform: 'Apple Tv'
-  };
+export class TicketChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  messages: TicketMessage[] = [
-    {
-      id: 1,
-      author: 'User',
-      role: 'Customer',
-      date: new Date('2026-08-11T09:30:00'),
-      content: 'This is a testing',
-      attachments: [
-        {
-          name: 'rhino.jpg',
-          url: 'assets/images/rhino.jpg'
-        },
-        {
-          name: 'tiger.jpg',
-          url: 'assets/images/tiger.jpg'
-        }
-      ]
-    },
-    {
-      id: 2,
-      author: 'Ram Kumar Bedia',
-      role: 'Admin',
-      date: new Date('2026-08-11T10:43:00'),
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.",
-      attachments: [
-        {
-          name: 'rhino.jpg',
-          url: 'assets/images/rhino.jpg'
-        },
-        {
-          name: 'tiger.jpg',
-          url: 'assets/images/tiger.jpg'
-        }
-      ]
-    }
-  ];
+
+  ticketData: any = {};
+  ticketReplyForm!: FormGroup;
+  description = '';
+  selectedFiles: File[] = [];
+  @ViewChild(FileUploadComponent)
+  fileUploadComponent: FileUploadComponent;
 
   showReplyForm = false;
   replyMessage = '';
 
+  quillConfig = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
+
+      ['bold', 'italic', 'underline', 'strike'],
+
+      [{ color: [] }, { background: [] }],
+
+      [{ script: 'sub' }, { script: 'super' }],
+
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+
+      [{ align: [] }],
+
+      ['blockquote', 'code-block'],
+
+      ['link'],
+
+      ['clean']
+    ]
+  };
+
+  constructor(
+    private api: CrudService,
+    private alert: SweetalertService,
+    private activatedRoute: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+    private fb: FormBuilder
+  ) {
+    this.initializeForm();
+  }
+  ngAfterViewInit(): void {
+
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe(params => {
+      const ticketNo = params.get('ticketId');
+      this.getLoadTicket(ticketNo);
+    });
+
+  }
+  ngOnDestroy(): void {
+
+  }
+
+  initializeForm() {
+    this.ticketReplyForm = this.fb.group({
+      description: ['', Validators.required],
+      attachment: [null]
+    });
+  }
+  getSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+
+  getLoadTicket(ticketNo: string) {
+    this.alert.loading();
+    this.api.getRequest(`support-ticket/${ticketNo}`).subscribe({
+      next: (res: any) => {
+        this.alert.close();
+        console.log('Res :', res.data);
+        this.ticketData = res.data;
+      },
+      error: (err: any) => {
+        this.alert.close();
+        console.log('Error :', err);
+        this.alert.error(err.error.message);
+      },
+    });
+  }
+
   openReply(): void {
-    this.showReplyForm = true;
+    this.showReplyForm = !this.showReplyForm;
   }
 
   cancelReply(): void {
@@ -84,21 +127,27 @@ export class TicketChatComponent {
 
   sendReply(): void {
     const content = this.replyMessage.trim();
-
     if (!content) {
       return;
     }
-
-    this.messages.push({
-      id: Date.now(),
-      author: 'Ram Kumar Bedia',
-      role: 'Admin',
-      date: new Date(),
-      content,
-      attachments: []
-    });
-
     this.replyMessage = '';
     this.showReplyForm = false;
   }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      this.ticketReplyForm.patchValue({
+        attachment: input.files[0]
+      });
+    }
+  }
+
+  onFilesSelected(files: File[]) {
+    this.selectedFiles = files;
+
+    // console.log('Selected Files:', files);
+  }
+
 }
