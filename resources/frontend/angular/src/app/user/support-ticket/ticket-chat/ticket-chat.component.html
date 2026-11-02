@@ -27,7 +27,7 @@
         <div class="ticket-info">
           <p class="mb-2">
             <strong>Priority :</strong>
-            <span class="priority-badge" [ngClass]="'priority-' + ticketData.priority.toLowerCase()">
+            <span class="priority-badge priority-all">
               {{ ticketData.priority }}
             </span>
 
@@ -35,7 +35,7 @@
 
           <p class="mb-2">
             <strong>Status :</strong>
-            <span class="status-badge" [ngClass]="'status-' + ticketData.status.toLowerCase()">
+            <span class="status-badge status-all">
               {{ ticketData.status }}
             </span>
           </p>
@@ -76,7 +76,7 @@
               <div class="user-info">
                 <p>{{ messagex.user.name }}</p>
                 <time>
-                  {{ ticketData.created_at | date:'MMM d,yyyy h:mm a' }}
+                  {{ messagex.created_at | date:'MMM d,yyyy h:mm a' }}
                 </time>
 
 
@@ -150,7 +150,7 @@
               Cancel
             </button>
 
-            <button type="button" class="reply-button" [disabled]="!replyMessage.trim()" (click)="sendReply()">
+            <button type="button" class="reply-button" [disabled]="ticketReplyForm.invalid" (click)="sendReply()">
               Send Reply
             </button>
           </div>

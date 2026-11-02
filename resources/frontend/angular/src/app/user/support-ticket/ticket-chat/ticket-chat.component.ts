@@ -35,6 +35,7 @@ export class TicketChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ticketReplyForm!: FormGroup;
   description = '';
   selectedFiles: File[] = [];
+  ticketNo: string | null = null;
   @ViewChild(FileUploadComponent)
   fileUploadComponent: FileUploadComponent;
 
@@ -81,8 +82,8 @@ export class TicketChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
-      const ticketNo = params.get('ticketId');
-      this.getLoadTicket(ticketNo);
+      this.ticketNo = params.get('ticketId');
+      this.getLoadTicket(this.ticketNo);
     });
 
   }
@@ -126,12 +127,46 @@ export class TicketChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendReply(): void {
-    const content = this.replyMessage.trim();
-    if (!content) {
+
+    if (this.ticketReplyForm.invalid) {
+      this.ticketReplyForm.markAllAsTouched();
       return;
     }
-    this.replyMessage = '';
-    this.showReplyForm = false;
+    const formData = new FormData();
+    formData.append(
+      'ticket_number',
+      this.ticketNo
+    );
+    formData.append(
+      'message',
+      this.ticketReplyForm.value.description
+    );
+    this.selectedFiles.forEach(file => {
+      formData.append('attachment[]', file);
+    });
+
+    this.alert.loading();
+
+    this.api.postRequest('support-ticket/reply', formData).subscribe({
+      next: (res: any) => {
+
+        this.showReplyForm = false;
+        this.ticketReplyForm.reset();
+        this.fileUploadComponent.clearAll();
+        // this.alert.success(res.message, "success");
+        setTimeout(() => {
+          this.alert.close();
+          location.reload();
+        }, 3000)
+
+
+      },
+      error: (err: any) => {
+        this.alert.close();
+        this.alert.error(err.error.message, "error");
+      },
+    })
+
   }
 
   onFileSelected(event: Event): void {
