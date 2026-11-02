@@ -33,20 +33,20 @@ class SupportTicketReplyMail extends Mailable
     public function headers()
     {
 
+        $messageId = $this->supportTicket->email_message_id;
+
         return new Headers(
-            references: [
-                $this->supportTicket->email_message_id
-            ],
-            text: [
-                'In-Reply-To' => $this->supportTicket->email_message_id,
-            ],
+            references: !empty($messageId) ? [$messageId] : [],
+            text: !empty($messageId) ? [
+                'In-Reply-To' => $messageId,
+            ] : [],
         );
     }
 
     public function build()
     {
 
-       
+
 
         $mail = $this->subject("Support Ticket #{$this->supportTicket->ticket_number}")
             ->view('emails.support-ticket.reply');

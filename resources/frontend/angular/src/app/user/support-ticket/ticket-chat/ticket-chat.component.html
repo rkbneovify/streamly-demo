@@ -131,7 +131,7 @@
 
             <div *ngIf="ticketReplyForm.get('description')?.touched" class="text-danger">
               <span *ngIf="ticketReplyForm.get('description')?.errors as e">
-                {{ e['required'] && '* Description is required.' }}
+                {{ e['required'] && '* Reply is required.' }}
 
               </span>
             </div>
