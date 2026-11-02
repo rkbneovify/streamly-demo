@@ -191,7 +191,7 @@ class SupportTicketController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->validationErrorResponse(null, $validator->errors());
+            return $this->validationErrorResponse($validator->errors()->first(), $validator->errors());
         }
         DB::beginTransaction();
         try {
@@ -230,7 +230,7 @@ class SupportTicketController extends Controller
             }
 
             $data = [
-
+                'user_name' => $request->user()->name,
                 'ticket_no' => $supportTicket->ticket_number,
                 'subject' => $supportTicket->subject,
                 'description' => $this->supportTicketMessage->message
