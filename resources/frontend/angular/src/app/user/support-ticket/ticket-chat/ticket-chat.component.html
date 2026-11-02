@@ -6,7 +6,7 @@
     <!-- Ticket information -->
     <div class="ticket-header">
       <div class="ticket-heading">
-        <h2>{{ ticket.subject }}</h2>
+        <h2>{{ ticketData.subject }}</h2>
 
 
 
@@ -16,35 +16,37 @@
         <div class="ticket-info">
           <p class="mb-3">
             <strong>Ticket :</strong>
-            <span>{{ ticket.ticketNo }}</span>
+            <span>{{ ticketData.ticket_number }}</span>
           </p>
 
           <p class="mb-3">
             <strong>Platform :</strong>
-            <span>{{ ticket.platform }}</span>
+            <span>{{ ticketData.platform }}</span>
           </p>
         </div>
         <div class="ticket-info">
           <p class="mb-2">
             <strong>Priority :</strong>
-            <span class="priority-badge" [ngClass]="'priority-' + ticket.priority.toLowerCase()">
-              {{ ticket.priority }}
+            <span class="priority-badge" [ngClass]="'priority-' + ticketData.priority.toLowerCase()">
+              {{ ticketData.priority }}
             </span>
 
           </p>
 
           <p class="mb-2">
             <strong>Status :</strong>
-            <span class="status-badge" [ngClass]="'status-' + ticket.status.toLowerCase()">
-              {{ ticket.status }}
+            <span class="status-badge" [ngClass]="'status-' + ticketData.status.toLowerCase()">
+              {{ ticketData.status }}
             </span>
           </p>
         </div>
         <div class="ticket-info">
+          <p class="mb-2 mb-5">
 
-          <p>
+          </p>
+          <p class="mb-2">
             <strong>Created At :</strong>
-            <span>{{ ticket.ticketNo }}</span>
+            <span>{{ ticketData.created_at | date:'MMM d,yyyy h:mm a' }}</span>
           </p>
 
 
@@ -55,95 +57,114 @@
     <!-- Conversation -->
     <div class="conversation">
 
-      @for (message of messages; track message.id) {
-      <article class="message">
+      @for (messagex of ticketData.messages; track messagex.id; let i = $index) {
+      <div class="media">
 
-        @if (message.role === 'Customer') {
-        <div class="customer-message">
-          <p class="message-content">
-            {{ message.content }}
-          </p>
+        <div class="media-body">
+          @if (i==0){
+          <div class="chat-text" [innerHTML]="messagex.message">
 
-          @if (message.attachments.length > 0) {
-          <div class="attachments">
-            @for (file of message.attachments; track file.name) {
-            <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="attachment-link">
-              <img [src]="file.url" [alt]="file.name" class="attachment-image">
-            </a>
-            }
           </div>
-          }
-        </div>
-        } @else {
-        <div class="admin-message">
+          <app-image-gallery [images]="messagex.files" [width]="100" [height]="100" />
 
-          <div class="message-meta">
-            <div class="author-info">
-              <strong>{{ message.author }}</strong>
-              <span class="author-role">
-                ({{ message.role }})
-              </span>
+          }@else {
+          <div class="chat-container">
+            <div class="avtar">
+              <p> {{ messagex.user.name | avatar }}</p>
+            </div>
+            <div>
+              <div class="user-info">
+                <p>{{ messagex.user.name }}</p>
+                <time>
+                  {{ ticketData.created_at | date:'MMM d,yyyy h:mm a' }}
+                </time>
+
+
+              </div>
+              <!-- start -->
+              <div class="chat-text" [innerHTML]="messagex.message">
+
+              </div>
+
+              <app-image-gallery [images]="messagex.files" [width]="100" [height]="100" />
+              <!-- end -->
             </div>
 
-            <time>
-              {{ message.date | date:'MMM d,yyyy h:mm a' }}
-            </time>
-          </div>
-
-          <p class="message-content">
-            {{ message.content }}
-          </p>
-
-          @if (message.attachments.length > 0) {
-          <div class="attachments">
-            @for (file of message.attachments; track file.name) {
-            <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="attachment-link">
-              <img [src]="file.url" [alt]="file.name" class="attachment-image">
-            </a>
-            }
           </div>
           }
 
-          @if (message === messages[messages.length - 1]) {
-          <div class="reply-action">
-            <button type="button" class="reply-button" (click)="openReply()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9 14 4 9l5-5"></path>
-                <path d="M4 9h10a6 6 0 0 1 6 6v1"></path>
-              </svg>
-              Reply
-            </button>
-          </div>
-          }
+
 
         </div>
-        }
-
-      </article>
+      </div>
       }
 
-    </div>
-
-    <!-- Reply form -->
-    @if (showReplyForm) {
-    <div class="reply-form">
-      <label for="replyMessage">Your reply</label>
-
-      <textarea id="replyMessage" [(ngModel)]="replyMessage" placeholder="Write your reply here..." rows="5">
-        </textarea>
-
-      <div class="reply-form-actions">
-        <button type="button" class="cancel-button" (click)="cancelReply()">
-          Cancel
-        </button>
-
-        <button type="button" class="reply-button" [disabled]="!replyMessage.trim()" (click)="sendReply()">
-          Send Reply
+      <!-- start -->
+      <div class="reply-action">
+        <button type="button" class="reply-button" (click)="openReply()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"></path>
+            <path d="M4 9h10a6 6 0 0 1 6 6v1"></path>
+          </svg>
+          Reply
         </button>
       </div>
+      <!-- Reply form -->
+      @if (showReplyForm) {
+      <div class="reply-form">
+        <label for="replyMessage">Your reply</label>
+
+        <!-- <textarea id="replyMessage" [(ngModel)]="replyMessage" placeholder="Write your reply here..." rows="5">
+        </textarea> -->
+
+        <form [formGroup]="ticketReplyForm">
+
+
+
+
+          <!-- Description -->
+          <div class="form-group mb-5">
+            <!-- <label>Description</label> -->
+            <quill-editor class="full-width-editor" formControlName="description" [modules]="quillConfig" theme="snow">
+            </quill-editor>
+
+            <div *ngIf="ticketReplyForm.get('description')?.touched" class="text-danger">
+              <span *ngIf="ticketReplyForm.get('description')?.errors as e">
+                {{ e['required'] && '* Description is required.' }}
+
+              </span>
+            </div>
+          </div>
+
+          <!-- Attachment -->
+          <div class="form-group">
+            <label>Attachment</label>
+            <app-file-upload (filesChange)="onFilesSelected($event)">
+            </app-file-upload>
+          </div>
+
+
+          <div class="reply-form-actions">
+            <button type="button" class="cancel-button" (click)="cancelReply()">
+              Cancel
+            </button>
+
+            <button type="button" class="reply-button" [disabled]="!replyMessage.trim()" (click)="sendReply()">
+              Send Reply
+            </button>
+          </div>
+
+        </form>
+
+
+      </div>
+      }
+      <!-- end -->
+
     </div>
-    }
+
+
 
   </section>
 </div>

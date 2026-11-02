@@ -32,7 +32,7 @@ class ApiCrashReportController extends Controller
 
             foreach ($this->request->crash_reports as $item) {
                 $item['user_id'] = auth()->id();
-                $item['session_id'] = SessionTable::getCurrentSessionByToken()->id;
+                $item['session_id'] = SessionTable::getCurrentUserByToken()->id;
                 $this->crashReport->create($item);
             }
             DB::commit();
