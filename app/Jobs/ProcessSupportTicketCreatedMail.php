@@ -25,6 +25,7 @@ class ProcessSupportTicketCreatedMail implements ShouldQueue
     public function __construct(
         public SupportTicket $supportTicket,
         public  $user,
+        public $data
 
     ) {
         //
@@ -37,6 +38,6 @@ class ProcessSupportTicketCreatedMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->user->email)->send(new SupportTicketCreatedMail($this->user->name, $this->supportTicket));
+        Mail::to($this->user->email)->send(new SupportTicketCreatedMail($this->user->name, $this->supportTicket, $this->data));
     }
 }
