@@ -194,7 +194,7 @@ class StripeController extends Controller
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $password = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+='), 0, 10);
+            $password =  $this->generatePassword();
             $user->password = Hash::make($password);
             $user->forced_change = 1;
             $user->zipcode = $request->zip_code;
@@ -985,5 +985,37 @@ class StripeController extends Controller
             ]
         );
         return $subscription;
+    }
+
+
+
+    private function generatePassword()
+    {
+        $letters = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '123456789';
+
+        $password = '';
+
+        // Generate 5 random lowercase letters
+        for ($i = 0; $i < 5; $i++) {
+            $password .= $letters[random_int(0, strlen($letters) - 1)];
+        }
+
+        // Generate 5 random digits
+        for ($i = 0; $i < 5; $i++) {
+            $password .= $numbers[random_int(0, strlen($numbers) - 1)];
+        }
+
+        // Randomize the complete password sequence
+        $password = str_split($password);
+
+        for ($i = count($password) - 1; $i > 0; $i--) {
+            $j = random_int(0, $i);
+            [$password[$i], $password[$j]] = [$password[$j], $password[$i]];
+        }
+
+        $password = implode('', $password);
+
+        return $password;
     }
 }
