@@ -101,6 +101,8 @@
         }
     </style>
     <style>
+
+
         .chat-image {
             width: 120px;
             height: 120px;
@@ -113,6 +115,16 @@
 
         .chat-image:hover {
             transform: scale(1.05);
+        }
+        .chat-text{
+            width: 100%;
+  /* // display: flex; */
+            color: #000;
+            font-size: 16px;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            white-space: normal;
+            text-align: justify;
         }
     </style>
 @endsection
@@ -314,9 +326,9 @@
                                             </small>
                                         </div>
 
-                                        <p class="mb-0">
+                                        <div  class="chat-text">
                                             {!! $item->message !!}
-                                        </p>
+                                        </div>
 
                                         @if (!empty($item->files) && count($item->files))
                                             <div class="d-flex flex-wrap mt-2">

@@ -69,9 +69,16 @@
 
           }@else {
           <div class="chat-container">
+            @if(messagex.user.roles[0].name =='admin'){
+            <div class="avtar-2">
+              <p> {{ messagex.user.name | avatar }}</p>
+            </div>
+            }@else{
             <div class="avtar">
               <p> {{ messagex.user.name | avatar }}</p>
             </div>
+            }
+
             <div>
               <div class="user-info">
                 <p>{{ messagex.user.name }}</p>

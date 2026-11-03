@@ -21,6 +21,7 @@ class SupportTicketCreatedMail extends Mailable
     public function __construct(
         public $userName,
         public $ticket,
+        public $data
 
 
 

@@ -122,8 +122,26 @@
                                 Please review this request and respond to the user as soon as possible.
                             </p>
 
+                            <!-- Optional Ticket Link -->
+                            @if(!empty($data['url']))
+                                <table cellpadding="0" cellspacing="0" role="presentation" style="margin:25px 0;">
+                                    <tr>
+                                        <td style="background:#155eef; border-radius:5px;">
+                                            <a href="{{ $data['url'] }}"
+                                                style="display:inline-block; padding:13px 22px;
+                                                                                                                                                                                                                          color:#ffffff; text-decoration:none;
+                                                                                                                                                                                                                          font-size:14px; font-weight:bold;">
+                                                View Support Ticket
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            @endif
+
                         </td>
                     </tr>
+
+
 
                     {{-- Footer --}}
                     <tr>
