@@ -768,7 +768,14 @@ class StripeController extends Controller
                 if ($user->save()) {
                     if ($user->subscribed('main') && !$user->subscribedToPlan($StripeplanId, 'main')) {
                         // Swap subscription if different plan
-                        $user->subscription('main')->quantity($quantity)->swap($StripeplanId);
+
+                        $user->subscription('main')->swap([
+                            $StripeplanId => [
+                                'quantity' => $quantity,
+                            ],
+                        ]);
+
+                        // $user->subscription('main')->quantity($quantity)->swap($StripeplanId);
                         // $user->subscription('main')
                         //     ->updateQuantity($quantity);
 
