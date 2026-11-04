@@ -40,8 +40,10 @@ class ProcessSupportTicketReplyMail implements ShouldQueue
     {
 
         if (in_array($this->role, ['admin', 'superadmin'])) {
+            $this->data['url'] = url('/user/support-ticket/chat/' . $this->supportTicket->ticket_number);
             Mail::to($this->email)->send(new SupportTicketReplyMail($this->supportTicket, $this->data, $this->attachments));
         } else {
+            $this->data['url']  = url('/admin/support-ticket/chat/' . $this->supportTicket->ticket_number);
             Mail::to(env('MAIL_USERNAME'))->send(new SupportTicketReplyMail($this->supportTicket, $this->data, $this->attachments));
         }
     }

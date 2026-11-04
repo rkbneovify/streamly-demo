@@ -145,24 +145,19 @@ class SupportTicketController extends Controller
                 ProcessSupportTicketFile::dispatch($supportTicketMessage->id, $files);
             }
 
-            $url = null;
-            if (in_array($request->user()->roles[0]->name, ['admin', 'superadmin'])) {
-                // For admin
-                $url = url('/admin/support-ticket/chat/' . $supportTicket->ticket_number);
-            } else {
-                // For user
-                $url = url('/user/support-ticket/chat/' . $supportTicket->ticket_number);
-            }
 
-
+            $urlForAdmin =   url('/admin/support-ticket/chat/' . $supportTicket->ticket_number);
+            $urlForUser =   url('/user/support-ticket/chat/' . $supportTicket->ticket_number);
             $data = [
                 'ticket_no' => $supportTicket->ticket_number,
                 'platform' => $supportTicket->platform,
                 'device_model' => $supportTicket->device_model,
                 'subject' => $supportTicket->subject,
                 'description' => $supportTicketMessage->message,
-                'url' => $url
+
             ];
+
+
 
             $attachments = [];
             foreach ($files as $file) {
@@ -170,8 +165,10 @@ class SupportTicketController extends Controller
             }
 
             // return response()->json($attachments);
+            $data['url'] = $urlForAdmin;
             ProcessSupportTicketMail::dispatch($supportTicket, Auth::user()->email, $data, $attachments);
             // Support ticket created mail to user
+            $data['url'] = $urlForUser;
             ProcessSupportTicketCreatedMail::dispatch($supportTicket, Auth::user(), $data);
 
             $this->activity()->event("Support Ticket")
@@ -243,21 +240,14 @@ class SupportTicketController extends Controller
                 ProcessSupportTicketFile::dispatch($this->supportTicketMessage->id, $files);
             }
 
-            $url = null;
-            if (in_array($request->user()->roles[0]->name, ['admin', 'superadmin'])) {
-                // send by support team to user
-                $url = url('/user/support-ticket/chat/' . $supportTicket->ticket_number);
-            } else {
-                // send by user to support team
-                $url = url('/admin/support-ticket/chat/' . $supportTicket->ticket_number);
-            }
+
 
             $data = [
                 'user_name' => $request->user()->name,
                 'ticket_no' => $supportTicket->ticket_number,
                 'subject' => $supportTicket->subject,
                 'description' => $this->supportTicketMessage->message,
-                'url' => $url
+
             ];
 
             $attachments = [];

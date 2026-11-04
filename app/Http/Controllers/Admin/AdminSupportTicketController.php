@@ -225,6 +225,7 @@ class AdminSupportTicketController extends Controller
             toast('Reply submited successfully !', 'success')
                 ->timerProgressBar()
                 ->autoClose(3000);
+            sleep(10);
             return redirect()->back();
 
             // return $this->successResponse("Submited successfully !");
