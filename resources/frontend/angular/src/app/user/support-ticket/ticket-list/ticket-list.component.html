@@ -13,7 +13,7 @@
       </svg>
 
       <input type="search" [(ngModel)]="searchText" placeholder="Search by ticket number, platform..."
-        aria-label="Search support tickets" />
+        aria-label="Search support tickets" (search)="onSearchClear()" />
     </div>
 
     <button type="button" class="search-button" (click)="onSearch()">
@@ -166,9 +166,10 @@
             <td class="created-date">{{ ticket.created_at | date:'dd/MM/yyyy' }}</td>
           </tr>
 
-          <tr *ngIf="!isLoading && supportTicketList.length === 0">
-            <td colspan="7" class="empty-state">
+          <tr *ngIf="supportTicketList.length === 0 && !isLoading">
+            <td colspan="6" class="empty-state">
               No support tickets found.
+
             </td>
           </tr>
         </tbody>

@@ -67,7 +67,12 @@ export class TicketListComponent implements OnInit, OnDestroy {
   }
 
 
-
+  onSearchClear() {
+    if (!this.searchText) {
+      this.searchText = '';
+      this.reloadSupportTickets();
+    }
+  }
 
   getSupportTicketList() {
 
@@ -116,11 +121,11 @@ export class TicketListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.alert.close();
+          this.isLoading = this.alert.loadingState;
 
 
           this.hasMore = res.has_more;
           this.supportTicketList = [...this.supportTicketList, ...res.data];
-
 
           if (this.hasMore) {
             this.page += 1;
@@ -129,6 +134,8 @@ export class TicketListComponent implements OnInit, OnDestroy {
 
         error: (err: any) => {
           this.alert.close();
+          this.isLoading = this.alert.loadingState;
+
           this.alert.error(err.error.message);
         }
       });
@@ -206,7 +213,12 @@ export class TicketListComponent implements OnInit, OnDestroy {
 
 
   onSearch() {
-    this.reloadSupportTickets();
+    if (this.searchText.length > 0) {
+      this.reloadSupportTickets();
+    } else {
+      this.alert.toast('Please enter ticket no. or platform', 'error');
+    }
+
   }
 
 
