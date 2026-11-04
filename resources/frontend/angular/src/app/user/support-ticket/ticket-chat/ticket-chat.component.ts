@@ -119,11 +119,14 @@ export class TicketChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openReply(): void {
     this.showReplyForm = !this.showReplyForm;
+    this.ticketReplyForm.reset();
+    this.fileUploadComponent.clearAll();
   }
 
   cancelReply(): void {
     this.showReplyForm = false;
-    this.replyMessage = '';
+    this.ticketReplyForm.reset();
+    this.fileUploadComponent.clearAll();
   }
 
   sendReply(): void {
