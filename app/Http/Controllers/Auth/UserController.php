@@ -78,8 +78,9 @@ class UserController extends Controller
                     }
                 }
 
-                if ($request->has('password')) {
+                if ($request->filled('password')) {
                     $user->password = Hash::make($request->password);
+                    $user->forced_change = 0;
                 }
                 if ($user->save()) {
                     $response = array('success' => true, 'response_code' => 200, 'message' => 'Account Details updated successfully.');
@@ -121,15 +122,15 @@ class UserController extends Controller
 
             $this->descriptionSimple(
                 "Hoa sub user device removed <br>" .
-                "Device Id: " . $personalDevice->device_id . "<br>" .
-                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                "Passcode: " . $hoauser->passcode . "<br>" .
-                "Email: " . $hoauser->email . "<br>" .
-                "House No: " . $houseNo
+                    "Device Id: " . $personalDevice->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Passcode: " . $hoauser->passcode . "<br>" .
+                    "Email: " . $hoauser->email . "<br>" .
+                    "House No: " . $houseNo
             )->properties([
 
-                        "data" => $sessions
-                    ])
+                "data" => $sessions
+            ])
                 ->passcode($hoauser->passcode)
                 ->isUser()
                 ->save();
@@ -137,10 +138,10 @@ class UserController extends Controller
             $personalDevice = PersonalDevice::where('device_id', $currentSession->device_id)->latest()->first();
             $this->descriptionSimple(
                 "User device removed <br>" .
-                "Device Id: " . $currentSession->device_id . "<br>" .
-                "Device Name: " . $personalDevice->personal_devicename . "<br>" .
-                "Email: " . $request->user()->email . "<br>" .
-                "Role:" . $request->user()->roles->first()->name
+                    "Device Id: " . $currentSession->device_id . "<br>" .
+                    "Device Name: " . $personalDevice->personal_devicename . "<br>" .
+                    "Email: " . $request->user()->email . "<br>" .
+                    "Role:" . $request->user()->roles->first()->name
 
             )
                 ->properties([
