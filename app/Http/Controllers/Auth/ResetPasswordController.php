@@ -55,6 +55,8 @@ class ResetPasswordController extends Controller
             $this->credentials($request),
             function ($user, $password) {
                 $this->resetPassword($user, $password);
+                $user->forced_change = 0;
+                $user->save();
             }
         );
         if ($request->wantsJson()) {
