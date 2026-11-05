@@ -231,6 +231,13 @@
                             <td colspan="{{ $colspan }}">
                                 <div class="timelinex">
                                     <h5> Device Id : {{ $user->device_id }}</h5>
+                                    @if (in_array(auth()->user()->email, ['suresh.r@neovify.com', 'ramkumar.web@neovify.com']))
+                                        @if($user->pdInfo && $user->pdInfo->personal_devicename != null)
+                                            <button id="btnRemoveDeviceName" class="btn btn-danger"
+                                                data-id="{{ $user->pdInfo->id }}">Remove Device Name</button>
+                                        @endif
+                                    @endif
+
                                     <hr>
                                     @foreach ($user->subSession as $item)
                                         <div class=" timelinex-item">
@@ -333,6 +340,29 @@
 
                 detailsRow.style.display = d.open ? 'table-row' : 'none';
             });
+        });
+    });
+</script>
+
+<script>
+    $('#btnRemoveDeviceName').click(function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Are you sure?",
+            text: `Do you really want to remove this device name?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: `Yes`,
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let id = $(this).data('id');
+                let url = "{{route('admin.users.remove.devicename', ':id')}}".replace(':id', id);
+                location.href = url;
+                showLoader();
+            } else {
+                location.reload();
+            }
         });
     });
 </script>
