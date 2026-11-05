@@ -40,14 +40,15 @@ class SyncCustomSubscription extends Command
     public function handle()
     {
         $subscriptions = Subscription::where('stripe_id', 'Like', '%sub_custom_%')
-            ->orWhereNotNull('custom_status')
+            ->whereNotNull('custom_status')
+            ->whereNotNull('renews_at')
             ->where('renews_at', '<', Carbon::now())
             ->get();
 
         foreach ($subscriptions as $subscription) {
             $subscription->update([
                 'custom_status' => 'expired',
-                'stripe_plan' => 'canceled'
+
             ]);
         }
 
