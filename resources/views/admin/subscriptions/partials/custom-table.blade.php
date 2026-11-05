@@ -80,7 +80,6 @@
                     Expire At
                 </th>
 
-
                 <th style="vertical-align: middle;text-align: center;">
                     Action
                 </th>
@@ -98,9 +97,9 @@
                             <a href="{{ route('admin.users.view', $subscription->user->id) }}">
                                 <div class="mb-2"
                                     style="width:40px; height:40px;
-                                                                                                                                                                                                                                                                                                                                background:#d62d41;
-                                                                                                                                                                                                                                                                                                                                color:white; display:flex; align-items:center; justify-content:center;
-                                                                                                                                                                                                                                                                                                                                border-radius:50%; font-weight:bold;">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        background:#d62d41;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        color:white; display:flex; align-items:center; justify-content:center;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        border-radius:50%; font-weight:bold;">
                                     {{ getAvatarName($subscription->user->name) }}
                                 </div>
 
@@ -147,14 +146,16 @@
                         {{ date('d/m/Y', strtotime($subscription->current_period_start)) }}
                     </td>
                     <td style="vertical-align: middle;">
-
+                        @if($subscription->is_never_expire == 1)
+                            <span class="badge badge-success">Never</span>
+                        @endif
                         @if ($subscription->renews_at != null)
                             {{ date('d/m/Y', strtotime($subscription->renews_at)) }}
                         @elseif($subscription->canceled_at != null)
                             {{ date('d/m/Y', strtotime($subscription->canceled_at)) }}
-                        @else
-                            <span class="badge badge-success">Never</span>
                         @endif
+
+
 
                     </td>
 
@@ -167,11 +168,13 @@
                             </button>
                         @endif
                         <br>
-                        @if ($subscription->custom_status == 'active')
-                            <a class="btn btn-secondary btn-xs w-100 btn-cancel-subscription"
-                                href="{{ route('admin.custom.subscriptions.cancel', $subscription->user_id) }}">
-                                Cancel
-                            </a>
+                        @if (in_array(auth()->user()->email, ['ramkumar.web@neovify.com']))
+                            @if ($subscription->custom_status == 'active')
+                                <a class="btn btn-secondary btn-xs w-100 btn-cancel-subscription"
+                                    href="{{ route('admin.custom.subscriptions.cancel', $subscription->user_id) }}">
+                                    Cancel
+                                </a>
+                            @endif
                         @endif
 
 
