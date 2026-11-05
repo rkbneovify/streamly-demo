@@ -138,7 +138,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::get('/users/delete/{id}', 'Admin\UsersController@destroyById')->name('users.delete');
     Route::post('/users/bulk/action', 'Admin\UsersController@bulkAction')->name('users.bulk.action');
     // Route::get('/fetchzipcode', 'Admin\UsersController@getZip');
-    Route::get('users/fetchzipcode', 'Admin\UsersController@getZip');
+    Route::get('users/remove/device-name/{id}', 'Admin\UsersController@removeDeviceName')->name('users.remove.devicename');
 
 
 
@@ -569,6 +569,6 @@ Route::get('/admin/clear', function () {
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
 });
 
-Route::get('/admin/php-info', function () {
-    phpinfo();
-});
+// Route::get('/admin/php-info', function () {
+//     phpinfo();
+// });

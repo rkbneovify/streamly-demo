@@ -34,6 +34,7 @@ use Yajra\DataTables\DataTables;
 use App\HotelRoomTable;
 use App\LocalZipcode;
 use App\Models\Channel;
+use App\Models\PersonalDevice;
 use App\Models\RoleUser;
 use App\Models\Subscription;
 use App\PhxLocalChannelAccess;
@@ -1712,6 +1713,7 @@ class UsersController extends Controller
         |--------------------------------------------------------------------------
         */
 
+            // return response()->json($allSession);
             if ($request->ajax()) {
                 return view(
                     'admin.users.partials.connected-table',
@@ -1733,6 +1735,37 @@ class UsersController extends Controller
             );
         } catch (\Throwable $th) {
 
+            toast('Something went wrong! Try again later.', 'error')
+                ->timerProgressBar()
+                ->autoClose(3000);
+            // Alert::error('error', $th->getMessage());
+            return redirect()->back();
+        }
+    }
+
+
+    public function removeDeviceName($id)
+    {
+        DB::beginTransaction();
+        try {
+            $device =  PersonalDevice::find($id);
+            if ($device == null) {
+                toast('Data not found !', 'error')
+                    ->timerProgressBar()
+                    ->autoClose(3000);
+
+                return redirect()->back();
+            }
+            $device->delete();
+            DB::commit();
+            toast('Device name removed successfully  !', 'success')
+                ->timerProgressBar()
+                ->autoClose(3000);
+
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
             toast('Something went wrong! Try again later.', 'error')
                 ->timerProgressBar()
                 ->autoClose(3000);
