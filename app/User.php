@@ -49,7 +49,8 @@ class User extends Authenticatable implements JWTSubject
         'connected_device',
         'user_type',
         'is_custom_user',
-        'access_premium_channel'
+        'access_premium_channel',
+        'creator_id'
     ];
 
     /**

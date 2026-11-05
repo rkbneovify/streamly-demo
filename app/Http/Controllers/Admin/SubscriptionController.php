@@ -361,7 +361,7 @@ class SubscriptionController extends Controller
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user')->whereNotNull('custom_status')->pluck('custom_status')->unique()->values();
 
-
+        // return response()->json($subscriptions);
         if ($request->ajax()) {
             return view('admin.subscriptions.partials.custom-table', compact('subscriptions', 'plankey', 'statusTypes', 'mode'));
         }
