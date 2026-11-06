@@ -14,11 +14,22 @@ class AdminAccountManagementController extends Controller
 {
     public function usersListByAdmin(Request $request)
     {
+        $usersWithRole = User::whereHas('roles', function ($query) {
+            $query->whereIn('name', ['superadmin', 'admin']);
+        })->with('roles')->get(['id', 'email']);
+
+        $creatorId = null;
+        if ($request->filled('user_id')) {
+            $creatorId = $request->user_id;
+        } else {
+            $creatorId = $request->user()->id;
+        }
+        // return response()->json($usersWithRole);
         SessionTable::where('status', 1)->resolveSession();
 
         $roles = Role::all()->pluck('name', 'id');
         $query = User::query();
-        $query->with('roles');
+        $query->where('creator_id', $creatorId)->with('roles');
         $query->with('zipcodeRule');
         $query->withCount('local');
         $query->withCount('premium');
@@ -137,8 +148,8 @@ class AdminAccountManagementController extends Controller
 
         // return response()->json($users);
         if ($request->ajax()) {
-            return view('admin.account-managment.users-list-by-admin.table', compact('users', 'roles', 'dates'));
+            return view('admin.account-managment.users-list-by-admin.table', compact('users', 'roles', 'dates', 'usersWithRole'));
         }
-        return view('admin.account-managment.users-list-by-admin.index', compact('users', 'roles', 'dates'));
+        return view('admin.account-managment.users-list-by-admin.index', compact('users', 'roles', 'dates', 'usersWithRole'));
     }
 }
