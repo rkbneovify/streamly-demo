@@ -168,14 +168,12 @@
                             </button>
                         @endif
                         <br>
-                        @if (in_array(auth()->user()->email, ['ramkumar.web@neovify.com']))
-                            @if ($subscription->custom_status == 'active')
+                       @if ($subscription->custom_status == 'active')
                                 <a class="btn btn-secondary btn-xs w-100 btn-cancel-subscription"
                                     href="{{ route('admin.custom.subscriptions.cancel', $subscription->user_id) }}">
                                     Cancel
                                 </a>
                             @endif
-                        @endif
 
 
 

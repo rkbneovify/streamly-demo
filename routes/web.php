@@ -208,6 +208,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
 
+    // Account Managements
+    Route::get('/users/list-by-admin', 'Admin\AdminAccountManagementController@usersListByAdmin')->name('users.list-by-admin');
+
     // activity
     Route::get('/activities', 'Admin\AdminActivityController@index')->name('activity');
     Route::get('/activities/users/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
