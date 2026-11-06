@@ -200,7 +200,7 @@
 
                     <div class="row  mt-3 mb-0 mb-3">
 
-                        <div class="col-md-2 mb-2">
+                        <div class="col-md-3 mb-2">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/check-all-square.png') }}" alt="Bulk Action Icon">
                                 <select name="bulk_action" id="sel_bulk_action" class="select-custom">
@@ -291,13 +291,13 @@
                                 Export into Excel</a>
 
                         </div>
-                        <div class="col-md-3 mb-3">
+                        {{-- <div class="col-md-3 mb-3">
                             <div class="select-wrapper">
                                 <img src="{{ asset('images/calendar.png') }}" alt="status icon">
                                 <input type="text" class="input-daterange" name="daterange"
                                     value="{{ formatDaterange(request('daterange')) }}">
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-4 mb-3">
                             <div class="input-conatiner">
@@ -342,6 +342,7 @@
 @section('scripts')
 
 
+{{--
 <script>
     $(function () {
 
@@ -413,7 +414,7 @@
 
         });
     });
-</script>
+</script> --}}
 <script>
     let storageKey = "selected_users";
 
