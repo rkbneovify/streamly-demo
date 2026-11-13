@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\HoaUser;
 use App\HotelRoomTable;
-
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\SubscriptionPlan;
@@ -67,7 +66,7 @@ class SubscriptionController extends Controller
             'custom_subscription_expired_at' => null,
             'device_limit' => $deviceLimit,
             'plan_request' => SubscriptionPlanRequest::getPlanRequest(),
-            'plan_details' => SubscriptionPlan::getPlanDetail(SubscriptionPlanRequest::getPlanRequest()->plan_id)
+            'plan_details' => SubscriptionPlanRequest::getPlanRequest() == null ? null : SubscriptionPlan::getPlanDetail(SubscriptionPlanRequest::getPlanRequest()->plan_id)
         ];
 
         //  $defaultRes = [
