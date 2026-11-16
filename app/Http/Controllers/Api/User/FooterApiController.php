@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\BugReporting;
+use App\Services\RecaptchaService;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -12,12 +14,19 @@ use Illuminate\Support\Facades\Validator;
 
 class FooterApiController extends Controller
 {
+    use ApiResponseTrait;
+
+    public function __construct(
+        public RecaptchaService $recaptchaService
+    ) {
+
+    }
     public function contactForm(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|max:50',
+            'name' => 'required|max:225',
+            'email' => 'required|max:225',
             'message' => 'required|string|max:255',
         ]);
         if ($validator->fails()) {
@@ -35,6 +44,7 @@ class FooterApiController extends Controller
             try {
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
                     $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+                        ->bcc('contact@streamlytv.com')
                         ->subject(env('APP_NAME') . ': Contact Form');
                 });
 
@@ -50,6 +60,53 @@ class FooterApiController extends Controller
             }
         }
     }
+
+
+
+    public function newContectForm(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'captcha_token' => 'nullable|string',
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:100',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator->errors()->first());
+        }
+
+        if (!$this->recaptchaService->verify($request->captcha_token, $request->ip())) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid captcha !'
+            ], 422);
+        }
+
+        try {
+            $html = '<html>
+                Hi, My name is ' . $request['name'] . '<br><br>
+                Email: ' . $request['email'] . '<br><br>
+                Message: ' . $request['message'] . '.<br><br>
+            </html>';
+            Mail::send('emails.general', ["html" => $html], function ($message) {
+                $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+                    ->subject(env('APP_NAME') . ': Contact Form');
+            });
+
+
+            return $this->successResponse('Thanks for contacting us!');
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->exceptionResponse($th);
+        }
+
+    }
+
+
     public function faq(Request $request)
     {
         $faq = DB::table('faqs')->select('question_key', 'question_answer')->get();

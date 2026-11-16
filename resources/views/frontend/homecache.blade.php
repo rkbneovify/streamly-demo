@@ -33,7 +33,7 @@
             width: 100%;
             z-index: 1040;
         }
-        	
+
 	.css-thjkr7,
 	[data-css-thjkr7] {
 		position: relative;
@@ -110,13 +110,13 @@
 		-webkit-box-align: center;
 		-webkit-align-items: center;
 	}
-	
+
 	.css-5nata0 .upper-section .content,
 	[data-css-5nata0] .upper-section .content {
 		position: absolute;
 		left: 100px;
 	}
-	
+
 	.css-5nata0 .upper-section .content .title,
 	[data-css-5nata0] .upper-section .content .title {
 		font-size: 48px;
@@ -125,7 +125,7 @@
 		max-width: 856px;
 		margin-bottom: 20px;
 	}
-	
+
 	.css-5nata0 .upper-section .content .sub-title,
 	[data-css-5nata0] .upper-section .content .sub-title {
 		font-size: 18px;
@@ -134,7 +134,7 @@
 		letter-spacing: 0.19px;
 		max-width: 856px;
 	}
-	
+
     .css-5nata0 .upper-section .content .apps,[data-css-5nata0] .upper-section .content .apps {
                 margin: 26px 0 20px;
                 padding: 8px 30px;
@@ -226,7 +226,7 @@
 .item1{
     height: 80px;
     width: 80px;
-    
+
     /* background-color:#fff; */
 }
 
@@ -239,7 +239,7 @@
   font-size: 2em;
   /* color: #20263f; */
   border-radius: 15px;
-      background-color:  #4D5659; 
+      background-color:  #4D5659;
       text-align: center;
       padding: 10px 0;
 }
@@ -252,11 +252,11 @@
   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   grid-auto-rows: 50px;
   justify-items: center;
-  
+
   -webkit-box-pack: space-evenly;
-  
+
       -ms-flex-pack: space-evenly;
-  
+
           justify-content: space-evenly;
   padding: 10px;
     }
@@ -270,8 +270,8 @@
 /*devices circle*/
 
 .flex-container {
-        width: 100%;   
-    
+        width: 100%;
+
   padding: 0;
   margin: 0;
   list-style: none;
@@ -284,7 +284,7 @@
 
 /* Responsive layout - makes a one column-layout instead of two-column layout */
 @media (max-width: 800px) {
-    
+
     .flex-container>div {
     text-align: center ;
     -webkit-box-flex: 0;
@@ -297,10 +297,10 @@
 }
 }
 
-.space-evenly { 
-  -webkit-box-pack: space-evenly; 
-      -ms-flex-pack: space-evenly; 
-          justify-content: space-evenly; 
+.space-evenly {
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
 }
     .hovicon {
         display: inline-block;
@@ -317,7 +317,7 @@
         z-index: 1;
         color: #fff;
     }
-    
+
 .hovicon:after {
     pointer-events: none;
     position: absolute;
@@ -360,15 +360,15 @@
     transition: transform 0.2s, opacity 0.2s;
     transform: scale(1);
     opacity: 0;
-    
+
 }
 /* Effect 1a */
  .hovicon.effect-1.sub-a:hover {
     background: #000428;
-    
+
 }
 .hovicon.effect-1.sub-a:hover i {
-    
+
 }
 .hovicon.effect-1.sub-a:hover:after {
     -webkit-transform: scale(1);
@@ -439,7 +439,7 @@ background-position: center;
 background-size: 50px;
 background-repeat: no-repeat;
 background-position: center;
-    } 
+    }
      #android{
 
       background-image: url("../frontend/img/newicon/android.png");
@@ -464,7 +464,7 @@ background-position: center;
   stroke-width: 0.5;
   transform: scale(15);
     }
-	
+
     </style>
 @endsection
 @section('content')
@@ -476,7 +476,7 @@ background-position: center;
         </div>
     @endif --}}
 
-    
+
 
 	<!-- Masthead-->
 	<header class="masthead">
@@ -485,7 +485,7 @@ background-position: center;
 	        <div class="masthead-heading">
                 <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
                 </div>
-	        
+
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
             <p><strong>Streamly TV requires the use of a 4k streaming device to view<strong></p>
@@ -496,9 +496,9 @@ background-position: center;
 
     @include('frontend.partials.sidenavRegisterAndLogin')
 
-{{--   
+{{--
 	<div class="modal fade" id="resetPassword">
-        
+
 	    <div class="modal-dialog">
 			<div class="modal-content"><h3 class="login_txt" style="
                 padding-left: 20px;
@@ -520,7 +520,7 @@ background-position: center;
             {!! csrf_field() !!}
 						{{-- <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
 							<label for="email" class="control-label">Send reset password link at                        </label>
-							
+
                             <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}">
 						</div>
 
@@ -581,8 +581,8 @@ background-position: center;
                         <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
                             <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
                             @foreach ($plan->metadata->jsonSerialize() as $key => $value)
-                  
-                    
+
+
                     <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
                     @endforeach
                           </ul>
@@ -629,7 +629,7 @@ background-position: center;
 		    margin-top: 5px;
 		}
 
-		[data-toggle="collapse"] .fa:before {   
+		[data-toggle="collapse"] .fa:before {
 		  content: "\f107";
 		}
 
@@ -641,7 +641,7 @@ background-position: center;
   cursor:pointer;
   color:#666;
   font:400 15px 'pt sans',sans-serif;
-  
+
   padding:0 15px;
   line-height:40px !important;
   border: 2px solid #FF712F;}
@@ -650,7 +650,7 @@ background-position: center;
   color:#FFFFFF;
   position:relative;
   box-shadow:0 0 10px rgba(0,0,0,0.5);
-  
+
     /* width: 163px;
     height: 41px; */
 
@@ -663,39 +663,39 @@ background-position: center;
         <div class="text-center">
 
             <h2 class="section-heading">Available Channels</h2>
-           
+
             <div class="row">
                 <div class="col-centered" id="tab-buttons">
 
- @foreach ($Genrekey as $genre) 
- @if ($loop->first)  
+ @foreach ($Genrekey as $genre)
+ @if ($loop->first)
  <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$genre}}</a>
  @else
  <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$genre}}</a>
  @endif
  @endforeach
-                    
+
                 </div>
             </div>
         </div>
    <div class="row col-centered " id="accordion">
         @foreach($pagechannel as $key => $user)
-        @if ($loop->first)  
+        @if ($loop->first)
         <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
             <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
-            <div class="item1"> 
+            <div class="item1">
                 <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
             </div>  @endforeach</div></div>
-        </div> 
-   
+        </div>
+
     @else
 
     <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
-        <div class="item1"> 
+        <div class="item1">
             <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
         </div>  @endforeach</div></div>
-    </div> 
+    </div>
 @endif
     @endforeach
 </div>
@@ -715,19 +715,19 @@ background-position: center;
                 </div>
                 {{-- <div class="content"><div class="title">Watch on all <br> your devices.</div><div class="sub-title">Download the free fuboTV apps for all your devices. <br> Watch what you want, when you want.</div>
                 <div role="button" aria-label="" class="apps css-q9bl1b"><a href="/welcome/apps">See all apps and devices</a></div></div> --}}
-                <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}" 
-  
+                <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}"
+
 alt="image of tv guide"
 ></div>
             </div>
         </div>
 
         <div class="flex-container space-evenly">
-            
+
             <div><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
             <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
             </svg></div>
-              
+
               <div><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></div>

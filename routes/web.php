@@ -10,22 +10,34 @@
 |
 */
 
+use App\Http\Controllers\Admin\AdminBugReportController;
+use App\Http\Controllers\Admin\AdminAnnouncementController;
+use App\Http\Controllers\Admin\AdminCrashReportController;
+use App\Http\Controllers\Admin\AdminBlogCategoryController;
+use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\Admin\AdminBlogSubCategoryController;
 use App\Http\Controllers\Admin\AdminGracenoteController;
 use App\Http\Controllers\Admin\AdminServerLogController;
-use App\Http\Controllers\BotManController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\AngularController;
-use App\Http\Controllers\SubscriptionCronController;
+use App\Http\Controllers\Admin\AdminSupportTicketController;
+use App\Http\Controllers\Admin\AdminSupportTicketCategoryController;
+use App\Http\Controllers\Admin\AdminSupportTicketSubCategoryController;
+use App\Http\Controllers\Admin\AdminTimezoneController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\AngularController;
 use App\Http\Controllers\Api\ApiHoaController;
+use App\Http\Controllers\BotManController;
 use App\Http\Controllers\GracenoteCron\GracenoteCronController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SubscriptionCronController;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use FontLib\Table\Type\name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+
 
 // qrcode generate
 Route::get('qrcode/generate', function (Request $request) {
@@ -209,7 +221,9 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     // activity
     Route::get('/activities', 'Admin\AdminActivityController@index')->name('activity');
     Route::get('/activities/users/{id}', 'Admin\AdminActivityController@index2')->name('users.activity');
+    Route::get('/activities/session/{token?}', 'Admin\AdminActivityController@bySession')->name('users.activity.session.token');
     Route::get('/activities/sub-users/{passcode}', 'Admin\AdminActivityController@subUserActivity')->name('sub-user.activity');
+    Route::get('/activities/sub-users/session/{token?}', 'Admin\AdminActivityController@subUserBySession')->name('sub-user.activity.session');
 
     //channel
     Route::get('/channelstatus/create', 'Admin\ChannelController@create')->name('channel.create'); //channels Statust
@@ -344,6 +358,93 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
 
     // Gracenote sync
     Route::get('/gracenote/channel-data/{prgSvcId?}', [GracenoteCronController::class, 'programBySinglePrgSvcId'])->name('gracenote.data.pull');
+
+    // Annoucement
+    Route::prefix('/announcement')->group(function () {
+        Route::get('/', [AdminAnnouncementController::class, 'index'])->name('announcement');
+        Route::get('/create', [AdminAnnouncementController::class, 'create'])->name('announcement.create');
+        Route::post('/store', [AdminAnnouncementController::class, 'store'])->name('announcement.store');
+        Route::get('/edit/{id}', [AdminAnnouncementController::class, 'edit'])->name('announcement.edit');
+        Route::post('/update/{id}', [AdminAnnouncementController::class, 'update'])->name('announcement.update');
+        Route::get('/status/{id}', [AdminAnnouncementController::class, 'status'])->name('announcement.status');
+        Route::get('/destroy/{id}', [AdminAnnouncementController::class, 'destroy'])->name('announcement.destroy');
+        Route::post('/bulk/action', [AdminAnnouncementController::class, 'bulkAction'])->name('announcement.bulk.action');
+    });
+
+    // Blog
+    Route::prefix('/blog')->group(function () {
+        Route::get('/', [AdminBlogController::class, 'index'])->name('blog.index');
+        Route::get('/create', [AdminBlogController::class, 'create'])->name('blog.create');
+        Route::post('/store', [AdminBlogController::class, 'store'])->name('blog.store');
+        Route::get('/edit/{id}', [AdminBlogController::class, 'edit'])->name('blog.edit');
+        Route::post('/update/{id}', [AdminBlogController::class, 'update'])->name('blog.update');
+        Route::get('/status/{id}', [AdminBlogController::class, 'updateStatus'])->name('blog.status');
+        Route::get('/delete/{id}', [AdminBlogController::class, 'destroy'])->name('blog.destroy');
+        Route::post('/bulk/action', [AdminBlogController::class, 'bulkAction'])->name('blog.bulk.action');
+        Route::get('/sub-categories/{category}/list', [AdminBlogController::class, 'subCategoriesByCategory'])->name('blog.subcategory.list');
+        Route::post('/upload', [AdminBlogController::class, 'uploadImage'])->name('blog.image.upload');
+        Route::post('/delete', [AdminBlogController::class, 'deleteImage'])->name('blog.image.delete');
+        Route::prefix('/categories')->group(function () {
+            Route::get('/', [AdminBlogCategoryController::class, 'index'])->name('blog.category');
+            Route::post('/store', [AdminBlogCategoryController::class, 'store'])->name('blog.category.store');
+            Route::post('/update/{id}', [AdminBlogCategoryController::class, 'update'])->name('blog.category.update');
+            Route::get('/status/{id}', [AdminBlogCategoryController::class, 'updateStatus'])->name('blog.category.status');
+            Route::get('/delete/{id}', [AdminBlogCategoryController::class, 'destroy'])->name('blog.category.destroy');
+            Route::post('/bulk/action', [AdminBlogCategoryController::class, 'bulkAction'])->name('blog.category.bulk.action');
+        });
+
+        Route::prefix('/sub-categories')->group(function () {
+            Route::get('/', [AdminBlogSubCategoryController::class, 'index'])->name('blog.subcategory');
+            Route::post('/store', [AdminBlogSubCategoryController::class, 'store'])->name('blog.subcategory.store');
+            Route::post('/update/{id}', [AdminBlogSubCategoryController::class, 'update'])->name('blog.subcategory.update');
+            Route::get('/status/{id}', [AdminBlogSubCategoryController::class, 'updateStatus'])->name('blog.subcategory.status');
+            Route::get('/delete/{id}', [AdminBlogSubCategoryController::class, 'destroy'])->name('blog.subcategory.destroy');
+            Route::post('/bulk/action', [AdminBlogSubCategoryController::class, 'bulkAction'])->name('blog.subcategory.bulk.action');
+        });
+    });
+
+    // Annoucement
+    Route::prefix('/crash-report')->group(function () {
+        Route::get('/', [AdminCrashReportController::class, 'index'])->name('crash-report');
+        Route::get('/detail/{id}', [AdminCrashReportController::class, 'detail'])->name('crash-report.detail');
+    });
+
+    // Support Ticket
+    Route::prefix('/support-ticket')->group(function () {
+
+        Route::prefix('/categories')->group(function () {
+          Route::get('/', [AdminSupportTicketCategoryController::class, 'index'])->name('support-ticket.category.index');
+          Route::post('/store', [AdminSupportTicketCategoryController::class, 'store'])->name('support-ticket.category.store');
+          Route::post('/update/{id}', [AdminSupportTicketCategoryController::class, 'update'])->name('support-ticket.category.update');
+          Route::get('/delete/{id}', [AdminSupportTicketCategoryController::class, 'delete'])->name('support-ticket.category.delete');
+          Route::get('/status/{id}', [AdminSupportTicketCategoryController::class, 'status'])->name('support-ticket.category.status');
+          Route::post('/bulk/action', [AdminSupportTicketCategoryController::class, 'bulkAction'])->name('support-ticket.category.bulk.action');
+        });
+
+        Route::prefix('/sub-categories')->group(function () {
+          Route::get('/', [AdminSupportTicketSubCategoryController::class, 'index'])->name('support-ticket.subcategory.index');
+          Route::post('/store', [AdminSupportTicketSubCategoryController::class, 'store'])->name('support-ticket.subcategory.store');
+          Route::post('/update/{id}', [AdminSupportTicketSubCategoryController::class, 'update'])->name('support-ticket.subcategory.update');
+          Route::get('/delete/{id}', [AdminSupportTicketSubCategoryController::class, 'delete'])->name('support-ticket.subcategory.delete');
+          Route::get('/status/{id}', [AdminSupportTicketSubCategoryController::class, 'status'])->name('support-ticket.subcategory.status');
+          Route::post('/bulk/action', [AdminSupportTicketSubCategoryController::class, 'bulkAction'])->name('support-ticket.subcategory.bulk.action');
+        });
+
+
+        Route::get('/', [AdminSupportTicketController::class, 'index']);
+        Route::get('/status/{status}/update/{id}', [AdminSupportTicketController::class, 'statusUpdate'])->name('ticket.status.update');
+        Route::get('/priority/{priority}/update/{id}', [AdminSupportTicketController::class, 'priorityUpdate'])->name('ticket.priority.update');
+        Route::post('/bulk/action', [AdminSupportTicketController::class, 'bulkAction'])->name('ticket.bulk.action');
+        // chat
+        Route::get('/chat/{ticket}', [AdminSupportTicketController::class, 'chat'])->name('ticket.chat');
+        Route::post('/chat/reply/{ticket}', [AdminSupportTicketController::class, 'ticketReply'])->name('ticket.reply');
+    });
+
+
+    Route::prefix('/new-bug-report')->group(function () {
+        Route::get('/', [AdminBugReportController::class, 'index'])->name('bug-report');
+        Route::get('/show/{id}', [AdminBugReportController::class, 'show'])->name('bug-report.show');
+    });
 });
 
 /*Prev Next channel*/
@@ -534,6 +635,8 @@ Route::any('/{any}', [AngularController::class, 'index'])
     ->where('any', '^(?!api|admin|stripe|hoa-sub-user-email|regenerate-passcode).*$')
     ->name('angular');
 
+
+
 Route::get('/hoa-sub-user-email/verify/{id}/{hash}', [ApiHoaController::class, 'emailVerify'])->name('sub.user.email.verify');
 Route::get('/regenerate-passcode/{token}', [ApiHoaController::class, 'regeneratePasscode'])->name('sub.user.regenerate.passcode');
 // url from frontend
@@ -549,6 +652,7 @@ Route::get('/admin/passcode/{id}', function ($id) {
     ]);
 });
 
+// for cache clear
 Route::get('/admin/clear', function () {
     // Application cache
     Artisan::call('cache:clear');
@@ -563,6 +667,14 @@ Route::get('/admin/clear', function () {
     Artisan::call('view:clear');
 
     return redirect()->route('admin.users')->with('info', "Cleared all cache successfully !");
+});
+
+Route::get('/admin/queue', function () {
+    Artisan::call('queue:work', [
+        '--once'  => true,
+        '--tries' => 3,
+    ]);
+    return redirect()->back();
 });
 
 Route::get('/admin/export-db', function () {
@@ -618,6 +730,90 @@ Route::get('/admin/export-db', function () {
 
     return response()->download($filePath)->deleteFileAfterSend(true);
 });
+
+// Timezone
+Route::post('/admin/timezone', function (Request $request) {
+    session(['timezone' => $request->timezone]);
+
+    return response()->json([
+        'timezone' => session('timezone')
+    ]);
+})->name('admin.timezone');
+
+Route::get('/admin/php-info', function () {
+    phpinfo();
+});
+
+Route::get('/admin/queue', function () {
+    Artisan::call('queue:work', [
+        '--once'  => true,
+        '--tries' => 3,
+    ]);
+    return redirect()->back();
+});
+
+Route::get('/admin/export-db', function () {
+
+    $dbHost = env('DB_HOST');
+    $dbPort = env('DB_PORT', 3306);
+    $dbName = env('DB_DATABASE');
+    $dbUser = env('DB_USERNAME');
+    $dbPass = env('DB_PASSWORD');
+
+    $fileName = 'streamly-' . now()->format('d-m-Y_H-i-s') . '.sql';
+    $filePath = storage_path('app/' . $fileName);
+
+    // Detect mysqldump path based on OS
+    switch (PHP_OS_FAMILY) {
+        case 'Windows':
+            $mysqldump = 'H:\\xampp\\mysql\\bin\\mysqldump.exe';
+            break;
+
+        case 'Linux':
+            $mysqldump = '/usr/bin/mysqldump';
+            break;
+
+        case 'Darwin': // macOS
+            $mysqldump = '/usr/local/mysql/bin/mysqldump';
+            break;
+
+        default:
+            abort(500, 'Unsupported operating system.');
+    }
+
+    if (!file_exists($mysqldump)) {
+        abort(500, "mysqldump not found at: {$mysqldump}");
+    }
+
+    // Escape arguments for security
+    $command = sprintf(
+        '"%s" --host=%s --port=%s --user=%s --password=%s %s > "%s"',
+        $mysqldump,
+        escapeshellarg($dbHost),
+        escapeshellarg($dbPort),
+        escapeshellarg($dbUser),
+        escapeshellarg($dbPass),
+        escapeshellarg($dbName),
+        $filePath
+    );
+
+    exec($command, $output, $result);
+
+    if ($result !== 0 || !file_exists($filePath) || filesize($filePath) === 0) {
+        abort(500, 'Database export failed.');
+    }
+
+    return response()->download($filePath)->deleteFileAfterSend(true);
+});
+
+// Timezone
+Route::post('/admin/timezone', function (Request $request) {
+    session(['timezone' => $request->timezone]);
+
+    return response()->json([
+        'timezone' => session('timezone')
+    ]);
+})->name('admin.timezone');
 
 Route::get('/admin/php-info', function () {
     phpinfo();

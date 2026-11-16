@@ -9,6 +9,7 @@ use App\HotelRoomTable;
 use App\Models\PersonalDevice;
 use Carbon\Carbon;
 use DeviceDetector\DeviceDetector;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SessionTable extends Model
 {
@@ -21,7 +22,7 @@ class SessionTable extends Model
     protected $casts = [
         'device' => 'array'
     ];
-    protected $appends = ['device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
+    protected $appends = ['logout_at', 'token_expire_at', 'remaining_days', 'device_img', 'device_detail', 'device_type', 'subscriptionStatus', 'deviceSign'];
     protected $hidden = ['device_detail']; //device detail from json
     protected $fillable = [
         'users_id',
@@ -47,6 +48,41 @@ class SessionTable extends Model
      * @var array
      */
     protected $guarded = [];
+
+
+    public function scopeFilterStatus($query, $status)
+    {
+        if ($status !== null) {
+            return $query->where('status', $status);
+        }
+    }
+
+    public function scopeFilterSearch($query, $search)
+    {
+
+        if (!empty($search)) {
+
+            if (strtolower($search) !== 'web') {
+
+
+
+                $query->whereHas('pdInfo', function ($query) use ($search) {
+                    $query->where('personal_devicename', 'like', "%{$search}%")
+                        ->orWhere('platform', 'like', "%{$search}%")
+                        ->orWhere('device_model', 'like', "%{$search}%")
+                        ->orWhere('build_version', 'like', "%{$search}%")
+                        ->orWhere('zipcode', 'like', "%{$search}%");
+                });
+            } else {
+
+                // Filter web sessions directly in SQL
+                $query->whereRaw("LOWER(device_type) = 'web'");
+            }
+        }
+    }
+
+    public function status() {}
+
     public function user()
     {
         return $this->belongsTo(User::class, 'users_id');
@@ -61,8 +97,6 @@ class SessionTable extends Model
     {
         return $this->hasOne(PersonalDevice::class, 'device_id', 'device_id')
             ->latest('updated_at');
-
-
     }
     public function pdInfo()
     {
@@ -147,6 +181,58 @@ class SessionTable extends Model
         parent::boot();
     }
      */
+
+
+    public function getLogoutAtAttribute()
+    {
+        if ($this->users_id) {
+            return null;
+        }
+
+        try {
+            return  ActivityLog::where('properties->data->users_id', $this->users_id)->first();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    public function getTokenExpireAtAttribute()
+    {
+        if (!$this->access_token) {
+            return null;
+        }
+
+        try {
+            $payload = JWTAuth::setToken($this->access_token)->getPayload();
+
+            return Carbon::createFromTimestamp(
+                $payload->get('exp')
+            )->toDateTimeString();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    public function getRemainingDaysAttribute()
+    {
+        if (!$this->access_token) {
+            return null;
+        }
+
+        try {
+            $payload = JWTAuth::setToken($this->access_token)->getPayload();
+
+            $expiresAt = Carbon::createFromTimestamp($payload->get('exp'));
+
+            return max(
+                0,
+                (int) ceil(now()->diffInSeconds($expiresAt) / 86400)
+            );
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     public function getId()
     {
         return $this->getKey();
@@ -241,5 +327,88 @@ class SessionTable extends Model
         return $subscriptionStatus ?? 'unsubscribe';
     }
 
+    public static function getCurrentUserByToken()
+    {
+        $session =  SessionTable::where('access_token', request()->bearerToken())->first();
+        if ($session != null) {
+            return User::where('id', $session->users_id)->first();
+        }
+        return null;
+    }
 
+    public static function  getJwtExpiryDate(string $token): ?string
+    {
+
+
+        $parts = explode('.', $token);
+
+        if (count($parts) !== 3) {
+            return null;
+        }
+
+        $payload = json_decode(
+            base64_decode(strtr($parts[1], '-_', '+/')),
+            true
+        );
+
+        if (!isset($payload['exp'])) {
+            return null;
+        }
+
+        return Carbon::createFromTimestamp($payload['exp'])
+            ->timezone(config('app.timezone'))
+            ->format('d/m/Y h:i:s A');
+    }
+
+    public function checkTokenValidity()
+    {
+        if (empty($this->access_token)) {
+            $this->status = 0;
+            $this->expired_at = null;
+            $this->save();
+            return;
+        }
+
+        try {
+            $parts = explode('.', $this->access_token);
+
+            if (count($parts) !== 3) {
+                $this->status = 0;
+                $this->save();
+                return;
+            }
+
+            $payload = json_decode(
+                base64_decode(strtr($parts[1], '-_', '+/')),
+                true
+            );
+
+            if (empty($payload['exp'])) {
+                $this->status = 0;
+                $this->save();
+                return;
+            }
+
+            // Always store expiry date
+            // $this->expired_at = Carbon::createFromTimestamp($payload['exp'])->timestamp;
+
+            // Check token validity
+            $this->status = $payload['exp'] > time() ? 1 : 0;
+
+            $this->save();
+        } catch (\Exception $e) {
+            $this->status = 0;
+            $this->save();
+        }
+    }
+
+    public function scopeResolveSession($query)
+    {
+        return $query
+            ->where('created_on', '>=', now()->subMonth())
+            ->get()
+            ->each(function ($session) {
+                $session->checkTokenValidity();
+            });
+    }
 }

@@ -31,6 +31,11 @@ import { SubscriptionCancelComponent } from './subscription-cancel/subscription-
 import { LocationAccessComponent } from './location-access/location-access.component';
 import { ConnectedHousesComponent } from './connected-houses/connected-houses.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SupportTicketComponent } from './support-ticket/support-ticket.component';
+import { ArticleSubCategoriesComponent } from '../components/footerComponents/help-and-support/article-sub-categories/article-sub-categories.component';
+import { ArticleComponent } from '../components/footerComponents/help-and-support/article/article.component';
+import { TicketListComponent } from './support-ticket/ticket-list/ticket-list.component';
+import { TicketChatComponent } from './support-ticket/ticket-chat/ticket-chat.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -64,6 +69,12 @@ const routes: Routes = [
       { path: 'supported-devices', component: SupportedDevicesComponent },
       { path: 'location-access', component: LocationAccessComponent },
       { path: 'search', component: SearchComponent, canActivate: [authguardGuard] },
+      { path: 'support-ticket', component: SupportTicketComponent, canActivate: [authguardGuard] },
+      { path: 'support-ticket/chat/:ticketId', component: TicketChatComponent, canActivate: [authguardGuard] },
+      { path: 'support-ticket/list', component: TicketListComponent, canActivate: [authguardGuard] },
+      { path: 'article/:category', component: ArticleSubCategoriesComponent },
+      { path: 'article/:category/:subcategory', component: ArticleSubCategoriesComponent },
+      { path: 'article/:category/:subcategory/:id/:slug', component: ArticleComponent },
     ]
   }
 ];

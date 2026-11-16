@@ -13,6 +13,16 @@ class ActivityLog extends Model
         'is_user' => 'boolean'
     ];
 
+
+    public function scopeFilterEvent($query, $event)
+    {
+        if ($event == 'All') {
+            return $query;
+        } elseif ($event != null) {
+            return  $query->where('event', $event);
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -43,5 +53,4 @@ class ActivityLog extends Model
             ->where('is_read', 0)
             ->update(['is_read' => 1]);
     }
-
 }

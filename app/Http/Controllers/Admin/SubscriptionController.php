@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\ActivityEventType;
+use App\Exports\CustomSubscriptionExport;
 use App\Exports\SubscriptionNewReportExport;
 use App\Exports\UsersSubscriptionExport;
 use App\HoaUser;
@@ -126,7 +127,11 @@ class SubscriptionController extends Controller
         }
 
         $subscriptions = $query->latest()->paginate(10)->appends($request->query());
-        // return response()->json($subscriptions);
+        foreach ($subscriptions->items() as $item) {
+            Subscription::stripeSyncById($item->stripe_id);
+        }
+
+        // return response()->json($subscriptions->items());
 
 
         if ($request->ajax()) {
@@ -300,48 +305,45 @@ class SubscriptionController extends Controller
         // custom subscription
         Subscription::syncCustomExpired();
 
+        // $query = Subscription::query()
+        //     ->whereHas('user')
+        //     ->with(['user.roles', 'planRequest.plan'])
+        //     ->withCount('planRequest')
+        //     ->whereNotNull('custom_status')
+        //     ->orderByDesc('plan_request_count');
+
+        $latestSubscriptionIds = Subscription::query()
+            ->where('stripe_id', 'LIKE', '%sub_custom_%')
+            ->orWhereNotNull('custom_status')
+            ->selectRaw('MAX(id)')
+            ->groupBy('user_id');
+
         $query = Subscription::query()
             ->whereHas('user')
             ->with(['user.roles', 'planRequest.plan'])
-            ->withCount('planRequest')
-            ->whereNotNull('custom_status')
-            ->orderByDesc('plan_request_count');
+            ->whereIn('id', $latestSubscriptionIds);
 
-        // Filter by status if provided
-        if (!empty($request->status)) {
 
-            $query->where('custom_status', $request->status);
-        }
-
-        // Apply search filter if provided
-        if (!empty($request->search)) {
-
-            $search = $request->search;
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            });
-        }
-
-        if ($request->sort_subscribe_at == null || $request->sort_subscribe_at == 'desc') {
-            $query->orderByDesc('created_at');
-        } else {
-            $query->orderBy('created_at');
-        }
         // return response()->json($query->get());
-        $subscriptions = $query->paginate(10)
+
+
+        $subscriptions = $query->filterStatus($request->status)
+            ->filterSearch($request->search)
+            ->filterCreatedAt($request->sort_subscribe_at)
+            ->paginate(10)
             ->appends($request->query());
 
         $subscriptions->getCollection()->transform(function ($item) {
 
-            $role =  $item->user->roles[0]->id;
-            $item->user->device_limit = 5;
-            if (strtolower($role) == 5) {
-                $item->user->device_limit =  HotelRoomTable::getTotalRoomCount($item->user->id);
-            } elseif (strtolower($role) == 7) {
-                $item->user->device_limit =  HoaUser::getTotalDeviceCount($item->user->id);
+            if ($item->user != null) {
+                $role =   $item->user->roles[0]->id;
+                $item->user->device_limit = 5;
+                if (strtolower($role) == 5) {
+                    $item->user->device_limit =  HotelRoomTable::getTotalRoomCount($item->user->id);
+                } elseif (strtolower($role) == 7) {
+                    $item->user->device_limit =  HoaUser::getTotalDeviceCount($item->user->id);
+                }
             }
-
             return $item;
         });
         // return response()->json($subscriptions);
@@ -358,17 +360,6 @@ class SubscriptionController extends Controller
         $mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Extracting subscription status types
         $statusTypes = Subscription::whereHas('user')->whereNotNull('custom_status')->pluck('custom_status')->unique()->values();
-
-
-
-
-
-
-
-
-
-
-
 
 
         if ($request->ajax()) {
@@ -1457,13 +1448,6 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
     public function exportCustomSubscription(Request $request)
     {
 
-        $query = Subscription::query()
-            ->whereHas('user')   // only subscriptions with a related user
-            ->with(['user.roles', 'plan'])      // still eager load user data
-            ->whereNotNull('custom_status');
-        return response()->json($query->get());
-
-
         // $query = Subscription::query()
         //     ->whereHas('user')   // only subscriptions with a related user
         //     ->with(['user.roles', 'plan'])      // still eager load user data
@@ -1471,13 +1455,16 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         // return response()->json($query->get());
 
 
-
-
+        // $query = Subscription::query()
+        //     ->whereHas('user')   // only subscriptions with a related user
+        //     ->with(['user.roles', 'plan'])      // still eager load user data
+        //     ->whereNotNull('custom_status');
+        // return response()->json($query->get());
         try {
 
-            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . $type;
+            $filename = 'subscription_' . now()->format('d-m-Y_H-i-s') . '.' . 'xlsx';
             // return Excel::download(new UsersSubscriptionExport($filters), $filename);
-            return Excel::download(new SubscriptionNewReportExport($request), $filename);
+            return Excel::download(new CustomSubscriptionExport($request), $filename);
         } catch (\Throwable $th) {
             //throw $th;
             Alert::error('Error', $th->getMessage());

@@ -1,5 +1,15 @@
 export const environment = {
-    production: true,
-    baseUrl: 'https://new.staging.streamlytv.com/',
-  };
-  
+  production: false,
+  baseUrl: 'http://127.0.0.1:8000',
+  // production: true,
+  // baseUrl: "example.com",
+  // production: true,
+  // baseUrl: "example.com",
+  stripe: {
+    publicKey: 'pk_test'
+  },
+  google: {
+    captchaKey: '',
+
+  }
+}

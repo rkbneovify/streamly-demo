@@ -68,6 +68,8 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
   planExpiredAt: Date;
   isCustomSubscription: boolean = false;
   subscriptionData: any = null;
+  // user login session
+  sessionExpiresOn: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -266,7 +268,7 @@ export class AccountsettingsComponent implements OnInit, OnDestroy {
             userData.name = res?.userinfo?.name
             userData.email = res?.userinfo?.email
             userData.zipcode = res?.userinfo?.zipcode
-
+            this.sessionExpiresOn = res?.auth_token_expire_at;
             localStorage.setItem(
               'userDetails',
               JSON.stringify(userData)

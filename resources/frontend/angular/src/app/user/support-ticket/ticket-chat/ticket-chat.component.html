@@ -1,0 +1,177 @@
+<div class="ticket-page">
+  <h1 class="page-title">Support Ticket Conversation/Chat</h1>
+
+  <section class="ticket-card">
+
+    <!-- Ticket information -->
+    <div class="ticket-header">
+      <div class="ticket-heading">
+        <h2>{{ ticketData.subject }}</h2>
+
+
+
+      </div>
+
+      <div class="info-box">
+        <div class="ticket-info">
+          <p class="mb-3">
+            <strong>Ticket :</strong>
+            <span>{{ ticketData.ticket_number }}</span>
+          </p>
+
+          <p class="mb-3">
+            <strong>Platform :</strong>
+            <span>{{ ticketData.platform }}</span>
+          </p>
+        </div>
+        <div class="ticket-info">
+          <p class="mb-2">
+            <strong>Priority :</strong>
+            <span class="priority-badge priority-all">
+              {{ ticketData.priority }}
+            </span>
+
+          </p>
+
+          <p class="mb-2">
+            <strong>Status :</strong>
+            <span class="status-badge status-all">
+              {{ ticketData.status }}
+            </span>
+          </p>
+        </div>
+        <div class="ticket-info">
+          <p class="mb-2 mb-5">
+
+          </p>
+          <p class="mb-2">
+            <strong>Created At :</strong>
+            <span>{{ ticketData.created_at | date:'MMM d,yyyy h:mm a' }}</span>
+          </p>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation -->
+    <div class="conversation">
+
+      @for (messagex of ticketData.messages; track messagex.id; let i = $index) {
+      <div class="media">
+
+        <div class="media-body">
+          @if (i==0){
+          <div class="chat-text" [innerHTML]="messagex.message">
+
+          </div>
+          <app-image-gallery [images]="messagex.files" [width]="100" [height]="100" />
+
+          }@else {
+          <div class="chat-container">
+            @if(messagex.user.roles[0].name =='admin'){
+            <div class="avtar-2">
+              <p> {{ messagex.user.name | avatar }}</p>
+            </div>
+            }@else{
+            <div class="avtar">
+              <p> {{ messagex.user.name | avatar }}</p>
+            </div>
+            }
+
+            <div>
+              <div class="user-info">
+                <p>{{ messagex.user.name }}</p>
+                <time>
+                  {{ messagex.created_at | date:'MMM d,yyyy h:mm a' }}
+                </time>
+
+
+              </div>
+              <!-- start -->
+              <div class="chat-text" [innerHTML]="messagex.message">
+
+              </div>
+
+              <app-image-gallery [images]="messagex.files" [width]="100" [height]="100" />
+              <!-- end -->
+            </div>
+
+          </div>
+          }
+
+
+
+        </div>
+      </div>
+      }
+
+      <!-- start -->
+      <div class="reply-action">
+        <button type="button" class="reply-button" (click)="openReply()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"></path>
+            <path d="M4 9h10a6 6 0 0 1 6 6v1"></path>
+          </svg>
+          Reply
+        </button>
+      </div>
+      <!-- Reply form -->
+      @if (showReplyForm) {
+      <div class="reply-form">
+        <label for="replyMessage">Your reply</label>
+
+        <!-- <textarea id="replyMessage" [(ngModel)]="replyMessage" placeholder="Write your reply here..." rows="5">
+        </textarea> -->
+
+        <form [formGroup]="ticketReplyForm">
+
+
+
+
+          <!-- Description -->
+          <div class="form-group mb-5">
+            <!-- <label>Description</label> -->
+            <quill-editor class="full-width-editor" formControlName="description" [modules]="quillConfig" theme="snow">
+            </quill-editor>
+
+            <div *ngIf="ticketReplyForm.get('description')?.touched" class="text-danger">
+              <span *ngIf="ticketReplyForm.get('description')?.errors as e">
+                {{ e['required'] && '* Reply is required.' }}
+
+              </span>
+            </div>
+          </div>
+
+          <!-- Attachment -->
+          <div class="form-group">
+            <label>Attachment</label>
+            <app-file-upload (filesChange)="onFilesSelected($event)">
+            </app-file-upload>
+          </div>
+
+
+          <div class="reply-form-actions">
+            <button type="button" class="cancel-button" (click)="cancelReply()">
+              Cancel
+            </button>
+
+            <button type="button" class="reply-button" [disabled]="ticketReplyForm.invalid" (click)="sendReply()">
+              Send Reply
+            </button>
+          </div>
+
+        </form>
+
+
+      </div>
+      }
+      <!-- end -->
+
+    </div>
+
+
+
+  </section>
+</div>

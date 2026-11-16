@@ -17,6 +17,7 @@ class AdminHoaController extends Controller
 {
     public function index(Request $request, $id)
     {
+        
         try {
             $user = User::find($id);
 
@@ -31,7 +32,6 @@ class AdminHoaController extends Controller
                 $query->orderByDesc('session_count');
             } elseif ($request->device == 'asc') {
                 $query->orderBy('session_count');
-
             }
             $query->when($request->has('search'), function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
@@ -53,7 +53,6 @@ class AdminHoaController extends Controller
                     } else {
                         $q->latest();
                     }
-
                 });
             }
             $limit = $request->input('limit', 10);
@@ -76,6 +75,8 @@ class AdminHoaController extends Controller
 
     public function sessionByPasscode(Request $request, $passcode)
     {
+
+
         try {
             $user = HoaUser::where('passcode', $passcode)->first();
             $query = SessionTable::query();
@@ -83,52 +84,54 @@ class AdminHoaController extends Controller
                 'pdInfoPasscode',
                 'subSessionPasscode'
             ]);
-            $query->selectRaw("*, 
+            $query->selectRaw("*,
         SUBSTRING_INDEX(mac_address, '#~', 1) as device_name,
         JSON_UNQUOTE(JSON_EXTRACT(device, '$.useragent')) as useragent")
                 ->where('is_main_account', 0)
-                ->where('passcode', $passcode)
-                ->where('status', 1);
+                ->where('passcode', $passcode);
+            // ->where('status', 1);
 
 
-            if (!empty($request->search) && strtolower($request->search) != 'web') {
+            // if (!empty($request->search) && strtolower($request->search) != 'web') {
 
 
-                $query->whereHas('pdInfoPasscode', function ($query) use ($request) {
-                    $query->where('personal_devicename', 'like', '%' . $request->search . '%')
-                        ->orWhere('platform', 'like', '%' . $request->search . '%')
-                        ->orWhere('device_model', 'like', '%' . $request->search . '%')
-                        ->orWhere('build_version', 'like', '%' . $request->search . '%')
-                        ->orWhere('zipcode', 'like', '%' . $request->search . '%');
-
-                });
-
-
-
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-            } elseif (!empty($request->search) && strtolower($request->search) == 'web') {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-                if (!empty($request->search) && strtolower($request->search) == 'web') {
-                    $allSession = $allSession->filter(function ($item) {
-                        return strtolower($item->device_type) === 'web';
-                    })->values();
-                }
-            } else {
-                $query->orderBy('created_on', 'desc');
-                $allSession = $query->get();
-            }
+            //     $query->whereHas('pdInfoPasscode', function ($query) use ($request) {
+            //         $query->where('personal_devicename', 'like', '%' . $request->search . '%')
+            //             ->orWhere('platform', 'like', '%' . $request->search . '%')
+            //             ->orWhere('device_model', 'like', '%' . $request->search . '%')
+            //             ->orWhere('build_version', 'like', '%' . $request->search . '%')
+            //             ->orWhere('zipcode', 'like', '%' . $request->search . '%');
+            //     });
 
 
 
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            // } elseif (!empty($request->search) && strtolower($request->search) == 'web') {
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            //     if (!empty($request->search) && strtolower($request->search) == 'web') {
+            //         $allSession = $allSession->filter(function ($item) {
+            //             return strtolower($item->device_type) === 'web';
+            //         })->values();
+            //     }
+            // } else {
+            //     $query->orderBy('created_on', 'desc');
+            //     $allSession = $query->get();
+            // }
 
-            if ($allSession->count() <= 0) {
-                toast('No active device.', 'error')
-                    ->timerProgressBar()
-                    ->autoClose(3000);
-                return redirect()->back();
-            }
+            $query->filterSearch($request->search)
+                ->filterStatus($request->status)
+                ->orderBy('created_on', 'desc');
+            $allSession = $query->get();
+
+
+            // if ($allSession->count() <= 0) {
+            //     toast('No active device.', 'error')
+            //         ->timerProgressBar()
+            //         ->autoClose(3000);
+            //     return redirect()->back();
+            // }
 
             // return response()->json($allSession);
 
@@ -149,8 +152,6 @@ class AdminHoaController extends Controller
             // Alert::error('Oops !', $th->getMessage());
             return redirect()->back();
         }
-
-
     }
 
     public function houseListOrdering($id)
@@ -171,8 +172,8 @@ class AdminHoaController extends Controller
             // toast('Something went wrong ! try again later.', 'error')
             //     ->timerProgressBar()
             //     ->autoClose(3000);
-            Alert::error('Oops !', $th->getMessage());
-            return redirect()->back();
+            // Alert::error('Oops !', $th->getMessage());
+            // return redirect()->back();
         }
     }
 

@@ -520,7 +520,8 @@ class NewChannelApiController extends Controller
             $query = Channel::with([
                 'zipcode',
                 'premium',
-                'phxLocal'
+                'phxLocal',
+                'eastCoast'
             ])
                 ->select('channels.id', 'channels.image as db_image', 'channels.type', 'channels.status', 'channels.image as local_image', 'channels.is_logo_from_gracenote', 'channels.prgSvcId', "channels.$type as url", 'channels.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
@@ -551,6 +552,7 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->orwhere('channels.type', 'all')
                         ->where('channels.status', 1)
                         ->orwhereNull('channels.type')
@@ -562,6 +564,7 @@ class NewChannelApiController extends Controller
                     $query->localZipcode($zipcode)
                         ->premiumStatus($user)
                         ->phxLocalStatus($user)
+                        ->eastCoastStatus($user)
                         ->where('channels.status', 1);
                 }
             }
@@ -1358,7 +1361,7 @@ class NewChannelApiController extends Controller
         } else {
             $TMSId = $request->TMSId;
             $timezone = $request->timezone ?? 'UTC'; // Default to UTC if no timezone is provided
-            $programs = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets', 'gracenote_schedule_program.start', 'gracenote_schedule_program.end')
+            $programs = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'channels.is_display_station_name as channel_dsn', 'channels.stationName as channel_station_name', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets', 'gracenote_schedule_program.start', 'gracenote_schedule_program.end')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
                 ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -1391,6 +1394,11 @@ class NewChannelApiController extends Controller
                     ->get();
 
                 $stationName = $programs[0]->stationName;
+                if ($programs[0]->channel_dsn == 1) {
+                    $stationName = $programs[0]->channel_station_name;
+                }
+
+                //
                 $channelId = $programs[0]->channel_id;
                 $image = $this->getURIFromAssetForProgram($program->assets);
 

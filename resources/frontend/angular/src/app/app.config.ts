@@ -5,7 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxStripeModule, provideNgxStripe } from 'ngx-stripe';
 import { environment } from '../environments/environment';
 import { StripeModule } from 'stripe-angular';
-
+import { QuillModule } from 'ngx-quill';
 import { routes } from './app.routes';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -13,21 +13,27 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { authInterceptor } from './_interceptor/auth.interceptor';
 import { SweetalertService } from './services/SweetAlert/sweetalert.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { RecaptchaModule } from "ng-recaptcha";
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes, withViewTransitions()),
     provideClientHydration(),
     provideNgxStripe(),
+
     importProvidersFrom(
       HttpClientModule,
       NgSelectModule,
       ScrollingModule,
+      RecaptchaModule,
       // NgxStripeModule.forRoot(''),
       StripeModule.forRoot(environment.stripe.publicKey),
+
       BrowserAnimationsModule,
       BrowserModule,
       SweetalertService,
+      QuillModule.forRoot(),
       ToastrModule.forRoot({
         timeOut: 4000,
         positionClass: 'toast-top-right',
@@ -36,5 +42,6 @@ export const appConfig: ApplicationConfig = {
         closeButton: true
       })
     ),
+
   ],
 };

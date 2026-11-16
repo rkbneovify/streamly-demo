@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Traits;
 
-
+use Illuminate\Pagination\Paginator;
 
 trait ApiResponseTrait
 {
@@ -17,25 +18,39 @@ trait ApiResponseTrait
             ],
             $code
         );
-
-
-
     }
 
     public function dataResponse($data = [], $message = null, $code = 200, $success = true)
     {
 
+        return response()->json([
+            'success' => $success,
+            'response_code' => $code,
+            'message' => $message ?? 'Request processed successfully !',
+            'data' => $data,
+        ], $code);
+    }
+
+    public function paginateResponse($data, $message = null, $code = 200, $success = true)
+    {
+
+
         return response()->json(
-            array_merge([
+            [
                 'success' => $success,
                 'response_code' => $code,
                 'message' => $message ?? 'Request processed successfully !',
-            ], $data),
+                'data' => $data->items(),
+                'total' => $data->total(),
+                'last_page' => $data->lastPage(),
+                'current_page' => $data->currentPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem(),
+                'limit' => $data->perPage(),
+                'has_more' => $data->hasMorePages()
+            ],
             $code
         );
-
-
-
     }
     public function exceptionResponse($th, $message = null, $code = 500, $success = false)
     {
@@ -48,7 +63,9 @@ trait ApiResponseTrait
             'success' => $success,
             'response_code' => $code,
             'message' => $errorMessage,
+            'file' => $th->getFile(),
             'line' => $th->getLine(),
+
         ], $code);
     }
 
@@ -57,7 +74,7 @@ trait ApiResponseTrait
         return response()->json([
             'success' => $success,
             'response_code' => $code,
-            'message' => $message ?? 'Resource not found !',
+            'message' => $message ?? 'Data not found !',
 
         ], $code);
     }

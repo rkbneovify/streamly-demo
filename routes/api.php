@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\ApiAnnouncementController;
 use App\Http\Controllers\Api\ApiSubscriptionPlanController;
 use App\Http\Controllers\Api\ApiSubscriptionPlanRequestController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V2\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +72,7 @@ Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronContro
 /** Gracenote API data into db cron code end here */
 
 /** Gracenote channel images optimization cron code start here */
-Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCron');
+Route::get('roku-channel-images-cron', 'GracenoteCron\RokuChannelImagesCronController@RokuChannelImagesCronNew');
 
 /** Gracenote channel images optimization cron code end here */
 
@@ -95,14 +97,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('epgguide', 'Api\User\NewGracenoteController@epg_guide')->middleware(['jwt.verify']);
     Route::get('fetchGracenoteData', 'Api\User\NewGracenoteController@fetchGracenoteData');
 
-    Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
+    Route::post('contactForm', 'Api\User\FooterApiController@newContectForm')->middleware(['jwt.verify']);
 
     Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify', 'subscribed']);
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify', 'subscribed']);
     Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'hoa.subuser.subscription',  'stripe.sync', 'subscribed']);
-    Route::post('epg-guide-v2', 'Api\NewChannelApiController@epgGuideWithPagination')->middleware(['jwt.verify', 'hoa.subuser.subscription',  'stripe.sync', 'subscribed']);
+    // Route::post('epg-guide-v2', 'Api\NewChannelApiController@epgGuideWithPagination')->middleware(['jwt.verify', 'hoa.subuser.subscription',  'stripe.sync', 'subscribed']);
     Route::post('epg-guide-roku', 'Api\RokuEpgGuideApiController@epgGuide')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
     Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify', 'stripe.sync']);
     Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'stripe.sync', 'subscribed']);
@@ -128,6 +130,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/subscription/terminate', 'Auth\AuthController@subscriptionTerminate');
     Route::post('/subscription/terminate-without-login', 'Auth\AuthController@subscriptionTerminateWithoutLogin');
     Route::post('/subscription/check', 'Auth\AuthController@subscriptionCheck')->middleware(['jwt.verify']);
+    //  Route::post('/subscriptionx/check', [SubscriptionController::class, 'subscriptionCheck'])->middleware(['jwt.verify']);
     Route::post('/subscription/plan-request', [ApiSubscriptionPlanRequestController::class, 'planRequestByUser'])->middleware(['jwt.verify']);
     Route::get('/custom/subscription/plan', [ApiSubscriptionPlanController::class, 'index']);
 
@@ -142,6 +145,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('same-device-id-logout', 'Auth\AuthController@samedevicelogout')->name('samedeviceidlogout');
     Route::post('logout-device-session', 'Auth\AuthController@logoutDevice')->name('logoutdeveicesession');
     Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::post('refresh/token', 'Auth\AuthController@refreshToken');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
@@ -240,7 +244,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
 });
 
 
-
+// Crash Report
+Route::prefix('crash-report')->group(function () {
+    Route::post('/store', 'Api\ApiCrashReportController@store')->middleware(['jwt.verify']);
+});
 
 Route::group(['prefix' => 'hoa/sub-user'], function () {
     Route::post("account-active", "Api\ApiHoaController@accountActive");
@@ -303,3 +310,44 @@ Route::post('/login/entry/login', 'Auth\AuthController@loginEntry'); //Check whe
 Route::get('/cron/subscription-renew', 'SubscriptionCronController@subscriptioncron');
 Route::get('/hoa/plan-expire/notification', 'Api\ApiHoaController@planExpireNotification');
 Route::get('/notification/send', 'Api\ApiNotificationController@send');
+
+
+Route::group(['prefix' => 'support-ticket', 'middleware' => 'jwt.verify'], function () {
+    Route::group(['prefix' => 'sub-categories'], function () {
+        Route::get('/{category}', 'Api\ApiSupportTicketSubCategoryController@index');
+    });
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/', 'Api\ApiSupportTicketCategoryController@index');
+    });
+
+    Route::get('/', 'Api\SupportTicketController@index');
+    Route::post('/store', 'Api\SupportTicketController@store');
+    Route::post('/reply', 'Api\SupportTicketController@ticketReply');
+    Route::post('/upload', 'Api\SupportTicketController@fileUpload');
+    Route::get('/{ticketNo}', 'Api\SupportTicketController@byTicketNo');
+
+
+});
+
+
+Route::group(['prefix' => 'blogs'], function () {
+    Route::get('/', 'Api\Blog\ApiBlogController@index');
+
+
+    Route::prefix('categories')->group(function () {
+        Route::get('/', 'Api\Blog\BlogCategoryController@index');
+        Route::get('/list', 'Api\Blog\ApiBlogController@categoriesList');
+        Route::get('/{category}', 'Api\Blog\BlogCategoryController@detail');
+    });
+
+    Route::get('/{category}/sub-categories', 'Api\Blog\BlogSubCategoryController@byCategory');
+    Route::get('/{category}/{subcategory}/list', 'Api\Blog\BlogSubCategoryController@subcategoryList');
+
+    Route::get('/{id}', 'Api\Blog\ApiBlogController@byId');
+});
+
+Route::group(['prefix' => 'announcement'], function () {
+    Route::get('/', [ApiAnnouncementController::class, 'index']);
+});
+
+require __DIR__ . '/api-v2.php';

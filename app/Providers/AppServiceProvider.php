@@ -7,11 +7,16 @@ use App\Console\DebugKernel;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\SubscriptionsObserver;
 use App\Models\Subscription;
-use Illuminate\Pagination\Paginator;
+use App\Models\SupportTicket;
+use App\Services\ActivityLogService;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Stripe\Stripe;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.debug')) {
             $this->app->singleton(DebugKernel::class);
         }
+        $this->app->singleton(ActivityLogService::class);
     }
 
     /**
@@ -48,5 +54,25 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Subscription::observe(SubscriptionsObserver::class);
+
+        // Support Ticket Email and reply
+
+        Event::listen(MessageSent::class, function (MessageSent $event) {
+
+            $headers = $event->sent->getOriginalMessage()->getHeaders();
+
+            $ticketNumber = $headers->get('support_ticket_number')?->getBodyAsString();
+
+            $messageId = $event->sent->getMessageId();
+
+            if ($ticketNumber != null) {
+                SupportTicket::where('ticket_number', $ticketNumber)->update([
+                    'email_message_id' => $messageId,
+                ]);
+            }
+
+            // Save the message ID
+            Log::info('Message ID: ' . $messageId);
+        });
     }
 }
